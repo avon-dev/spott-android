@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Spott</string>
+
+    <!--위젯_이름_위치_구분-->
+
+    <!-- EditMyinfoActivity [Start]-->
+    <string name="text_title_editmyinfo_a">내 정보 수정</string>
+    <string name="text_editing">편 집</string>
+    <string name="btn_signout_editmyinfo_a">로그아웃</string>
+    <string name="btn_withdrawal_editmyinfo_a">회원탈퇴</string>
+    <string name="imgbtn_changepw_editmyinfo_a">비밀번호 변경</string>
+
+    <!-- Hint -->
+    <string name="hint_nickname">닉네임</string>
+    <string name="hint_email">이메일</string>
+    <!-- EditMyinfoActivity [End]-->
 </resources>
