@@ -14,4 +14,12 @@
     <string name="hint_nickname">닉네임</string>
     <string name="hint_email">이메일</string>
     <!-- EditMyinfoActivity [End]-->
+
+
+    <!-- MapFragment [Start]-->
+    <string name="text_all">전체</string>
+    <!-- MapFragment [End]-->
+
+
+
 </resources>
