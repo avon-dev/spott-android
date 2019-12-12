@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#073B8A</color>
+    <color name="colorPrimaryDark">#3A619C</color>
+    <color name="colorAccent">#DE9800</color>
 
     <!-- 화면 배경색 -->
     <color name="default_background">#FAFAFA</color>
@@ -14,6 +14,6 @@
     <color name="text_grey">#727272</color>
     <color name="text_black">#000000</color>
 
-    <!--[임시] 아이콘 색-->
+
 
 </resources>

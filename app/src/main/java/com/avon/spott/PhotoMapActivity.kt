@@ -10,7 +10,7 @@ class PhotoMapActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_photo_map)
 
-        text_main_toolbar.text = "지도"
+        text_title_toolbar.text = "지도"
 
         img_back_toolbar.setOnClickListener {
             onBackPressed()

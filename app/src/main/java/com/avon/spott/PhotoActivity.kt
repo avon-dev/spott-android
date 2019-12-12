@@ -24,7 +24,7 @@ class PhotoActivity : AppCompatActivity() {
             startActivity(nextIntent)
         }
 
-        imagebutton_map_photo_f.setOnClickListener {
+        imgbtn_map_photo_f.setOnClickListener {
             val nextIntent = Intent(this, PhotoMapActivity::class.java)
             startActivity(nextIntent)
         }

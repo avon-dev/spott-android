@@ -15,7 +15,7 @@ class MapActivity : AppCompatActivity() {
         setContentView(R.layout.activity_map)
         configureBackdrop()
 
-        imagebutton_mylocation_map_f.setOnClickListener {
+        imgbtn_mylocation_map_f.setOnClickListener {
             println("내 위치로 이동!")
             val nextIntent = Intent(this, PhotoActivity::class.java)
             startActivity(nextIntent)
@@ -26,7 +26,7 @@ class MapActivity : AppCompatActivity() {
 
     private fun configureBackdrop() {
         // Get the fragment reference
-        val fragment = supportFragmentManager.findFragmentById(R.id.filter_fragment)
+        val fragment = supportFragmentManager.findFragmentById(R.id.frag_list_map_f)
 
         fragment?.let {
             // Get the BottomSheetBehavior from the fragment view
@@ -34,7 +34,7 @@ class MapActivity : AppCompatActivity() {
                 // Set the initial state of the BottomSheetBehavior to HIDDEN
                 bsb.state = BottomSheetBehavior.STATE_HIDDEN
 
-                fragment.image_up_map_F.setOnClickListener {
+                fragment.img_updown_maplist_f.setOnClickListener {
                     if( bsb.state == BottomSheetBehavior.STATE_COLLAPSED){
                         bsb.state = BottomSheetBehavior.STATE_EXPANDED
                     }else{
@@ -53,12 +53,12 @@ class MapActivity : AppCompatActivity() {
                             BottomSheetBehavior.STATE_HIDDEN -> {
                             }
                             BottomSheetBehavior.STATE_EXPANDED -> {
-                                fragment.image_up_map_F.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp)
-                                imagebutton_mylocation_map_f.isEnabled =false
+                                fragment.img_updown_maplist_f.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp)
+                                imgbtn_mylocation_map_f.isEnabled =false
                             }
                             BottomSheetBehavior.STATE_COLLAPSED -> {
-                                fragment.image_up_map_F.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp)
-                                imagebutton_mylocation_map_f.isEnabled=true
+                                fragment.img_updown_maplist_f.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp)
+                                imgbtn_mylocation_map_f.isEnabled=true
                             }
                             BottomSheetBehavior.STATE_DRAGGING -> {
                             }

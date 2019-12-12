@@ -5,9 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PhotoActivity">
+
     <include
-        android:id="@+id/include"
-        layout="@layout/toolbar"/>
+        android:id="@+id/include_toolbar_photo_f"
+        layout="@layout/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <ScrollView
@@ -17,14 +21,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include">
+        app:layout_constraintTop_toBottomOf="@+id/include_toolbar_photo_f">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/img_photo_photo_f"
                 android:layout_width="0dp"
                 android:layout_height="220dp"
                 android:scaleType="centerCrop"
@@ -36,7 +40,7 @@
                 tools:ignore="VectorDrawableCompat" />
 
             <ImageButton
-                android:id="@+id/imagebutton_map_photo_f"
+                android:id="@+id/imgbtn_map_photo_f"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginStart="24dp"
@@ -44,12 +48,12 @@
                 android:layout_marginTop="190dp"
                 android:background="@drawable/layout_circlebutton"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/imageView2"
+                app:layout_constraintTop_toTopOf="@+id/img_photo_photo_f"
                 app:srcCompat="@drawable/ic_map_white_32dp"
                 tools:ignore="VectorDrawableCompat" />
 
             <ImageButton
-                android:id="@+id/imagebutton_camera_photo_f"
+                android:id="@+id/imgbtn_camera_photo_f"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginTop="190dp"
@@ -57,36 +61,36 @@
                 android:layout_marginRight="24dp"
                 android:background="@drawable/layout_circlebutton"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/imageView2"
+                app:layout_constraintTop_toTopOf="@+id/img_photo_photo_f"
                 app:srcCompat="@drawable/ic_camera_alt_white_32dp"
                 tools:ignore="VectorDrawableCompat" />
 
             <ImageView
-                android:id="@+id/image_lock_photo_f"
+                android:id="@+id/img_lock_photo_f"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
-                app:layout_constraintStart_toStartOf="@+id/imageView2"
-                app:layout_constraintTop_toTopOf="@+id/imageView2"
+                app:layout_constraintStart_toStartOf="@+id/img_photo_photo_f"
+                app:layout_constraintTop_toTopOf="@+id/img_photo_photo_f"
                 app:srcCompat="@drawable/ic_lock_black_24dp"
                 tools:ignore="VectorDrawableCompat" />
 
             <ImageView
-                android:id="@+id/image_like_photo_f"
+                android:id="@+id/img_like_photo_f"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="15dp"
                 android:layout_marginRight="15dp"
-                app:layout_constraintEnd_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toTopOf="@+id/imageView2"
+                app:layout_constraintEnd_toEndOf="@+id/img_photo_photo_f"
+                app:layout_constraintTop_toTopOf="@+id/img_photo_photo_f"
                 app:srcCompat="@drawable/ic_favorite_border_black_24dp"
                 tools:ignore="VectorDrawableCompat" />
 
             <ImageView
-                android:id="@+id/image_profile_photo_f"
+                android:id="@+id/img_userphoto_photo_f"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="16dp"
@@ -103,36 +107,35 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="30dp"
-                android:text="userNickName"
                 android:textColor="@color/text_grey"
-                app:layout_constraintStart_toEndOf="@+id/image_profile_photo_f"
-                app:layout_constraintTop_toBottomOf="@+id/imagebutton_map_photo_f" />
+                app:layout_constraintStart_toEndOf="@+id/img_userphoto_photo_f"
+                app:layout_constraintTop_toBottomOf="@+id/imgbtn_map_photo_f"
+                tools:text="userNickName" />
 
             <ImageView
-                android:id="@+id/imageView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
                 android:layout_marginRight="4dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView5"
-                app:layout_constraintEnd_toStartOf="@+id/textView5"
-                app:layout_constraintTop_toTopOf="@+id/textView5"
+                app:layout_constraintBottom_toBottomOf="@+id/text_like_photo_f"
+                app:layout_constraintEnd_toStartOf="@+id/text_like_photo_f"
+                app:layout_constraintTop_toTopOf="@+id/text_like_photo_f"
                 app:srcCompat="@drawable/ic_favorite_grey_24dp"
-                tools:ignore="VectorDrawableCompat"/>
+                tools:ignore="VectorDrawableCompat" />
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/text_like_photo_f"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
-                android:text="100"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imagebutton_camera_photo_f" />
+                app:layout_constraintTop_toBottomOf="@+id/imgbtn_camera_photo_f"
+                tools:text="100" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout"
+                android:id="@+id/const_comment_photo_f"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
@@ -141,49 +144,48 @@
                 app:layout_constraintTop_toBottomOf="@+id/text_nickname_photo_f">
 
                 <TextView
-                    android:id="@+id/textView6"
+                    android:id="@+id/text_caption_photo_f"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
-                    android:text="이 곳에 글에 대한 간단한 설명과 해시태그들이 들어갑니다. 이 곳에 글에 대한 간단한 설명과 해시태그들이 들어갑니다.
-    이 곳에 글에 대한 간단한 설명과 해시태그들이 들어갑니다. 이 곳에 글에 대한 간단한 설명과 해시태그들이 들어갑니다."
                     android:textColor="@color/text_black"
                     android:textSize="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="이 곳에 글에 대한 간단한 설명과 해시태그들이 들어갑니다. 이 곳에 글에 대한 간단한 설명과 해시태그들이 들어갑니다.     이 곳에 글에 대한 간단한 설명과 해시태그들이 들어갑니다. 이 곳에 글에 대한 간단한 설명과 해시태그들이 들어갑니다." />
 
                 <TextView
-                    android:id="@+id/textView7"
+                    android:id="@+id/text_allcomment_photo_f"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="8dp"
-                    android:text="댓글 5개 모두 보기"
                     android:textColor="@color/text_grey"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView6" />
+                    app:layout_constraintTop_toBottomOf="@+id/text_caption_photo_f"
+                    tools:text="댓글 5개 모두 보기" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/text_date_photo_f"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="24dp"
-                android:text="2019년 12월 12일"
                 android:textColor="@color/text_grey"
                 android:textSize="12dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toBottomOf="@+id/const_comment_photo_f"
+                app:layout_constraintVertical_bias="0.0"
+                tools:text="2019년 12월 12일" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

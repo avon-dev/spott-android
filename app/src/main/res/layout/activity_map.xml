@@ -12,14 +12,14 @@
     <!--        app:layout_behavior="@string/appbar_scrolling_view_behavior" />-->
 
     <fragment
-        android:id="@+id/frag_near"
+        android:id="@+id/frag_googlemap_map_f"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="40dp" />
 
     <ImageButton
-        android:id="@+id/imagebutton_mylocation_map_f"
+        android:id="@+id/imgbtn_mylocation_map_f"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:background="@drawable/layout_mapbutton"
@@ -34,7 +34,7 @@
          layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" -->
 
     <fragment
-        android:id="@+id/filter_fragment"
+        android:id="@+id/frag_list_map_f"
         android:name="com.avon.spott.MapListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

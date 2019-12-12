@@ -16,16 +16,19 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_geo_key" />
 
-        <activity android:name=".MapActivity"></activity>
-        <activity android:name=".PhotoMapActivity" />
-        <activity android:name=".PhotoActivity" />
-        <activity android:name=".EditMyInfoActivity"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".MapActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".MypageActivity"/>
+        <activity android:name=".PhotoMapActivity" />
+        <activity android:name=".PhotoActivity" />
+        <activity android:name=".EditMyInfoActivity"></activity>
+        <activity android:name=".MainActivity">
+
         </activity>
     </application>
 
