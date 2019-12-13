@@ -8,26 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <!--&lt;!&ndash; baseline_keyboard_arrow_left_24 / 뒤로가기 &ndash;&gt;-->
-    <!--<style name="arrow_left" parent="Widget.AppCompat.ImageButton">-->
-        <!--<item name="android:background">@color/default_background</item>-->
-        <!--<item name="android:src">@drawable/baseline_keyboard_arrow_left_24</item>-->
-        <!--<item name="android:layout_marginTop">20dp</item>-->
-        <!--<item name="android:layout_marginLeft">20dp</item>-->
-        <!--<item name="android:minHeight">36dp</item>-->
-        <!--<item name="android:minWidth">36dp</item>-->
-    <!--</style>-->
-
-    <!--&lt;!&ndash; text_title &ndash;&gt;-->
-    <!--<style name="text_title" parent="Widget.AppCompat.TextView">-->
-        <!--<item name="android:background">@color/default_background</item>-->
-        <!--<item name="android:textSize">16dp</item>-->
-        <!--<item name="android:textStyle">bold</item>-->
-        <!--<item name="android:gravity">center</item>-->
-    <!--</style>-->
-
     <!-- baseline_keyboard_arrow_left_24 / 뒤로가기 -->
-    <style name="arrow_left_edit" parent="Widget.AppCompat.ImageButton">
+    <style name="arrow_left" parent="Widget.AppCompat.ImageButton">
         <item name="android:background">@color/default_background</item>
         <item name="android:src">@drawable/baseline_keyboard_arrow_left_24</item>
         <item name="android:layout_marginTop">20dp</item>
@@ -37,7 +19,7 @@
     </style>
 
     <!-- text_title -->
-    <style name="text_title_edit" parent="Widget.AppCompat.TextView">
+    <style name="text_title" parent="Widget.AppCompat.TextView">
         <item name="android:background">@color/default_background</item>
         <item name="android:textSize">16dp</item>
         <item name="android:textStyle">bold</item>
