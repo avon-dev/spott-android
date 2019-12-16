@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <!-- Here is the content of your CoordinatorLayout -->
+
+
+    <!--        app:layout_behavior="@string/appbar_scrolling_view_behavior" />-->
+
+    <fragment
+        android:id="@+id/frag_googlemap_map_f"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="40dp" />
+
+    <ImageButton
+        android:id="@+id/imgbtn_mylocation_map_f"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:background="@drawable/layout_mapbutton"
+        android:layout_gravity="end|top"
+        android:layout_margin="12dp"
+        app:srcCompat="@drawable/ic_my_location_black_24dp"
+        tools:ignore="VectorDrawableCompat" />
+
+
+
+    <!-- This is the backdrop view. The magic happens when you add the
+         layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" -->
+
+    <fragment
+        android:id="@+id/frag_list_map_f"
+        android:name="com.avon.spott.MapListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="40dp"
+        app:behavior_skipCollapsed="true"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
+
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
