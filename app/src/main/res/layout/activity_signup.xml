@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignupActivity">
+
+    <EditText
+        android:textSize="12dp"
+        android:id="@+id/edtext_passwordcheck_signup_a"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/corner_round_whitetext"
+        android:hint="비밀번호 확인"
+        android:padding="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edtext_password_signup_a" />
+
+    <TextView
+        android:textSize="12dp"
+        android:id="@+id/text_warnmsg3_signup_a"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="비밀번호가 일치하지 않습니다"
+        android:textColor="#EB685B"
+        app:layout_constraintStart_toStartOf="@+id/edtext_passwordcheck_signup_a"
+        app:layout_constraintTop_toBottomOf="@+id/edtext_passwordcheck_signup_a" />
+
+    <EditText
+        android:id="@+id/edtext_password_signup_a"
+        android:textSize="12dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/corner_round_whitetext"
+        android:hint="비밀번호"
+        android:padding="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edtext_email_signup_a" />
+
+    <TextView
+        android:id="@+id/text_warnmsg2_signup_a"
+        android:layout_width="wrap_content"
+        android:textSize="12dp"
+        android:layout_height="wrap_content"
+        android:text="비밀번호를 형식에 맞게 입력해주십시오"
+        android:textColor="#EB685B"
+        app:layout_constraintStart_toStartOf="@+id/edtext_password_signup_a"
+        app:layout_constraintTop_toBottomOf="@+id/edtext_password_signup_a" />
+
+    <TextView
+        android:id="@+id/text_title_signup_a"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="회원가입"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/edtext_email_signup_a"
+        android:layout_width="0dp"
+        android:textSize="12dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/corner_round_whitetext"
+        android:hint="이메일"
+        android:padding="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_title_signup_a" />
+
+    <TextView
+        android:id="@+id/text_warnmsg1_signup_a"
+        android:layout_width="wrap_content"
+        android:textSize="12dp"
+       android:layout_height="wrap_content"
+        android:text="이메일 형식을 확인해주세요"
+        android:textColor="#EB685B"
+        app:layout_constraintStart_toStartOf="@+id/edtext_email_signup_a"
+        app:layout_constraintTop_toBottomOf="@+id/edtext_email_signup_a" />
+
+    <Button
+        android:id="@+id/btn_confirm_signup_a"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/corner_round_graybtn"
+        android:text="다음"
+        android:textColor="#ffffff"
+        android:textSize="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edtext_passwordcheck_signup_a" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
