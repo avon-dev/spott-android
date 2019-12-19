@@ -22,5 +22,12 @@
     <string name="text_all">전체</string>
     <!-- MapFragment [End]-->
 
+    <!-- item_alarm.xml [Start] -->
+    <string name="alarm">알람</string>
+    <string name="alarm_failure">사진이 반려되었습니다</string>
+    <string name="alarm_sharing">사진이 공유되었습니다</string>
+    <string name="guideline">가이드라인</string>
+    <!-- item_alarm.xml [End] -->
+
 
 </resources>
