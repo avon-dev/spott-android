@@ -101,7 +101,7 @@
     <TextView
         android:id="@+id/text_bgbottom_camera_a"
         android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="80dp"
         android:background="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -110,21 +110,26 @@
     <!-- 좋아요 목록 버튼 -->
     <ImageButton
         android:id="@+id/imgbtn_like_camera_a"
-        android:layout_width="?attr/actionBarSize"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:adjustViewBounds="true"
         android:background="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/text_bgbottom_camera_a"
         app:srcCompat="@drawable/ic_favorite_border_black_24dp"/>
 
     <!-- 갤러리 버튼 -->
     <ImageButton
         android:id="@+id/imgbtn_gallery_camera_a"
-        android:layout_width="?attr/actionBarSize"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:adjustViewBounds="true"
         android:background="@null"
+        android:scaleType="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/text_bgbottom_camera_a"
         app:srcCompat="@drawable/ic_photo_library_black_24dp"/>
 
     <!-- 사진 찍기 버튼 -->
@@ -135,8 +140,9 @@
         android:background="@null"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/imgbtn_like_camera_a"
         app:layout_constraintEnd_toStartOf="@id/imgbtn_gallery_camera_a"
+        app:layout_constraintStart_toEndOf="@id/imgbtn_like_camera_a"
+        app:layout_constraintTop_toTopOf="@id/text_bgbottom_camera_a"
         app:srcCompat="@drawable/ic_brightness_1_black_24dp"/>
 
 
