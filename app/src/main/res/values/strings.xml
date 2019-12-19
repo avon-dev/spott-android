@@ -29,7 +29,8 @@
     <string name="guideline">가이드라인</string>
     <!-- item_alarm.xml [End] -->
 
-    <string name="signup">가입</string>
+    <string name="signup">회원가입</string>
+    <string name="join">가입</string>
     <string name="change">변경</string>
 
     <string name="email">이메일</string>
@@ -43,5 +44,10 @@
     <string name="text_warnmsg3_signup_a">비밀번호가 일치하지 않습니다</string>
 
     <string name="next">다음</string>
+    <string name="findpw">비밀번호 찾기</string>
+    <string name="text_warnmsg_findpw_a">이메일 형식을 확인해주세요</string>
+    <string name="text_warnmessage_number_a">이미 사용하고 있는 닉네임입니다</string>
 
+    <string name="nickname">닉네임</string>
+    <string name="select_delete">선택 삭제</string>
 </resources>
