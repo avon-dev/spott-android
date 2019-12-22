@@ -22,5 +22,32 @@
     <string name="text_all">전체</string>
     <!-- MapFragment [End]-->
 
+    <!-- item_alarm.xml [Start] -->
+    <string name="alarm">알람</string>
+    <string name="alarm_failure">사진이 반려되었습니다</string>
+    <string name="alarm_sharing">사진이 공유되었습니다</string>
+    <string name="guideline">가이드라인</string>
+    <!-- item_alarm.xml [End] -->
 
+    <string name="signup">회원가입</string>
+    <string name="join">가입</string>
+    <string name="change">변경</string>
+
+    <string name="email">이메일</string>
+    <string name="pw">비밀번호 입력</string>
+    <string name="checkpw">비밀번호 확인</string>
+    <string name="originpw">기존 비밀번호</string>
+    <string name="newpw">새 비밀번호</string>
+
+    <string name="text_warnmsg1_signup_a">이메일 형식을 확인해주세요</string>
+    <string name="text_warnmsg2_signup_a">비밀번호를 형식에 맞게 입력해주십시오</string>
+    <string name="text_warnmsg3_signup_a">비밀번호가 일치하지 않습니다</string>
+
+    <string name="next">다음</string>
+    <string name="findpw">비밀번호 찾기</string>
+    <string name="text_warnmsg_findpw_a">이메일 형식을 확인해주세요</string>
+    <string name="text_warnmessage_number_a">이미 사용하고 있는 닉네임입니다</string>
+
+    <string name="nickname">닉네임</string>
+    <string name="select_delete">선택 삭제</string>
 </resources>

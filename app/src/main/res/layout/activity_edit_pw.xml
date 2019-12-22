@@ -1,70 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignupActivity">
+    tools:context=".EditPWActivity">
 
     <include
-        android:id="@+id/include_toolbar_signup_a"
+        android:id="@+id/include_toolbar_editpw_a"
         layout="@layout/toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
     <EditText
-        android:id="@+id/edit_email_signup_a"
+        android:id="@+id/edit_email_editpw_a"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="80dp"
         android:layout_marginRight="30dp"
         android:background="@drawable/corner_round_whitetext"
-        android:hint="@string/email"
+        android:hint="@string/originpw"
         android:padding="15dp"
         android:textSize="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include_toolbar_signup_a"/>
+        app:layout_constraintTop_toBottomOf="@+id/include_toolbar_editpw_a"/>
 
     <TextView
-        android:id="@+id/text_warnmsg1_signup_a"
+        android:id="@+id/text_warnmsg1_editpw_a"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/text_warnmsg1_signup_a"
         android:textColor="#EB685B"
         android:textSize="12dp"
-        app:layout_constraintStart_toStartOf="@+id/edit_email_signup_a"
-        app:layout_constraintTop_toBottomOf="@+id/edit_email_signup_a"/>
+        app:layout_constraintStart_toStartOf="@+id/edit_email_editpw_a"
+        app:layout_constraintTop_toBottomOf="@+id/edit_email_editpw_a"/>
 
     <EditText
-        android:id="@+id/edit_password_signup_a"
+        android:id="@+id/edit_password_editpw_a"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="35dp"
         android:layout_marginRight="30dp"
         android:background="@drawable/corner_round_whitetext"
-        android:hint="@string/pw"
+        android:hint="@string/newpw"
         android:padding="15dp"
         android:textSize="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_email_signup_a"/>
+        app:layout_constraintTop_toBottomOf="@+id/edit_email_editpw_a"/>
 
     <TextView
-        android:id="@+id/text_warnmsg2_signup_a"
+        android:id="@+id/text_warnmsg2_editpw_a"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/text_warnmsg2_signup_a"
+        android:text="비밀번호를 형식에 맞게 입력해주십시오"
         android:textColor="#EB685B"
         android:textSize="12dp"
-        app:layout_constraintStart_toStartOf="@+id/edit_password_signup_a"
-        app:layout_constraintTop_toBottomOf="@+id/edit_password_signup_a"/>
+        app:layout_constraintStart_toStartOf="@+id/edit_password_editpw_a"
+        app:layout_constraintTop_toBottomOf="@+id/edit_password_editpw_a"/>
 
     <EditText
-        android:id="@+id/edit_passwordcheck_signup_a"
+        android:id="@+id/edit_passwordcheck_editpw_a"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
@@ -76,20 +77,20 @@
         android:textSize="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_password_signup_a"/>
+        app:layout_constraintTop_toBottomOf="@+id/edit_password_editpw_a"/>
 
     <TextView
-        android:id="@+id/text_warnmsg3_signup_a"
+        android:id="@+id/text_warnmsg3_editpw_a"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/text_warnmsg3_signup_a"
+        android:text="비밀번호가 일치하지 않습니다"
         android:textColor="#EB685B"
         android:textSize="12dp"
-        app:layout_constraintStart_toStartOf="@+id/edit_passwordcheck_signup_a"
-        app:layout_constraintTop_toBottomOf="@+id/edit_passwordcheck_signup_a"/>
+        app:layout_constraintStart_toStartOf="@+id/edit_passwordcheck_editpw_a"
+        app:layout_constraintTop_toBottomOf="@+id/edit_passwordcheck_editpw_a"/>
 
     <Button
-        android:id="@+id/btn_confirm_signup_a"
+        android:id="@+id/btn_confirm_editpw_a"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
@@ -101,6 +102,7 @@
         android:textSize="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_passwordcheck_signup_a"/>
+        app:layout_constraintTop_toBottomOf="@+id/edit_passwordcheck_editpw_a"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

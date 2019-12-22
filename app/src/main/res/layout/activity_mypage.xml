@@ -21,7 +21,7 @@
         tools:ignore="VectorDrawableCompat" />
 
     <include
-        android:id="@+id/include3"
+        android:id="@+id/include_toolbar_mypage_f"
         layout="@layout/toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include3"
+        app:layout_constraintTop_toBottomOf="@+id/include_toolbar_mypage_f"
         app:tabIndicatorColor="@color/colorPrimary">
 
         <com.google.android.material.tabs.TabItem

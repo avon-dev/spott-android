@@ -26,18 +26,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="15dp"
-        android:text="선택 삭제"
+        android:text="@string/select_delete"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/text_count_like_f"
         app:layout_constraintEnd_toEndOf="@+id/text_count_like_f"
-        app:layout_constraintTop_toTopOf="@+id/text_count_like_f" />
+        app:layout_constraintTop_toTopOf="@+id/text_count_like_f"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_like_f"
         android:layout_width="0dp"
-        android:layout_height="500dp"
-        android:layout_margin="15dp"
+        android:layout_height="0dp"
+        android:layout_margin="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_count_like_f" />
+        app:layout_constraintTop_toBottomOf="@+id/text_count_like_f"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
