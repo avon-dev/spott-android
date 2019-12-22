@@ -72,7 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="110dp"
         android:background="@drawable/corner_round_graybtn"
-        android:text="로그인"
+        android:text="@string/check"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="#F4F1FA"
         android:textSize="14sp"
