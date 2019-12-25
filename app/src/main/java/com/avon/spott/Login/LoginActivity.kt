@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.avon.spott.EmailLoginActivity
+import com.avon.spott.EmailLogin.EmailLoginActivity
 import com.avon.spott.R
 import com.avon.spott.SignupActivity
 import kotlinx.android.synthetic.main.activity_login.*
@@ -23,15 +23,16 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        // 프레젠터 생성하기
-        loginPresenter = LoginPresenter(this)
-
-        // 클릭 리스너 등록하기
-        setOnClickListener()
+        // 초기화
+        init()
     }
 
-    // 버튼 클릭 리스너
-    fun setOnClickListener() {
+    // 초기화
+    fun init() {
+        // 프레젠터 생성
+        loginPresenter = LoginPresenter(this)
+
+        // 버튼 클릭 리스너
         btn_emaillogin_login_a.setOnClickListener(this)
         text_signup_login_a.setOnClickListener(this)
     }
