@@ -43,7 +43,7 @@
         app:layout_constraintTop_toBottomOf="@+id/edit_certifiy_nickname_a"/>
 
     <Button
-        android:id="@+id/btn_confirm_number_a"
+        android:id="@+id/btn_confirm_nickname_a"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"

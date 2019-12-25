@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.avon.spott.NicknameActivity
+import com.avon.spott.Nickname.NicknameActivity
 import com.avon.spott.R
 import kotlinx.android.synthetic.main.activity_signup.*
 import kotlinx.android.synthetic.main.toolbar.*
