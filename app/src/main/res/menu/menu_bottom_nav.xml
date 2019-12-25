@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:contentDescription="home"
+        android:title="" />
+
+    <item
+        android:id="@+id/map"
+        android:icon="@drawable/ic_location_on_black_24dp"
+        android:contentDescription="map"
+        android:title="" />
+
+    <item
+        android:id="@+id/camera"
+        android:icon="@drawable/ic_camera_alt_grey_32dp"
+        android:enabled="false"
+        android:title="" />
+
+    <item
+        android:id="@+id/scrap"
+        android:icon="@drawable/ic_bookmark_black_24dp"
+        android:title="" />
+
+    <item
+        android:id="@+id/mypage"
+        android:icon="@drawable/ic_person_black_24dp"
+        android:title="" />
+
+</menu>

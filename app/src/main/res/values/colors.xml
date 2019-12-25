@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#073B8A</color>
-    <color name="colorPrimaryDark">#3A619C</color>
+    <color name="colorPrimary">#3A619C</color>
+    <color name="colorPrimaryDark">#073B8A</color>
     <color name="colorAccent">#DE9800</color>
 
     <!-- 화면 배경색 -->
     <color name="default_background">#FAFAFA</color>
     <color name="bg_black">#050505</color>
+    <color name="status_bar">#22272B</color>
 
     <!-- [임시] 배경회색 -->
     <color name="background_grey">#B8B8B8</color>

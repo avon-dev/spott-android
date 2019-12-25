@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PhotoActivity">
+    tools:context=".PhotoFragment">
 
     <include
         android:id="@+id/include_toolbar_photo_f"
@@ -78,7 +78,7 @@
                 tools:ignore="VectorDrawableCompat" />
 
             <ImageView
-                android:id="@+id/img_like_photo_f"
+                android:id="@+id/img_scrap_photo_f"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_marginTop="15dp"
@@ -86,7 +86,7 @@
                 android:layout_marginRight="15dp"
                 app:layout_constraintEnd_toEndOf="@+id/img_photo_photo_f"
                 app:layout_constraintTop_toTopOf="@+id/img_photo_photo_f"
-                app:srcCompat="@drawable/ic_favorite_border_black_24dp"
+                app:srcCompat="@drawable/ic_bookmark_border_black_24dp"
                 tools:ignore="VectorDrawableCompat" />
 
             <ImageView
@@ -113,6 +113,7 @@
                 tools:text="userNickName" />
 
             <ImageView
+                android:id="@+id/img_like_photo_f"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
@@ -130,6 +131,7 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
+                android:text="-"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imgbtn_camera_photo_f"
                 tools:text="100" />
