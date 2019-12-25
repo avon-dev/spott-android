@@ -23,7 +23,7 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
     }
 
     // 초기화
-    fun init() {
+    private fun init() {
         // 프레젠터 생성
         emailLoginPresenter = EmailLoginPresenter(this)
 

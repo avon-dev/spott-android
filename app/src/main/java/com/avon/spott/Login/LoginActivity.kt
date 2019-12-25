@@ -6,7 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.avon.spott.EmailLogin.EmailLoginActivity
 import com.avon.spott.R
-import com.avon.spott.SignupActivity
+import com.avon.spott.Signup.SignupActivity
 import kotlinx.android.synthetic.main.activity_login.*
 
 /*
@@ -28,7 +28,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
     }
 
     // 초기화
-    fun init() {
+    private fun init() {
         // 프레젠터 생성
         loginPresenter = LoginPresenter(this)
 
