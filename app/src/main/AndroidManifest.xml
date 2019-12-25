@@ -18,7 +18,7 @@
         <activity android:name=".EditNicknameActivity"></activity>
         <activity android:name=".CameraActivity"></activity>
         <activity android:name=".EditMyInfoActivity"></activity>
-        <activity android:name=".EmailLoginActivity"></activity>
+        <activity android:name=".EmailLogin.EmailLoginActivity"></activity>
         <activity android:name=".FindPWActivity"></activity>
         <activity android:name=".Login.LoginActivity">
             <intent-filter>

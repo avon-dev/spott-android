@@ -72,5 +72,6 @@
     <string name="text_personalinformation_login_a">개인정보수집 이용약관</string>
     <string name="text_privacyinfo3_login_a">에 동의합니다</string>
 
+    <string name="text_title_emaillogin">이메일 로그인</string>
 
 </resources>
