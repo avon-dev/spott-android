@@ -6,10 +6,12 @@ interface EmailLoginContract {
     interface View:BaseView<Presenter> {
         fun showMainUi()
         fun showFindPWUi()
+        fun navigateUp()
     }
 
     interface Presenter {
         fun openMain()
         fun openFindPW()
+        fun navigateUp()
     }
 }

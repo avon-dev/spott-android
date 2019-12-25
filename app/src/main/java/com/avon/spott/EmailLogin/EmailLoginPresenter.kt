@@ -13,4 +13,8 @@ class EmailLoginPresenter(val emailLoginView: EmailLoginContract.View) : EmailLo
     override fun openFindPW() {
         emailLoginView.showFindPWUi()
     }
+
+    override fun navigateUp() {
+        emailLoginView.navigateUp()
+    }
 }

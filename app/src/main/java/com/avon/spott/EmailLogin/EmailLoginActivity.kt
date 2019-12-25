@@ -48,10 +48,15 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
         startActivity(intent)
     }
 
+    // 뒤로가기
+    override fun navigateUp() {
+        onBackPressed()
+    }
+
     override fun onClick(v: View?) {
         when (v?.id) {
             // 뒤로가기
-            R.id.img_back_toolbar -> { onBackPressed() }
+            R.id.img_back_toolbar -> { presenter.navigateUp() }
             R.id.text_findpw_emailogin_a -> { presenter.openFindPW() }
             R.id.btn_login_emailogin_a -> { presenter.openMain() }
         }
