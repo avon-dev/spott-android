@@ -8,42 +8,29 @@
 
     <!-- id : 위젯_이름_위치_구분-->
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/text_title_editmyinfo_a"
-        style="@style/text_title"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:text="@string/text_title_editmyinfo_a"
-        app:layout_constraintBottom_toBottomOf="@id/imgbtn_back_editmyinfo_a"
+    <include
+        android:id="@+id/include_toolbar_editmyinfo_a"
+        layout="@layout/toolbar"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/imgbtn_back_editmyinfo_a" />
-
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/imgbtn_back_editmyinfo_a"
-        style="@style/arrow_left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleType="fitCenter"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <FrameLayout
         android:id="@+id/frame_profile_editmyinfo_a"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        app:layout_constraintEnd_toEndOf="@+id/text_title_editmyinfo_a"
-        app:layout_constraintStart_toStartOf="@+id/text_title_editmyinfo_a"
-        app:layout_constraintTop_toBottomOf="@id/text_title_editmyinfo_a">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/include_toolbar_editmyinfo_a">
 
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:layout_width="match_parent"
+        <ImageButton
+            android:layout_width="100dp"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:background="@color/default_background"
             android:scaleType="fitCenter"
-            android:src="@drawable/baseline_face_24" />
+            app:srcCompat="@drawable/baseline_face_24"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
@@ -55,23 +42,8 @@
             android:paddingRight="5dp"
             android:text="@string/text_editing"
             android:textColor="#FFF"
-            android:textSize="14dp" />
+            android:textSize="14sp"/>
     </FrameLayout>
-
-    <!--<androidx.appcompat.widget.AppCompatButton-->
-    <!--android:id="@+id/text_nickname_editmyinfo_a"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginTop="20dp"-->
-    <!--android:background="@color/default_background"-->
-    <!--android:drawableRight="@drawable/baseline_mail_24"-->
-    <!--android:drawablePadding="10dp"-->
-    <!--android:hint="@string/hint_nickname"-->
-    <!--android:paddingLeft="30dp"-->
-    <!--android:stateListAnimator="@null"-->
-    <!--app:layout_constraintEnd_toEndOf="parent"-->
-    <!--app:layout_constraintStart_toStartOf="parent"-->
-    <!--app:layout_constraintTop_toBottomOf="@id/frame_profile_editmyinfo_a" />-->
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/text_nickname_editmyinfo_a"
@@ -90,7 +62,7 @@
         android:background="@color/default_background"
         android:paddingLeft="10dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/baseline_edit_24"
+        app:srcCompat="@drawable/baseline_edit_24"
         app:layout_constraintBottom_toBottomOf="@id/text_nickname_editmyinfo_a"
         app:layout_constraintStart_toEndOf="@id/text_nickname_editmyinfo_a"
         app:layout_constraintTop_toTopOf="@id/text_nickname_editmyinfo_a" />

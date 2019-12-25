@@ -25,13 +25,14 @@
         <item name="android:textStyle">bold</item>
         <item name="android:gravity">center</item>
     </style>
-
+    
     <!-- blank / 공백 -->
     <style name="blank">
         <item name="android:minHeight">30dp</item>
         <item name="android:background">#E0E0E0</item>
         <item name="android:layout_marginTop">20dp</item>
     </style>
+
 
 
 </resources>

@@ -6,6 +6,7 @@
 
     <!-- 화면 배경색 -->
     <color name="default_background">#FAFAFA</color>
+    <color name="bg_black">#050505</color>
 
     <!-- [임시] 배경회색 -->
     <color name="background_grey">#B8B8B8</color>

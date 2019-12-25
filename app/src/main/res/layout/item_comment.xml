@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <ImageButton
+        android:id="@+id/imgbtn_profile_comment_i"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:background="@color/default_background"
+        android:scaleType="fitCenter"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_face_24"/>
+
+    <TextView
+        android:id="@+id/text_nickname_comment_i"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:gravity="center"
+        android:text="userNickName"
+        app:layout_constraintBottom_toBottomOf="@id/imgbtn_profile_comment_i"
+        app:layout_constraintStart_toEndOf="@id/imgbtn_profile_comment_i"
+        app:layout_constraintTop_toTopOf="@id/imgbtn_profile_comment_i"
+        tools:text="userNickName"/>
+
+    <ImageButton
+        android:id="@+id/imgbtn_edit_comment_i"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:adjustViewBounds="true"
+        android:background="@color/default_background"
+        app:layout_constraintBottom_toBottomOf="@id/text_nickname_comment_i"
+        app:layout_constraintStart_toEndOf="@id/text_nickname_comment_i"
+        app:layout_constraintTop_toTopOf="@id/imgbtn_profile_comment_i"
+        app:srcCompat="@drawable/baseline_edit_24"/>
+
+    <ImageButton
+        android:id="@+id/imgbtn_remove_comment_i"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:adjustViewBounds="true"
+        android:background="@color/default_background"
+        app:layout_constraintBottom_toBottomOf="@id/imgbtn_edit_comment_i"
+        app:layout_constraintStart_toEndOf="@id/imgbtn_edit_comment_i"
+        app:layout_constraintTop_toTopOf="@id/imgbtn_edit_comment_i"
+        app:srcCompat="@drawable/baseline_delete_24"/>
+
+    <TextView
+        android:id="@+id/text_content_comment_i"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="content 내용 \n \n#댓글내용"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/imgbtn_profile_comment_i"
+        app:layout_constraintTop_toBottomOf="@id/imgbtn_profile_comment_i"
+        tools:text="content 내용 \n \n#댓글내용"/>
+
+    <TextView
+        android:id="@+id/text_date_comment_i"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="2019년 12월 32일"
+        app:layout_constraintStart_toStartOf="@id/imgbtn_profile_comment_i"
+        app:layout_constraintTop_toBottomOf="@id/text_content_comment_i"
+        tools:text="2019년 12월 32일"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
