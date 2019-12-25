@@ -19,7 +19,7 @@
         <activity android:name=".CameraActivity"></activity>
         <activity android:name=".EditMyInfoActivity"></activity>
         <activity android:name=".EmailLogin.EmailLoginActivity"></activity>
-        <activity android:name=".FindPWActivity"></activity>
+        <activity android:name=".FindPW.FindPWActivity"></activity>
         <activity android:name=".Login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

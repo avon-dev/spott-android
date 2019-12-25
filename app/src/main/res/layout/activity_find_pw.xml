@@ -4,7 +4,7 @@
                                                    xmlns:tools="http://schemas.android.com/tools"
                                                    android:layout_width="match_parent"
                                                    android:layout_height="match_parent"
-                                                   tools:context=".FindPWActivity">
+                                                   tools:context=".FindPW.FindPWActivity">
 
     <include
         android:id="@+id/include_toolbar_findpw_a"
@@ -49,10 +49,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:background="@drawable/corner_round_graybtn"
+        android:text="@string/next"
         android:textColor="#FFFFFF"
         android:textSize="12dp"
         app:layout_constraintEnd_toEndOf="@id/edit_email_findpw_a"
         app:layout_constraintStart_toStartOf="@id/edit_email_findpw_a"
-        app:layout_constraintTop_toBottomOf="@+id/edit_email_findpw_a"/>
+        app:layout_constraintTop_toBottomOf="@+id/edit_email_findpw_a" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

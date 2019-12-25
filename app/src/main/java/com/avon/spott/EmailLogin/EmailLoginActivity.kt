@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.avon.spott.FindPWActivity
+import com.avon.spott.FindPW.FindPWActivity
 import com.avon.spott.MainActivity
 import com.avon.spott.R
 import kotlinx.android.synthetic.main.activity_email_login.*
