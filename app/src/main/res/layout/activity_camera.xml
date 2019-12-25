@@ -34,7 +34,7 @@
     <ImageButton
         android:id="@+id/imgbtn_reverse_camera_a"
         android:layout_width="wrap_content"
-        android:layout_height="dp"
+        android:layout_height="0dp"
         android:adjustViewBounds="true"
         android:background="@null"
         android:tint="@color/default_background"

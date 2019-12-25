@@ -12,42 +12,29 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+
         <activity android:name=".AddPhotoActivity"></activity>
-
-        <activity android:name=".EditPWActivity">
-        </activity>
-        <activity android:name=".EditNicknameActivity">
-        </activity>
-        <activity android:name=".CameraActivity">
-        </activity>
-
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_geo_key"/>
-
-        <activity android:name=".MapActivity">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
-
-        <activity android:name=".MypageActivity" />
-        <activity android:name=".PhotoMapActivity" />
-        <activity android:name=".PhotoActivity" />
-        <activity android:name=".EditMyInfoActivity" />
+        <activity android:name=".EditPWActivity"></activity>
+        <activity android:name=".EditNicknameActivity"></activity>
+        <activity android:name=".CameraActivity"></activity>
+        <activity android:name=".EditMyInfoActivity"></activity>
+        <activity android:name=".EmailLoginActivity"></activity>
+        <activity android:name=".FindPWActivity"></activity>
+        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".NicknameActivity"></activity>
+        <activity android:name=".NumberActivity"></activity>
+        <activity android:name=".SignupActivity"></activity>
         <activity android:name=".MainActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_geo_key"/>
 
     </application>
 
