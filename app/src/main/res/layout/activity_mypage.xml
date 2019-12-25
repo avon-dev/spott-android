@@ -27,37 +27,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.tabs.TabLayout
 
-        android:id="@+id/tab_photomap_f"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include3"
-        app:tabIndicatorColor="@color/colorPrimary">
+        app:layout_constraintTop_toBottomOf="@+id/include3">
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_grid_on_black_24dp"/>
+        <ImageButton
+            android:id="@+id/imgbtn_grid_mypage_f"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/btn_left_mypage_f"
+            app:srcCompat="@drawable/ic_grid_on_selector"
+            android:layout_weight="1"/>
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_map_black_24dp"/>
-    </com.google.android.material.tabs.TabLayout>
+        <ImageButton
+            android:id="@+id/imgbtn_map_mypage_f"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/btn_right_mypage_f"
+            app:srcCompat="@drawable/ic_map_selector"
+            android:layout_weight="1"/>
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/container_photomap_f"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tab_photomap_f" >
-
-    </androidx.viewpager.widget.ViewPager>
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

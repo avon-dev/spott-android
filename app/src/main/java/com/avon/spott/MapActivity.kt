@@ -3,6 +3,7 @@ package com.avon.spott
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_map.*
@@ -19,6 +20,10 @@ class MapActivity : AppCompatActivity() {
             println("내 위치로 이동!")
             val nextIntent = Intent(this, PhotoActivity::class.java)
             startActivity(nextIntent)
+        }
+
+        btn_find_map_f.setOnClickListener {
+            Toast.makeText(this, "이 지역에서 찾기", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -55,19 +60,26 @@ class MapActivity : AppCompatActivity() {
                             BottomSheetBehavior.STATE_EXPANDED -> {
                                 fragment.img_updown_maplist_f.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp)
                                 imgbtn_mylocation_map_f.isEnabled =false
+                                btn_find_map_f.isEnabled =false
+
                             }
                             BottomSheetBehavior.STATE_COLLAPSED -> {
                                 fragment.img_updown_maplist_f.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp)
                                 imgbtn_mylocation_map_f.isEnabled=true
+                                btn_find_map_f.isEnabled =true
                             }
                             BottomSheetBehavior.STATE_DRAGGING -> {
                             }
                             BottomSheetBehavior.STATE_SETTLING -> {
                             }
-                        }            }
+                        }
+                    }
 
                     override fun onSlide(bottomSheet: View, slideOffset: Float) {
                         // React to dragging events
+
+                        // bottomsheet을 올리면 '이 지역에서 찾기'버튼이 비활성화됨
+//                        btn_find_map_f.isEnabled =false
                     }
                 })
 
