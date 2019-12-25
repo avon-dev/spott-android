@@ -28,16 +28,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-<<<<<<< HEAD
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:orientation="horizontal"
-=======
         android:id="@+id/tab_photomap_f"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/include_toolbar_mypage_f"
@@ -46,39 +42,39 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:icon="@drawable/ic_grid_on_black_24dp"/>
+            android:icon="@drawable/ic_grid_on_primary_24dp"/>
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:icon="@drawable/ic_map_black_24dp"/>
-    </com.google.android.material.tabs.TabLayout>
+            android:icon="@drawable/ic_map_primary_24dp"/>
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/container_photomap_f"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
->>>>>>> master
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include3">
 
-        <ImageButton
-            android:id="@+id/imgbtn_grid_mypage_f"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="@drawable/btn_left_mypage_f"
-            app:srcCompat="@drawable/ic_grid_on_selector"
-            android:layout_weight="1"/>
+<!--    <androidx.viewpager.widget.ViewPager-->
+<!--        android:id="@+id/container_photomap_f"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
 
-        <ImageButton
-            android:id="@+id/imgbtn_map_mypage_f"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="@drawable/btn_right_mypage_f"
-            app:srcCompat="@drawable/ic_map_selector"
-            android:layout_weight="1"/>
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/include_toolbar_mypage_f"/>-->
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/imgbtn_grid_mypage_f"-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="fill_parent"-->
+<!--            android:background="@drawable/btn_left_mypage_f"-->
+<!--            app:srcCompat="@drawable/ic_grid_on_selector"-->
+<!--            android:layout_weight="1"/>-->
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/imgbtn_map_mypage_f"-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="fill_parent"-->
+<!--            android:background="@drawable/btn_right_mypage_f"-->
+<!--            app:srcCompat="@drawable/ic_map_selector"-->
+<!--            android:layout_weight="1"/>-->
 
     </LinearLayout>
 
