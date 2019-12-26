@@ -24,7 +24,7 @@
         <activity android:name=".NicknameActivity"></activity>
         <activity android:name=".NumberActivity"></activity>
         <activity android:name=".SignupActivity"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

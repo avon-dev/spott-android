@@ -72,5 +72,8 @@
     <string name="text_personalinformation_login_a">개인정보수집 이용약관</string>
     <string name="text_privacyinfo3_login_a">에 동의합니다</string>
 
+    <string name="map">지도</string>
+    <string name="comment">댓글</string>
+
 
 </resources>

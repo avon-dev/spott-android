@@ -6,7 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
+import com.avon.spott.main.MainActivity
+import com.avon.spott.main.controlToobar
+import kotlinx.android.synthetic.main.fragment_comment.view.*
+import kotlinx.android.synthetic.main.toolbar.view.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -26,10 +31,21 @@ class CommentFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_comment, container, false)
+
+        view.text_nickname_comment_f.setOnClickListener {
+           findNavController().navigate(R.id.action_commentFragment_to_userFragment)
+        }
+
         return view
 //        return inflater.inflate(R.layout.fragment_comment, container, false)
     }
 
+    override fun onStart() {
+        super.onStart()
+        controlToobar(View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.GONE, View.GONE, View.GONE)
+        MainActivity.mToolbar.text_title_toolbar.text = getString(R.string.comment)
+        MainActivity.mToolbar.visibility = View.VISIBLE
+    }
 
 
 }

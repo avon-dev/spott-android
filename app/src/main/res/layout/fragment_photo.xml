@@ -6,13 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".PhotoFragment">
 
-    <include
-        android:id="@+id/include_toolbar_photo_f"
-        layout="@layout/toolbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
 
     <ScrollView
         android:layout_width="0dp"
@@ -21,7 +14,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include_toolbar_photo_f">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
