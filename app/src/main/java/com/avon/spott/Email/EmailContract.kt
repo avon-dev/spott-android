@@ -1,15 +1,17 @@
-package com.avon.spott.Signup
+package com.avon.spott.Email
 
 import com.avon.spott.BaseView
 
-interface SignupContract {
+interface EmailContract {
     interface View:BaseView<Presenter> {
-        fun showNicknameUi()
+        fun showNumberUi()
         fun navigateUp()
+        fun sendEmail()
     }
 
     interface Presenter {
-        fun openNickname()
+        fun openNumber()
         fun navigateUp()
+        fun send()
     }
 }
