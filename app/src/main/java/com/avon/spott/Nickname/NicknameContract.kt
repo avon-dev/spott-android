@@ -5,7 +5,7 @@ import com.avon.spott.BaseView
 interface NicknameContract {
     interface View:BaseView<Presenter> {
         fun navigateUp()
-        fun showMainUI()
+        fun showMainUi()
     }
 
     interface Presenter {

@@ -34,7 +34,7 @@ class PasswordActivity : AppCompatActivity(), PasswordContract.View, View.OnClic
         onBackPressed()
     }
 
-    override fun showNicknameUi() {
+    override fun showNickname() {
         val intent = Intent(this@PasswordActivity, NicknameActivity::class.java)
         startActivity(intent)
     }

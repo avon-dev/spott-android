@@ -32,7 +32,7 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
 
     override fun navigateUp() { onBackPressed() }
 
-    override fun showMainUI() {
+    override fun showMainUi() {
         val intent = Intent(this@NicknameActivity, MainActivity::class.java)
         startActivity(intent)
     }

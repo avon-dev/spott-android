@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.avon.spott.Number.NumberActivity
+import com.avon.spott.Password.PasswordActivity
 import com.avon.spott.R
 import kotlinx.android.synthetic.main.activity_email.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -37,8 +37,8 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
     }
 
     // 인증번호 입력으로 이동
-    override fun showNumberUi() {
-        val intent = Intent(this@EmailActivity, NumberActivity::class.java)
+    override fun showPasswordUi() {
+        val intent = Intent(this@EmailActivity, PasswordActivity::class.java)
         startActivity(intent)
     }
 
@@ -56,7 +56,7 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
     override fun onClick(v: View?) {
         when(v?.id) {
             R.id.img_back_toolbar -> { presenter.navigateUp() }
-            R.id.btn_confirm_email_a -> { presenter.openNumber() }
+            R.id.btn_confirm_email_a -> { presenter.openPassword() }
             R.id.btn_send_email_a -> { presenter.send() }
         }
     }

@@ -6,7 +6,7 @@ interface PasswordContract {
 
     interface View: BaseView<Presenter> {
         fun navigateUp()
-        fun showNicknameUi()
+        fun showNickname()
     }
 
     interface Presenter {

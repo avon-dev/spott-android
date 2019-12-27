@@ -4,7 +4,7 @@ class EmailPresenter(val signUpView: EmailContract.View) : EmailContract.Present
 
     init { signUpView.presenter = this }
 
-    override fun openNumber() { signUpView.showNumberUi() }
+    override fun openPassword() { signUpView.showPasswordUi() }
 
     override fun navigateUp() { signUpView.navigateUp() }
 

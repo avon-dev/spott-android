@@ -5,5 +5,5 @@ class NicknamePresenter(val nicknameView: NicknameContract.View) : NicknameContr
 
     override fun navigateUp() { nicknameView.navigateUp() }
 
-    override fun openMain() { nicknameView.showMainUI() }
+    override fun openMain() { nicknameView.showMainUi() }
 }

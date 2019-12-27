@@ -10,6 +10,6 @@ class PasswordPresenter (val numberView:PasswordContract.View) : PasswordContrac
     }
 
     override fun openNickname() {
-        numberView.showNicknameUi()
+        numberView.showNickname()
     }
 }
