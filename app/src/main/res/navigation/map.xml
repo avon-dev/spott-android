@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/mapFragment"
-        android:name="com.avon.spott.MapFragment"
+        android:name="com.avon.spott.Map.MapFragment"
         android:label="fragment_map"
         tools:layout="@layout/fragment_map" >
         <action

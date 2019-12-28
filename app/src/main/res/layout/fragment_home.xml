@@ -4,7 +4,7 @@
                                                    xmlns:tools="http://schemas.android.com/tools"
                                                    android:layout_width="match_parent"
                                                    android:layout_height="match_parent"
-                                                   tools:context=".HomeFragment">
+                                                   tools:context=".Home.HomeFragment">
 
     <EditText
         android:id="@+id/eidt_search_home_f"
@@ -51,21 +51,20 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eidt_search_home_f" />
 
-    <Button
-        android:id="@+id/btn_photo_home_f"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="photo"
-        app:layout_constraintEnd_toEndOf="@+id/recycler_home_f"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="@+id/recycler_home_f"
-        app:layout_constraintTop_toTopOf="@+id/recycler_home_f" />
+<!--    <Button-->
+<!--        android:id="@+id/btn_photo_home_f"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:text="photo"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/recycler_home_f"-->
+<!--        app:layout_constraintHorizontal_bias="0.498"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/recycler_home_f"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/recycler_home_f" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

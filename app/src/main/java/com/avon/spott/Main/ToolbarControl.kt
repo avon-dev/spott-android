@@ -1,11 +1,11 @@
-package com.avon.spott.main
+package com.avon.spott.Main
 
-import android.view.View
-import androidx.constraintlayout.widget.ConstraintLayout
-import com.avon.spott.main.MainActivity.Companion.mToolbar
+import com.avon.spott.Main.MainActivity.Companion.mToolbar
 import kotlinx.android.synthetic.main.toolbar.view.*
 
+
 fun controlToobar(back:Int, profile:Int, name:Int, title:Int, more:Int, menu:Int, noti:Int){
+
     mToolbar.img_back_toolbar.visibility = back
     MainActivity.mToolbar.img_profile_toolbar.visibility=profile
     MainActivity.mToolbar.text_name_toolbar.visibility=name

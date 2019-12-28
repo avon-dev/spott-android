@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PhotoFragment">
+    tools:context=".Photo.PhotoFragment">
 
 
     <ScrollView
@@ -28,9 +28,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_launcher_background"
-                tools:ignore="VectorDrawableCompat" />
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <ImageButton
                 android:id="@+id/imgbtn_map_photo_f"
@@ -39,7 +37,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginLeft="24dp"
                 android:layout_marginTop="190dp"
-                android:background="@drawable/layout_circlebutton"
+                android:background="@drawable/btn_circle"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/img_photo_photo_f"
                 app:srcCompat="@drawable/ic_map_white_32dp"
@@ -52,7 +50,7 @@
                 android:layout_marginTop="190dp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginRight="24dp"
-                android:background="@drawable/layout_circlebutton"
+                android:background="@drawable/btn_circle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/img_photo_photo_f"
                 app:srcCompat="@drawable/ic_camera_alt_white_32dp"
@@ -76,6 +74,7 @@
                 android:layout_height="35dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="15dp"
+                android:tint="@color/trans_grey"
                 android:layout_marginRight="15dp"
                 app:layout_constraintEnd_toEndOf="@+id/img_photo_photo_f"
                 app:layout_constraintTop_toTopOf="@+id/img_photo_photo_f"

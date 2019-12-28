@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PhotoMapFragment">
+    tools:context=".Photomap.PhotoMapFragment">
 
 
     <fragment
@@ -21,7 +21,7 @@
 
     <ImageButton
         android:id="@+id/imgbtn_mylocation_photomap_f"
-        android:background="@drawable/layout_mapbutton_icon"
+        android:background="@drawable/btn_map_icon"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginTop="12dp"
@@ -39,7 +39,7 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="12dp"
         android:layout_marginRight="12dp"
-        android:background="@drawable/layout_mapbutton_icon"
+        android:background="@drawable/btn_map_icon"
         app:layout_constraintEnd_toEndOf="@+id/frag_googlemap_photomap_f"
         app:layout_constraintTop_toBottomOf="@+id/imgbtn_mylocation_photomap_f"
         app:srcCompat="@drawable/ic_location_on_black_24dp"

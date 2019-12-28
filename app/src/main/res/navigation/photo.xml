@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/photoFragment"
-        android:name="com.avon.spott.PhotoFragment"
+        android:name="com.avon.spott.Photo.PhotoFragment"
         android:label="fragment_photo"
         tools:layout="@layout/fragment_photo" >
         <action
@@ -15,7 +15,7 @@
             app:destination="@id/userFragment" />
         <action
             android:id="@+id/action_photoFragment_to_commentFragment"
-            app:destination="@id/commentFragment" />
+            app:destination="@id/commentFragment"/>
         <action
             android:id="@+id/action_photoFragment_to_photomapFragment"
             app:destination="@id/photomapFragment" />
@@ -23,13 +23,13 @@
 
     <fragment
         android:id="@+id/photomapFragment"
-        android:name="com.avon.spott.PhotoMapFragment"
+        android:name="com.avon.spott.Photomap.PhotoMapFragment"
         android:label="fragment_photomap"
         tools:layout="@layout/fragment_photomap" />
 
     <fragment
         android:id="@+id/commentFragment"
-        android:name="com.avon.spott.CommentFragment"
+        android:name="com.avon.spott.Comment.CommentFragment"
         android:label="fragment_comment"
         tools:layout="@layout/fragment_comment" >
         <action
@@ -39,7 +39,7 @@
 
     <fragment
         android:id="@+id/userFragment"
-        android:name="com.avon.spott.UserFragment"
+        android:name="com.avon.spott.User.UserFragment"
         android:label="fragment_user"
         tools:layout="@layout/fragment_mypage" >
         <action

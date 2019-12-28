@@ -1,4 +1,4 @@
-package com.avon.spott.main
+package com.avon.spott.Main
 
 import android.content.Intent
 import android.util.SparseArray
@@ -10,6 +10,10 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.avon.spott.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_map_list.*
+import kotlinx.android.synthetic.main.fragment_mypage.*
+import kotlinx.android.synthetic.main.fragment_scrap.*
 
 fun BottomNavigationView.setupWithNavController(navGraphIds: List<Int>, fragmentManager: FragmentManager,
                                                 containerId: Int, intent: Intent) {
@@ -144,10 +148,16 @@ private fun BottomNavigationView.setupItemReselected(graphIdToTagMap: SparseArra
 
         }else{
 
-            //현재 보고있는 프래그먼트가 첫번째 프래그먼트면
-//            if(selectedFragment.tag== "bottomNavigation#2"){ //스크롤있는 스크랩 플래그먼트면 스크롤업
-//                selectedFragment.scollview.smoothScrollTo(0,0)
-//            }
+            //리사이클러뷰있는 스크랩 플래그먼트면 리사이클러뷰 스크롤 UP, (아이템 없어도 터지지 않음.)
+            if(selectedFragment.tag== "bottomNavigation#0"){
+                selectedFragment.recycler_home_f.smoothScrollToPosition(0)
+            }else if(selectedFragment.tag== "bottomNavigation#1"){
+                selectedFragment.recycler_map_f.smoothScrollToPosition(0)
+            }else if(selectedFragment.tag == "bottomNavigation#2"){
+                selectedFragment.recycler_scrap_f.smoothScrollToPosition(0)
+            }else if(selectedFragment.tag == "bottomNavigation#3"){
+                selectedFragment.recycler_grid_mypage_f.smoothScrollToPosition(0)
+            }
 
         }
 

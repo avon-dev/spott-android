@@ -8,9 +8,15 @@
 
     <fragment
         android:id="@+id/scrapFragment"
-        android:name="com.avon.spott.ScrapFragment"
+        android:name="com.avon.spott.Scrap.ScrapFragment"
         android:label="fragment_scrap"
-        tools:layout="@layout/fragment_scrap" />
+        tools:layout="@layout/fragment_scrap" >
+        <action
+            android:id="@+id/action_scrapFragment_to_photo"
+            app:destination="@id/photo" />
+    </fragment>
+
+    <include app:graph="@navigation/photo" />
 
 
 </navigation>
