@@ -21,6 +21,7 @@
         android:layout_marginTop="80dp"
         android:background="@drawable/corner_round_whitetext"
         android:hint="@string/email"
+        android:inputType="textEmailAddress"
         android:padding="15dp"
         android:textSize="12dp"
         app:layout_constraintEnd_toStartOf="@+id/btn_send_email_a"
@@ -35,7 +36,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginEnd="30dp"
         android:layout_marginRight="30dp"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/corner_round_primary"
         android:text="@string/send"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="@+id/edit_email_email_a"
@@ -52,8 +53,10 @@
         android:text="@string/text_warnmsg1_signup_a"
         android:textColor="#EB685B"
         android:textSize="12dp"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@+id/edit_email_email_a"
-        app:layout_constraintTop_toBottomOf="@+id/edit_email_email_a" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_email_email_a"
+        tools:visibility="visible" />
 
     <EditText
         android:id="@+id/edit_number_email_a"
@@ -88,6 +91,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:background="@drawable/corner_round_graybtn"
+        android:clickable="false"
         android:text="@string/next"
         android:textColor="#ffffff"
         android:textSize="12dp"

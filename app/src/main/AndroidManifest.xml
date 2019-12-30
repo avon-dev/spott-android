@@ -28,8 +28,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".Nickname.NicknameActivity"></activity>
-        <activity android:name=".NumberActivity"></activity>
-        <activity android:name=".Signup.SignupActivity"></activity>
+        <activity android:name=".Password.PasswordActivity"></activity>
+        <activity android:name=".Email.EmailActivity"></activity>
         <activity android:name=".MainActivity"></activity>
 
         <meta-data

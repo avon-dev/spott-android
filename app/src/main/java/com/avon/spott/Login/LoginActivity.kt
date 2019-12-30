@@ -2,11 +2,17 @@ package com.avon.spott.Login
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Spannable
+import android.text.Spanned
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.avon.spott.Email.EmailActivity
 import com.avon.spott.EmailLogin.EmailLoginActivity
+import com.avon.spott.MainActivity
 import com.avon.spott.R
-import com.avon.spott.Signup.SignupActivity
 import kotlinx.android.synthetic.main.activity_login.*
 
 /*
@@ -35,6 +41,28 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         // 버튼 클릭 리스너
         btn_emaillogin_login_a.setOnClickListener(this)
         text_signup_login_a.setOnClickListener(this)
+
+        val span: Spannable = text_privacyinfo_login_a.text as Spannable
+        text_privacyinfo_login_a.movementMethod = LinkMovementMethod.getInstance()
+
+        val privacy:String = text_privacyinfo_login_a.text.toString()
+
+        span.setSpan(object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                Intent(this@LoginActivity, MainActivity::class.java).let { startActivity(it) }
+            }
+        }, 13, 17, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        text_privacyinfo_login_a.movementMethod = LinkMovementMethod.getInstance()
+
+        val span2: Spannable = text_privacyinfo_login_a.text as Spannable
+        text_privacyinfo_login_a.movementMethod = LinkMovementMethod.getInstance()
+
+        span.setSpan(object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                Intent(this@LoginActivity, EmailLoginActivity::class.java).let { startActivity(it) }
+            }
+        }, 20, 31, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        text_privacyinfo_login_a.movementMethod = LinkMovementMethod.getInstance()
     }
 
     // 이메일로그인으로 이동하기
@@ -45,15 +73,19 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
 
     // 회원가입으로 이동하기
     override fun showSignupUi() {
-        val intent = Intent(this@LoginActivity, SignupActivity::class.java)
+        val intent = Intent(this@LoginActivity, EmailActivity::class.java)
         startActivity(intent)
     }
 
     // 버튼에 따른 클릭이벤트
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.btn_emaillogin_login_a -> { presenter.openEmailLogin() }
-            R.id.text_signup_login_a -> { presenter.openSignup() }
+            R.id.btn_emaillogin_login_a -> {
+                presenter.openEmailLogin()
+            }
+            R.id.text_signup_login_a -> {
+                presenter.openSignup()
+            }
         }
     }
 }

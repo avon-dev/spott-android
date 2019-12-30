@@ -1,6 +1,9 @@
 package com.avon.spott.Email
 
+import com.avon.spott.Utils.ValidatorModel
+
 class EmailPresenter(val signUpView: EmailContract.View) : EmailContract.Presenter {
+
 
     init { signUpView.presenter = this }
 
@@ -8,5 +11,11 @@ class EmailPresenter(val signUpView: EmailContract.View) : EmailContract.Present
 
     override fun navigateUp() { signUpView.navigateUp() }
 
-    override fun send() { signUpView.sendEmail() }
+    override fun isEmail(email: String) {
+        signUpView.isEmail(ValidatorModel.validEmail(email))
+    }
+
+    override fun sendEmail() {
+        signUpView.sendEmail()
+    }
 }

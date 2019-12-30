@@ -73,52 +73,55 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
+        android:bufferType="spannable"
         android:text="@string/text_privacyinfo_login_a"
+        android:textColorHighlight="@color/default_background"
         android:textSize="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/btn_googlelogin_login_a"/>
+        app:layout_constraintEnd_toEndOf="@+id/btn_googlelogin_login_a"
+        app:layout_constraintStart_toStartOf="@id/btn_googlelogin_login_a" />
 
-    <TextView
-        android:id="@+id/text_termsandconditions_login_a"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/text_termsandconditions_login_a"
-        android:textColor="#0000f0"
-        android:textSize="12dp"
-        app:layout_constraintStart_toEndOf="@id/text_privacyinfo_login_a"
-        app:layout_constraintTop_toTopOf="@id/text_privacyinfo_login_a"
-        />
+<!--    <TextView-->
+<!--        android:id="@+id/text_termsandconditions_login_a"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/text_termsandconditions_login_a"-->
+<!--        android:textColor="#0000f0"-->
+<!--        android:textSize="12dp"-->
+<!--        app:layout_constraintStart_toEndOf="@id/text_privacyinfo_login_a"-->
+<!--        app:layout_constraintTop_toTopOf="@id/text_privacyinfo_login_a"-->
+<!--        />-->
 
-    <TextView
-        android:id="@+id/text_privacyinfo2_login_a"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/text_privacyinfo2_login_a"
-        android:textSize="12dp"
-        app:layout_constraintStart_toEndOf="@id/text_termsandconditions_login_a"
-        app:layout_constraintTop_toTopOf="@id/text_termsandconditions_login_a"
-        />
+<!--    <TextView-->
+<!--        android:id="@+id/text_privacyinfo2_login_a"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/text_privacyinfo2_login_a"-->
+<!--        android:textSize="12dp"-->
+<!--        app:layout_constraintStart_toEndOf="@id/text_termsandconditions_login_a"-->
+<!--        app:layout_constraintTop_toTopOf="@id/text_termsandconditions_login_a"-->
+<!--        />-->
 
-    <TextView
-        android:id="@+id/text_personalinformation_login_a"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/text_personalinformation_login_a"
-        android:textColor="#0000f0"
-        android:textSize="12dp"
-        app:layout_constraintStart_toEndOf="@id/text_privacyinfo2_login_a"
-        app:layout_constraintTop_toTopOf="@id/text_privacyinfo2_login_a"
-        />
+<!--    <TextView-->
+<!--        android:id="@+id/text_personalinformation_login_a"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/text_personalinformation_login_a"-->
+<!--        android:textColor="#0000f0"-->
+<!--        android:textSize="12dp"-->
+<!--        app:layout_constraintStart_toEndOf="@id/text_privacyinfo2_login_a"-->
+<!--        app:layout_constraintTop_toTopOf="@id/text_privacyinfo2_login_a"-->
+<!--        />-->
 
-    <TextView
-        android:id="@+id/text_privacyinfo3_login_a"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/text_privacyinfo3_login_a"
-        android:textSize="12dp"
-        app:layout_constraintStart_toEndOf="@id/text_personalinformation_login_a"
-        app:layout_constraintTop_toTopOf="@id/text_personalinformation_login_a"
-        />
+<!--    <TextView-->
+<!--        android:id="@+id/text_privacyinfo3_login_a"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/text_privacyinfo3_login_a"-->
+<!--        android:textSize="12dp"-->
+<!--        app:layout_constraintStart_toEndOf="@id/text_personalinformation_login_a"-->
+<!--        app:layout_constraintTop_toTopOf="@id/text_personalinformation_login_a"-->
+<!--        />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

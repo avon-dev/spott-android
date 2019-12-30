@@ -63,15 +63,21 @@
     <string name="text_warnmsg_findpw_a">이메일 형식을 확인해주세요</string>
     <string name="text_warnmessage_number_a">이미 사용하고 있는 닉네임입니다</string>
 
+    <string name="certification_number">인증번호</string>
     <string name="nickname">닉네임</string>
     <string name="select_delete">선택 삭제</string>
-    
-    <string name="text_privacyinfo_login_a">회원가입 시 Spott의 </string>
-    <string name="text_termsandconditions_login_a">이용약관</string>
-    <string name="text_privacyinfo2_login_a">및</string>
-    <string name="text_personalinformation_login_a">개인정보수집 이용약관</string>
-    <string name="text_privacyinfo3_login_a">에 동의합니다</string>
+
+    <string name="text_privacyinfo_login_a">회원가입시 Spott의 이용약관 및 개인정보수집 이용약관에 동의합니다</string>
+<!--    <string name="text_privacyinfo_login_a">회원가입 시 Spott의 </string>-->
+<!--    <string name="text_termsandconditions_login_a">이용약관</string>-->
+<!--    <string name="text_privacyinfo2_login_a">및</string>-->
+<!--    <string name="text_personalinformation_login_a">개인정보수집 이용약관</string>-->
+<!--    <string name="text_privacyinfo3_login_a">에 동의합니다</string>-->
 
     <string name="text_title_emaillogin">이메일 로그인</string>
+
+    <string name="send">전송</string>
+    <string name="resend">재전송</string>
+    <string name="certification_message">이메일 주소로 전송된 인증번호를 입력해주세요. </string>
 
 </resources>
