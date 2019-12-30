@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraint_sharing_alarm_i"
     android:layout_width="match_parent"
-    android:layout_height="60dp">
+    android:layout_height="60dp"
+    android:layout_marginBottom="5dp">
 
     <ImageView
         android:id="@+id/img_sharing_alarm_i"
@@ -28,7 +29,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:gravity="center_vertical"
-        android:text="@string/alarm_failure"
+        android:text="@string/alarm_sharing"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/img_sharing_alarm_i"
         app:layout_constraintTop_toTopOf="parent"/>

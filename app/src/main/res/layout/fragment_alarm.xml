@@ -3,7 +3,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context=".AlarmFragment">
+             tools:context=".Alarm.AlarmFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_alarm_f"
@@ -12,5 +12,6 @@
         tools:listitem="@layout/item_failure_alarm">
 
     </androidx.recyclerview.widget.RecyclerView>
+
 
 </FrameLayout>

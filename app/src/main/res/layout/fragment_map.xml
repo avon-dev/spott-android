@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MapFragment">
+    android:id="@+id/coordi_map_f"
+    tools:context=".Map.MapFragment">
 
 
     <!-- Here is the -->
@@ -31,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="12dp"
-            android:background="@drawable/layout_mapbutton_text"
+            android:background="@drawable/btn_map_text"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:text="@string/text_find_thisplace"
@@ -44,7 +45,7 @@
         android:id="@+id/imgbtn_mylocation_map_f"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:background="@drawable/layout_mapbutton_icon"
+        android:background="@drawable/btn_map_icon"
         android:layout_gravity="end|top"
         android:layout_margin="12dp"
         app:srcCompat="@drawable/ic_my_location_black_24dp"
@@ -61,7 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:behavior_hideable="false"
-        app:behavior_peekHeight="40dp"
+        app:behavior_peekHeight="50dp"
         app:behavior_skipCollapsed="true"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
 

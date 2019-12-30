@@ -38,12 +38,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="15dp"
                         android:background="@color/default_background"
                         android:scaleType="fitCenter"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/baseline_face_24"/>
+                        app:srcCompat="@drawable/baseline_face_24" />
 
                     <TextView
                         android:id="@+id/text_nickname_comment_f"
@@ -62,24 +62,27 @@
                         android:id="@+id/text_content_comment_f"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="8dp"
                         android:text="content 내용\n#댓글내용"
+                        android:textColor="@color/text_black"
+                        android:textSize="15dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@id/imgbtn_profile_comment_f"
                         app:layout_constraintTop_toBottomOf="@id/imgbtn_profile_comment_f"
                         app:layout_goneMarginTop="15dp"
-                        tools:text="content 내용\n#댓글내용"/>
+                        tools:text="content 내용\n#댓글내용" />
 
                     <TextView
                         android:id="@+id/text_date_comment_f"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="16dp"
                         android:text="2019년 12월 32일"
+                        android:textSize="12dp"
                         app:layout_constraintStart_toStartOf="@id/imgbtn_profile_comment_f"
                         app:layout_constraintTop_toBottomOf="@id/text_content_comment_f"
                         app:layout_goneMarginTop="15dp"
-                        tools:text="2019년 12월 32일"/>
+                        tools:text="2019년 12월 32일" />
 
                     <TextView
                         android:id="@+id/text_blank_comment_f"
@@ -99,9 +102,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="8dp"
             android:layout_marginRight="16dp"
-            android:layout_marginBottom="8dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <androidx.recyclerview.widget.RecyclerView
@@ -117,13 +118,12 @@
         android:id="@+id/text_blank2_comment_f"
         android:layout_width="0dp"
         android:layout_height="5dp"
-        android:layout_marginTop="15dp"
         android:layout_marginBottom="5dp"
         android:background="#E0E0E0"
         app:layout_constraintBottom_toTopOf="@id/imgbtn_write_comment_f"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/coordinator_comment_f"/>
+        app:layout_constraintTop_toBottomOf="@id/coordinator_comment_f" />
 
     <EditText
         android:id="@+id/edit_comment_comment_f"
@@ -165,6 +165,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_goneMarginTop="5dp"/>
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="0dp"
+        android:layout_height="0.5dp"
+        android:background="@color/background_grey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

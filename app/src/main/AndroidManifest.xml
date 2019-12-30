@@ -16,15 +16,18 @@
         <activity android:name=".AddPhotoActivity"></activity>
         <activity android:name=".EditPWActivity"></activity>
         <activity android:name=".EditNicknameActivity"></activity>
-        <activity android:name=".CameraActivity"></activity>
-        <activity android:name=".EditMyInfoActivity"></activity>
+
+        <activity android:name=".Camera.CameraActivity"
+            android:theme="@style/NoStatusbar"></activity>
+
+        <activity android:name=".EditMyinfo.EditMyInfoActivity"></activity>
         <activity android:name=".EmailLoginActivity"></activity>
         <activity android:name=".FindPWActivity"></activity>
         <activity android:name=".LoginActivity"></activity>
         <activity android:name=".NicknameActivity"></activity>
         <activity android:name=".NumberActivity"></activity>
         <activity android:name=".SignupActivity"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".Main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

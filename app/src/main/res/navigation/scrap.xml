@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrap"
+    app:startDestination="@id/scrapFragment">
+
+
+    <fragment
+        android:id="@+id/scrapFragment"
+        android:name="com.avon.spott.Scrap.ScrapFragment"
+        android:label="fragment_scrap"
+        tools:layout="@layout/fragment_scrap" >
+        <action
+            android:id="@+id/action_scrapFragment_to_photo"
+            app:destination="@id/photo" />
+    </fragment>
+
+    <include app:graph="@navigation/photo" />
+
+
+</navigation>

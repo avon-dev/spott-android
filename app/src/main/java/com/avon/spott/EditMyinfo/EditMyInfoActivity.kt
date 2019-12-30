@@ -1,7 +1,8 @@
-package com.avon.spott
+package com.avon.spott.EditMyinfo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.avon.spott.R
 
 class EditMyInfoActivity : AppCompatActivity() {
 

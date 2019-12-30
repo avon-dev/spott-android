@@ -1,14 +1,14 @@
-package com.avon.spott
+package com.avon.spott.Camera
 
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.ImageView
 import android.widget.SeekBar
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import com.avon.spott.R
 import kotlinx.android.synthetic.main.activity_camera.*
 
 class CameraActivity : AppCompatActivity(), View.OnClickListener {
@@ -32,7 +32,9 @@ class CameraActivity : AppCompatActivity(), View.OnClickListener {
         imgbtn_like_camera_a.setOnClickListener(this)
 
         translateLeftAnim = AnimationUtils.loadAnimation(this, R.anim.translate_left)
-        translateRightAnim = AnimationUtils.loadAnimation(this, R.anim.translate_right)
+        translateRightAnim = AnimationUtils.loadAnimation(this,
+            R.anim.translate_right
+        )
 
         translateLeftAnim.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationRepeat(animation: Animation?) {}

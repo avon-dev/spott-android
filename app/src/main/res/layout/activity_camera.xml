@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CameraActivity">
+    tools:context=".Camera.CameraActivity">
 
     <!-- 상단 -->
     <TextView
@@ -18,17 +18,28 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <!-- 뒤로가기 버튼 -->
-    <ImageButton
-        android:id="@+id/imgbtn_back_camera_a"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:adjustViewBounds="true"
-        android:background="@null"
+    <ImageView
+        android:id="@+id/img_back_camera_a"
+        android:layout_width="35dp"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_marginLeft="5dp"
         android:tint="@color/default_background"
-        app:layout_constraintBottom_toBottomOf="@id/text_bgtop_camera_a"
+        app:layout_constraintBottom_toTopOf="@+id/frame_surface_camera_a"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_keyboard_arrow_left_black_24dp"/>
+        app:srcCompat="@drawable/ic_keyboard_arrow_left_black_24dp"
+        tools:ignore="VectorDrawableCompat" />
+<!--    <ImageButton-->
+<!--        android:id="@+id/imgbtn_back_camera_a"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:adjustViewBounds="true"-->
+<!--        android:background="@null"-->
+<!--        android:tint="@color/default_background"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/text_bgtop_camera_a"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:srcCompat="@drawable/ic_keyboard_arrow_left_black_24dp"/>-->
 
     <!-- 카메라 전/후면 버튼 -->
     <ImageButton
@@ -104,16 +115,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
+    <!-- 좋아요 목록 버튼 -->
     <TextView
         android:id="@+id/text_bgbottom_camera_a"
         android:layout_width="0dp"
-        android:layout_height="80dp"
+        android:layout_height="100dp"
         android:background="@color/bg_black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- 좋아요 목록 버튼 -->
     <ImageButton
         android:id="@+id/imgbtn_like_camera_a"
         android:layout_width="wrap_content"
@@ -129,19 +141,33 @@
     <!-- 갤러리 버튼 -->
 
     <!-- 사진 찍기 버튼 -->
+<!--    <ImageButton-->
+<!--        android:id="@+id/imgbtn_capture_camera_a"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:adjustViewBounds="true"-->
+<!--        android:background="@null"-->
+<!--        android:scaleType="fitCenter"-->
+<!--        android:tint="@color/default_background"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toStartOf="@id/imgbtn_gallery_camera_a"-->
+<!--        app:layout_constraintStart_toEndOf="@id/imgbtn_like_camera_a"-->
+<!--        app:layout_constraintTop_toTopOf="@id/text_bgbottom_camera_a"-->
+<!--        app:srcCompat="@drawable/ic_brightness_1_black_24dp"/>-->
     <ImageButton
         android:id="@+id/imgbtn_capture_camera_a"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:adjustViewBounds="true"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:tint="@color/default_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/imgbtn_gallery_camera_a"
         app:layout_constraintStart_toEndOf="@id/imgbtn_like_camera_a"
         app:layout_constraintTop_toTopOf="@id/text_bgbottom_camera_a"
-        app:srcCompat="@drawable/ic_brightness_1_black_24dp"/>
+        app:srcCompat="@drawable/btn_camera_shooting" />
 
     <ImageButton
         android:id="@+id/imgbtn_gallery_camera_a"

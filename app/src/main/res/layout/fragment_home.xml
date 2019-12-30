@@ -4,16 +4,17 @@
                                                    xmlns:tools="http://schemas.android.com/tools"
                                                    android:layout_width="match_parent"
                                                    android:layout_height="match_parent"
-                                                   tools:context=".HomeFragment">
+                                                   tools:context=".Home.HomeFragment">
 
     <EditText
         android:id="@+id/eidt_search_home_f"
-        android:layout_width="330dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:background="@drawable/corner_round_whitetext"
         android:drawableLeft="@drawable/ic_search_black_24dp"
         android:drawablePadding="5dip"
@@ -25,33 +26,45 @@
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView_home_f"
+        app:layout_constraintEnd_toStartOf="@+id/imgbtn_filiter_home_f"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imgbtn_filiter_home_f"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/eidt_search_home_f"
-        app:layout_constraintStart_toEndOf="@+id/eidt_search_home_f"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/eidt_search_home_f"
         app:srcCompat="@drawable/ic_filter_list_black_24dp"
-        tools:ignore="VectorDrawableCompat"/>
+        tools:ignore="VectorDrawableCompat" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView_home_f"
+        android:id="@+id/recycler_home_f"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eidt_search_home_f"/>
+        app:layout_constraintTop_toBottomOf="@+id/eidt_search_home_f" />
+
+<!--    <Button-->
+<!--        android:id="@+id/btn_photo_home_f"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:text="photo"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/recycler_home_f"-->
+<!--        app:layout_constraintHorizontal_bias="0.498"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/recycler_home_f"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/recycler_home_f" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

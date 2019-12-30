@@ -33,6 +33,14 @@
         <item name="android:layout_marginTop">20dp</item>
     </style>
 
+    <!--  상태바 없애기  -->
+    <style name="NoStatusbar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+
 
 
 </resources>

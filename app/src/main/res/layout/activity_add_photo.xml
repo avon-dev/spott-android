@@ -99,7 +99,7 @@
             <TextView
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:background="@drawable/layout_map_guide"
+                android:background="@drawable/text_map_guide"
                 android:paddingVertical="5dp"
                 android:paddingHorizontal="10dp"
                 android:id="@+id/textView"

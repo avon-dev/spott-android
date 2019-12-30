@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraint_failure_alarm_i"
     android:layout_width="match_parent"
-    android:layout_height="60dp">
+    android:layout_height="60dp"
+    android:layout_marginBottom="5dp">
 
     <ImageView
         android:id="@+id/img_failure_alarm_i"
@@ -34,18 +35,17 @@
         app:layout_constraintEnd_toStartOf="@+id/btn_guideline_alarm_i"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@id/img_failure_alarm_i"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/text_failreason_alarm_i"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/text_failtext_alarm_i"
         app:layout_constraintStart_toStartOf="@id/text_failtext_alarm_i"
         app:layout_constraintTop_toBottomOf="@+id/text_failtext_alarm_i"
-        tools:text="(사유 : 잘못된 위치정보 )"/>
+        tools:text="(사유 : 잘못된 위치정보 )" />
 
     <Button
         android:id="@+id/btn_guideline_alarm_i"

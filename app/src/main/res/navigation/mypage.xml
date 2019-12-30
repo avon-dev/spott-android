@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mypage"
+    app:startDestination="@id/mypageFragment">
+
+
+    <fragment
+        android:id="@+id/mypageFragment"
+        android:name="com.avon.spott.Mypage.MypageFragment"
+        android:label="fragment_mypage"
+        tools:layout="@layout/fragment_mypage" >
+        <action
+            android:id="@+id/action_mypageFragment_to_photo"
+            app:destination="@id/photo" />
+        <action
+            android:id="@+id/action_mypageFragment_to_alarmFragment"
+            app:destination="@id/alarmFragment" />
+    </fragment>
+
+    <include app:graph="@navigation/photo" />
+
+    <fragment
+        android:id="@+id/alarmFragment"
+        android:name="com.avon.spott.Alarm.AlarmFragment"
+        android:label="fragment_alarm"
+        tools:layout="@layout/fragment_alarm" >
+        <action
+            android:id="@+id/action_alarmFragment_to_photo"
+            app:destination="@id/photo"/>
+    </fragment>
+
+
+</navigation>

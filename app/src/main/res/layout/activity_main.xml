@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".Main.MainActivity">
 
     <include
         android:id="@+id/include_toolbar"
@@ -39,13 +39,13 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
 
-            android:id="@+id/const_camera"
+            android:id="@+id/const_camera_main_a"
             android:layout_width="60dp"
             android:layout_height="52dp"
             android:layout_gravity="center">
 
             <ImageView
-                android:id="@+id/imageView4"
+                android:id="@+id/img_camera_main_a"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"

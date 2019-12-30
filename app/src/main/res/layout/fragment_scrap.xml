@@ -4,41 +4,136 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ScrapFragment">
+    tools:context=".Scrap.ScrapFragment">
 
-    <TextView
-        android:id="@+id/text_count_like_f"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bottom_border_text"
-        android:paddingLeft="20dp"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
-        android:text="총 0장"
-        android:textSize="18sp"
+    <View
+        android:id="@+id/view_top_scarp_f"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="50dp"
+        android:background="@color/background_grey"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textbtn_delete_like_f"
+        android:id="@+id/text_all_scrap_F"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:text="@string/select_delete"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/text_count_like_f"
-        app:layout_constraintEnd_toEndOf="@+id/text_count_like_f"
-        app:layout_constraintTop_toTopOf="@+id/text_count_like_f"/>
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:textColor="@color/text_black"
+        android:textSize="14dp"
+        android:text="@string/text_all_scrap_f"
+        app:layout_constraintBottom_toTopOf="@+id/view_top_scarp_f"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview_like_f"
+    <TextView
+        android:id="@+id/text_scraps_scrap_f"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/text_all_scrap_F"
+        app:layout_constraintStart_toEndOf="@+id/text_all_scrap_F"
+        app:layout_constraintTop_toTopOf="@+id/text_all_scrap_F"
+        tools:text="10" />
+
+    <TextView
+        android:id="@+id/text_photos_scrap_f"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_black"
+        android:textSize="14dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:text="@string/text_photos_scrap_f"
+        app:layout_constraintBottom_toBottomOf="@+id/text_scraps_scrap_f"
+        app:layout_constraintStart_toEndOf="@+id/text_scraps_scrap_f"
+        app:layout_constraintTop_toTopOf="@+id/text_scraps_scrap_f" />
+
+    <TextView
+        android:id="@+id/text_delete_scrap_f"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_black"
+        android:textSize="14dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="@string/select_delete"
+        app:layout_constraintBottom_toTopOf="@+id/view_top_scarp_f"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator_comment_f"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_count_like_f"/>
+        app:layout_constraintTop_toBottomOf="@+id/view_top_scarp_f">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/default_background"
+            android:fitsSystemWindows="true"
+            app:elevation="0dp">
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                app:layout_scrollFlags="scroll|snap">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/text_guide_scrap_f"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/text_scrap_guide"
+                        android:gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="5dp"
+                        android:text="@string/text_guide_scrap_f"
+                        android:textColor="@color/text_white"
+                        android:textSize="13dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swiperefresh_scrap_f"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_scrap_f"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+          />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
