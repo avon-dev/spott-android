@@ -1,4 +1,5 @@
 <resources>
     <!-- [더미] 구글맵 api password-->
     <string name="google_geo_key">sdgsdgsdgegadgsdgsdg</string>
+    <string name="baseurl"></string>
 </resources>

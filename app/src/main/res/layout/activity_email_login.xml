@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <EditText
-        android:id="@+id/edit_username_emailogin_a"
+        android:id="@+id/edit_username_emaillogin_a"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -27,7 +27,7 @@
         android:drawableLeft="@drawable/ic_person_black_24dp"
         android:ems="10"
         android:hint=" Username"
-        android:inputType="textPersonName"
+        android:inputType="textEmailAddress"
         android:paddingLeft="10dp"
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
@@ -35,10 +35,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.48"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include_toolbar_emaillogin_a"/>
+        app:layout_constraintTop_toBottomOf="@+id/include_toolbar_emaillogin_a" />
 
     <EditText
-        android:id="@+id/edit_password_emailogin_a"
+        android:id="@+id/edit_password_emaillogin_a"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -46,39 +46,40 @@
         android:drawableLeft="@drawable/ic_lock_black_24dp"
         android:ems="10"
         android:hint=" Password"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
         android:paddingLeft="10dp"
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
         android:textSize="12dp"
-        app:layout_constraintEnd_toEndOf="@id/edit_username_emailogin_a"
-        app:layout_constraintStart_toStartOf="@id/edit_username_emailogin_a"
-        app:layout_constraintTop_toBottomOf="@+id/edit_username_emailogin_a"/>
+        app:layout_constraintEnd_toEndOf="@id/edit_username_emaillogin_a"
+        app:layout_constraintStart_toStartOf="@id/edit_username_emaillogin_a"
+        app:layout_constraintTop_toBottomOf="@+id/edit_username_emaillogin_a" />
 
     <TextView
-        android:id="@+id/text_findpw_emailogin_a"
+        android:id="@+id/text_findpw_emaillogin_a"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="@string/findpw"
         android:textColor="#5B9DC9"
         android:textSize="12dp"
-        app:layout_constraintEnd_toEndOf="@+id/edit_password_emailogin_a"
-        app:layout_constraintTop_toBottomOf="@+id/edit_password_emailogin_a"/>
+        app:layout_constraintEnd_toEndOf="@+id/edit_password_emaillogin_a"
+        app:layout_constraintTop_toBottomOf="@+id/edit_password_emaillogin_a"/>
 
     <Button
-        android:id="@+id/btn_login_emailogin_a"
+        android:id="@+id/btn_login_emaillogin_a"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="110dp"
         android:background="@drawable/corner_round_graybtn"
+        android:clickable="false"
         android:text="@string/check"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="#F4F1FA"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@id/edit_username_emailogin_a"
-        app:layout_constraintStart_toStartOf="@id/edit_username_emailogin_a"
-        app:layout_constraintTop_toBottomOf="@+id/edit_password_emailogin_a"/>
+        app:layout_constraintEnd_toEndOf="@id/edit_username_emaillogin_a"
+        app:layout_constraintStart_toStartOf="@id/edit_username_emaillogin_a"
+        app:layout_constraintTop_toBottomOf="@+id/edit_password_emaillogin_a" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
