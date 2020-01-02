@@ -3,6 +3,7 @@ package com.avon.spott.EmailLogin
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.avon.spott.Data.Token
@@ -12,6 +13,7 @@ import com.avon.spott.R
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_email_login.*
 import kotlinx.android.synthetic.main.toolbar.*
+
 
 class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.OnClickListener {
 
@@ -59,6 +61,13 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
         edit_password_emaillogin_a.addTextChangedListener {
             presenter.isPassword(it.toString())
         }
+
+        temp()
+    }
+
+    private fun temp() {
+        edit_username_emaillogin_a.setText("lee2@naver.com")
+        edit_password_emaillogin_a.setText("leechiwon")
     }
 
     // 메인으로 이동
@@ -98,17 +107,21 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
         }
     }
 
+    override fun showError(error: String) {
+        Toast.makeText(this@EmailLoginActivity, error, Toast.LENGTH_SHORT).show()
+    }
+
     override fun onClick(v: View?) {
         when (v?.id) {
             // 뒤로가기
             R.id.img_back_toolbar -> {
-                presenter.navigateUp()
+                presenter.navigateUp() // 뒤로가기
             }
-            R.id.text_findpw_emaillogin_a -> {
+            R.id.text_findpw_emaillogin_a -> { // 비밀번호 찾기
                 presenter.openFindPW()
             }
-            R.id.btn_login_emaillogin_a -> {
-                presenter.openMain()
+            R.id.btn_login_emaillogin_a -> { // 로그인하기
+                presenter.signIn(edit_username_emaillogin_a.text.toString(), edit_password_emaillogin_a.text.toString())
             }
         }
     }

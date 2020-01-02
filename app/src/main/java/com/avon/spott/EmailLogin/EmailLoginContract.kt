@@ -9,6 +9,7 @@ interface EmailLoginContract {
         fun navigateUp()
         fun isEmail(valid:Boolean)
         fun isPassword(valid:Boolean)
+        fun showError(error:String)
     }
 
     interface Presenter {
@@ -17,5 +18,7 @@ interface EmailLoginContract {
         fun navigateUp()
         fun isEmail(email:String)
         fun isPassword(pw:String)
+        fun signIn(email:String, password:String)
+        fun authentication()
     }
 }
