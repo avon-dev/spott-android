@@ -6,6 +6,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import com.avon.spott.Data.Number
+import com.avon.spott.Data.User
 import com.avon.spott.Password.PasswordActivity
 import com.avon.spott.R
 import kotlinx.android.synthetic.main.activity_email.*
@@ -17,18 +19,28 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
     override lateinit var presenter: EmailContract.Presenter
     private lateinit var signUpPresenter: EmailPresenter
 
+    val INTENT_EXTRA_USER = "user"
+
     // 유효성 검사 객체
     // private val validator by lazy { Validator.getInstance() }
 
     private var isFirst: Boolean = true
     private var startTime: Long = 0
     private var elapsedTime: Long = 0
+    private val resendTime: Long = 60
+    private var number: Number = Number(0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_email)
 
         init()
+
+//        temp()
+    }
+
+    fun temp() {
+        btn_confirm_email_a.visibility = View.VISIBLE
     }
 
     override fun onDestroy() {
@@ -47,6 +59,7 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
         img_back_toolbar.setOnClickListener(this)
         btn_confirm_email_a.setOnClickListener(this)
         btn_send_email_a.setOnClickListener(this)
+        btn_confirm_email_a.setOnClickListener(this)
 
         // 이메일 입력변화 리스너 등록
         edit_email_email_a.addTextChangedListener {
@@ -59,11 +72,25 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
             R.id.img_back_toolbar -> { // 뒤로가기
                 presenter.navigateUp()
             }
-            R.id.btn_confirm_email_a -> { // 비밀번호 화면으로 이동
-                presenter.openPassword()
-            }
             R.id.btn_send_email_a -> { // 이메일 전송
-                presenter.sendEmail()
+                if (isFirst) {
+                    presenter.sendEmail(edit_email_email_a.text.toString())
+                } else {
+                    elapsedTime = (System.currentTimeMillis() - startTime) / 1000
+                    if (elapsedTime < resendTime) {
+                        Toast.makeText(
+                            this@EmailActivity,
+                            "${resendTime - elapsedTime}초후 재전송할 수 있습니다",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        presenter.sendEmail(edit_email_email_a.text.toString())
+                    }
+                }
+            }
+            R.id.btn_confirm_email_a -> { // 인증 성공
+                if (number.number.toString().equals(edit_number_email_a.text.toString()))
+                    presenter.openPassword()
             }
         }
     }
@@ -80,33 +107,29 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
 
 
     override fun showPasswordUi() { // 인증번호 입력으로 이동
-        val intent = Intent(this@EmailActivity, PasswordActivity::class.java)
+        val intent = Intent(this, PasswordActivity::class.java)
+        val user = User(edit_email_email_a.text.toString())
+        intent.putExtra(INTENT_EXTRA_USER, user)
         startActivity(intent)
     }
 
 
-    override fun sendEmail() { // 이메일 전송하기
+    override fun sendEmail(number: Number) { // 이메일 전송하기
         if (isFirst) {
             isFirst = false
-            startTime = System.currentTimeMillis()
             btn_send_email_a.text = getString(R.string.resend)
-            btn_send_email_a.setBackgroundResource(R.drawable.corner_round_primary)
 
             // 인증번호 입력할 수 있는 뷰 표시
             edit_number_email_a.visibility = View.VISIBLE
             text_numbermessage_email_a.visibility = View.VISIBLE
             btn_confirm_email_a.visibility = View.VISIBLE
-
-            Toast.makeText(this@EmailActivity, "전송", Toast.LENGTH_SHORT).show()
-        } else {
-            elapsedTime = System.currentTimeMillis() - startTime
-            if (elapsedTime < 60000) {
-                Toast.makeText(this@EmailActivity, "1분 후 재전송할 수 있습니다", Toast.LENGTH_SHORT).show()
-            } else {
-                startTime = System.currentTimeMillis()
-                Toast.makeText(this@EmailActivity, "전송", Toast.LENGTH_SHORT).show()
-            }
         }
+
+        this.number = number
+        startTime = System.currentTimeMillis()
+
+        Toast.makeText(this@EmailActivity, "인증번호가 전송되었습니다", Toast.LENGTH_SHORT).show()
     }
+
 
 }
