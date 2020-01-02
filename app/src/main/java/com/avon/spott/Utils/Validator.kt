@@ -1,6 +1,6 @@
 package com.avon.spott.Utils
 
-class ValidatorModel {
+class Validator {
     companion object {
         fun validEmail(email: String): Boolean {
             val reg =
