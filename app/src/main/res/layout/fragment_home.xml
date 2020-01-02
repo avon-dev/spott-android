@@ -8,6 +8,7 @@
 
     <EditText
         android:id="@+id/eidt_search_home_f"
+        android:focusableInTouchMode="false"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -25,15 +26,17 @@
         android:paddingLeft="10dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:textSize="18sp"
+        android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/imgbtn_filiter_home_f"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/imgbtn_filiter_home_f"
+        android:focusableInTouchMode="true"
         android:layout_width="35dp"
         android:layout_height="35dp"
+        android:background="@drawable/corner_round_whitetext"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/eidt_search_home_f"
@@ -55,16 +58,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eidt_search_home_f" />
-
-<!--    <Button-->
-<!--        android:id="@+id/btn_photo_home_f"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        android:text="photo"-->
-<!--        app:layout_constraintEnd_toEndOf="@+id/recycler_home_f"-->
-<!--        app:layout_constraintHorizontal_bias="0.498"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/recycler_home_f"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/recycler_home_f" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

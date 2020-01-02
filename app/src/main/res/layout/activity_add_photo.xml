@@ -30,17 +30,21 @@
 
             <EditText
                 android:id="@+id/edit_searchplace_addphoto_a"
+                android:focusableInTouchMode="false"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:layout_marginHorizontal="16dp"
+                android:drawableLeft="@drawable/ic_search_black_24dp"
+                android:drawablePadding = "2dp"
                 android:background="@drawable/corner_round_whitetext"
                 android:ems="10"
                 android:hint="@string/hint_search_place"
                 android:inputType="textPersonName"
-                android:paddingLeft="10dp"
+                android:paddingLeft="13dp"
+                android:textSize="12sp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
-                android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -63,11 +67,13 @@
                 android:background="@drawable/corner_round_whitetext"
                 android:ems="10"
                 android:gravity="start|top"
+                android:layout_marginHorizontal="16dp"
                 android:hint="@string/hint_caption"
                 android:inputType="textMultiLine"
                 android:paddingLeft="10dp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
+                android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/frag_googlemap_addphoto_a" />
@@ -78,6 +84,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/text_private"
+                android:textSize="14dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/edit_caption_addphoto_a" />
 
@@ -85,6 +92,7 @@
                 android:id="@+id/btn_upload_addphoto_a"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="24dp"
                 android:background="@drawable/corner_round_graybtn"

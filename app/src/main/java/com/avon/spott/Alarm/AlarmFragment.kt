@@ -18,17 +18,6 @@ import com.avon.spott.Main.controlToobar
 import kotlinx.android.synthetic.main.fragment_alarm.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
-// -------↓ 아래 코드들은 몰라서 일단 나둠 (민석). -------------------------
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- *
- */
-//-----------------------------------------------------------------------
 
 class AlarmFragment : Fragment(), AlarmContract.View, View.OnClickListener {
 

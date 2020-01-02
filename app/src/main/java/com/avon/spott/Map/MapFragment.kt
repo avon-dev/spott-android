@@ -2,31 +2,53 @@ package com.avon.spott.Map
 
 
 import android.content.Context
+import android.graphics.*
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.avon.spott.GlideApp
+import com.avon.spott.Main.MainActivity
 import com.avon.spott.R
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.android.synthetic.main.fragment_map.view.*
 import kotlinx.android.synthetic.main.fragment_map_list.*
+import retrofit2.http.Url
+import java.io.EOFException
+import java.io.IOException
+import java.net.URL
 
-class MapFragment : Fragment() , MapContract.View, View.OnClickListener {
+class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapReadyCallback {
 
 
     private lateinit var mapPresenter: MapPresenter
     override lateinit var presenter: MapContract.Presenter
 
     lateinit var childfragment :Fragment
+
+    private lateinit var mMap : GoogleMap
+    private lateinit var mapView:View
 
     val mapInterListener = object : mapInter{
         override fun itemClick(){
@@ -45,6 +67,12 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener {
             println("이 지역에서 찾기!!!!!!!!!!!!!!!!!!")
         }
         //-----------------------------------------------
+
+        val mapFragment : SupportMapFragment = childFragmentManager.findFragmentById(R.id.frag_googlemap_map_f) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+        mapView = mapFragment.view!!
+
+
 
          return root
     }
@@ -229,7 +257,94 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener {
 
     }
 
+    override fun onMapReady(map: GoogleMap) {
+        mMap = map
+        val defaultlocation = LatLng(37.56668, 126.97843)
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultlocation, 12f))
 
+        //더미데이터
+        addCustomMarkerFromURL(37.56368, 126.97823,"https://cdn.pixabay.com/photo/2017/08/06/12/06/people-2591874_1280.jpg")
+        addCustomMarkerFromURL(37.564920, 126.925100, "https://cdn.pixabay.com/photo/2012/10/10/11/05/space-station-60615_960_720.jpg")
+    }
+
+
+//    fun markers_setting(x:Double, y:Double, url:String){
+//
+//        val bmp = getMarkerBitmapFromView(url)
+//
+//        val location = LatLng(x, y)
+//        val makerOptions = MarkerOptions()
+//        makerOptions.position(location)
+//            .icon(BitmapDescriptorFactory.fromBitmap(bmp))
+////            .title(no)
+////            .snippet("설명 테스트~~~")
+//
+//        mMap.addMarker(makerOptions)
+//
+////        mMap.setOnMarkerClickListener(this)
+
+//    }
+
+    private fun getMarkerBitmapFromView(view:View, bitmap: Bitmap): Bitmap{
+        val markerImageView = view.findViewById(R.id.img_photo_photo_m) as ImageView
+
+        markerImageView.setImageBitmap(bitmap)
+
+        view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+        view.layout(
+            0,
+            0,
+            view.getMeasuredWidth(),
+            view.getMeasuredHeight()
+        )
+        view.buildDrawingCache()
+
+        val returnedBitmap = Bitmap.createBitmap(
+           view.getMeasuredWidth(), view.getMeasuredHeight(),
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(returnedBitmap)
+        canvas.drawColor(Color.WHITE, PorterDuff.Mode.SRC_IN)
+        val drawable =view.getBackground()
+        if (drawable != null)
+            drawable!!.draw(canvas)
+        view.draw(canvas)
+        return returnedBitmap
+
+
+    }
+
+    private fun addCustomMarkerFromURL(x:Double, y:Double, ImageUrl:String) {
+        val customMarkerView:View = LayoutInflater.from(context).inflate(R.layout.marker_photo, null)
+
+        val location = LatLng(x, y)
+
+        if (mMap == null) {
+            return
+        }
+        // adding a marker with image from URL using glide image loading library
+        Glide.with(context!!)
+            .asBitmap()
+            .load(ImageUrl)
+            .fitCenter()
+            .into(object : SimpleTarget<Bitmap>() {
+                override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?) {
+                    mMap.addMarker(
+                        MarkerOptions().position(location)
+                            .icon(
+                                BitmapDescriptorFactory.fromBitmap(
+                                    getMarkerBitmapFromView(
+                                        customMarkerView,
+                                        bitmap
+                                    )
+                                )
+                            )
+                    )
+                }
+
+            })
+
+    }
 
 }
 

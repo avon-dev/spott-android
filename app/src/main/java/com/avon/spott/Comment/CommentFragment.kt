@@ -14,21 +14,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.avon.spott.R
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.Main.controlToobar
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fragment_comment.*
 import kotlinx.android.synthetic.main.fragment_comment.view.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
-// -------↓ 아래 코드들은 몰라서 일단 나둠 (민석). -------------------------
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- *
- */
-//-----------------------------------------------------------------------
 
 class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
@@ -132,6 +124,8 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         }
 
     }
+
+
 
 
 }

@@ -35,7 +35,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:background="@drawable/btn_left_mypage_f"
+            android:background="@drawable/btn_selector_mypage_f"
             app:srcCompat="@drawable/ic_grid_on_selector" />
 
         <ImageButton
@@ -43,31 +43,16 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:background="@drawable/btn_right_mypage_f"
+            android:background="@drawable/btn_selector_mypage_f"
             app:srcCompat="@drawable/ic_map_selector" />
 
     </LinearLayout>
 
-<!--    <Button-->
-<!--        android:id="@+id/btn_photo_mypage_f"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="161dp"-->
-<!--        android:layout_marginLeft="161dp"-->
-<!--        android:layout_marginTop="368dp"-->
-<!--        android:layout_marginEnd="162dp"-->
-<!--        android:layout_marginRight="162dp"-->
-<!--        android:text="photo"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="1.0"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />-->
 
     <FrameLayout
         android:id="@+id/frame_mypage_f"
         android:layout_width="409dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -81,7 +66,13 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_grid_mypage_f"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingVertical="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -101,6 +92,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

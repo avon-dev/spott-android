@@ -100,6 +100,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
                         android:background="@drawable/text_scrap_guide"
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
@@ -107,9 +108,11 @@
                         android:text="@string/text_guide_scrap_f"
                         android:textColor="@color/text_white"
                         android:textSize="13dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -120,19 +123,20 @@
             android:id="@+id/swiperefresh_scrap_f"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_scrap_f"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            <androidx.recyclerview.widget.RecyclerView
+                android:paddingVertical="8dp"
+                android:clipToPadding="false"
+                android:id="@+id/recycler_scrap_f"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
 
-          />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
