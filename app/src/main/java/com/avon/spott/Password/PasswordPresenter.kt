@@ -1,6 +1,8 @@
 package com.avon.spott.Password
 
-class PasswordPresenter (val numberView:PasswordContract.View) : PasswordContract.Presenter {
+import com.avon.spott.Utils.Validator
+
+class PasswordPresenter(val numberView: PasswordContract.View) : PasswordContract.Presenter {
     init {
         numberView.presenter = this
     }
@@ -10,6 +12,15 @@ class PasswordPresenter (val numberView:PasswordContract.View) : PasswordContrac
     }
 
     override fun openNickname() {
-        numberView.showNickname()
+        numberView.showNicknameUi()
+    }
+
+    override fun isPassword(password: String) {
+        numberView.isPassword(Validator.validPassword(password))
+    }
+
+    override fun isPassword(password: String, check: String) {
+        numberView.isCheck(check.equals(password))
+        numberView.showWarning()
     }
 }
