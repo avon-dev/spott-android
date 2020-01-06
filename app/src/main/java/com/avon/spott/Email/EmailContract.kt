@@ -8,13 +8,18 @@ interface EmailContract {
         fun showPasswordUi()
         fun navigateUp()
         fun isEmail(valid: Boolean)
-        fun sendEmail(number:Number)
+        fun isNumber(bool:Boolean)
+        fun getNumber(number:Number)
+        fun showError(msg:String)
     }
 
     interface Presenter {
         fun openPassword()
         fun navigateUp()
         fun isEmail(email: String)
+        fun isNumber(number:String)
         fun sendEmail(email: String)
+        fun showError(msg:String)
+        fun checkNumber(number:String)
     }
 }

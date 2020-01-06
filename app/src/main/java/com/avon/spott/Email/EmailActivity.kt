@@ -21,14 +21,12 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
 
     val INTENT_EXTRA_USER = "user"
 
-    // 유효성 검사 객체
-    // private val validator by lazy { Validator.getInstance() }
-
     private var isFirst: Boolean = true
     private var startTime: Long = 0
     private var elapsedTime: Long = 0
     private val resendTime: Long = 60
-    private var number: Number = Number(0)
+    private var number: Number = Number(false)
+    private var isEmail: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +39,10 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
 
     fun temp() {
         btn_confirm_email_a.visibility = View.VISIBLE
+        edit_number_email_a.visibility = View.VISIBLE
+        edit_number_email_a.setText("0")
+        this.number = Number(true, "0123")
+        edit_email_email_a.setText("back947@naver.com")
     }
 
     override fun onDestroy() {
@@ -65,6 +67,10 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
         edit_email_email_a.addTextChangedListener {
             presenter.isEmail(it.toString())
         }
+
+        edit_number_email_a.addTextChangedListener {
+            presenter.isNumber(it.toString())
+        }
     }
 
     override fun onClick(v: View?) {
@@ -73,24 +79,20 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
                 presenter.navigateUp()
             }
             R.id.btn_send_email_a -> { // 이메일 전송
-                if (isFirst) {
-                    presenter.sendEmail(edit_email_email_a.text.toString())
-                } else {
-                    elapsedTime = (System.currentTimeMillis() - startTime) / 1000
-                    if (elapsedTime < resendTime) {
-                        Toast.makeText(
-                            this@EmailActivity,
-                            "${resendTime - elapsedTime}초후 재전송할 수 있습니다",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        presenter.sendEmail(edit_email_email_a.text.toString())
-                    }
+
+                if(!isEmail) {
+                    Toast.makeText(this@EmailActivity, "이메일을 입력해주세요", Toast.LENGTH_SHORT).show()
+                    return
                 }
+
+                presenter.sendEmail(edit_email_email_a.text.toString())
             }
-            R.id.btn_confirm_email_a -> { // 인증 성공
-                if (number.number.toString().equals(edit_number_email_a.text.toString()))
+            R.id.btn_confirm_email_a -> {
+                if (number.code.toString().equals(edit_number_email_a.text.toString()))
                     presenter.openPassword()
+                else {
+                    presenter.checkNumber(edit_number_email_a.text.toString())
+                }
             }
         }
     }
@@ -101,10 +103,17 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
     }
 
     override fun isEmail(valid: Boolean) { // 이메일 입력에따른 경고문구
-        if (valid) text_warnmsg1_email_a.visibility = View.INVISIBLE
+        isEmail = valid
+        if (isEmail) text_warnmsg1_email_a.visibility = View.INVISIBLE
         else text_warnmsg1_email_a.visibility = View.VISIBLE
     }
 
+    override fun isNumber(bool: Boolean) {
+        if(bool)
+            btn_confirm_email_a.setBackgroundResource(R.drawable.corner_round_primary)
+        else
+            btn_confirm_email_a.setBackgroundResource(R.drawable.corner_round_graybtn)
+    }
 
     override fun showPasswordUi() { // 인증번호 입력으로 이동
         val intent = Intent(this, PasswordActivity::class.java)
@@ -114,7 +123,8 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
     }
 
 
-    override fun sendEmail(number: Number) { // 이메일 전송하기
+    override fun getNumber(number: Number) {
+
         if (isFirst) {
             isFirst = false
             btn_send_email_a.text = getString(R.string.resend)
@@ -128,8 +138,12 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
         this.number = number
         startTime = System.currentTimeMillis()
 
-        Toast.makeText(this@EmailActivity, "인증번호가 전송되었습니다", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this@EmailActivity, number.code.toString(), Toast.LENGTH_SHORT).show()
+
+//        Toast.makeText(this@EmailActivity, "인증번호가 전송되었습니다", Toast.LENGTH_SHORT).show()
     }
 
-
+    override fun showError(msg: String) {
+        Toast.makeText(this@EmailActivity, msg, Toast.LENGTH_SHORT).show()
+    }
 }
