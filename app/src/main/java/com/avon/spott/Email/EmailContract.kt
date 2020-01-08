@@ -18,8 +18,7 @@ interface EmailContract {
         fun navigateUp()
         fun isEmail(email: String)
         fun isNumber(number:String)
-        fun sendEmail(email: String)
-        fun showError(msg:String)
-        fun checkNumber(number:String)
+        fun sendEmail(isEmail:Boolean, baseUrl:String, email: String)
+        fun confirm(number:Number, str:String)
     }
 }

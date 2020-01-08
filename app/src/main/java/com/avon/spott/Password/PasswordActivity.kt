@@ -28,12 +28,6 @@ class PasswordActivity : AppCompatActivity(), PasswordContract.View, View.OnClic
         setContentView(R.layout.activity_password)
 
         init()
-//        temp()
-    }
-
-    fun temp() {
-        edit_password_a.setText("123456")
-        edit_check_password_a.setText("123456")
     }
 
     override fun onDestroy() {
@@ -69,13 +63,6 @@ class PasswordActivity : AppCompatActivity(), PasswordContract.View, View.OnClic
 
     override fun isCheck(warn: Boolean) {
         isCheck = warn
-        if (isCheck) {
-            btn_confirm_password_a.isClickable = true
-            btn_confirm_password_a.setBackgroundResource(R.drawable.corner_round_primary)
-        } else {
-            btn_confirm_password_a.isClickable = false
-            btn_confirm_password_a.setBackgroundResource(R.drawable.corner_round_graybtn)
-        }
     }
 
     override fun showWarning() {

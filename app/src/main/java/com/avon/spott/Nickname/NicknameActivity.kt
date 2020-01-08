@@ -26,11 +26,6 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
 
         init()
 
-//        temp()
-    }
-
-    fun temp() {
-        edit_nickname_a.setText("inca")
     }
 
     private fun init() {
@@ -57,17 +52,12 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
     }
 
     override fun navigateUp() {
-//        onBackPressed()
-        val intent = Intent(this@NicknameActivity, MainActivity::class.java)
-//        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
-//        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(intent)
+        onBackPressed()
     }
 
     override fun showMainUi(result: Boolean) {
         if (result) {
             val intent = Intent(this@NicknameActivity, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         } else {
             Toast.makeText(this@NicknameActivity, "이미 가입한 닉네임입니다", Toast.LENGTH_SHORT).show()
@@ -82,7 +72,7 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
             R.id.btn_confirm_nickname_a -> {
                 if (edit_nickname_a.text.length > 3) {
                     user.nickname = edit_nickname_a.text.toString()
-                    presenter.signUp(user)
+                    presenter.signUp(getString(R.string.baseurl), user)
                 } else {
                     Toast.makeText(this@NicknameActivity, "닉네임을 4글자 이상 작성해주세요", Toast.LENGTH_SHORT)
                         .show()

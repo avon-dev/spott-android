@@ -13,6 +13,6 @@ interface NicknameContract {
     interface Presenter {
         fun navigateUp()
         fun isNickname(nickname:String)
-        fun signUp(user: User)
+        fun signUp(baseUrl:String, user: User)
     }
 }

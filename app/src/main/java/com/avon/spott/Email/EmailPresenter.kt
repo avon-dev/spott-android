@@ -32,33 +32,35 @@ class EmailPresenter(val emailView: EmailContract.View) : EmailContract.Presente
         emailView.isNumber(Validator.validNumber(number))
     }
 
-    override fun checkNumber(number: String) {
-//        if(!Validator.validNumber(number))
-        emailView.showError("인증번호를 확인해주세요")
+    override fun confirm(number: Number, str: String) {
+        if (number.code.equals(str)) {
+            emailView.showPasswordUi()
+        } else {
+            emailView.showError("인증번호를 확인해주세요")
+        }
     }
 
-    override fun sendEmail(email: String) {
-        Retrofit().get("/spott/email-authen", Parser.toJson(User(email))).subscribe({ response ->
+    override fun sendEmail(isEmail:Boolean, baseUrl: String, email: String) {
+        if (isEmail) {
+            emailView.showError("이메일을 확인해주세요")
+        } else {
+            Retrofit(baseUrl).get("/spott/email-authen", Parser.toJson(User(email)))
+                .subscribe({ response ->
+                    logd(TAG, response.body())
+                    val number = response.body()?.let { Parser.fromJson<Number>(it) }
+                    if (!number?.code?.equals("")!!) {
+                        emailView.getNumber(number)
+                    }
 
-            logd(TAG, response.body())
-            val number = response.body()?.let { Parser.fromJson<Number>(it) }
-            if (!number?.code?.equals("")!!) {
-                emailView.getNumber(number)
-            }
-
-        }, { throwable ->
-            logd(TAG, throwable.message)
-            if (throwable is HttpException) {
-                logd(
-                    TAG,
-                    "http exception code : ${throwable.code()}, http exception response code: ${throwable.response()?.code()}"
-                )
-                emailView.showError(throwable.message())
-            }
-        })
-    }
-
-    override fun showError(msg: String) {
-        emailView.showError(msg)
+                }, { throwable ->
+                    logd(TAG, throwable.message)
+                    if (throwable is HttpException) {
+                        logd(
+                            TAG,
+                            "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
+                        )
+                    }
+                })
+        }
     }
 }
