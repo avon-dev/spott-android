@@ -19,6 +19,8 @@
 
     <color name="trans_grey">#80727272</color>
 
+    <color name="markerSelected">#5690E8</color>
+
 
 
 </resources>

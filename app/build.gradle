@@ -72,4 +72,7 @@ dependencies {
 
     // rxjava
     implementation 'io.reactivex.rxjava2:rxjava:2.2.16'
+
+    //for GoogleMap Clustering
+    implementation 'com.google.maps.android:android-maps-utils:0.5'
 }

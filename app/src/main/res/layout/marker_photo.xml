@@ -1,27 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_margin="2dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/default_background"
-    app:cardCornerRadius="2dp"
-    >
-
-<FrameLayout
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <ImageView
-        android:layout_margin="3dp"
-        android:id="@+id/img_photo_photo_m"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:scaleType="centerCrop"
-        android:layout_gravity="center_horizontal"
-         />
-</FrameLayout>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_photo_m"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        app:cardBackgroundColor="@color/text_white"
+        app:cardCornerRadius="4dp"
+        app:layout_constraintEnd_toEndOf="@+id/text_count_photo_m"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/text_count_photo_m">
 
-</androidx.cardview.widget.CardView>
+        <ImageView
+            android:id="@+id/img_photo_photo_m"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="3dp"
+            android:scaleType="centerCrop" />
+
+
+    </androidx.cardview.widget.CardView>
+
+    <View
+        android:id="@+id/view_triangle_photo_m"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="44dp"
+        android:background="@drawable/ic_signal_wifi_4_bar_white_24dp"
+        app:layout_constraintEnd_toEndOf="@+id/card_photo_m"
+        app:layout_constraintStart_toStartOf="@+id/card_photo_m"
+        app:layout_constraintTop_toTopOf="@+id/card_photo_m" />
+
+    <TextView
+        android:id="@+id/text_count_photo_m"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:background="@drawable/text_count_map"
+        android:elevation="2dp"
+        android:paddingHorizontal="5dp"
+        android:textColor="@color/text_white"
+        android:textSize="13dp"
+        app:layout_constraintEnd_toEndOf="@+id/card_photo_m"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="20000" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
