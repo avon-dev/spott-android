@@ -39,20 +39,22 @@
         android:text="@string/text_warnmessage_number_a"
         android:textColor="#EB685B"
         android:textSize="14sp"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@+id/edit_nickname_a"
-        app:layout_constraintTop_toBottomOf="@+id/edit_nickname_a"/>
+        app:layout_constraintTop_toBottomOf="@+id/edit_nickname_a"
+        tools:visibility="visible" />
 
     <Button
         android:id="@+id/btn_confirm_nickname_a"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:background="@drawable/corner_round_graybtn"
+        android:background="@drawable/corner_round_primary"
         android:text="@string/join"
         android:textColor="#ffffff"
         android:textSize="12sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@id/edit_nickname_a"
         app:layout_constraintStart_toStartOf="@id/edit_nickname_a"
-        app:layout_constraintTop_toBottomOf="@+id/text_warnmessage_nickname_a"/>
+        app:layout_constraintTop_toBottomOf="@+id/text_warnmessage_nickname_a" />
 </androidx.constraintlayout.widget.ConstraintLayout>

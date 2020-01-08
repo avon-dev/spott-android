@@ -1,6 +1,6 @@
 package com.avon.spott.Utils
 
-class ValidatorModel {
+class Validator {
     companion object {
         fun validEmail(email: String): Boolean {
             val reg =
@@ -10,9 +10,13 @@ class ValidatorModel {
         }
 
         fun validPassword(string: String): Boolean {
-            val reg = Regex(".{6,16}")
+            val reg = Regex("((?=.*\\d)(?=.*[a-zA-Z])(?=.*\\W).{6,20})")
 
             return string.matches(reg)
+        }
+
+        fun validNumber(number:String):Boolean {
+            return number.length > 0
         }
     }
 }
