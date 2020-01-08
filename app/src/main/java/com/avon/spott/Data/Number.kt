@@ -1,3 +1,3 @@
 package com.avon.spott.Data
 
-data class Number(val number:Int)
+data class Number(val result:Boolean, val code:String? = "")
