@@ -1,11 +1,13 @@
 package com.avon.spott.Nickname
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import com.avon.spott.Data.Token
 import com.avon.spott.Data.User
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.R
@@ -55,13 +57,23 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
         onBackPressed()
     }
 
-    override fun showMainUi(result: Boolean) {
+    override fun signUp(result: Boolean) {
         if (result) {
-            val intent = Intent(this@NicknameActivity, MainActivity::class.java)
-            startActivity(intent)
+            presenter.getToken(getString(R.string.baseurl), user.email, user.password!!)
         } else {
             Toast.makeText(this@NicknameActivity, "이미 가입한 닉네임입니다", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    override fun showMainUi(token:Token) {
+        val pref = getSharedPreferences("pref", Context.MODE_PRIVATE)
+        val ed = pref.edit()
+        ed.putString("access", token.access)
+        ed.putString("refresh", token.refresh)
+        ed.apply()
+
+        val intent = Intent(this@NicknameActivity, MainActivity::class.java)
+        startActivity(intent)
     }
 
     override fun onClick(v: View?) {
