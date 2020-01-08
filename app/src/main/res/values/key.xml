@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+<<<<<<< HEAD
     <!--  구글맵 api password-->
     <string name="google_geo_key">AIzaSyDmQomoAqjNiRHP3oVEARpc33wV6Xiz_ZI</string>
 
+=======
+    <!-- [더미] 구글맵 api password-->
+    <string name="google_geo_key">sdgsdgsdgegadgsdgsdg</string>
+>>>>>>> e20a1b671cd38c72f2771f1df45f872aa89b0a73
     <string name="baseurl">http://15.164.213.66:8000</string>
 </resources>
