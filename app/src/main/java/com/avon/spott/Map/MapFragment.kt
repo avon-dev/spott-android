@@ -582,10 +582,6 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         clusterManager!!.addItem(MapItem(LatLng(37.514458, 126.996861), "",
             "https://cdn.pixabay.com/photo/2017/08/02/00/16/people-2568954_1280.jpg"))
 
-        for (i in 0..100){
-            clusterManager!!.addItem(MapItem(position(), "",
-                "https://cdn.pixabay.com/photo/2017/08/02/00/16/people-2568954_1280.jpg"))
-        }
 
     }
     //////=======================더미데이터 끝==============================================
