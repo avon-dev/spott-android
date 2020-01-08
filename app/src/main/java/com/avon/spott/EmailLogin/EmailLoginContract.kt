@@ -1,10 +1,11 @@
 package com.avon.spott.EmailLogin
 
 import com.avon.spott.BaseView
+import com.avon.spott.Data.Token
 
 interface EmailLoginContract {
     interface View : BaseView<Presenter> {
-        fun showMainUi()
+        fun showMainUi(token: Token)
         fun showFindPWUi()
         fun navigateUp()
         fun isEmail(valid:Boolean)
@@ -13,12 +14,10 @@ interface EmailLoginContract {
     }
 
     interface Presenter {
-        fun openMain()
         fun openFindPW()
         fun navigateUp()
         fun isEmail(email:String)
         fun isPassword(pw:String)
-        fun signIn(email:String, password:String)
-        fun authentication()
+        fun signIn(baseurl:String, email:String, password:String)
     }
 }
