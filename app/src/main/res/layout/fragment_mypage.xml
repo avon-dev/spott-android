@@ -51,7 +51,7 @@
 
     <FrameLayout
         android:id="@+id/frame_mypage_f"
-        android:layout_width="409dp"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

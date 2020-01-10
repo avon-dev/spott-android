@@ -1,27 +1,36 @@
 package com.avon.spott.Mypage
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.avon.spott.AddPhotoActivity
+import com.avon.spott.AddPhoto.AddPhotoActivity
 import com.avon.spott.EditMyinfo.EditMyInfoActivity
 import com.avon.spott.R
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
 import com.avon.spott.Main.controlToobar
+import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_mypage.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
 
 class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener {
+
+    private val TAG = "MypageFragment"
 
     var Mypageselectgrid = true
 
@@ -87,7 +96,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener {
     override fun onStart() {
         super.onStart()
 
-             //-----임시 데이터-----------------------------
+        //-----임시 데이터-----------------------------
         Glide.with(this)
             .load(R.mipmap.ic_launcher)
              .into(mToolbar.img_profile_toolbar)
@@ -111,8 +120,10 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener {
         findNavController().navigate(R.id.action_mypageFragment_to_photo)
     }
 
-    override fun showAddPhotoUi() {
-        startActivity(Intent(context, AddPhotoActivity::class.java))
+    override fun showAddPhotoUi(mFilePath : String) {
+        val nextIntent = Intent(context, AddPhotoActivity::class.java)
+        nextIntent.putExtra("photo", mFilePath)
+        startActivity(nextIntent)
     }
 
     override fun showAlarmUi() {
@@ -126,7 +137,9 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener {
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.img_noti_toolbar -> {presenter.openAlarm()}
-            R.id.floatimgbtn_addphoto_mypage -> {presenter.openAddPhoto()}
+            R.id.floatimgbtn_addphoto_mypage -> {
+                presenter.clickAddPhoto()
+            }
         }
     }
 
@@ -191,6 +204,51 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener {
             val photo = itemView.findViewById<ImageView>(R.id.img_photo_photo_square_i) as ImageView
         }
 
+    }
+
+    override fun checkPermission(): Boolean {
+        val result = ActivityCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (result == PackageManager.PERMISSION_DENIED) return false
+        return true
+    }
+
+    override fun showPermissionDialog() {
+        requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1000)
+    }
+
+
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(requestCode==1000){
+            if(grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                presenter.clickAddPhoto()
+            }
+        }
+    }
+
+    override fun openGallery(){
+        val pickPhoto = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        pickPhoto.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        startActivityForResult(pickPhoto, 102)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == 102) {
+            if (resultCode == Activity.RESULT_OK && null != data) {
+                if (data.getData() != null) {
+                    var mPhotoPath: Uri = data.getData()
+                        presenter.openAddPhoto(mPhotoPath.toString())
+
+                    println("포토 패쓰는 : " + mPhotoPath)
+                }
+            }
+        }
     }
 
 }

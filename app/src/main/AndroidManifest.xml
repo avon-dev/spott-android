@@ -3,6 +3,8 @@
     package="com.avon.spott">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -14,7 +16,7 @@
         android:theme="@style/AppTheme">
 
 
-        <activity android:name=".AddPhotoActivity"></activity>
+        <activity android:name=".AddPhoto.AddPhotoActivity"></activity>
         <activity android:name=".EditPWActivity"></activity>
         <activity android:name=".EditNicknameActivity"></activity>
 

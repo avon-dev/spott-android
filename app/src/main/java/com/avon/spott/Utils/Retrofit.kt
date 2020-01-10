@@ -3,6 +3,7 @@ package com.avon.spott.Utils
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import okhttp3.MultipartBody
 import retrofit2.HttpException
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -42,4 +43,13 @@ class Retrofit(baseUrl:String) {
             .map { t -> if (t.isSuccessful) t else throw HttpException(t) }
             .observeOn(AndroidSchedulers.mainThread())
     }
+
+    fun postPhoto(url:String, sending: String, imageFile : ArrayList<MultipartBody.Part>)
+            : Observable<Response<String>> {
+        return retrofitService.postPhoto(url, sending, imageFile)
+            .subscribeOn(Schedulers.io())
+            .map { t -> if (t.isSuccessful) t else throw HttpException(t) }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
 }

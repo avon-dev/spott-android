@@ -14,7 +14,7 @@ class MapPresenter (val mapView:MapContract.View) : MapContract.Presenter {
         if(App.prefs.mylastlat!=0.0f){
             mapView.movePosition(LatLng(App.prefs.mylastlat.toDouble(), App.prefs.mylastlng.toDouble()),
                 App.prefs.mylastzoom)
-        }else{  //앱을 설치 후 처음 실행하면 지도의 기본 위치는 서울.
+        }else{  //앱을 설치 후 처음 실행하면 지도의 기본 위치는 서울시청.
             mapView.movePosition(LatLng(37.56668, 126.97843),14f)
         }
     }

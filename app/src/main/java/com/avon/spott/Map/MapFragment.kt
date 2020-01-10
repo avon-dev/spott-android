@@ -185,7 +185,9 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         childfragment.img_updown_maplist_f.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp)
         imgbtn_mylocation_map_f.isEnabled =false
         btn_find_map_f.isEnabled =false
-        mMap.uiSettings.setAllGesturesEnabled(false)
+        if(::mMap.isInitialized) {
+            mMap.uiSettings.setAllGesturesEnabled(false)
+        }
     }
 
     fun bottomCollapsed(){ //리스트플래그먼트가 내려가있을 때 일어나는 일
@@ -307,7 +309,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     }
 
     override fun movePosition(latLng: LatLng, zoom:Float){
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom)) //시작점으로 옮기기, 줌 정도 조절
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
     }
 
 
@@ -539,10 +541,10 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         clusterManager!!.addItem(MapItem(LatLng(37.514458, 126.996861), "",
             "https://cdn.pixabay.com/photo/2017/08/02/00/16/people-2568954_1280.jpg"))
 
-//        for(i in 0..100){
-//            clusterManager!!.addItem(MapItem(position(), "",
-//                "https://cdn.pixabay.com/photo/2016/11/29/06/45/beach-1867881_1280.jpg"))
-//        }
+        for(i in 0..100){
+            clusterManager!!.addItem(MapItem(position(), "",
+                "https://cdn.pixabay.com/photo/2016/11/29/06/45/beach-1867881_1280.jpg"))
+        }
     }
     /*===================================구글맵 더미 데이터 끝=========================================*/
 
