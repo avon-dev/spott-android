@@ -202,7 +202,7 @@ class CameraFragment : Fragment(), View.OnClickListener,
     ) {
         if(requestCode == REQUEST_CAMERA_PERMISSION) {
             if (grantResults.size != 1 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                ErrorDialog.newInstance("This app needs camera permission") // 처음 앱 켰을 때 취소시 에러 메세지
+                ErrorDialog.newInstance("카메라 권한이 필요합니다") // 처음 앱 켰을 때 취소시 에러 메세지
                     .show(childFragmentManager, FRAGMENT_DIALOG)
             }
         } else {
