@@ -7,27 +7,27 @@
     tools:context=".Camera.CameraActivity">
 
     <!-- 상단 -->
-    <TextView
-        android:id="@+id/text_bgtop_camera_a"
-        android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/bg_black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    <TextView-->
+<!--        android:id="@+id/text_bgtop_camera_a"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="?attr/actionBarSize"-->
+<!--        android:background="@color/bg_black"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <!-- 뒤로가기 버튼 -->
-    <ImageView
-        android:id="@+id/img_back_camera_a"
-        android:layout_width="35dp"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_marginLeft="5dp"
-        android:tint="@color/default_background"
-        app:layout_constraintBottom_toTopOf="@+id/frame_surface_camera_a"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_keyboard_arrow_left_black_24dp"
-        tools:ignore="VectorDrawableCompat" />
+<!--    <ImageView-->
+<!--        android:id="@+id/img_back_camera_a"-->
+<!--        android:layout_width="35dp"-->
+<!--        android:layout_height="?attr/actionBarSize"-->
+<!--        android:layout_marginLeft="5dp"-->
+<!--        android:tint="@color/default_background"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/frame_surface_camera_a"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:srcCompat="@drawable/ic_keyboard_arrow_left_black_24dp"-->
+<!--        tools:ignore="VectorDrawableCompat" />-->
     <!--    <ImageButton-->
     <!--        android:id="@+id/imgbtn_back_camera_a"-->
     <!--        android:layout_width="wrap_content"-->
@@ -41,17 +41,17 @@
     <!--        app:srcCompat="@drawable/ic_keyboard_arrow_left_black_24dp"/>-->
 
     <!-- 카메라 전/후면 버튼 -->
-    <ImageButton
-        android:id="@+id/imgbtn_reverse_camera_a"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:adjustViewBounds="true"
-        android:background="@null"
-        android:tint="@color/default_background"
-        app:layout_constraintBottom_toBottomOf="@id/text_bgtop_camera_a"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_cached_black_24dp" />
+<!--    <ImageButton-->
+<!--        android:id="@+id/imgbtn_reverse_camera_a"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:adjustViewBounds="true"-->
+<!--        android:background="@null"-->
+<!--        android:tint="@color/default_background"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/text_bgtop_camera_a"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:srcCompat="@drawable/ic_cached_black_24dp" />-->
 
     <!-- 카메라가 보여질 화면 -->
     <FrameLayout
@@ -60,8 +60,16 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_bgtop_camera_a" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+<!--    <FrameLayout-->
+<!--        android:id="@+id/frame_surface_camera_a"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/text_bgtop_camera_a" />-->
 
 
     <!-- 카메라 투명도 조절 화면 -->

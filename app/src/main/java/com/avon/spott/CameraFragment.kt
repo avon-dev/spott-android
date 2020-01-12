@@ -29,12 +29,27 @@ import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 /**
- * A simple [Fragment] subclass.
+ * CameraManager : 시스템 서비스, 사용 간으한 카메라와 카메라 기능들을 쿼리할 수 있고 카메라를 열 수 있습니다.
+ * CameraCharacteristics : 카메라의 속성들을 담고 있는 객체
+ * CameraDevice : 카메라 객체
+ * CaptureRequest : 사진 촬영이나 카메라 미리보기를 요청(request)하는데 쓰이는 객체
+ *                  카메라의 설정을 변경할 때도 관여합니다.
+ * CameraCaptureSession : CaptureRequest를 보내고 카메라 하드웨어에서 결과를 받을 수 있습니다.
+ * CaptureResult : CaptureRequest의 결과물입니다.
+ *                 이미지의 메타데이터도 가져올 수 있습니다.
  */
 class CameraFragment : Fragment(), View.OnClickListener,
     ActivityCompat.OnRequestPermissionsResultCallback {
 
+    private var isGallery = false
+
+    // textureListener
     private val surfaceTextureListener = object : TextureView.SurfaceTextureListener {
+        /*
+        처음 액티비티가 실행되었다 가정하면
+        textureView 초기화가 완료되고 화면에 텍스쳐를 그릴준비가 되었을 때
+        onSurfaceTextureAbailable()을 호출하게 됩니다.
+         */
         override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {
             openCamera(width, height)
         }
@@ -61,6 +76,10 @@ class CameraFragment : Fragment(), View.OnClickListener,
         @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
         object : CameraDevice.StateCallback() {
             override fun onOpened(cameraDevice: CameraDevice) {
+                /*
+                카메라가 열리고나면 onOpend(cameraDevice)가 호출됩니다
+                카메라가 정상적으로 열렸으므로 이제 프리뷰세션을 만듭니다.
+                 */
                 cameraOpenCloseLock.release()
                 this@CameraFragment.cameraDevice = cameraDevice
                 createCameraPreviewSession()
@@ -170,7 +189,17 @@ class CameraFragment : Fragment(), View.OnClickListener,
         super.onActivityCreated(savedInstanceState)
         file = File(activity?.getExternalFilesDir(null), PIC_FILE_NAME)
     }
+
     override fun onResume() {
+        /* 1.
+        프래그먼트가 실행되면 onResume()이 호출됩니다.
+        카메라와 관련된 작업은 UI를 그리는 메인쓰레드를 방해하지 않기 위해 onResume에서 새로운 쓰레드와 핸들러를 생성합니다.
+        또한 Fragment에 포함된 textureView또한 인플레이팅과 동시에 초기화가 진행됩니다.
+
+        처음 시작되면 아래 조건문에서 두번째 else조건을 타지만,
+        다른 액티비티의 호출로 카메라 리소스와 텍스쳐뷰들이 잠시 비활성화 되었다가 다시 재게 되는 경우에는
+        if문 안의 openCamera()를 바로 호출하게 됩니다.
+         */
         super.onResume()
         startBackgroundThread()
 
@@ -182,6 +211,9 @@ class CameraFragment : Fragment(), View.OnClickListener,
     }
 
     override fun onPause() {
+        /*
+        카메라 장치는 싱글톤 인스턴스이므로 사용후 반드시 시스템에 반환하여 다른 프로세스(앱)가 이용할 수 있도록 합니다.
+         */
         closeCamera()
         stopBackgroundThread()
         super.onPause()
@@ -211,6 +243,14 @@ class CameraFragment : Fragment(), View.OnClickListener,
     }
 
     private fun setUpCameraOutputs(width: Int, height: Int) {
+        /*
+        후면 카메라 선택
+        캡쳐된 사진(이미지리더)의 해상도, 포맷 선택
+        이미지의 방향
+        적합한 프리뷰 사이즈 선택
+        들어오는 영상의 비율에 맞춰 TextureView의 비율 변경(이 부분은 예제에 포함된 AutoFitTextureView 커스텀 뷰입니다)
+        플래시 지원 여부
+         */
         val manager = activity?.getSystemService(Context.CAMERA_SERVICE) as CameraManager
 
         try {
@@ -296,6 +336,11 @@ class CameraFragment : Fragment(), View.OnClickListener,
     }
 
     private fun openCamera(width: Int, height: Int) {
+        /*
+        textureView의 사이즈를 입력받아 여러가지작업들을 수행
+        카메라 런타임 퍼미션이 있는지 확인
+         퍼미션을 얻었다면 setUpCameraOutputs()를 수행
+         */
         val permission = ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA)
         if(permission != PackageManager.PERMISSION_GRANTED) {
             requestCameraPermission()
@@ -305,6 +350,9 @@ class CameraFragment : Fragment(), View.OnClickListener,
         setUpCameraOutputs(width, height)
         configureTransform(width, height)
 
+        /*
+        Camera를 열기위한 선작업들이 끝났다면 CameraManager를 통해 openCamera(카메라ID, CameraDevice.StateCallback, 핸들러)를 호출
+         */
         val manager = requireActivity().getSystemService(Context.CAMERA_SERVICE) as CameraManager
         try {
             if (!cameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
@@ -317,6 +365,7 @@ class CameraFragment : Fragment(), View.OnClickListener,
             throw RuntimeException("Interrupted while trying to lock camera opening.", e)
         }
     }
+
     private fun closeCamera() {
         try {
             cameraOpenCloseLock.acquire()
@@ -332,6 +381,7 @@ class CameraFragment : Fragment(), View.OnClickListener,
             cameraOpenCloseLock.release()
         }
     }
+
     private fun startBackgroundThread() {
         backgroundThread = HandlerThread("CameraBackground").also { it.start()}
         backgroundHandler = Handler(backgroundThread?.looper)
@@ -349,6 +399,18 @@ class CameraFragment : Fragment(), View.OnClickListener,
     }
 
     private fun createCameraPreviewSession() {
+        /*
+        Preview 세션을 만들기 위해서 TextureView가 가지고 있는 SurfaceTexture를 가져옵니다.
+        SurfaceTexture에 setUpCameraOutputs()에서 계산한 기본 버퍼 사이즈를 설정합니다
+        SufaceTexture를 이용하여 Surface를 만듭니다.
+        그런 다음 CaptureRequest.Builder에 surface를 타겟으로 지정합니다
+        지정된 타겟은 실제 카메라 프레임 버퍼를 받아 처리하게 됩니다
+        아직 CaptureRequest를 사용할순 없습니다. 캡쳐세션이 먼저 만들어져야합니다
+        CameraDevice.createCaptureSession()을 통해 세션을 만듭니다
+        캡쳐 세션이 만들어졌다면 CameraCaptureSession.StateCallback의 onConfigured()가 호출 되게 됩니다
+        이곳에서 아까만든 CaptureRequest.Builder를 build하여 CaptureRequest객체를 만들고, 반복적으로 이미지 버퍼를 얻기 위해 setRepeatingRequest()를 호출합니다
+        이렇게 하면 TextureView에 카메라 영상이 나오는것을 확인할 수 있습니다
+         */
         try {
             val texture = textureView.surfaceTexture
             texture.setDefaultBufferSize(previewSize.width, previewSize.height)
@@ -386,7 +448,11 @@ class CameraFragment : Fragment(), View.OnClickListener,
             loge(TAG, e.toString())
         }
     }
+
     private fun configureTransform(viewWidth: Int, viewHeight: Int) {
+        /*
+        스크린과 카메라의 영상의 방향을 맞추기 위해 View를 매트릭스 연산으로 회전시킴
+         */
         activity ?: return
 
         val rotation = requireActivity().windowManager.defaultDisplay.rotation
@@ -411,7 +477,13 @@ class CameraFragment : Fragment(), View.OnClickListener,
         }
         textureView.setTransform(matrix)
     }
+
     private fun lockFocus() {
+        /*
+        카메라에게 초점을 잡으라고 request를 보내기 위해 해당 파라미터를 설정해줍니다
+        준비된 세션으로부터 capture()메소드와 함께 request인자를 넣어 호출합니다
+        초점이 잡혔다면 mCaptureCallback으로부터 captureStillPicture()을 호출하게 될 것입니다
+         */
         try {
             previewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
                 CameraMetadata.CONTROL_AF_TRIGGER_START)
@@ -422,6 +494,7 @@ class CameraFragment : Fragment(), View.OnClickListener,
             loge(TAG, e.toString())
         }
     }
+
     private fun runPrecaptureSequence() {
         try {
             previewRequestBuilder.set(CaptureRequest.CONTROL_AE_PRECAPTURE_TRIGGER,
@@ -433,7 +506,11 @@ class CameraFragment : Fragment(), View.OnClickListener,
             loge(TAG, e.toString())
         }
     }
+
     private fun captureStillPicture() {
+        /*
+        또 다시 CaptureSession에 CaptureRequest를 넣어 사진을 캡쳐하는데 이때의 캡쳐한 이미지 버퍼를 받을 Surface는 아까 TextureView의 Surface가 아닌 ImageReader의 Surface입니다
+         */
         try {
             if ( activity == null || cameraDevice == null) return
             val rotation = requireActivity().windowManager.defaultDisplay.rotation
@@ -481,6 +558,17 @@ class CameraFragment : Fragment(), View.OnClickListener,
 
     override fun onClick(v: View) {
         when (v.id) {
+//            R.id.img_overlay_camera_f -> {
+//                isGallery = !isGallery
+//
+//                if (isGallery) {
+//                    img_overlay_camera_f.visibility = View.VISIBLE
+////                    frame_opacity_camera_a.visibility = visible
+//                } else {
+//                    img_overlay_camera_f.visibility = View.GONE
+////                    frame_opacity_camera_a.visibility = gone
+//                }
+//            }
             R.id.picture -> lockFocus()
             R.id.info -> {
                 if (activity != null) {
