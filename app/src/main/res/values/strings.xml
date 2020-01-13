@@ -84,4 +84,6 @@
     <string name="resend">재전송</string>
     <string name="certification_message">이메일 주소로 전송된 인증번호를 입력해주세요. </string>
 
+    <string name="adding_photo">사진 등록</string>
+
 </resources>

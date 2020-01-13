@@ -8,14 +8,18 @@ interface MypageContract {
         fun showPhotoUi()
         fun showAlarmUi()
         fun showEditMyInfoUi()
-        fun showAddPhotoUi()
+        fun showAddPhotoUi(mFilePath : String)
+        fun checkPermission():Boolean
+        fun showPermissionDialog()
+        fun openGallery()
     }
 
     interface Presenter{
         fun openPhoto()
         fun openAlarm()
         fun openEditMyInfo()
-        fun openAddPhoto()
+        fun openAddPhoto(mFilePath : String)
+        fun clickAddPhoto()
     }
 
 }

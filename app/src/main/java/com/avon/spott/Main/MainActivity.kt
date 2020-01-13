@@ -7,11 +7,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.avon.spott.Camera.CameraActivity
 import com.avon.spott.R
+import com.avon.spott.Utils.logd
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
 class MainActivity : AppCompatActivity(), MainContract.View, View.OnClickListener {
+
+    private val TAG = "MainActivity"
 
     private lateinit var mainPresenter: MainPresenter
     override lateinit var presenter: MainContract.Presenter
@@ -22,17 +25,15 @@ class MainActivity : AppCompatActivity(), MainContract.View, View.OnClickListene
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        mToolbar = this.findViewById<ConstraintLayout>(R.id.include_toolbar)
-
-        if(savedInstanceState ==null){
+        logd(TAG, "onCreate" + savedInstanceState)
+         setContentView(R.layout.activity_main)
+         mToolbar = this.findViewById<ConstraintLayout>(R.id.include_toolbar)
+        if (savedInstanceState == null){
             setupBottomNavigationBar()
         }
-
-        init()
-
+         init()
     }
+
 
     fun init(){
         // 프레젠터 생성
@@ -53,7 +54,9 @@ class MainActivity : AppCompatActivity(), MainContract.View, View.OnClickListene
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
+        logd(TAG, "onRestoreInstance")
         setupBottomNavigationBar()
+
     }
 
     private fun setupBottomNavigationBar() {

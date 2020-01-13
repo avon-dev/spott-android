@@ -4,4 +4,6 @@
     <string name="google_geo_key">AIzaSyDmQomoAqjNiRHP3oVEARpc33wV6Xiz_ZI</string>
 
     <string name="baseurl">http://15.164.213.66:8000</string>
+
+    <string name="testurl">http://15.164.213.66:7000</string>
 </resources>

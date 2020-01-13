@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:background="@drawable/text_count_map"
-        android:elevation="2dp"
+        android:elevation="10dp"
         android:paddingHorizontal="5dp"
         android:textColor="@color/text_white"
         android:textSize="13dp"

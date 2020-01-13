@@ -4,8 +4,8 @@ class MypagePresenter(val mypageView:MypageContract.View):MypageContract.Present
 
     init{mypageView.presenter = this}
 
-    override fun openAddPhoto() {
-        mypageView.showAddPhotoUi()
+    override fun openAddPhoto(mFilePath : String) {
+        mypageView.showAddPhotoUi(mFilePath)
     }
 
     override fun openAlarm() {
@@ -18,5 +18,14 @@ class MypagePresenter(val mypageView:MypageContract.View):MypageContract.Present
 
     override fun openPhoto() {
         mypageView.showPhotoUi()
+    }
+
+    override fun clickAddPhoto(){
+        if (!mypageView.checkPermission()) {
+            mypageView.showPermissionDialog()
+            return
+        }
+        mypageView.openGallery()
+
     }
 }
