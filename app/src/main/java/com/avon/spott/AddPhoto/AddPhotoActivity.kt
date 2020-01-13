@@ -47,6 +47,9 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         //툴바 타이틀 넣기
         include_toolbar_addphoto_a.text_title_toolbar.text = getString(R.string.adding_photo)
 
+        //처음 키보드 올라오기 방지용
+        text_guide_addphoto_a.requestFocus()
+
         init()
     }
 
@@ -103,13 +106,26 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
     }
 
     override fun getPath(uri: Uri): String {
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = managedQuery(uri, projection, null, null, null)
-        startManagingCursor(cursor)
-        val column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-        cursor.moveToFirst()
-        return cursor.getString(column_index)
+        //UCrop 이전
+//        val projection = arrayOf(MediaStore.Images.Media.DATA)
+//        val cursor = managedQuery(uri, projection, null, null, null)
+//        startManagingCursor(cursor)
+//        val column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+//        cursor.moveToFirst()
+//        return cursor.getString(column_index)
 
+        val path:String
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = contentResolver.query(uri, projection, null, null, null)
+        logd(TAG, "cursor : "+cursor)
+        if(cursor == null){
+            path = uri.path
+        }else{
+            cursor.moveToFirst()
+            val column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            path = cursor.getString(column_index)
+        }
+        return path
     }
 
     override fun navigateUp() {
@@ -117,6 +133,7 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
     }
 
     override fun setPhoto(photo:String){
+        logd("photoTEST", "이미지 넣기 직전 : " + photo)
         Glide.with(this)
             .load(photo)
             .apply(RequestOptions().centerCrop())
@@ -137,5 +154,9 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
 
         //현재 마커의 위치 저장
         markerLatLng = latLng
+    }
+
+    override fun focusEdit(){ //설명 editText 포커스
+        edit_caption_addphoto_a.requestFocus()
     }
 }

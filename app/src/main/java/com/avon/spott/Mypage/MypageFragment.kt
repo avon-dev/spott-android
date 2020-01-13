@@ -12,7 +12,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -24,13 +26,21 @@ import com.avon.spott.Main.MainActivity.Companion.mToolbar
 import com.avon.spott.Main.controlToobar
 import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
+import com.yalantis.ucrop.UCrop
+import com.yalantis.ucrop.UCropActivity
+import com.yalantis.ucrop.model.AspectRatio
 import kotlinx.android.synthetic.main.fragment_mypage.*
 import kotlinx.android.synthetic.main.toolbar.view.*
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener {
 
     private val TAG = "MypageFragment"
+
+    private val SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage.jpg"
 
     var Mypageselectgrid = true
 
@@ -124,6 +134,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener {
         val nextIntent = Intent(context, AddPhotoActivity::class.java)
         nextIntent.putExtra("photo", mFilePath)
         startActivity(nextIntent)
+        logd("photoTEST", "Mypagefragment에서 넘겨줌 " + mFilePath)
     }
 
     override fun showAlarmUi() {
@@ -239,15 +250,44 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == 102) {
-            if (resultCode == Activity.RESULT_OK && null != data) {
+         if (resultCode == Activity.RESULT_OK && null != data) {
+                if(requestCode == 102) {
                 if (data.getData() != null) {
                     var mPhotoPath: Uri = data.getData()
-                        presenter.openAddPhoto(mPhotoPath.toString())
+                    logd(TAG, "photopath : " + mPhotoPath)
 
-                    println("포토 패쓰는 : " + mPhotoPath)
+                    val options = UCrop.Options()
+                    options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE)
+                    options.setToolbarTitle("")
+                    options.setToolbarCropDrawable(R.drawable.ic_arrow_forward_black_24dp)
+                    options.setActiveControlsWidgetColor(ContextCompat.getColor(context!!, R.color.colorPrimary))
+                    options.setStatusBarColor(ContextCompat.getColor(context!!, R.color.bg_black))
+                    options.setAspectRatioOptions(0,
+                        AspectRatio("4X3", 4f, 3f),
+                        AspectRatio("1X1", 1f, 1f)
+                    )
+
+                    /* 현재시간을 임시 파일 이름에 넣는 이유 : 중복방지
+                    / (안넣으면 AddPhotoActivity의 이미지뷰에 다른 사진 보여진다.) */
+                    val timeStamp = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
+                    UCrop.of(mPhotoPath, Uri.fromFile(File(context!!.cacheDir, timeStamp+SAMPLE_CROPPED_IMAGE_NAME)))
+                        .withMaxResultSize(resources.getDimension(R.dimen.upload_width).toInt(),
+                            resources.getDimension(R.dimen.upload_heigth).toInt())
+                        .withOptions(options)
+                        .start(context!!, this)
+
+                        //uCrop 넣기 전(다음 페이지 진행)
+//                     presenter.openAddPhoto(mPhotoPath.toString())
+
                 }
-            }
+            }else if(requestCode == UCrop.REQUEST_CROP){
+                    var mCropPath: Uri? = UCrop.getOutput(data)
+                    logd(TAG, "croppath : " + mCropPath)
+                    presenter.openAddPhoto(mCropPath.toString())
+                }
+        }
+        if(resultCode == UCrop.RESULT_ERROR){
+
         }
     }
 
