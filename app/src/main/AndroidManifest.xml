@@ -16,7 +16,8 @@
         android:theme="@style/AppTheme">
 
 
-        <activity android:name=".AddPhoto.AddPhotoActivity"></activity>
+        <activity android:name=".AddPhoto.AddPhotoActivity"
+            android:windowSoftInputMode="adjustResize" ></activity>
         <activity android:name=".EditPWActivity"></activity>
         <activity android:name=".EditNicknameActivity"></activity>
 
@@ -25,7 +26,8 @@
             android:theme="@style/NoStatusbar"></activity>
 
         <activity android:name=".EditMyinfo.EditMyInfoActivity"></activity>
-        <activity android:name=".Main.MainActivity" />
+        <activity android:name=".Main.MainActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".EmailLogin.EmailLoginActivity"></activity>
         <activity android:name=".FindPW.FindPWActivity"></activity>
         <activity android:name=".Login.LoginActivity">

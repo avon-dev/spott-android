@@ -28,11 +28,12 @@ import java.util.*
 
 class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClickListener,
     OnMapReadyCallback {
-
     private val TAG = "forAddPhotoActivity"
 
     private lateinit var addPhotoPresenter: AddPhotoPresenter
     override lateinit var presenter: AddPhotoContract.Presenter
+
+    private var markerLatLng: LatLng? = null
 
     private lateinit var mMap : GoogleMap
 
@@ -51,15 +52,14 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
 
     private fun init(){
         addPhotoPresenter = AddPhotoPresenter(this)
-        btn_upload_addphoto_a.setOnClickListener(this)
+        text_upload_addphoto_a.setOnClickListener(this)
         include_toolbar_addphoto_a.img_back_toolbar.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when(v?.id) {
-            R.id.btn_upload_addphoto_a->{
-                presenter.sendPhoto(getString(R.string.testurl),intent.getStringExtra("photo"), edit_caption_addphoto_a.text.toString(),
-                    position())
+            R.id.text_upload_addphoto_a->{
+                presenter.sendPhoto(getString(R.string.testurl),intent.getStringExtra("photo"), edit_caption_addphoto_a.text.toString(), markerLatLng)
             }
             R.id.img_back_toolbar ->{ presenter.navigateUp() }
         }
@@ -70,6 +70,22 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
 
         //인텐트로 받아온 사진 이미지 처리(이미지뷰에 넣기 + 위치 정보 있으면 가져오기)
         presenter.usePhoto(intent.getStringExtra("photo"))
+
+        //맵 클릭 리스너
+//        mMap.setOnMapClickListener(object : GoogleMap.OnMapClickListener{
+//            override fun onMapClick(latlng: LatLng) {
+//                logd(TAG, "MapClick : " +latlng)
+//            }
+//        })
+
+        //맵 롱클릭 리스너
+        mMap.setOnMapLongClickListener(object : GoogleMap.OnMapLongClickListener{
+            override fun onMapLongClick(latlng: LatLng) {
+                logd(TAG, "MapLONGClick : "+latlng)
+                presenter.newMarker(latlng)
+            }
+        })
+
     }
 
     /*==========================구글맵 더미 데이터용 랜덤위치 생성 함수들==================================*/
@@ -87,19 +103,13 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
     }
 
     override fun getPath(uri: Uri): String {
-//        val projection = arrayOf(MediaStore.Images.Media.DATA)
-//        val cursor = managedQuery(uri, projection, null, null, null)
-//        startManagingCursor(cursor)
-//        val column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-//        cursor.moveToFirst()
-//        return cursor.getString(column_index)
-
         val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = contentResolver.query(uri, projection, null, null, null)
+        val cursor = managedQuery(uri, projection, null, null, null)
         startManagingCursor(cursor)
         val column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
         cursor.moveToFirst()
         return cursor.getString(column_index)
+
     }
 
     override fun navigateUp() {
@@ -121,7 +131,11 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         mMap.clear()
         val makerOptions = MarkerOptions()
         makerOptions.position(latLng)
-            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+//            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)) //기본 마커 파란색
+              .icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_where_to_vote_black_48))
         mMap.addMarker(makerOptions)
+
+        //현재 마커의 위치 저장
+        markerLatLng = latLng
     }
 }
