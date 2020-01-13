@@ -6,7 +6,7 @@ import android.view.TextureView
 import android.view.View
 
 /*
-TextureView를 상속받아 구성되었습니다
+TextureView를 상속받아 구성되었으며 TextureView처럼 사용됩니다.
 Device의 상태변화에 따른 종횡비(aspect ratio)를 조정해주는 기능을 가집니다.
 
 사용하는 이유

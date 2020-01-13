@@ -21,6 +21,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.avon.spott.Utils.logd
 import com.avon.spott.Utils.loge
 import java.io.File
 import java.util.*
@@ -183,6 +184,13 @@ class CameraFragment : Fragment(), View.OnClickListener,
         view.findViewById<View>(R.id.picture).setOnClickListener(this)
         view.findViewById<View>(R.id.info).setOnClickListener(this)
         textureView = view.findViewById(R.id.texture)
+        textureView.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+//                runPrecaptureSequence()
+                captureStillPicture()
+            }
+            true
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -528,6 +536,8 @@ class CameraFragment : Fragment(), View.OnClickListener,
                     result: TotalCaptureResult
                 ) {
                     Toast.makeText(activity, "Saved:$file", Toast.LENGTH_SHORT).show()
+                    logd(TAG, file.toString())
+                    unlockFocus()
                 }
             }
 
