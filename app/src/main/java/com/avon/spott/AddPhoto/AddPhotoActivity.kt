@@ -62,7 +62,7 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
     override fun onClick(v: View?) {
         when(v?.id) {
             R.id.text_upload_addphoto_a->{
-                presenter.sendPhoto(getString(R.string.testurl),intent.getStringExtra("photo"), edit_caption_addphoto_a.text.toString(), markerLatLng)
+                presenter.sendPhoto(getString(R.string.baseurl),intent.getStringExtra("photo"), edit_caption_addphoto_a.text.toString(), markerLatLng)
             }
             R.id.img_back_toolbar ->{ presenter.navigateUp() }
         }
@@ -159,4 +159,5 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
     override fun focusEdit(){ //설명 editText 포커스
         edit_caption_addphoto_a.requestFocus()
     }
+
 }

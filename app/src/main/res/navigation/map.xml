@@ -16,6 +16,6 @@
             app:destination="@id/photo" />
     </fragment>
 
-    <include app:graph="@navigation/photo" />
+    <include app:graph="@navigation/photo"/>
 
 </navigation>

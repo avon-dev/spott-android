@@ -77,29 +77,29 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
 
             val newPhoto = NewPhoto(latLng.latitude, latLng.longitude, caption)
 
-            logd(TAG, "파서 테스트 : " + Parser.toJson(newPhoto))
-            logd(TAG, "images : " + images)
+            Retrofit(baseUrl).postPhoto("/spott/posts", Parser.toJson(newPhoto), images)
+                .subscribe({ response ->
+                    logd(
+                        TAG,
+                        "response code: ${response.code()}, response body : ${response.body()}"
+                    )
+                    val result = response.body()
+                    if (result != null) {
+                        addPhotoView.showToast("성공") /**  성공 메세지 수정해야함.  */
+                        addPhotoView.navigateUp()
+                    }
+                }, { throwable ->
+                    logd(TAG, throwable.message)
+                    if (throwable is HttpException) {
+                        val exception = throwable
+                        logd(
+                            TAG,
+                            "http exception code: ${exception.code()}, http exception message: ${exception.message()}"
+                        )
+                    }
+                })
 
-//            Retrofit(baseUrl).postPhoto("/spott/posts", Parser.toJson(newPhoto), images)
-//                .subscribe({ response ->
-//                    logd(
-//                        TAG,
-//                        "response code: ${response.code()}, response body : ${response.body()}"
-//                    )
-//                    val result = response.body()
-//                    if (result != null) {
-//                        addPhotoView.showToast("성공")
-//                    }
-//                }, { throwable ->
-//                    logd(TAG, throwable.message)
-//                    if (throwable is HttpException) {
-//                        val exception = throwable
-//                        logd(
-//                            TAG,
-//                            "http exception code: ${exception.code()}, http exception message: ${exception.message()}"
-//                        )
-//                    }
-//                })
+
         }
 
     }

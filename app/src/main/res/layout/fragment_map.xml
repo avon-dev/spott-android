@@ -22,11 +22,16 @@
         android:layout_marginBottom="50dp" />
 
 
+    <!-- 리니어레이아웃 넣은 이유 :
+         그냥 버튼만 있을 경우
+         backdrop fragment이 올라왔을 때도 여전히 버튼이 보임.(버튼 아래로 올라옴.)  -->
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|top"
         android:orientation="vertical">
+
         <Button
             android:id="@+id/btn_find_map_f"
             android:layout_width="wrap_content"
@@ -36,7 +41,9 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:text="@string/text_find_thisplace"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
     </LinearLayout>
 

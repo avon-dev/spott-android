@@ -13,13 +13,16 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.avon.spott.Data.MapItem
+import com.avon.spott.Data.Map
+import com.avon.spott.Data.MapCluster
 import com.avon.spott.R
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
+import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -38,33 +41,41 @@ import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.android.synthetic.main.fragment_map.view.*
 import kotlinx.android.synthetic.main.fragment_map_list.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapReadyCallback,
-    ClusterManager.OnClusterClickListener<MapItem>, ClusterManager.OnClusterItemClickListener<MapItem>{
+    ClusterManager.OnClusterClickListener<MapCluster>, ClusterManager.OnClusterItemClickListener<MapCluster>{
 
-    private lateinit var mapPresenter: MapPresenter
-    override lateinit var presenter: MapContract.Presenter
+    private val TAG = "forMapFragment"
 
-    lateinit var childfragment :Fragment
-    lateinit var mBottomSheetBehavior: BottomSheetBehavior<View?>
+    private lateinit var mapPresenter : MapPresenter
+    override lateinit var presenter : MapContract.Presenter
+
+    private lateinit var mapAdapter: MapAdapter
+
+    lateinit var childfragment : Fragment
+    lateinit var mBottomSheetBehavior : BottomSheetBehavior<View?>
 
     private lateinit var mMap : GoogleMap
-    private lateinit var mapView:View
+    private lateinit var mapView : View
 
-    private lateinit var clusterManager: ClusterManager<MapItem>
+    private lateinit var clusterManager : ClusterManager<MapCluster>
     private lateinit var  mCustomClusterItemRenderer : PhotoRenderer
 
-    private var selectedMarker: Marker? = null //선택한 마커
+    private var selectedMarker : Marker? = null //선택한 마커
     private var selectedMarkerView : View? = null //선택했던 마커뷰
-    private var selectedCluster:Cluster<MapItem>? = null //선택한 아이템
+    private var selectedCluster : Cluster<MapCluster>? = null //선택한 클러스터
+    private var selectedItems : ArrayList<Map>? = null//선택된 아이템
+
+    private var initMapMoving : Boolean = true //처음 맵 로딩하는지 여부
 
     val mapInterListener = object : mapInter{
-        override fun itemClick(){
-            presenter.openPhoto()
+        override fun itemClick(id: Int){
+            presenter.openPhoto(id)
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?{
         val root = inflater.inflate(R.layout.fragment_map, container, false)
 
         //바텀시트 처리
@@ -74,29 +85,33 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         root.btn_find_map_f.setOnClickListener{
             //새로 아이템을 불러오는 함수 넣어야함.
 
+            btn_find_map_f.visibility = View.GONE
+            text_nophoto_maplist_f.visibility = View.GONE
+
             clusterManager.clearItems()
             clusterManager.cluster()
 
-            clusterManager = ClusterManager<MapItem>(context, mMap)
+            setClusterManager()
 
-            mCustomClusterItemRenderer = PhotoRenderer()
-            clusterManager!!.renderer = mCustomClusterItemRenderer
-            clusterManager!!.renderer.setAnimation(false)
-
-            mMap.setOnCameraIdleListener(clusterManager)
-            mMap.setOnMarkerClickListener(clusterManager)
-            mMap.setOnInfoWindowClickListener(clusterManager)
-            clusterManager!!.setOnClusterClickListener(this)
-            clusterManager!!.setOnClusterItemClickListener(this)
-
-            addItems()
-
-            clusterManager.cluster()
-
-            //리스트플래그먼트에 총개수 넣음 (더미)
-            text_spotnumber_maplist_f.text = clusterManager.algorithm.items.size.toString()
+            sendCameraRange()
         }
         //-----------------------------------------------
+
+        //------사진 없을 경우 테스트--------------------------
+        root.imgbtn_mylocation_map_f.setOnClickListener{
+
+                btn_find_map_f.visibility = View.GONE
+                text_nophoto_maplist_f.visibility = View.GONE
+
+                clusterManager.clearItems()
+                clusterManager.cluster()
+
+                setClusterManager()
+
+                presenter.getNophoto()
+            }
+        //------------------------------------------------
+
 
         if(!::mapView.isInitialized){ //처음 생성될 때 빼고는 다시 구글맵을 초기화하지 않는다.
             val mapFragment : SupportMapFragment = childFragmentManager.findFragmentById(R.id.frag_googlemap_map_f) as SupportMapFragment
@@ -113,9 +128,11 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
         //---------------리사이클러뷰테스트 코드------------------------------
         val layoutManager = GridLayoutManager(context!!, 2)
-
         recycler_map_f.layoutManager = layoutManager
-        recycler_map_f.adapter = MapAdapter(context!!, mapInterListener)
+
+        mapAdapter = MapAdapter(context!!, mapInterListener)
+
+        recycler_map_f.adapter = mapAdapter
         //-----------------------------------------------------------------
     }
 
@@ -125,6 +142,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
     override fun onStart() {
         super.onStart()
+
         //툴바 안보이게
         mToolbar.visibility = View.GONE
 
@@ -133,6 +151,15 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
             bottomExpanded()
         }else{
             bottomCollapsed()
+        }
+
+        //선택했던 아이템 있을 경우 리스트플래그먼트의 리사이클러뷰와 전체 개수 텍스트 처리
+        if(selectedItems!=null){
+
+            mapAdapter.addItemsAdapter(selectedItems!!)
+            mapAdapter.notifyDataSetChanged()
+
+            text_spotnumber_maplist_f.text = selectedItems!!.size.toString()
         }
 
     }
@@ -205,15 +232,18 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         }
     }
 
-    override fun showPhotoUi(){ //PhotoFragment로 이동
-        findNavController().navigate(R.id.action_mapFragment_to_photo)
+    override fun showPhotoUi(id:Int){ //PhotoFragment로 이동
+        val bundle = bundleOf("photoId" to id)
+        findNavController().navigate(R.id.action_mapFragment_to_photo, bundle)
     }
 
     interface mapInter{
-        fun itemClick()
+        fun itemClick(id: Int)
     }
 
     inner class MapAdapter(val context: Context, val  mapInterListener:mapInter):RecyclerView.Adapter<MapAdapter.ViewHolder>(){
+
+        private var itemsList = ArrayList<Map>()
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MapAdapter.ViewHolder {
             val view =  LayoutInflater.from(context).inflate(R.layout.item_photo_square, parent, false)
@@ -221,54 +251,30 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         }
 
         override fun getItemCount(): Int {
-            return 30
+            return itemsList.size
+        }
+
+        fun addItemsAdapter(mapItems: ArrayList<Map>){
+            itemsList = mapItems
+        }
+
+        fun clearItemsAdapter() {
+            itemsList.clear()
         }
 
         override fun onBindViewHolder(holder: MapAdapter.ViewHolder, position: Int) {
 
-            //------------임시 데이터들---------------------------------------------------------------
-            if(position==0 || position==5){
-                Glide.with(holder.itemView.context)
-                    .load("https://cdn.pixabay.com/photo/2017/08/06/12/06/people-2591874_1280.jpg")
-                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                    .error(android.R.drawable.stat_notify_error)
-                    .into(holder.photo)
-            }else if(position==1 || position==6){
-                Glide.with(holder.itemView.context)
-                    .load("https://cdn.pixabay.com/photo/2017/06/23/17/41/morocco-2435391_960_720.jpg")
-                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                    .error(android.R.drawable.stat_notify_error)
-                    .into(holder.photo)
-
-            }else if(position==2 || position==7){
-                Glide.with(holder.itemView.context)
-                    .load("https://cdn.pixabay.com/photo/2012/10/10/11/05/space-station-60615_960_720.jpg")
-                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                    .error(android.R.drawable.stat_notify_error)
-                    .into(holder.photo)
-            }else if(position==3 || position==8){
-                Glide.with(holder.itemView.context)
-                    .load("https://cdn.pixabay.com/photo/2017/08/02/00/16/people-2568954_1280.jpg")
-                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                    .error(android.R.drawable.stat_notify_error)
-                    .into(holder.photo)
-            }else if(position==4 || position==9){
-                Glide.with(holder.itemView.context)
-                    .load("https://cdn.pixabay.com/photo/2016/11/29/06/45/beach-1867881_1280.jpg")
-                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                    .error(android.R.drawable.stat_notify_error)
-                    .into(holder.photo)
-            }else{
-                Glide.with(holder.itemView.context)
-                    .load("https://cdn.pixabay.com/photo/2016/11/29/06/45/beach-1867881_1280.jpg")
+            itemsList[position].let{
+                     Glide.with(holder.itemView.context)
+                    .load(it.imgUrl)
                     .placeholder(android.R.drawable.progress_indeterminate_horizontal)
                     .error(android.R.drawable.stat_notify_error)
                     .into(holder.photo)
             }
-            //---------------------------------------------------------------------------------------------------
+
 
             holder.itemView.setOnClickListener{
-                mapInterListener.itemClick()
+                mapInterListener.itemClick(itemsList[position].id)
             }
         }
 
@@ -282,34 +288,20 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
     override fun onMapReady(map: GoogleMap){ //구글맵이 로딩 되었을 때
         mMap = map
-
         presenter.getLastPosition() //카메라 포지션 옮기기. (처음실행 : 서울, 그외 : 최근에 봤던 곳)
 
-        mMap.uiSettings.isRotateGesturesEnabled = false //지도 방향 고정시키기
+        mMap.uiSettings.isRotateGesturesEnabled = false //지도 방향 고정시키기(회전 불가)
 
-        //클러스트링
-        clusterManager = ClusterManager<MapItem>(context, mMap)
+        setClusterManager()
 
-        mCustomClusterItemRenderer = PhotoRenderer()
-        clusterManager!!.renderer = mCustomClusterItemRenderer
+        sendCameraRange()
 
-        mMap.setOnCameraIdleListener(clusterManager)
-        mMap.setOnMarkerClickListener(clusterManager)
-        mMap.setOnInfoWindowClickListener(clusterManager)
-        clusterManager!!.setOnClusterClickListener(this)
-        clusterManager!!.setOnClusterItemClickListener(this)
-
-        addItems() // 더미 클러스터링 데이터 넣음
-
-        clusterManager.cluster()
-
-        //리스트플래그먼트에 총개수 넣음 (더미)
-        text_spotnumber_maplist_f.text = clusterManager.algorithm.items.size.toString()
 
     }
 
     override fun movePosition(latLng: LatLng, zoom:Float){
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
+        logd(TAG, "movePosition")
     }
 
 
@@ -357,8 +349,8 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     }
 
 
-    /*-------------------------------클러스터 랜더링 클래스 생성--------------------------------------------*/
-    private inner class PhotoRenderer:DefaultClusterRenderer<MapItem>(context!!, mMap, clusterManager){
+    /*-------------------------------[클러스터 랜더링 클래스 생성]--------------------------------------------*/
+    private inner class PhotoRenderer:DefaultClusterRenderer<MapCluster>(context!!, mMap, clusterManager){
 
         val customMarkerView:View
         private val mClusterIconGenerator = IconGenerator(context)
@@ -376,12 +368,12 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
             icon = bmp
         }
 
-        override fun onBeforeClusterItemRendered(item: MapItem?, markerOptions: MarkerOptions?) {
+        override fun onBeforeClusterItemRendered(item: MapCluster?, markerOptions: MarkerOptions?) {
             //클러스터아이템 만들어지기 전 임시로 나오는 아이콘 지정 -> empty bitmap
             markerOptions?.icon(BitmapDescriptorFactory.fromBitmap(icon))
         }
 
-        override fun onClusterItemRendered(clusterItem: MapItem?, marker: Marker?) {
+        override fun onClusterItemRendered(clusterItem: MapCluster?, marker: Marker?) {
             selectedMarker = null //선택된 클러스터 null로 만듦. -> 새로 클러스터링이 되면 선택했던 클러스터 없어지게함.
             mBottomSheetBehavior?.state =  BottomSheetBehavior.STATE_COLLAPSED //리스트플래그먼트는 내려가게함.
 
@@ -400,12 +392,12 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         }
 
 
-        override fun onBeforeClusterRendered(cluster: Cluster<MapItem>?,markerOptions: MarkerOptions?) {
+        override fun onBeforeClusterRendered(cluster: Cluster<MapCluster>?, markerOptions: MarkerOptions?) {
             //클러스터 만들어지기 전 임시로 나오는 아이콘 지정 -> empty bitmap
             markerOptions!!.icon(BitmapDescriptorFactory.fromBitmap(icon))
         }
 
-        override fun onClusterRendered(cluster: Cluster<MapItem>?, marker: Marker?) {
+        override fun onClusterRendered(cluster: Cluster<MapCluster>?, marker: Marker?) {
             selectedMarker = null//선택된 클러스터 null로 만듦. -> 새로 클러스터링이 되면 선택했던 클러스터 없어지게함.
             mBottomSheetBehavior?.state =  BottomSheetBehavior.STATE_COLLAPSED //리스트플래그먼트는 내려가게함.
 
@@ -428,30 +420,29 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
         }
 
-        override fun shouldRenderAsCluster(cluster: Cluster<MapItem>?): Boolean {
+        override fun shouldRenderAsCluster(cluster: Cluster<MapCluster>?): Boolean {
             // 언제나 클러스터가 일어나게함. 클러스터아이템이 2개 이상이면 클러스터가 일어나게함.
             return cluster!!.size > 1
         }
     }
-    /*-------------------------------클러스터 랜더링 클래스 끝--------------------------------------------*/
+    /*-------------------------------[클러스터 랜더링 클래스 끝]--------------------------------------------*/
 
 
-
-    override fun onClusterItemClick(item: MapItem?): Boolean { //클러스터아이템(사진 한 장) 눌렀을 때 일어나는 일
+    override fun onClusterItemClick(item: MapCluster?): Boolean { //클러스터아이템(사진 한 장) 눌렀을 때 일어나는 일
         if(mBottomSheetBehavior?.state ==  BottomSheetBehavior.STATE_EXPANDED){
             return true   //리스트플래그먼트 상태가 올라온 상태라면 클러스터 클릭안되게
         }
-        Toast.makeText(context, "item : "+item!!.imgUrl, Toast.LENGTH_SHORT).show()
-        presenter.openPhoto() //사진 한 장 클릭시 PhotoFragment로 이동
+        presenter.openPhoto(item!!.id) //사진 한 장 클릭시 PhotoFragment로 이동
         return true
     }
 
-    override fun onClusterClick(cluster: Cluster<MapItem>?): Boolean { //클러스터(사진 여러장) 눌렀을 때 일어나는 일
+    override fun onClusterClick(cluster: Cluster<MapCluster>?): Boolean { //클러스터(사진 여러장) 눌렀을 때 일어나는 일
 
         if(mBottomSheetBehavior?.state ==  BottomSheetBehavior.STATE_EXPANDED){
             //리스트플래그먼트 상태가 올라온 상태라면 클러스터 클릭안되게
             return true
         }
+
 
         if(selectedMarker !=null){ //전에 선택했던 마커는 다시 하얀색으로 바꾸기
             Glide.with(context!!)
@@ -477,9 +468,8 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         return true
     }
 
-    private fun newCluster(cluster: Cluster<MapItem>?){ //새로 선택한 클러스터 처리
-        Toast.makeText(context, "size : " + cluster!!.size, Toast.LENGTH_SHORT).show()
-        text_spotnumber_maplist_f.text = cluster!!.size.toString()
+    private fun newCluster(cluster: Cluster<MapCluster>?){ //새로 선택한 클러스터 처리
+        childfragment.text_spotnumber_maplist_f.text = cluster!!.size.toString()
 
         val firstItem = cluster!!.items.iterator().next() //첫번째 아이템 선택
 
@@ -510,6 +500,20 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         val center: CameraUpdate = CameraUpdateFactory.newLatLng(newPositon)
         mMap.animateCamera(center) //카메라 이동
 
+        mapAdapter.clearItemsAdapter()
+
+        val clusterMapItems = ArrayList<Map>()
+        for(i in 0..selectedCluster!!.items.size-1){
+            val item = cluster!!.items.iterator().asSequence().toList()
+            logd(TAG, item.toString())
+            clusterMapItems.add(Map(item[i].latLng.latitude,item[i].latLng.longitude, item[i].imgUrl, item[i] .id))
+        }
+
+        selectedItems = clusterMapItems //선택된 아이템 변경.
+
+        mapAdapter.addItemsAdapter(clusterMapItems)
+        mapAdapter.notifyDataSetChanged()
+
         //클러스터 선택시 리스트플래그먼트 반만 올라오게
         mBottomSheetBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
     }
@@ -517,46 +521,69 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
     override fun onStop() {
         super.onStop()
-        presenter.setLastPosition(mMap.cameraPosition)
+        presenter.setLastPosition(mMap.cameraPosition) //마지막 구글맵 위치(위도,경도,줌) shared에 저장
     }
 
+    override fun addItems(mapItems:ArrayList<Map>){
 
-    /*===================================구글맵 더미 데이터===========================================*/
-    private fun addItems(){  //구글맵 더미 마커
-        clusterManager!!.addItem(MapItem(LatLng(37.565597, 126.978009), "",
-            "https://cdn.pixabay.com/photo/2017/08/06/12/06/people-2591874_1280.jpg"))
-        clusterManager!!.addItem(MapItem(LatLng(37.564920, 126.925100), "",
-            "https://cdn.pixabay.com/photo/2012/10/10/11/05/space-station-60615_960_720.jpg"))
-        clusterManager!!.addItem(MapItem(LatLng(37.547759, 126.922873), "",
-            "https://cdn.pixabay.com/photo/2016/11/29/06/45/beach-1867881_1280.jpg"))
-        clusterManager!!.addItem(MapItem(LatLng(37.504458, 126.986861), "",
-            "https://cdn.pixabay.com/photo/2017/08/02/00/16/people-2568954_1280.jpg"))
+        selectedItems = mapItems //선택된 아이템 변경.
 
-        clusterManager!!.addItem(MapItem(LatLng(37.566597, 126.968009), "",
-            "https://cdn.pixabay.com/photo/2017/08/06/12/06/people-2591874_1280.jpg"))
-        clusterManager!!.addItem(MapItem(LatLng(37.563920, 126.955100), "",
-            "https://cdn.pixabay.com/photo/2012/10/10/11/05/space-station-60615_960_720.jpg"))
-        clusterManager!!.addItem(MapItem(LatLng(37.545759, 126.942873), "",
-            "https://cdn.pixabay.com/photo/2016/11/29/06/45/beach-1867881_1280.jpg"))
-        clusterManager!!.addItem(MapItem(LatLng(37.514458, 126.996861), "",
-            "https://cdn.pixabay.com/photo/2017/08/02/00/16/people-2568954_1280.jpg"))
-
-        for(i in 0..100){
-            clusterManager!!.addItem(MapItem(position(), "",
-                "https://cdn.pixabay.com/photo/2016/11/29/06/45/beach-1867881_1280.jpg"))
+        for(i  in 0..mapItems.size-1){
+            clusterManager!!.addItem(MapCluster(LatLng(mapItems[i].lat, mapItems[i].lng), "",
+                mapItems[i].imgUrl, mapItems[i].id))
         }
-    }
-    /*===================================구글맵 더미 데이터 끝=========================================*/
 
-    /*==========================구글맵 더미 데이터용 랜덤위치 생성 함수들==================================*/
-    private fun position():LatLng{
-        return LatLng(random(37.489324, 37.626495), random(126.903712, 127.096659))
+        clusterManager.cluster()
+        //리스트플래그먼트에 총개수 넣음 (더미)
+        childfragment.text_spotnumber_maplist_f.text = clusterManager.algorithm.items.size.toString()
+
+        //리스트플래그먼트 리사이클러뷰에 아이템 추가
+        mapAdapter.addItemsAdapter(mapItems)
+        mapAdapter.notifyDataSetChanged()
+
+        //하단 플레그먼트 내려가게
+        mBottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+        bottomCollapsed()
     }
 
-    private fun random(min:Double, max:Double):Double{
-        return min+(max-min)* Random().nextDouble()
+
+    override fun showToast(string: String) {
+        Toast.makeText(this.context, string, Toast.LENGTH_SHORT).show()
     }
-    /*=========================구글맵 더미 데이터용 랜덤위치 생성 함수들 끝=================================*/
+
+    override fun sendCameraRange(){ //현재 화면에 보여지는 위치 서버에 보냄.
+       presenter.getPhotos(getString(R.string.baseurl), mMap.projection.visibleRegion.latLngBounds)
+    }
+
+    private fun setClusterManager(){
+        clusterManager = ClusterManager<MapCluster>(context, mMap)
+
+        mCustomClusterItemRenderer = PhotoRenderer()
+        clusterManager!!.renderer = mCustomClusterItemRenderer
+        clusterManager!!.renderer.setAnimation(false)
+
+        mMap.setOnMarkerClickListener(clusterManager)
+        mMap.setOnInfoWindowClickListener(clusterManager)
+        clusterManager!!.setOnClusterClickListener(this)
+        clusterManager!!.setOnClusterItemClickListener(this)
+
+        mMap.setOnCameraIdleListener(object:GoogleMap.OnCameraIdleListener{ //카메라 움직임이 끝나는 콜백
+            override fun onCameraIdle() {
+                logd(TAG, "Camera movement has ended")
+                if(!initMapMoving){ //처음 맵을 세팅할 때는 카메라 움직임이 끝나도 "이 지역에서 찾기"버튼 보여주지 않음.
+                    btn_find_map_f.visibility = View.VISIBLE
+                }
+                initMapMoving = false
+
+                clusterManager.cluster()
+            }
+        } )
+
+    }
+    override fun noPhoto(){ //카메라 범위에 해당하는 사진이 없을때
+        text_spotnumber_maplist_f.text = "0"
+        text_nophoto_maplist_f.visibility = View.VISIBLE
+    }
 
 }
 
