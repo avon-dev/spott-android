@@ -42,8 +42,6 @@ import kotlin.collections.ArrayList
 class CameraFragment : Fragment(), View.OnClickListener,
     ActivityCompat.OnRequestPermissionsResultCallback {
 
-    private var isGallery = false
-
     // textureListener
     private val surfaceTextureListener = object : TextureView.SurfaceTextureListener {
         /*
