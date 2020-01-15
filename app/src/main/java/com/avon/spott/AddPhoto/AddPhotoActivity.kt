@@ -91,16 +91,6 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
 
     }
 
-    /*==========================구글맵 더미 데이터용 랜덤위치 생성 함수들==================================*/
-    private fun position(): LatLng {
-        return LatLng(random(37.489324, 37.626495), random(126.903712, 127.096659))
-    }
-
-    private fun random(min:Double, max:Double):Double{
-        return min+(max-min)* Random().nextDouble()
-    }
-    /*=========================구글맵 더미 데이터용 랜덤위치 생성 함수들 끝=================================*/
-
     override fun showToast(string: String) {
         Toast.makeText(this, string, Toast.LENGTH_SHORT).show()
     }

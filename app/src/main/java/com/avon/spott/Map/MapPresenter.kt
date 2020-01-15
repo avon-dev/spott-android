@@ -21,6 +21,8 @@ class MapPresenter (val mapView:MapContract.View) : MapContract.Presenter {
 
     init{ mapView.presenter = this}
 
+    val adddummy = addDummy() //테스트 코드 추가
+
     override fun openPhoto(id:Int) { mapView.showPhotoUi(id) }
 
     override fun getLastPosition() {
@@ -43,18 +45,45 @@ class MapPresenter (val mapView:MapContract.View) : MapContract.Presenter {
 
         val cameraRange = CameraRange(latLngBounds.northeast.latitude, latLngBounds.northeast.longitude,
             latLngBounds.southwest.latitude, latLngBounds.southwest.longitude)
-        logd(TAG, "cameraRange Parser"+Parser.toJson(cameraRange))
 
-        Retrofit(baseUrl).get("/spott/email-authen",  Parser.toJson(cameraRange))
+       //------------------------200115 테스트 코드-------------------------------------------
+//        val newArryList = ArrayList<Map>()
+//        for(i in 0..adddummy.size-1){
+//            if(adddummy[i].latitude < latLngBounds.northeast.latitude &&
+//                adddummy[i].latitude >  latLngBounds.southwest.latitude &&
+//                adddummy[i].longitude < latLngBounds.northeast.longitude &&
+//                adddummy[i].longitude > latLngBounds.southwest.longitude  ){
+//                newArryList.add(adddummy[i])
+//            }
+//
+//        }
+//        mapView.addItems(newArryList)
+        //-----------------------------------------------------------------------------------
+
+
+        //------------------- json parser테스트------------------------------------------------
+//        var parser = Parser.toJson(addDummy())
+//        parser = "{ \"payload\" : " + parser + "}"
+//        logd(TAG, "1. 투제이슨 ===== " +parser)
+//        val presult = Parser.fromJson<ArrayList<Map>>(parser)
+//        logd(TAG, "2. 프롬제이슨 ===== " +presult)
+        //----------------------------------------------------------------------------------
+
+        Retrofit(baseUrl).get("/spott/posts",  Parser.toJson(cameraRange))
             .subscribe({ response ->
-                logd(TAG, response.body())
-                val result = response.body()?.let { Parser.fromJson<ArrayList<Map>>(it) }
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 
-                if(result!=null){
-                    mapView.addItems(result)
-                }
+                val string  = response.body()
+                logd(TAG,"스트링 테스트 : " + string)
+                var changeString = string!!.replace("'", "")
+                val parserString = "{ \"payload\" : " + changeString + "}"
+                 val photos = Parser.fromJson<ArrayList<Map>>(parserString)
 
+                logd(TAG,"리절트는 " +photos)
+
+                if(photos!=null){
+                    mapView.addItems(photos)
+                }
 
             }, { throwable ->
                 logd(TAG, throwable.message)
@@ -66,7 +95,7 @@ class MapPresenter (val mapView:MapContract.View) : MapContract.Presenter {
                 }
             })
 
-//         mapView.addItems(addDummy()) /** 더미 넣는 테스트 코드 **/
+//         mapView.addItems(adddummy) /** 더미 넣는 테스트 코드 **/
     }
 
     override fun getNophoto(){ //테스트용
@@ -83,7 +112,7 @@ class MapPresenter (val mapView:MapContract.View) : MapContract.Presenter {
         mapItems.add(Map(37.547759, 126.922873,"https://cdn.pixabay.com/photo/2016/11/29/06/45/beach-1867881_1280.jpg",0))
         mapItems.add(Map(37.504458, 126.986861,"https://cdn.pixabay.com/photo/2017/08/02/00/16/people-2568954_1280.jpg",0))
 
-        for(i in 0..2){
+        for(i in 0..102){
             val position = position()
             mapItems.add(Map(position.latitude, position.longitude, "https://cdn.pixabay.com/photo/2016/11/29/06/45/beach-1867881_1280.jpg",1))
         }

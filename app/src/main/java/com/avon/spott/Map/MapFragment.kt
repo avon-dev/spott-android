@@ -1,13 +1,17 @@
 package com.avon.spott.Map
 
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.text.Layout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -31,6 +35,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.animation.AnimationUtils
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.maps.android.clustering.Cluster
@@ -70,7 +75,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     private var initMapMoving : Boolean = true //처음 맵 로딩하는지 여부
 
     val mapInterListener = object : mapInter{
-        override fun itemClick(id: Int){
+        override fun itemClick(id: Int){ //  맵리스트플래그먼트(하단플래그먼트) 리사이클러뷰 아이템 클릭시
             presenter.openPhoto(id)
         }
     }
@@ -80,38 +85,6 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
         //바텀시트 처리
         configureBackdrop()
-
-        //----------------임시 테스트----------------
-        root.btn_find_map_f.setOnClickListener{
-            //새로 아이템을 불러오는 함수 넣어야함.
-
-            btn_find_map_f.visibility = View.GONE
-            text_nophoto_maplist_f.visibility = View.GONE
-
-            clusterManager.clearItems()
-            clusterManager.cluster()
-
-            setClusterManager()
-
-            sendCameraRange()
-        }
-        //-----------------------------------------------
-
-        //------사진 없을 경우 테스트--------------------------
-        root.imgbtn_mylocation_map_f.setOnClickListener{
-
-                btn_find_map_f.visibility = View.GONE
-                text_nophoto_maplist_f.visibility = View.GONE
-
-                clusterManager.clearItems()
-                clusterManager.cluster()
-
-                setClusterManager()
-
-                presenter.getNophoto()
-            }
-        //------------------------------------------------
-
 
         if(!::mapView.isInitialized){ //처음 생성될 때 빼고는 다시 구글맵을 초기화하지 않는다.
             val mapFragment : SupportMapFragment = childFragmentManager.findFragmentById(R.id.frag_googlemap_map_f) as SupportMapFragment
@@ -126,7 +99,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         super.onActivityCreated(savedInstanceState)
         init()
 
-        //---------------리사이클러뷰테스트 코드------------------------------
+        //---------------맵리스트플래그먼트(하단플래그먼트)의 리사이클러뷰 생성------------------
         val layoutManager = GridLayoutManager(context!!, 2)
         recycler_map_f.layoutManager = layoutManager
 
@@ -138,6 +111,8 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
     fun init(){
         mapPresenter = MapPresenter(this)
+        btn_find_map_f.setOnClickListener(this)
+        imgbtn_mylocation_map_f.setOnClickListener(this)
     }
 
     override fun onStart() {
@@ -153,7 +128,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
             bottomCollapsed()
         }
 
-        //선택했던 아이템 있을 경우 리스트플래그먼트의 리사이클러뷰와 전체 개수 텍스트 처리
+        //선택했던 아이템 있을 경우 맵리스트플래그먼트(하단플래그먼트)의 리사이클러뷰와 전체 개수 텍스트 처리
         if(selectedItems!=null){
 
             mapAdapter.addItemsAdapter(selectedItems!!)
@@ -208,7 +183,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         }
     }
 
-    fun bottomExpanded(){ //리스트플래그먼트가 올라와있을 때 일어나는 일
+    fun bottomExpanded(){ //맵리스트플래그먼트(하단플래그먼트)가 올라와있을 때 일어나는 일
         childfragment.img_updown_maplist_f.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp)
         imgbtn_mylocation_map_f.isEnabled =false
         btn_find_map_f.isEnabled =false
@@ -217,7 +192,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         }
     }
 
-    fun bottomCollapsed(){ //리스트플래그먼트가 내려가있을 때 일어나는 일
+    fun bottomCollapsed(){ //맵리스트플래그먼트(하단플래그먼트)가 내려가있을 때 일어나는 일
         childfragment.img_updown_maplist_f.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp)
         imgbtn_mylocation_map_f.isEnabled=true
         btn_find_map_f.isEnabled =true
@@ -229,6 +204,31 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
     override fun onClick(v: View?){
         when(v?.id){
+            R.id.btn_find_map_f ->{ // '이 지역에서 찾기' 버튼 -> 해당 카메라 범위에 맞는 사진 새로 가져옴
+                showToast("이거 눌렀어요")
+
+                animateButton(btn_find_map_f, false) //버튼 사라짐(애니메이션)
+                text_nophoto_maplist_f.visibility = View.GONE // 맵리스트플래그먼트(하단플래그먼트)의 '사진 없음' 텍스트 없앰.
+
+                clusterManager.clearItems()
+                clusterManager.cluster()
+
+                setClusterManager()
+
+                sendCameraRange()
+            }
+            R.id.imgbtn_mylocation_map_f ->{ //내 위치 이미지버튼 ->
+                /*    현재는 사진없는 경우 테스트         */
+                animateButton(btn_find_map_f, false)
+                text_nophoto_maplist_f.visibility = View.GONE
+
+                clusterManager.clearItems()
+                clusterManager.cluster()
+
+                setClusterManager()
+
+                presenter.getNophoto()
+            }
         }
     }
 
@@ -266,7 +266,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
             itemsList[position].let{
                      Glide.with(holder.itemView.context)
-                    .load(it.imgUrl)
+                    .load(it.posts_image)
                     .placeholder(android.R.drawable.progress_indeterminate_horizontal)
                     .error(android.R.drawable.stat_notify_error)
                     .into(holder.photo)
@@ -379,7 +379,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
             Glide.with(context!!)
                 .asBitmap()
-                .load(clusterItem!!.imgUrl)
+                .load(clusterItem!!.posts_image)
                 .fitCenter()
                 .into(object :CustomTarget<Bitmap>(){
                     override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?) {
@@ -399,13 +399,13 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
         override fun onClusterRendered(cluster: Cluster<MapCluster>?, marker: Marker?) {
             selectedMarker = null//선택된 클러스터 null로 만듦. -> 새로 클러스터링이 되면 선택했던 클러스터 없어지게함.
-            mBottomSheetBehavior?.state =  BottomSheetBehavior.STATE_COLLAPSED //리스트플래그먼트는 내려가게함.
+            mBottomSheetBehavior?.state =  BottomSheetBehavior.STATE_COLLAPSED //맵리스트플래그먼트(하단플래그먼트)는 내려가게함.
 
             val firstItem = cluster!!.items.iterator().next()   //첫번째 아이템 선택
 
             Glide.with(context!!)
                 .asBitmap()
-                .load(firstItem.imgUrl)
+                .load(firstItem.posts_image)
                 .fitCenter()
                 .into(object :CustomTarget<Bitmap>(){
                     override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?){
@@ -415,9 +415,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
                     }
                     override fun onLoadCleared(placeholder: Drawable?) {
                     }
-
                 })
-
         }
 
         override fun shouldRenderAsCluster(cluster: Cluster<MapCluster>?): Boolean {
@@ -430,7 +428,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
     override fun onClusterItemClick(item: MapCluster?): Boolean { //클러스터아이템(사진 한 장) 눌렀을 때 일어나는 일
         if(mBottomSheetBehavior?.state ==  BottomSheetBehavior.STATE_EXPANDED){
-            return true   //리스트플래그먼트 상태가 올라온 상태라면 클러스터 클릭안되게
+            return true   //맵리스트플래그먼트(하단플래그먼트)가 올라온 상태라면 클러스터 클릭안되게
         }
         presenter.openPhoto(item!!.id) //사진 한 장 클릭시 PhotoFragment로 이동
         return true
@@ -439,7 +437,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     override fun onClusterClick(cluster: Cluster<MapCluster>?): Boolean { //클러스터(사진 여러장) 눌렀을 때 일어나는 일
 
         if(mBottomSheetBehavior?.state ==  BottomSheetBehavior.STATE_EXPANDED){
-            //리스트플래그먼트 상태가 올라온 상태라면 클러스터 클릭안되게
+            //맵리스트플래그먼트(하단플래그먼트)가 올라온 상태라면 클러스터 클릭안되게
             return true
         }
 
@@ -447,7 +445,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         if(selectedMarker !=null){ //전에 선택했던 마커는 다시 하얀색으로 바꾸기
             Glide.with(context!!)
                 .asBitmap()
-                .load(selectedCluster!!.items.iterator().next().imgUrl) //전에 선택했던 클러스터의 첫번째 이미지 url가져온다.
+                .load(selectedCluster!!.items.iterator().next().posts_image) //전에 선택했던 클러스터의 첫번째 이미지 url가져온다.
                 .fitCenter()
                 .into(object :CustomTarget<Bitmap>(){
                     override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?) {
@@ -479,7 +477,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
         Glide.with(context!!)
             .asBitmap()
-            .load(firstItem.imgUrl)
+            .load(firstItem.posts_image)
             .fitCenter()
             .into(object :CustomTarget<Bitmap>(){
                 override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?){
@@ -506,7 +504,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         for(i in 0..selectedCluster!!.items.size-1){
             val item = cluster!!.items.iterator().asSequence().toList()
             logd(TAG, item.toString())
-            clusterMapItems.add(Map(item[i].latLng.latitude,item[i].latLng.longitude, item[i].imgUrl, item[i] .id))
+            clusterMapItems.add(Map(item[i].latLng.latitude,item[i].latLng.longitude, item[i].posts_image, item[i] .id))
         }
 
         selectedItems = clusterMapItems //선택된 아이템 변경.
@@ -514,7 +512,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         mapAdapter.addItemsAdapter(clusterMapItems)
         mapAdapter.notifyDataSetChanged()
 
-        //클러스터 선택시 리스트플래그먼트 반만 올라오게
+        //클러스터 선택시 맵리스트플래그먼트(하단플래그먼트) 반만 올라오게
         mBottomSheetBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
     }
 
@@ -529,19 +527,19 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         selectedItems = mapItems //선택된 아이템 변경.
 
         for(i  in 0..mapItems.size-1){
-            clusterManager!!.addItem(MapCluster(LatLng(mapItems[i].lat, mapItems[i].lng), "",
-                mapItems[i].imgUrl, mapItems[i].id))
+            clusterManager!!.addItem(MapCluster(LatLng(mapItems[i].latitude, mapItems[i].longitude), "",
+                mapItems[i].posts_image, mapItems[i].id))
         }
 
         clusterManager.cluster()
-        //리스트플래그먼트에 총개수 넣음 (더미)
+        //맵리스트플래그먼트(하단플래그먼트)에 총개수 넣음 (더미)
         childfragment.text_spotnumber_maplist_f.text = clusterManager.algorithm.items.size.toString()
 
-        //리스트플래그먼트 리사이클러뷰에 아이템 추가
+        //맵리스트플래그먼트(하단플래그먼트) 리사이클러뷰에 아이템 추가
         mapAdapter.addItemsAdapter(mapItems)
         mapAdapter.notifyDataSetChanged()
 
-        //하단 플레그먼트 내려가게
+        //맵리스트플래그먼트(하단플래그먼트) 내려가게
         mBottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
         bottomCollapsed()
     }
@@ -571,19 +569,44 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
             override fun onCameraIdle() {
                 logd(TAG, "Camera movement has ended")
                 if(!initMapMoving){ //처음 맵을 세팅할 때는 카메라 움직임이 끝나도 "이 지역에서 찾기"버튼 보여주지 않음.
-                    btn_find_map_f.visibility = View.VISIBLE
+                    if(btn_find_map_f.visibility != View.VISIBLE){
+                        animateButton(btn_find_map_f, true) //버튼 나타남(애니메이션)
+                    }
                 }
                 initMapMoving = false
+
+                sendCameraRange()  /////////테스트중 test
 
                 clusterManager.cluster()
             }
         } )
 
     }
+
     override fun noPhoto(){ //카메라 범위에 해당하는 사진이 없을때
         text_spotnumber_maplist_f.text = "0"
         text_nophoto_maplist_f.visibility = View.VISIBLE
     }
+
+
+    private fun animateButton(view : View, show : Boolean){ //버튼 나오고 사라지는 애니메이션
+        val animationFadeOut = android.view.animation.AnimationUtils.loadAnimation(context,
+            if(show) R.anim.fragment_fade_enter else R.anim.fragment_fade_exit) //버튼 나오거나 사라지는 애니메이션
+        animationFadeOut.fillAfter = true
+        animationFadeOut.setAnimationListener(object : Animation.AnimationListener{
+            override fun onAnimationRepeat(animation: Animation?) {
+
+            }
+            override fun onAnimationEnd(animation: Animation?) { //애니메이션 끝났을때
+               view.visibility = if(show) View.VISIBLE else View.GONE  // show값에 따른 visible 처리
+            }
+            override fun onAnimationStart(animation: Animation?) {
+
+            }
+        })
+        view.startAnimation(animationFadeOut)
+    }
+
 
 }
 

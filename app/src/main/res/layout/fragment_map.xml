@@ -33,6 +33,7 @@
         android:orientation="vertical">
 
         <Button
+            android:animateLayoutChanges="true"
             android:id="@+id/btn_find_map_f"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
