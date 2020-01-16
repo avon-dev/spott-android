@@ -228,7 +228,6 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener {
     }
 
 
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,

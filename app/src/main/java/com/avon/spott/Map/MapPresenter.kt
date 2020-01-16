@@ -1,9 +1,6 @@
 package com.avon.spott.Map
 
-import com.avon.spott.Data.CameraRange
-import com.avon.spott.Data.Map
-import com.avon.spott.Data.Number
-import com.avon.spott.Data.User
+import com.avon.spott.Data.*
 import com.avon.spott.Utils.App
 import com.avon.spott.Utils.Parser
 import com.avon.spott.Utils.Retrofit
@@ -41,13 +38,27 @@ class MapPresenter (val mapView:MapContract.View) : MapContract.Presenter {
         App.prefs.mylastzoom = cameraPosition.zoom
     }
 
+    override fun getMylocation() {
+        if(!mapView.checkPermission()){
+            mapView.showPermissionDialog()
+            return
+        }
+        if(mapView.mylocation != null){
+            mapView.showMylocation()
+            mapView.moveToMylocation()
+        }else{
+            mapView.progress(true)
+            mapView.startLocationUpdates()
+        }
+    }
+
     override fun getPhotos(baseUrl:String, latLngBounds: LatLngBounds) {
 
         val cameraRange = CameraRange(latLngBounds.northeast.latitude, latLngBounds.northeast.longitude,
             latLngBounds.southwest.latitude, latLngBounds.southwest.longitude)
 
-       //------------------------200115 테스트 코드-------------------------------------------
-//        val newArryList = ArrayList<Map>()
+       //------------------------<서버없이 안드로이드에서 스스로하는 테스트 코드>-----------------------
+//        val newArryList = ArrayList<MapCluster>()
 //        for(i in 0..adddummy.size-1){
 //            if(adddummy[i].latitude < latLngBounds.northeast.latitude &&
 //                adddummy[i].latitude >  latLngBounds.southwest.latitude &&
@@ -55,36 +66,23 @@ class MapPresenter (val mapView:MapContract.View) : MapContract.Presenter {
 //                adddummy[i].longitude > latLngBounds.southwest.longitude  ){
 //                newArryList.add(adddummy[i])
 //            }
-//
 //        }
 //        mapView.addItems(newArryList)
         //-----------------------------------------------------------------------------------
-
-
-        //------------------- json parser테스트------------------------------------------------
-//        var parser = Parser.toJson(addDummy())
-//        parser = "{ \"payload\" : " + parser + "}"
-//        logd(TAG, "1. 투제이슨 ===== " +parser)
-//        val presult = Parser.fromJson<ArrayList<Map>>(parser)
-//        logd(TAG, "2. 프롬제이슨 ===== " +presult)
-        //----------------------------------------------------------------------------------
 
         Retrofit(baseUrl).get("/spott/posts",  Parser.toJson(cameraRange))
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 
                 val string  = response.body()
-                logd(TAG,"스트링 테스트 : " + string)
-                var changeString = string!!.replace("'", "")
-                val parserString = "{ \"payload\" : " + changeString + "}"
-                 val photos = Parser.fromJson<ArrayList<Map>>(parserString)
-
-                logd(TAG,"리절트는 " +photos)
+                val photos = Parser.fromJson<ArrayList<MapCluster>>(string!!)
 
                 if(photos!=null){
                     mapView.addItems(photos)
                 }
-
+                if(photos.size==0){
+                    mapView.noPhoto()
+                }
             }, { throwable ->
                 logd(TAG, throwable.message)
                 if (throwable is HttpException) {
@@ -95,27 +93,36 @@ class MapPresenter (val mapView:MapContract.View) : MapContract.Presenter {
                 }
             })
 
-//         mapView.addItems(adddummy) /** 더미 넣는 테스트 코드 **/
     }
 
-    override fun getNophoto(){ //테스트용
-        mapView.addItems(ArrayList<Map>())
-        mapView.noPhoto()
-    }
 
     /*============================= 더미 데이터 넣는 코드=========================================== */
-    private fun addDummy() : ArrayList<Map>{
+    private fun addDummy() : ArrayList<MapCluster>{
 
-        var mapItems = ArrayList<Map>()
-        mapItems.add(Map(37.565597, 126.978009,"https://cdn.pixabay.com/photo/2017/08/06/12/06/people-2591874_1280.jpg",0))
-        mapItems.add(Map(37.564920, 126.925100,"https://cdn.pixabay.com/photo/2012/10/10/11/05/space-station-60615_960_720.jpg",0))
-        mapItems.add(Map(37.547759, 126.922873,"https://cdn.pixabay.com/photo/2016/11/29/06/45/beach-1867881_1280.jpg",0))
-        mapItems.add(Map(37.504458, 126.986861,"https://cdn.pixabay.com/photo/2017/08/02/00/16/people-2568954_1280.jpg",0))
+        var mapItems = ArrayList<MapCluster>()
+        mapItems.add(MapCluster(37.565597, 126.978009,"https://cdn.pixabay.com/photo/2017/08/06/12/06/people-2591874_1280.jpg",0))
+        mapItems.add(MapCluster(37.564920, 126.925100,"https://cdn.pixabay.com/photo/2012/10/10/11/05/space-station-60615_960_720.jpg",0))
+        mapItems.add(MapCluster(37.547759, 126.922873,"https://cdn.pixabay.com/photo/2016/11/29/06/45/beach-1867881_1280.jpg",0))
+        mapItems.add(MapCluster(37.504458, 126.986861,"https://cdn.pixabay.com/photo/2017/08/02/00/16/people-2568954_1280.jpg",0))
 
-        for(i in 0..102){
+        for(i in 0..50000){
             val position = position()
-            mapItems.add(Map(position.latitude, position.longitude, "https://cdn.pixabay.com/photo/2016/11/29/06/45/beach-1867881_1280.jpg",1))
+            mapItems.add(MapCluster(position.latitude, position.longitude, "https://cdn.pixabay.com/photo/2017/08/06/12/06/people-2591874_1280.jpg",1))
         }
+
+        for(i in 0..500){
+            val position = position()
+            mapItems.add(MapCluster(position.latitude, position.longitude, "https://cdn.pixabay.com/photo/2016/11/29/06/45/beach-1867881_1280.jpg",1))
+        }
+
+        for(i in 0..500){
+            val position = position()
+            mapItems.add(MapCluster(position.latitude, position.longitude, "https://i0.wp.com/www.agoda.com/wp-content/uploads/2019/05/Gyeongbokgung-palace-Seoul-Gyeongbokgung-Palace-outside-grounds.jpg",1))
+        }
+
+        //부산
+        mapItems.add(MapCluster(35.278236, 129.165350,"https://cdn.pixabay.com/photo/2017/08/02/00/16/people-2568954_1280.jpg",0))
+        mapItems.add(MapCluster(35.275570, 129.164823,"https://cdn.pixabay.com/photo/2017/08/02/00/16/people-2568954_1280.jpg",0))
 
         return mapItems
     }

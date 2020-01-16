@@ -1,7 +1,7 @@
 package com.avon.spott.Map
 
 import com.avon.spott.BaseView
-import com.avon.spott.Data.Map
+import com.avon.spott.Data.MapCluster
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
@@ -13,8 +13,14 @@ interface MapContract {
         fun showToast(string: String)
         fun sendCameraRange()
         fun noPhoto()
-
-        fun addItems(mapItems:ArrayList<Map>)
+        fun addItems(mapItems:ArrayList<MapCluster>)
+        fun checkPermission(): Boolean
+        fun showPermissionDialog()
+        fun showMylocation()
+        fun moveToMylocation()
+        fun progress(boolean: Boolean)
+        fun startLocationUpdates()
+        var   mylocation : LatLng?
     }
 
     interface Presenter{
@@ -22,7 +28,7 @@ interface MapContract {
         fun getLastPosition()
         fun setLastPosition(cameraPosition: CameraPosition)
         fun getPhotos(baseUrl:String, latLngBounds: LatLngBounds)
+        fun getMylocation()
 
-        fun getNophoto() //테스트용
     }
 }

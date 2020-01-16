@@ -1,28 +1,30 @@
 package com.avon.spott.Map
 
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.text.Layout
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.avon.spott.Data.Map
 import com.avon.spott.Data.MapCluster
 import com.avon.spott.R
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
@@ -30,12 +32,12 @@ import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.material.animation.AnimationUtils
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.maps.android.clustering.Cluster
@@ -43,9 +45,7 @@ import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import com.google.maps.android.ui.IconGenerator
 import kotlinx.android.synthetic.main.fragment_map.*
-import kotlinx.android.synthetic.main.fragment_map.view.*
 import kotlinx.android.synthetic.main.fragment_map_list.*
-import java.util.*
 import kotlin.collections.ArrayList
 
 class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapReadyCallback,
@@ -53,27 +53,47 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
     private val TAG = "forMapFragment"
 
+    //presenter
     private lateinit var mapPresenter : MapPresenter
     override lateinit var presenter : MapContract.Presenter
 
+    //recyclerview
     private lateinit var mapAdapter: MapAdapter
 
+    //맵리스트플래그먼트(하단플래그먼트)와 바텀시트 움직임 관리
     lateinit var childfragment : Fragment
     lateinit var mBottomSheetBehavior : BottomSheetBehavior<View?>
 
+    //googlemap
     private lateinit var mMap : GoogleMap
     private lateinit var mapView : View
 
+    //googlemap clustering
     private lateinit var clusterManager : ClusterManager<MapCluster>
     private lateinit var  mCustomClusterItemRenderer : PhotoRenderer
 
+    //전에 선택된 마커 처리
     private var selectedMarker : Marker? = null //선택한 마커
     private var selectedMarkerView : View? = null //선택했던 마커뷰
     private var selectedCluster : Cluster<MapCluster>? = null //선택한 클러스터
-    private var selectedItems : ArrayList<Map>? = null//선택된 아이템
+    private var selectedItems : ArrayList<MapCluster>? = null//선택된 아이템
 
-    private var initMapMoving : Boolean = true //처음 맵 로딩하는지 여부
+    //카메라 움직임이 클러스터 선택으로 인한 움직임인지 확인, 클러스터 선택으로 인한 움직임이면 데이터 새로 가져오지 않음
+    private var clusterSelectMove : Boolean = false
 
+    //mylocation
+    private lateinit var mFusedLocationClient : FusedLocationProviderClient
+    private lateinit var locationRequest : LocationRequest
+    override var  mylocation :LatLng? = null
+    private var mylocationClick = false //내 위치 버튼 클릭했는지 여부
+
+    //paging 테스트중.. +++++++++++++++
+//    private var start = 0
+//    private val pageItems = 6  //아이템수
+//    private var pageLoading = false
+    //+++++++++++++++++++++++++++++++++
+
+    // 어댑터와 뷰 연결
     val mapInterListener = object : mapInter{
         override fun itemClick(id: Int){ //  맵리스트플래그먼트(하단플래그먼트) 리사이클러뷰 아이템 클릭시
             presenter.openPhoto(id)
@@ -83,14 +103,14 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?{
         val root = inflater.inflate(R.layout.fragment_map, container, false)
 
-        //바텀시트 처리
-        configureBackdrop()
+        configureBackdrop()  //바텀시트 처리
 
         if(!::mapView.isInitialized){ //처음 생성될 때 빼고는 다시 구글맵을 초기화하지 않는다.
             val mapFragment : SupportMapFragment = childFragmentManager.findFragmentById(R.id.frag_googlemap_map_f) as SupportMapFragment
             mapFragment.getMapAsync(this)
             mapView = mapFragment.view!!
         }
+
 
         return root
     }
@@ -99,24 +119,40 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         super.onActivityCreated(savedInstanceState)
         init()
 
-        //---------------맵리스트플래그먼트(하단플래그먼트)의 리사이클러뷰 생성------------------
+        //맵리스트플래그먼트(하단플래그먼트)의 리사이클러뷰 생성
         val layoutManager = GridLayoutManager(context!!, 2)
         recycler_map_f.layoutManager = layoutManager
-
         mapAdapter = MapAdapter(context!!, mapInterListener)
-
         recycler_map_f.adapter = mapAdapter
-        //-----------------------------------------------------------------
+
+        //+++++++++++++++++++++++++++++++++++++++++++
+//        recycler_map_f.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+//                super.onScrollStateChanged(recyclerView, newState)
+//                if(!recycler_map_f.canScrollVertically(1)){
+//                    if(selectedItems!=null && !pageLoading){
+//                        pageLoading = true
+//                        Handler().postDelayed({
+//                        addSomeItems()
+//                        }, 1000)
+//                    }
+//                }
+//            }
+//        })
+
+        //+++++++++++++++++++++++++++++++++++++++
+
     }
 
     fun init(){
         mapPresenter = MapPresenter(this)
-        btn_find_map_f.setOnClickListener(this)
         imgbtn_mylocation_map_f.setOnClickListener(this)
     }
 
     override fun onStart() {
         super.onStart()
+
+        locationInit()
 
         //툴바 안보이게
         mToolbar.visibility = View.GONE
@@ -136,15 +172,15 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
             text_spotnumber_maplist_f.text = selectedItems!!.size.toString()
         }
-
     }
 
-    private fun configureBackdrop() {
-        // Get the fragment reference
-        childfragment = childFragmentManager?.findFragmentById(R.id.frag_list_map_f)!!
+    private fun configureBackdrop() { //바텀시트 처리
+
+        childfragment = childFragmentManager?.findFragmentById(R.id.frag_list_map_f)!!  // 하단 내비게이션으로 쓸 플래그먼트 선택
 
         childfragment?.let {
             // Get the BottomSheetBehavior from the fragment view
+            // 플래그먼트
             BottomSheetBehavior.from(it.view)?.let { bsb ->
 
                 // Set the initial state of the BottomSheetBehavior to HIDDEN
@@ -186,7 +222,6 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     fun bottomExpanded(){ //맵리스트플래그먼트(하단플래그먼트)가 올라와있을 때 일어나는 일
         childfragment.img_updown_maplist_f.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp)
         imgbtn_mylocation_map_f.isEnabled =false
-        btn_find_map_f.isEnabled =false
         if(::mMap.isInitialized) {
             mMap.uiSettings.setAllGesturesEnabled(false)
         }
@@ -195,7 +230,6 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     fun bottomCollapsed(){ //맵리스트플래그먼트(하단플래그먼트)가 내려가있을 때 일어나는 일
         childfragment.img_updown_maplist_f.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp)
         imgbtn_mylocation_map_f.isEnabled=true
-        btn_find_map_f.isEnabled =true
         if(::mMap.isInitialized){
             mMap.uiSettings.setAllGesturesEnabled(true)
             mMap.uiSettings.isRotateGesturesEnabled = false //지도 방향 고정시키기
@@ -204,30 +238,9 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
     override fun onClick(v: View?){
         when(v?.id){
-            R.id.btn_find_map_f ->{ // '이 지역에서 찾기' 버튼 -> 해당 카메라 범위에 맞는 사진 새로 가져옴
-                showToast("이거 눌렀어요")
-
-                animateButton(btn_find_map_f, false) //버튼 사라짐(애니메이션)
-                text_nophoto_maplist_f.visibility = View.GONE // 맵리스트플래그먼트(하단플래그먼트)의 '사진 없음' 텍스트 없앰.
-
-                clusterManager.clearItems()
-                clusterManager.cluster()
-
-                setClusterManager()
-
-                sendCameraRange()
-            }
             R.id.imgbtn_mylocation_map_f ->{ //내 위치 이미지버튼 ->
-                /*    현재는 사진없는 경우 테스트         */
-                animateButton(btn_find_map_f, false)
-                text_nophoto_maplist_f.visibility = View.GONE
-
-                clusterManager.clearItems()
-                clusterManager.cluster()
-
-                setClusterManager()
-
-                presenter.getNophoto()
+                mylocationClick = true
+                presenter.getMylocation()
             }
         }
     }
@@ -243,7 +256,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
     inner class MapAdapter(val context: Context, val  mapInterListener:mapInter):RecyclerView.Adapter<MapAdapter.ViewHolder>(){
 
-        private var itemsList = ArrayList<Map>()
+        private var itemsList = ArrayList<MapCluster>()
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MapAdapter.ViewHolder {
             val view =  LayoutInflater.from(context).inflate(R.layout.item_photo_square, parent, false)
@@ -254,13 +267,19 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
             return itemsList.size
         }
 
-        fun addItemsAdapter(mapItems: ArrayList<Map>){
+        fun addItemsAdapter(mapItems: ArrayList<MapCluster>){
             itemsList = mapItems
         }
 
         fun clearItemsAdapter() {
             itemsList.clear()
         }
+
+        //paging 테스트중.. +++++++++++++++
+        fun addPageItem(mapItem : MapCluster){
+            itemsList.add(mapItem)
+        }
+        //++++++++++++++++++++++++++++++++++++
 
         override fun onBindViewHolder(holder: MapAdapter.ViewHolder, position: Int) {
 
@@ -288,14 +307,13 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
     override fun onMapReady(map: GoogleMap){ //구글맵이 로딩 되었을 때
         mMap = map
-        presenter.getLastPosition() //카메라 포지션 옮기기. (처음실행 : 서울, 그외 : 최근에 봤던 곳)
+
 
         mMap.uiSettings.isRotateGesturesEnabled = false //지도 방향 고정시키기(회전 불가)
 
         setClusterManager()
 
-        sendCameraRange()
-
+        presenter.getLastPosition() //카메라 포지션 옮기기. (처음실행 : 서울, 그외 : 최근에 봤던 곳)
 
     }
 
@@ -345,9 +363,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
             drawable!!.draw(canvas)
         view.draw(canvas)
         return returnedBitmap
-
     }
-
 
     /*-------------------------------[클러스터 랜더링 클래스 생성]--------------------------------------------*/
     private inner class PhotoRenderer:DefaultClusterRenderer<MapCluster>(context!!, mMap, clusterManager){
@@ -388,6 +404,10 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
                     }
                     override fun onLoadCleared(placeholder: Drawable?) {
                     }
+                    override fun onLoadFailed(errorDrawable: Drawable?) {
+                        super.onLoadFailed(errorDrawable)
+                        logd(TAG, "onLoadFailed" + errorDrawable)
+                    }
                 })
         }
 
@@ -415,6 +435,12 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
                     }
                     override fun onLoadCleared(placeholder: Drawable?) {
                     }
+
+                    override fun onLoadFailed(errorDrawable: Drawable?) {
+                        super.onLoadFailed(errorDrawable)
+                            logd(TAG, "onLoadFailed" + errorDrawable)
+                    }
+
                 })
         }
 
@@ -487,25 +513,15 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
                 }
                 override fun onLoadCleared(placeholder: Drawable?) {
                 }
+                override fun onLoadFailed(errorDrawable: Drawable?) {
+                    super.onLoadFailed(errorDrawable)
+                    logd(TAG, "onLoadFailed" + errorDrawable)
+                }
             })
-
-        val quarterLat = //지금 보여지는 맵 위쪽과 아래쪽의 위도 차이를 구해서 나눔.
-            (mMap.projection.visibleRegion.latLngBounds.northeast.latitude - mMap.projection.visibleRegion.latLngBounds.southwest.latitude)/6
-
-        val newPositon = //클러스터의 위도에서 바로 위에 구한 위도차이를 빼줌
-            LatLng(cluster.position.latitude - quarterLat, cluster.position.longitude)
-
-        val center: CameraUpdate = CameraUpdateFactory.newLatLng(newPositon)
-        mMap.animateCamera(center) //카메라 이동
-
         mapAdapter.clearItemsAdapter()
 
-        val clusterMapItems = ArrayList<Map>()
-        for(i in 0..selectedCluster!!.items.size-1){
-            val item = cluster!!.items.iterator().asSequence().toList()
-            logd(TAG, item.toString())
-            clusterMapItems.add(Map(item[i].latLng.latitude,item[i].latLng.longitude, item[i].posts_image, item[i] .id))
-        }
+        val clusterMapItems = ArrayList<MapCluster>()
+        clusterMapItems.addAll(cluster!!.items)
 
         selectedItems = clusterMapItems //선택된 아이템 변경.
 
@@ -514,30 +530,53 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
         //클러스터 선택시 맵리스트플래그먼트(하단플래그먼트) 반만 올라오게
         mBottomSheetBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+
+
+        val quarterLat = //지금 보여지는 맵 위쪽과 아래쪽의 위도 차이를 구해서 나눔.
+            (mMap.projection.visibleRegion.latLngBounds.northeast.latitude - mMap.projection.visibleRegion.latLngBounds.southwest.latitude)/6
+
+         val newClusterLatLng = //클러스터의 위도에서 바로 위에 구한 위도차이를 빼줌
+            LatLng(cluster.position.latitude - quarterLat, cluster.position.longitude)
+
+        val center: CameraUpdate = CameraUpdateFactory.newLatLng(newClusterLatLng)
+        mMap.animateCamera(center, 400, object : GoogleMap.CancelableCallback{
+            override fun onFinish() {
+                clusterSelectMove = true
+                logd(TAG, "animation Finish, animMove : "+ clusterSelectMove)
+            }
+
+            override fun onCancel() {
+            }
+
+        }) //카메라 이동
     }
 
 
     override fun onStop() {
         super.onStop()
         presenter.setLastPosition(mMap.cameraPosition) //마지막 구글맵 위치(위도,경도,줌) shared에 저장
+
+        mFusedLocationClient.removeLocationUpdates(locationCallback)
+        mylocation = null
     }
 
-    override fun addItems(mapItems:ArrayList<Map>){
+    override fun addItems(mapItems:ArrayList<MapCluster>){
 
         selectedItems = mapItems //선택된 아이템 변경.
 
-        for(i  in 0..mapItems.size-1){
-            clusterManager!!.addItem(MapCluster(LatLng(mapItems[i].latitude, mapItems[i].longitude), "",
-                mapItems[i].posts_image, mapItems[i].id))
-        }
-
+        clusterManager.clearItems() //클러스터 삭제
+        clusterManager.addItems(selectedItems)
         clusterManager.cluster()
-        //맵리스트플래그먼트(하단플래그먼트)에 총개수 넣음 (더미)
+
         childfragment.text_spotnumber_maplist_f.text = clusterManager.algorithm.items.size.toString()
 
         //맵리스트플래그먼트(하단플래그먼트) 리사이클러뷰에 아이템 추가
-        mapAdapter.addItemsAdapter(mapItems)
-        mapAdapter.notifyDataSetChanged()
+//        mapAdapter.addItemsAdapter(selectedItems!!)
+//        mapAdapter.notifyDataSetChanged()
+
+        //++++++++++페이징 테스트++++++
+//           addSomeItems()
+        //+++++++++++++++
 
         //맵리스트플래그먼트(하단플래그먼트) 내려가게
         mBottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -549,7 +588,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         Toast.makeText(this.context, string, Toast.LENGTH_SHORT).show()
     }
 
-    override fun sendCameraRange(){ //현재 화면에 보여지는 위치 서버에 보냄.
+    override fun sendCameraRange(){ //새로운 데이터를 가져오기 위해 현재 화면에 보여지는 위치를 서버에 보냄.
        presenter.getPhotos(getString(R.string.baseurl), mMap.projection.visibleRegion.latLngBounds)
     }
 
@@ -565,22 +604,96 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         clusterManager!!.setOnClusterClickListener(this)
         clusterManager!!.setOnClusterItemClickListener(this)
 
+
         mMap.setOnCameraIdleListener(object:GoogleMap.OnCameraIdleListener{ //카메라 움직임이 끝나는 콜백
             override fun onCameraIdle() {
-                logd(TAG, "Camera movement has ended")
-                if(!initMapMoving){ //처음 맵을 세팅할 때는 카메라 움직임이 끝나도 "이 지역에서 찾기"버튼 보여주지 않음.
-                    if(btn_find_map_f.visibility != View.VISIBLE){
-                        animateButton(btn_find_map_f, true) //버튼 나타남(애니메이션)
-                    }
+                logd(TAG, "onCameraIdle(), animMove : "+ clusterSelectMove)
+
+                if(!clusterSelectMove){ //애니메이션으로 움직인게 아니라면 데이터 가져옴.
+                    text_nophoto_maplist_f.visibility = View.GONE
+                    sendCameraRange()
                 }
-                initMapMoving = false
+                clusterSelectMove =false
 
-                sendCameraRange()  /////////테스트중 test
-
-                clusterManager.cluster()
             }
         } )
 
+    }
+
+    override fun checkPermission(): Boolean {
+        val resultFine = ActivityCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION)
+        val resultCoarse = ActivityCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_COARSE_LOCATION)
+        if( resultFine == PackageManager.PERMISSION_DENIED ||
+            resultCoarse == PackageManager.PERMISSION_DENIED ) return false
+        return true
+    }
+
+    override fun showPermissionDialog() {
+        requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 1000)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
+                                            grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(requestCode==1000){
+            if(grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                presenter.getMylocation()
+            }
+        }
+    }
+
+    override fun showMylocation() {
+        mMap.isMyLocationEnabled = true
+        mMap.uiSettings.isMyLocationButtonEnabled = false
+    }
+
+    override fun moveToMylocation() {
+        if(mylocation!=null){
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 16f))
+        }else{
+            showToast("현재 위치를 가지고 오는 중입니다. 잠시 후 다시 시도해주세요.")
+        }
+    }
+
+    override fun progress(boolean: Boolean){
+        progress_map_f.visibility = if(boolean) View.VISIBLE else View.GONE
+    }
+
+    private fun locationInit(){
+        locationRequest = LocationRequest()
+            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+            .setInterval(10000)
+            .setFastestInterval(1000)
+
+        val builder : LocationSettingsRequest.Builder = LocationSettingsRequest.Builder()
+        builder.addLocationRequest(locationRequest)
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context!!)
+    }
+
+    val locationCallback = object: LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult?) {
+            super.onLocationResult(locationResult)
+
+            locationResult?.let{
+                for((i, location) in it.locations.withIndex()){
+                    Log.d(TAG, "mylocation #$i ${location.latitude} , ${location.longitude}")
+                    mylocation = LatLng(location.latitude, location.longitude)
+                    if(mylocationClick && mylocation!=null){
+                        mylocationClick = false
+                        showMylocation()
+                        moveToMylocation()
+                        progress(false)
+                    }
+
+                }
+            }
+
+        }
+    }
+
+    override fun startLocationUpdates(){
+        mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
     }
 
     override fun noPhoto(){ //카메라 범위에 해당하는 사진이 없을때
@@ -588,25 +701,24 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         text_nophoto_maplist_f.visibility = View.VISIBLE
     }
 
-
-    private fun animateButton(view : View, show : Boolean){ //버튼 나오고 사라지는 애니메이션
-        val animationFadeOut = android.view.animation.AnimationUtils.loadAnimation(context,
-            if(show) R.anim.fragment_fade_enter else R.anim.fragment_fade_exit) //버튼 나오거나 사라지는 애니메이션
-        animationFadeOut.fillAfter = true
-        animationFadeOut.setAnimationListener(object : Animation.AnimationListener{
-            override fun onAnimationRepeat(animation: Animation?) {
-
-            }
-            override fun onAnimationEnd(animation: Animation?) { //애니메이션 끝났을때
-               view.visibility = if(show) View.VISIBLE else View.GONE  // show값에 따른 visible 처리
-            }
-            override fun onAnimationStart(animation: Animation?) {
-
-            }
-        })
-        view.startAnimation(animationFadeOut)
-    }
-
+//    +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//    private fun addSomeItems(){
+//
+//        var end = start + pageItems
+//        if(end>selectedItems!!.size){
+//            end = selectedItems!!.size
+//        }
+//
+//        if(start < selectedItems!!.size){
+//            for(i in start..end){
+//                mapAdapter.addPageItem(selectedItems!![i])
+//            }
+//            start = start + pageItems
+//        }
+//       mapAdapter.notifyDataSetChanged()
+//       pageLoading = false
+//    }
+//   +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 }
 
