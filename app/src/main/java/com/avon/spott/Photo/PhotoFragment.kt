@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.avon.spott.R
@@ -36,6 +37,10 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         root.text_date_photo_f.text = "2019년 12월 12일"
         //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 
+        //------넘어오는 photoId값 확인------------
+        val photoId = arguments?.getInt("photoId")
+        showToast(photoId.toString())
+        //--------------------------------------
 
         return root
     }
@@ -80,6 +85,10 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
             R.id.text_nickname_photo_f -> {presenter.openUser()}
 
         }
+    }
+
+    override fun showToast(string: String) {
+        Toast.makeText(this.context, string, Toast.LENGTH_SHORT).show()
     }
 
 }

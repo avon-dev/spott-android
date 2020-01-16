@@ -78,5 +78,8 @@ dependencies {
     //for GoogleMap Clustering
     implementation 'com.google.maps.android:android-maps-utils:0.5'
 
+    //uCrop
+    implementation 'com.github.yalantis:ucrop:2.2.4'
+
 
 }

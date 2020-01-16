@@ -7,6 +7,7 @@ class PhotoContract {
         fun showPhotoMapUi()
         fun showCommentUi()
         fun showUserUi()
+        fun showToast(string: String)
     }
 
     interface Presenter{

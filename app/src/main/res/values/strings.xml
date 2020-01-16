@@ -86,4 +86,7 @@
 
     <string name="adding_photo">사진 등록</string>
 
+    <string name="toast_nophoto_map_f">등록된 사진이 없습니다. 화면을 이동하거나 지도를 확대/축소해보세요.</string>
+    <string name="no_photo">등록된 사진 없음</string>
+
 </resources>

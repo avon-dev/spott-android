@@ -47,6 +47,9 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         //툴바 타이틀 넣기
         include_toolbar_addphoto_a.text_title_toolbar.text = getString(R.string.adding_photo)
 
+        //처음 키보드 올라오기 방지용
+        text_guide_addphoto_a.requestFocus()
+
         init()
     }
 
@@ -59,7 +62,7 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
     override fun onClick(v: View?) {
         when(v?.id) {
             R.id.text_upload_addphoto_a->{
-                presenter.sendPhoto(getString(R.string.testurl),intent.getStringExtra("photo"), edit_caption_addphoto_a.text.toString(), markerLatLng)
+                presenter.sendPhoto(getString(R.string.baseurl),intent.getStringExtra("photo"), edit_caption_addphoto_a.text.toString(), markerLatLng)
             }
             R.id.img_back_toolbar ->{ presenter.navigateUp() }
         }
@@ -88,28 +91,31 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
 
     }
 
-    /*==========================구글맵 더미 데이터용 랜덤위치 생성 함수들==================================*/
-    private fun position(): LatLng {
-        return LatLng(random(37.489324, 37.626495), random(126.903712, 127.096659))
-    }
-
-    private fun random(min:Double, max:Double):Double{
-        return min+(max-min)* Random().nextDouble()
-    }
-    /*=========================구글맵 더미 데이터용 랜덤위치 생성 함수들 끝=================================*/
-
     override fun showToast(string: String) {
         Toast.makeText(this, string, Toast.LENGTH_SHORT).show()
     }
 
     override fun getPath(uri: Uri): String {
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = managedQuery(uri, projection, null, null, null)
-        startManagingCursor(cursor)
-        val column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-        cursor.moveToFirst()
-        return cursor.getString(column_index)
+        //UCrop 이전
+//        val projection = arrayOf(MediaStore.Images.Media.DATA)
+//        val cursor = managedQuery(uri, projection, null, null, null)
+//        startManagingCursor(cursor)
+//        val column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+//        cursor.moveToFirst()
+//        return cursor.getString(column_index)
 
+        val path:String
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = contentResolver.query(uri, projection, null, null, null)
+        logd(TAG, "cursor : "+cursor)
+        if(cursor == null){
+            path = uri.path
+        }else{
+            cursor.moveToFirst()
+            val column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            path = cursor.getString(column_index)
+        }
+        return path
     }
 
     override fun navigateUp() {
@@ -117,6 +123,7 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
     }
 
     override fun setPhoto(photo:String){
+        logd("photoTEST", "이미지 넣기 직전 : " + photo)
         Glide.with(this)
             .load(photo)
             .apply(RequestOptions().centerCrop())
@@ -138,4 +145,9 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         //현재 마커의 위치 저장
         markerLatLng = latLng
     }
+
+    override fun focusEdit(){ //설명 editText 포커스
+        edit_caption_addphoto_a.requestFocus()
+    }
+
 }

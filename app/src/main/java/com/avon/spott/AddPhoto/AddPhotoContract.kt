@@ -13,6 +13,7 @@ interface AddPhotoContract {
         fun setPhoto(photo:String)
         fun movePosition(latLng: LatLng, zoom:Float)
         fun addMarker(latLng: LatLng)
+        fun focusEdit()
     }
 
     interface Presenter{
