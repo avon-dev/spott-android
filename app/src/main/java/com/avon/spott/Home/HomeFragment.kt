@@ -127,6 +127,8 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
             }
 
 
+
+
         }
 
         inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

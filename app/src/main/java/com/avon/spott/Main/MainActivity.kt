@@ -5,11 +5,17 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.FragmentManager
+import androidx.navigation.NavHostController
+import androidx.navigation.fragment.NavHostFragment
 import com.avon.spott.Camera.CameraActivity
+import com.avon.spott.Map.MapFragment.Companion.mBottomSheetBehavior
 import com.avon.spott.R
 import com.avon.spott.Utils.logd
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
 class MainActivity : AppCompatActivity(), MainContract.View, View.OnClickListener {
@@ -21,6 +27,7 @@ class MainActivity : AppCompatActivity(), MainContract.View, View.OnClickListene
 
     companion object{
         lateinit var mToolbar : ConstraintLayout
+        var toFirstMapFragment = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,6 +88,26 @@ class MainActivity : AppCompatActivity(), MainContract.View, View.OnClickListene
         }
     }
 
+    override fun onBackPressed() {
+        val mapFragments = this.supportFragmentManager.findFragmentByTag("bottomNavigation#1")
+        if (mapFragments != null && mapFragments.isVisible) {
+            logd(TAG, "this is bottomNavigation#1")
+            val selectedFragment = mapFragments as NavHostFragment
+            val navController = selectedFragment.navController
+            if (navController.currentDestination?.id == navController.graph.startDestination) {
+                logd(TAG, "this is the startDestination")
+                if (mBottomSheetBehavior?.state != BottomSheetBehavior.STATE_COLLAPSED) {
+                    logd(TAG, "STATE_EXPANDED")
+                    mBottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+                    return
+                }
+            }else{
+                toFirstMapFragment = true
+            }
+        }
+
+        super.onBackPressed()
+    }
 
 
 

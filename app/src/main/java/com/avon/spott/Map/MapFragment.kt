@@ -3,13 +3,14 @@ package com.avon.spott.Map
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.ColorStateList
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,12 +23,16 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.avon.spott.AddPhoto.AddPhotoActivity
 import com.avon.spott.Data.MapCluster
+import com.avon.spott.EmailLogin.EmailLoginActivity
 import com.avon.spott.R
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
+import com.avon.spott.Main.MainActivity.Companion.toFirstMapFragment
 import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
@@ -39,6 +44,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
@@ -53,16 +59,21 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
     private val TAG = "forMapFragment"
 
+    companion object{
+         lateinit var mBottomSheetBehavior : BottomSheetBehavior<View?>
+    }
+
     //presenter
     private lateinit var mapPresenter : MapPresenter
     override lateinit var presenter : MapContract.Presenter
 
     //recyclerview
     private lateinit var mapAdapter: MapAdapter
+    private lateinit var layoutManager : GridLayoutManager
+
 
     //맵리스트플래그먼트(하단플래그먼트)와 바텀시트 움직임 관리
     lateinit var childfragment : Fragment
-    lateinit var mBottomSheetBehavior : BottomSheetBehavior<View?>
 
     //googlemap
     private lateinit var mMap : GoogleMap
@@ -88,9 +99,9 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     private var mylocationClick = false //내 위치 버튼 클릭했는지 여부
 
     //paging 테스트중.. +++++++++++++++
-//    private var start = 0
-//    private val pageItems = 6  //아이템수
-//    private var pageLoading = false
+    private var start = 0
+    private val pageItems = 16  // 한번에 보여지는 리사이클러뷰 아이템 수
+    private var pageLoading = false
     //+++++++++++++++++++++++++++++++++
 
     // 어댑터와 뷰 연결
@@ -105,12 +116,12 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
         configureBackdrop()  //바텀시트 처리
 
+
         if(!::mapView.isInitialized){ //처음 생성될 때 빼고는 다시 구글맵을 초기화하지 않는다.
             val mapFragment : SupportMapFragment = childFragmentManager.findFragmentById(R.id.frag_googlemap_map_f) as SupportMapFragment
             mapFragment.getMapAsync(this)
             mapView = mapFragment.view!!
         }
-
 
         return root
     }
@@ -119,29 +130,32 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         super.onActivityCreated(savedInstanceState)
         init()
 
-        //맵리스트플래그먼트(하단플래그먼트)의 리사이클러뷰 생성
-        val layoutManager = GridLayoutManager(context!!, 2)
-        recycler_map_f.layoutManager = layoutManager
-        mapAdapter = MapAdapter(context!!, mapInterListener)
-        recycler_map_f.adapter = mapAdapter
+            //맵리스트플래그먼트(하단플래그먼트)의 리사이클러뷰 생성
+            layoutManager = GridLayoutManager(context!!, 2)
+            childfragment.recycler_maplist_f.layoutManager = layoutManager
+            mapAdapter = MapAdapter(context!!, mapInterListener)
+            childfragment.recycler_maplist_f.adapter = mapAdapter
 
         //+++++++++++++++++++++++++++++++++++++++++++
-//        recycler_map_f.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-//                super.onScrollStateChanged(recyclerView, newState)
-//                if(!recycler_map_f.canScrollVertically(1)){
-//                    if(selectedItems!=null && !pageLoading){
-//                        pageLoading = true
-//                        Handler().postDelayed({
-//                        addSomeItems()
-//                        }, 1000)
-//                    }
-//                }
-//            }
-//        })
+        childfragment.recycler_maplist_f.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if(!childfragment.recycler_maplist_f.canScrollVertically(1)){
+                    if(selectedItems!=null && !pageLoading){
+                        pageLoading = true
 
+                        if(start<selectedItems!!.size){
+                            progress_maplist_f.visibility = View.VISIBLE
+                            Handler().postDelayed({
+                                addSomeItems()
+                            }, 600)
+                        }
+
+                    }
+                }
+            }
+        })
         //+++++++++++++++++++++++++++++++++++++++
-
     }
 
     fun init(){
@@ -164,15 +178,34 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
             bottomCollapsed()
         }
 
-        //선택했던 아이템 있을 경우 맵리스트플래그먼트(하단플래그먼트)의 리사이클러뷰와 전체 개수 텍스트 처리
-        if(selectedItems!=null){
-
-            mapAdapter.addItemsAdapter(selectedItems!!)
-            mapAdapter.notifyDataSetChanged()
-
+            //선택했던 아이템 있을 경우 맵리스트플래그먼트(하단플래그먼트)의 리사이클러뷰와 전체 개수 텍스트 처리
+            if (selectedItems != null) {
             text_spotnumber_maplist_f.text = selectedItems!!.size.toString()
-        }
+//            mapAdapter.addItemsAdapter(selectedItems!!)
+//            mapAdapter.notifyDataSetChanged()
+
+//                //++++++++++++++++++++++++++
+//                start = 0
+//                addSomeItems()
+//                //++++++++++++++++++++++++++
+            }
+
+
     }
+
+
+
+
+    override fun onStop() {
+        super.onStop()
+        presenter.setLastPosition(mMap.cameraPosition) //마지막 구글맵 위치(위도,경도,줌) shared에 저장
+
+        //현재 내 위치 받아오기 제거
+        mFusedLocationClient.removeLocationUpdates(locationCallback)
+        mylocation = null
+
+    }
+
 
     private fun configureBackdrop() { //바텀시트 처리
 
@@ -291,7 +324,6 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
                     .into(holder.photo)
             }
 
-
             holder.itemView.setOnClickListener{
                 mapInterListener.itemClick(itemsList[position].id)
             }
@@ -308,10 +340,11 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     override fun onMapReady(map: GoogleMap){ //구글맵이 로딩 되었을 때
         mMap = map
 
-
         mMap.uiSettings.isRotateGesturesEnabled = false //지도 방향 고정시키기(회전 불가)
 
-        setClusterManager()
+        mMap.setMinZoomPreference(8f) //지도 최대 축소 지정
+
+        setClusterManager() //클러스터 세팅
 
         presenter.getLastPosition() //카메라 포지션 옮기기. (처음실행 : 서울, 그외 : 최근에 봤던 곳)
 
@@ -467,7 +500,6 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
             return true
         }
 
-
         if(selectedMarker !=null){ //전에 선택했던 마커는 다시 하얀색으로 바꾸기
             Glide.with(context!!)
                 .asBitmap()
@@ -518,15 +550,23 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
                     logd(TAG, "onLoadFailed" + errorDrawable)
                 }
             })
-        mapAdapter.clearItemsAdapter()
+
 
         val clusterMapItems = ArrayList<MapCluster>()
         clusterMapItems.addAll(cluster!!.items)
 
         selectedItems = clusterMapItems //선택된 아이템 변경.
 
-        mapAdapter.addItemsAdapter(clusterMapItems)
-        mapAdapter.notifyDataSetChanged()
+        mapAdapter.clearItemsAdapter()
+
+        //선택된 아이템 맵리스트플래그먼트(하단플래그먼트)에 반영
+//        mapAdapter.addItemsAdapter(clusterMapItems)
+//        mapAdapter.notifyDataSetChanged()
+
+        //++++++++++++++++++++++++++
+        start = 0
+        addSomeItems()
+        //++++++++++++++++++++++++++
 
         //클러스터 선택시 맵리스트플래그먼트(하단플래그먼트) 반만 올라오게
         mBottomSheetBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
@@ -552,13 +592,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     }
 
 
-    override fun onStop() {
-        super.onStop()
-        presenter.setLastPosition(mMap.cameraPosition) //마지막 구글맵 위치(위도,경도,줌) shared에 저장
 
-        mFusedLocationClient.removeLocationUpdates(locationCallback)
-        mylocation = null
-    }
 
     override fun addItems(mapItems:ArrayList<MapCluster>){
 
@@ -575,7 +609,9 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 //        mapAdapter.notifyDataSetChanged()
 
         //++++++++++페이징 테스트++++++
-//           addSomeItems()
+           mapAdapter.clearItemsAdapter()
+           start = 0
+           addSomeItems()
         //+++++++++++++++
 
         //맵리스트플래그먼트(하단플래그먼트) 내려가게
@@ -662,7 +698,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     private fun locationInit(){
         locationRequest = LocationRequest()
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-            .setInterval(10000)
+            .setInterval(10000) // 자기 위치를 최신화하는 단위시간
             .setFastestInterval(1000)
 
         val builder : LocationSettingsRequest.Builder = LocationSettingsRequest.Builder()
@@ -702,22 +738,29 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     }
 
 //    +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//    private fun addSomeItems(){
-//
-//        var end = start + pageItems
-//        if(end>selectedItems!!.size){
-//            end = selectedItems!!.size
-//        }
-//
-//        if(start < selectedItems!!.size){
-//            for(i in start..end){
-//                mapAdapter.addPageItem(selectedItems!![i])
-//            }
-//            start = start + pageItems
-//        }
-//       mapAdapter.notifyDataSetChanged()
-//       pageLoading = false
-//    }
+    private fun addSomeItems(){
+       logd(TAG, "페이징 테스트, start : "+start)
+       logd(TAG, "페이징 테스트, selecteditem size : "+selectedItems!!.size)
+
+        if(start==0){
+            childfragment.recycler_maplist_f.scrollToPosition(0)
+        }
+
+        var end = start + pageItems
+        if(end>selectedItems!!.size){
+            end = selectedItems!!.size
+        }
+
+        if(start < selectedItems!!.size){
+            for(i in start..end-1){
+                mapAdapter.addPageItem(selectedItems!![i])
+            }
+            start = start + pageItems
+        }
+       mapAdapter.notifyDataSetChanged()
+       pageLoading = false
+       progress_maplist_f.visibility = View.GONE
+    }
 //   +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 }

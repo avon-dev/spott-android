@@ -67,7 +67,6 @@ fun BottomNavigationView.setupWithNavController(navGraphIds: List<Int>, fragment
         } else {
             val newlySelectedItemTag = graphIdToTagMap[item.itemId]
 
-
             if (selectedItemTag != newlySelectedItemTag) {
 
                 //홈을 제외한 선택되었던 다른 백스택을 다 날려버린다.
@@ -93,7 +92,6 @@ fun BottomNavigationView.setupWithNavController(navGraphIds: List<Int>, fragment
                             graphIdToTagMap.forEach { _, fragmentTagIter ->
                                 if (fragmentTagIter != newlySelectedItemTag) {
                                     detach(fragmentManager.findFragmentByTag(firstFragmentTag)!!)
-                                    println(" 10. fragmentTagIter 디테치드!!!   :  "+ fragmentTagIter)
                                 }
                             }
                         }
@@ -152,7 +150,7 @@ private fun BottomNavigationView.setupItemReselected(graphIdToTagMap: SparseArra
             if(selectedFragment.tag== "bottomNavigation#0"){
                 selectedFragment.recycler_home_f.smoothScrollToPosition(0)
             }else if(selectedFragment.tag== "bottomNavigation#1"){
-                selectedFragment.recycler_map_f.smoothScrollToPosition(0)
+                selectedFragment.recycler_maplist_f.smoothScrollToPosition(0)
             }else if(selectedFragment.tag == "bottomNavigation#2"){
                 selectedFragment.recycler_scrap_f.smoothScrollToPosition(0)
             }else if(selectedFragment.tag == "bottomNavigation#3"){

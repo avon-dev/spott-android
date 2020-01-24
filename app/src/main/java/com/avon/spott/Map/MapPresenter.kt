@@ -58,40 +58,40 @@ class MapPresenter (val mapView:MapContract.View) : MapContract.Presenter {
             latLngBounds.southwest.latitude, latLngBounds.southwest.longitude)
 
        //------------------------<서버없이 안드로이드에서 스스로하는 테스트 코드>-----------------------
-//        val newArryList = ArrayList<MapCluster>()
-//        for(i in 0..adddummy.size-1){
-//            if(adddummy[i].latitude < latLngBounds.northeast.latitude &&
-//                adddummy[i].latitude >  latLngBounds.southwest.latitude &&
-//                adddummy[i].longitude < latLngBounds.northeast.longitude &&
-//                adddummy[i].longitude > latLngBounds.southwest.longitude  ){
-//                newArryList.add(adddummy[i])
-//            }
-//        }
-//        mapView.addItems(newArryList)
+        val newArryList = ArrayList<MapCluster>()
+        for(i in 0..adddummy.size-1){
+            if(adddummy[i].latitude < latLngBounds.northeast.latitude &&
+                adddummy[i].latitude >  latLngBounds.southwest.latitude &&
+                adddummy[i].longitude < latLngBounds.northeast.longitude &&
+                adddummy[i].longitude > latLngBounds.southwest.longitude  ){
+                newArryList.add(adddummy[i])
+            }
+        }
+        mapView.addItems(newArryList)
         //-----------------------------------------------------------------------------------
 
-        Retrofit(baseUrl).get("/spott/posts",  Parser.toJson(cameraRange))
-            .subscribe({ response ->
-                logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
-
-                val string  = response.body()
-                val photos = Parser.fromJson<ArrayList<MapCluster>>(string!!)
-
-                if(photos!=null){
-                    mapView.addItems(photos)
-                }
-                if(photos.size==0){
-                    mapView.noPhoto()
-                }
-            }, { throwable ->
-                logd(TAG, throwable.message)
-                if (throwable is HttpException) {
-                    logd(
-                        TAG,
-                        "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
-                    )
-                }
-            })
+//        Retrofit(baseUrl).get("/spott/posts",  Parser.toJson(cameraRange))
+//            .subscribe({ response ->
+//                logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
+//
+//                val string  = response.body()
+//                val photos = Parser.fromJson<ArrayList<MapCluster>>(string!!)
+//
+//                if(photos!=null){
+//                    mapView.addItems(photos)
+//                }
+//                if(photos.size==0){
+//                    mapView.noPhoto()
+//                }
+//            }, { throwable ->
+//                logd(TAG, throwable.message)
+//                if (throwable is HttpException) {
+//                    logd(
+//                        TAG,
+//                        "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
+//                    )
+//                }
+//            })
 
     }
 
@@ -105,17 +105,17 @@ class MapPresenter (val mapView:MapContract.View) : MapContract.Presenter {
         mapItems.add(MapCluster(37.547759, 126.922873,"https://cdn.pixabay.com/photo/2016/11/29/06/45/beach-1867881_1280.jpg",0))
         mapItems.add(MapCluster(37.504458, 126.986861,"https://cdn.pixabay.com/photo/2017/08/02/00/16/people-2568954_1280.jpg",0))
 
-        for(i in 0..50000){
+        for(i in 0..30000){
             val position = position()
             mapItems.add(MapCluster(position.latitude, position.longitude, "https://cdn.pixabay.com/photo/2017/08/06/12/06/people-2591874_1280.jpg",1))
         }
 
-        for(i in 0..500){
+        for(i in 0..15000){
             val position = position()
             mapItems.add(MapCluster(position.latitude, position.longitude, "https://cdn.pixabay.com/photo/2016/11/29/06/45/beach-1867881_1280.jpg",1))
         }
 
-        for(i in 0..500){
+        for(i in 0..5000){
             val position = position()
             mapItems.add(MapCluster(position.latitude, position.longitude, "https://i0.wp.com/www.agoda.com/wp-content/uploads/2019/05/Gyeongbokgung-palace-Seoul-Gyeongbokgung-Palace-outside-grounds.jpg",1))
         }
