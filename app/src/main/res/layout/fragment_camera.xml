@@ -7,27 +7,15 @@
     tools:context=".CameraFragment">
 
     <com.avon.spott.AutoFitTextureView
-        android:id="@+id/texture"
+        android:id="@+id/texture_camera_f"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true" />
 
-<!--    <ImageView-->
-<!--        android:id="@+id/img_overlay_camera_f"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignLeft="@id/texture"-->
-<!--        android:layout_alignTop="@id/texture"-->
-<!--        android:layout_alignRight="@id/texture"-->
-<!--        android:layout_alignBottom="@id/texture"-->
-<!--        android:visibility="gone"-->
-<!--        android:background="@color/text_grey"-->
-<!--        tools:visibility="visible" />-->
-
     <FrameLayout
-        android:id="@+id/control"
+        android:id="@+id/frame_control_camera_f"
         android:layout_width="match_parent"
         android:layout_height="112dp"
         android:layout_alignParentStart="true"
@@ -37,7 +25,7 @@
 
 
         <ImageButton
-            android:id="@+id/imgbtn_like_camera_f"
+            android:id="@+id/imgbtn_scrap_camera_f"
             android:layout_width="48dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -48,14 +36,8 @@
             android:tint="@color/default_background"
             app:srcCompat="@drawable/ic_favorite_border_black_24dp" />
 
-        <!--        <Button-->
-        <!--            android:id="@+id/picture"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_gravity="center"-->
-        <!--            android:text="Picture" />-->
         <ImageButton
-            android:id="@+id/picture"
+            android:id="@+id/imgbtn_shoot_camera_f"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -65,7 +47,7 @@
             android:src="@drawable/btn_camera_shooting" />
 
         <ImageButton
-            android:id="@+id/info"
+            android:id="@+id/imgbtn_gallery_camera_f"
             android:layout_width="48dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end"
