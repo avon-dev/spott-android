@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="upload_width">1936px</dimen>
+    <dimen name="upload_heigth">1936px</dimen>
+</resources>

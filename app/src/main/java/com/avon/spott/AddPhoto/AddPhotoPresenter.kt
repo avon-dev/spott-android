@@ -30,6 +30,8 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
 
         val photoLatLng = ExifExtractor.extractLatLng(addPhotoView.getPath(Uri.parse(photo)))
 
+        logd(TAG, "photoLatLng : " + photoLatLng  )
+
         if(photoLatLng==null) return //IOException 처리
 
         if(photoLatLng==LatLng(37.56668, 126.97843)){
@@ -53,11 +55,14 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
             addPhotoView.showToast("사진의 위치를 표시해주세요")
         }else if(caption.trim().length==0) { //사진에 대한 설명이 없을 때 (빈공간 제외)
             addPhotoView.showToast("사진에 대한 설명을 입력해주세요")
+            addPhotoView.focusEdit() //editText 포커스
         }else{
 
             var images = ArrayList<MultipartBody.Part>()
 
             val file = File(addPhotoView.getPath(Uri.parse(photo)))
+            val size = (file.length()/1024).toString() //사이즈 크기 kB
+            logd(TAG, "File size : " + size)
             /*----------------서버에 이미지 업로드 테스트용 이미지 2개 생성 ---------------------------------
             * 변경예정사항 : 1. 윤곽선이미지 추가해야함. 2. 이미지 이름 바꿔야함.*/
             val timeStamp = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
@@ -72,8 +77,6 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
 
             val newPhoto = NewPhoto(latLng.latitude, latLng.longitude, caption)
 
-            logd(TAG, "파서 테스트 : " + Parser.toJson(newPhoto))
-
             Retrofit(baseUrl).postPhoto("/spott/posts", Parser.toJson(newPhoto), images)
                 .subscribe({ response ->
                     logd(
@@ -82,7 +85,8 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
                     )
                     val result = response.body()
                     if (result != null) {
-                        addPhotoView.showToast("성공")
+                        addPhotoView.showToast("성공") /**  성공 메세지 수정해야함.  */
+                        addPhotoView.navigateUp()
                     }
                 }, { throwable ->
                     logd(TAG, throwable.message)
@@ -94,6 +98,8 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
                         )
                     }
                 })
+
+
         }
 
     }

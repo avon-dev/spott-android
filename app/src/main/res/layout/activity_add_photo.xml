@@ -47,6 +47,7 @@
         android:id="@+id/edit_caption_addphoto_a"
         android:layout_width="0dp"
         android:layout_height="80dp"
+        android:focusableInTouchMode="true"
         android:layout_marginHorizontal="16dp"
         android:layout_marginBottom="5dp"
         android:background="@drawable/corner_round_whitetext"
@@ -102,6 +103,8 @@
                 app:layout_constraintBottom_toBottomOf="@+id/edit_caption_addphoto_a"
                 app:layout_constraintStart_toStartOf="@+id/edit_caption_addphoto_a"
                 app:layout_constraintTop_toTopOf="@+id/edit_caption_addphoto_a" />
+
+
 
     <TextView
         android:id="@+id/text_upload_addphoto_a"

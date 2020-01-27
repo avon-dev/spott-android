@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_photoFragment_to_photomapFragment"
             app:destination="@id/photomapFragment" />
+        <argument
+            android:name="photoId"
+            app:argType="integer" />
     </fragment>
 
     <fragment
