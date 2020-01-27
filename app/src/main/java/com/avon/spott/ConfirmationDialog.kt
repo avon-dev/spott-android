@@ -6,10 +6,10 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 
-class ConfirmationDialog : DialogFragment() {
+class ConfirmationDialog(val msg:String) : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog.Builder(activity)
-            .setMessage("This sample needs camera permission.")
+            .setMessage(msg)
             .setPositiveButton(android.R.string.ok) {_, _ ->
                 parentFragment?.requestPermissions(arrayOf(Manifest.permission.CAMERA),
                     REQUEST_CAMERA_PERMISSION)
