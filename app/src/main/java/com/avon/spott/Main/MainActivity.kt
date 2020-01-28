@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.toolbar.view.*
 
 class MainActivity : AppCompatActivity(), MainContract.View, View.OnClickListener {
 
-    private val TAG = "MainActivity"
+    private val TAG = "forMainActivity"
 
     private lateinit var mainPresenter: MainPresenter
     override lateinit var presenter: MainContract.Presenter
@@ -95,7 +95,6 @@ class MainActivity : AppCompatActivity(), MainContract.View, View.OnClickListene
             val selectedFragment = mapFragments as NavHostFragment
             val navController = selectedFragment.navController
             if (navController.currentDestination?.id == navController.graph.startDestination) {
-                logd(TAG, "this is the startDestination")
                 if (mBottomSheetBehavior?.state != BottomSheetBehavior.STATE_COLLAPSED) {
                     logd(TAG, "STATE_EXPANDED")
                     mBottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED

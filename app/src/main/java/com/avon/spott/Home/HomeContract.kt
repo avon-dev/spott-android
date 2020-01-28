@@ -6,11 +6,12 @@ import com.avon.spott.BaseView
 interface HomeContract {
 
     interface View: BaseView<Presenter>{
-        fun showPhotoUi()
+        fun showPhotoUi(id:Int)
     }
 
     interface Presenter{
-        fun openPhoto()
+        fun openPhoto(id:Int)
+        fun getPhotos(baseUrl:String, start:Int)
     }
 
 }

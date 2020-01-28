@@ -105,17 +105,17 @@ class MapPresenter (val mapView:MapContract.View) : MapContract.Presenter {
         mapItems.add(MapCluster(37.547759, 126.922873,"https://cdn.pixabay.com/photo/2016/11/29/06/45/beach-1867881_1280.jpg",0))
         mapItems.add(MapCluster(37.504458, 126.986861,"https://cdn.pixabay.com/photo/2017/08/02/00/16/people-2568954_1280.jpg",0))
 
-        for(i in 0..30000){
+        for(i in 0..1050){
             val position = position()
-            mapItems.add(MapCluster(position.latitude, position.longitude, "https://cdn.pixabay.com/photo/2017/08/06/12/06/people-2591874_1280.jpg",1))
+            mapItems.add(MapCluster(position.latitude, position.longitude, "https://cdn.pixabay.com/photo/2020/01/20/12/41/namibia-4780251_1280.jpg",1))
         }
 
-        for(i in 0..15000){
+        for(i in 0..1040){
             val position = position()
-            mapItems.add(MapCluster(position.latitude, position.longitude, "https://cdn.pixabay.com/photo/2016/11/29/06/45/beach-1867881_1280.jpg",1))
+            mapItems.add(MapCluster(position.latitude, position.longitude, "https://cdn.pixabay.com/photo/2020/01/14/11/00/nubian-ibex-4764738_1280.jpg",1))
         }
 
-        for(i in 0..5000){
+        for(i in 0..1505){
             val position = position()
             mapItems.add(MapCluster(position.latitude, position.longitude, "https://i0.wp.com/www.agoda.com/wp-content/uploads/2019/05/Gyeongbokgung-palace-Seoul-Gyeongbokgung-Palace-outside-grounds.jpg",1))
         }
