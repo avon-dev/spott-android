@@ -1,33 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/bg_black"
     tools:context=".CameraFragment">
 
+    <FrameLayout
+        android:id="@+id/frame_top_camera_f"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/bg_black">
+
+        <ImageButton
+            android:id="@+id/imgbtn_back_camera_f"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:adjustViewBounds="true"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_keyboard_arrow_left_black_24dp"
+            android:tint="@color/default_background" />
+
+        <ImageButton
+            android:id="@+id/imgbtn_swap_camera_f"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginRight="12dp"
+            android:adjustViewBounds="true"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_cached_black_24dp"
+            android:tint="@color/default_background" />
+
+    </FrameLayout>
+
     <com.avon.spott.AutoFitTextureView
-        android:id="@+id/texture"
+        android:id="@+id/texture_camera_f"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/frame_top_camera_f"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_centerHorizontal="true" />
 
-<!--    <ImageView-->
-<!--        android:id="@+id/img_overlay_camera_f"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignLeft="@id/texture"-->
-<!--        android:layout_alignTop="@id/texture"-->
-<!--        android:layout_alignRight="@id/texture"-->
-<!--        android:layout_alignBottom="@id/texture"-->
-<!--        android:visibility="gone"-->
-<!--        android:background="@color/text_grey"-->
-<!--        tools:visibility="visible" />-->
+    <ImageView
+        android:id="@+id/img_temp1_camera_f"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:src="@color/colorPrimary"
+        android:layout_above="@id/frame_control_camera_f"/>
 
     <FrameLayout
-        android:id="@+id/control"
+        android:id="@+id/frame_control_camera_f"
         android:layout_width="match_parent"
         android:layout_height="112dp"
         android:layout_alignParentStart="true"
@@ -37,7 +65,7 @@
 
 
         <ImageButton
-            android:id="@+id/imgbtn_like_camera_f"
+            android:id="@+id/imgbtn_scrap_camera_f"
             android:layout_width="48dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -48,14 +76,8 @@
             android:tint="@color/default_background"
             app:srcCompat="@drawable/ic_favorite_border_black_24dp" />
 
-        <!--        <Button-->
-        <!--            android:id="@+id/picture"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_gravity="center"-->
-        <!--            android:text="Picture" />-->
         <ImageButton
-            android:id="@+id/picture"
+            android:id="@+id/imgbtn_shoot_camera_f"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -65,7 +87,7 @@
             android:src="@drawable/btn_camera_shooting" />
 
         <ImageButton
-            android:id="@+id/info"
+            android:id="@+id/imgbtn_gallery_camera_f"
             android:layout_width="48dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end"
@@ -73,7 +95,6 @@
             android:adjustViewBounds="true"
             android:background="@null"
             android:backgroundTint="@color/default_background"
-            android:contentDescription="Info"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_photo_library_white_24dp" />
 
