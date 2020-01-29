@@ -47,12 +47,44 @@
         android:layout_alignParentLeft="true"
         android:layout_centerHorizontal="true" />
 
-    <ImageView
-        android:id="@+id/img_temp1_camera_f"
+    <FrameLayout
+        android:id="@+id/container_recycler_camera_f"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/texture_camera_f">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_camera_f"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"/>
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/img_overlay_camera_f"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/texture_camera_f"
+        android:layout_alignTop="@id/texture_camera_f"
+        android:layout_alignEnd="@id/texture_camera_f"
+        android:layout_alignBottom="@id/texture_camera_f"
         android:src="@color/colorPrimary"
-        android:layout_above="@id/frame_control_camera_f"/>
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <SeekBar
+        android:id="@+id/seekbar_opacity_camera_f"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_above="@id/container_recycler_camera_f"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="15dp"
+        android:max="70"
+        android:progress="100"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <FrameLayout
         android:id="@+id/frame_control_camera_f"
