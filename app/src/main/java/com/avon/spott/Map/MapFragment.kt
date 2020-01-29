@@ -103,7 +103,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
     //paging
     private var start = 0 //페이징 시작 위치
-    private val pageItems = 10  // 한번에 보여지는 리사이클러뷰 아이템 수
+    private val pageItems = 20  // 한번에 보여지는 리사이클러뷰 아이템 수
     private var pageLoading = false // 페이징이 중복 되지 않게하기위함
 
     // 어댑터와 뷰 연결
@@ -551,6 +551,13 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
             mBottomSheetBehavior?.state =  BottomSheetBehavior.STATE_COLLAPSED //맵리스트플래그먼트(하단플래그먼트)는 내려가게함.
 
             val firstItem = cluster!!.items.iterator().next()   //첫번째 아이템 선택
+
+            //클러스터 순서 테스트중....
+            logd("clustertesting", "----------------------------------------------------")
+            logd("clustertesting", "size  : "+cluster!!.items.size.toString())
+            logd("clustertesting", "first : " +cluster!!.items.iterator().next())
+            logd("clustertesting", "all   : " +cluster.items)
+
 
             Glide.with(context!!)
                 .asBitmap()

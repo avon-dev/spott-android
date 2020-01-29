@@ -25,6 +25,13 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
     private lateinit var homePresenter: HomePresenter
     override lateinit var presenter: HomeContract.Presenter
 
+    private lateinit var homeAdapter: HomeAdapter
+
+    //페이징
+    private var start: Int = 0//페이징 시작 위치
+    private val pageItems = 10  // 한번에 보여지는 리사이클러뷰 아이템 수
+    private var pageLoading = false // 페이징이 중복 되지 않게하기위함
+
     val homeInterListener = object :homeInter{
         override fun itemClick(id: Int) {
             presenter.openPhoto(id)
@@ -50,7 +57,23 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         layoutManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
 
         recycler_home_f.layoutManager = layoutManager
-        recycler_home_f.adapter = HomeAdapter(context!!, homeInterListener)
+        homeAdapter = HomeAdapter(context!!, homeInterListener)
+        recycler_home_f.adapter = homeAdapter
+
+        recycler_home_f.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if(recycler_home_f.canScrollVertically(1)){
+                    logd(TAG, "End of Scroll")
+                    if(!pageLoading){ //이미 페이징을 불러오는 동안 중복요청하지 않게하기위함.
+                        pageLoading = true
+                        getPagedItems()
+                    }
+                }
+            }
+        })
+
+        //여기에 서버에서 리스트를 불러오는 코드를 넣어야한다.
 
     }
 
@@ -76,9 +99,25 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         }
     }
 
+    private fun getPagedItems() { //페이징으로 나눠서 아이템 추가
+        if(start!=0){
+            homeAdapter.removeLoadingItem()
+        }
+        pageLoading = false
+    }
+
     //리사이클러뷰 아이템 클릭을 위한 인터페이스
     interface homeInter{
         fun itemClick(id: Int)
+    }
+
+    override fun addItems(homeItems: ArrayList<Home>){
+        homeAdapter.addItemsAdapter(homeItems)
+        homeAdapter.notifyDataSetChanged()
+    }
+
+    override fun removeLoading(){
+        homeAdapter.removeLoadingItem()
     }
 
     inner class HomeAdapter(val context: Context, val homeInterListner:homeInter) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
@@ -105,6 +144,10 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
         fun clearItemsAdapter() {
             itemsList.clear()
+        }
+
+        fun addItemsAdapter(homeItems: ArrayList<Home>){
+            itemsList.addAll(homeItems)
         }
 
         fun addPageItem(homeItem:Home){
@@ -134,6 +177,12 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
         fun getItem(position: Int):Home{
             return itemsList.get(position)
+        }
+
+        override fun getItemViewType(position: Int): Int {
+            if(position==itemsList.size-1 && isLoadingAdded){
+                return LOADING
+            }else return ITEM
         }
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

@@ -18,7 +18,7 @@ class MapPresenter (val mapView:MapContract.View) : MapContract.Presenter {
 
     init{ mapView.presenter = this}
 
-    val adddummy = addDummy() //테스트 코드 추가
+
 
     override fun openPhoto(id:Int) { mapView.showPhotoUi(id) }
 
@@ -52,46 +52,48 @@ class MapPresenter (val mapView:MapContract.View) : MapContract.Presenter {
         }
     }
 
+//    val adddummy = addDummy() //테스트 코드 추가
+
     override fun getPhotos(baseUrl:String, latLngBounds: LatLngBounds) {
 
         val cameraRange = CameraRange(latLngBounds.northeast.latitude, latLngBounds.northeast.longitude,
             latLngBounds.southwest.latitude, latLngBounds.southwest.longitude)
 
        //------------------------<서버없이 안드로이드에서 스스로하는 테스트 코드>-----------------------
-        val newArryList = ArrayList<MapCluster>()
-        for(i in 0..adddummy.size-1){
-            if(adddummy[i].latitude < latLngBounds.northeast.latitude &&
-                adddummy[i].latitude >  latLngBounds.southwest.latitude &&
-                adddummy[i].longitude < latLngBounds.northeast.longitude &&
-                adddummy[i].longitude > latLngBounds.southwest.longitude  ){
-                newArryList.add(adddummy[i])
-            }
-        }
-        mapView.addItems(newArryList)
+//        val newArryList = ArrayList<MapCluster>()
+//        for(i in 0..adddummy.size-1){
+//            if(adddummy[i].latitude < latLngBounds.northeast.latitude &&
+//                adddummy[i].latitude >  latLngBounds.southwest.latitude &&
+//                adddummy[i].longitude < latLngBounds.northeast.longitude &&
+//                adddummy[i].longitude > latLngBounds.southwest.longitude  ){
+//                newArryList.add(adddummy[i])
+//            }
+//        }
+//        mapView.addItems(newArryList)
         //-----------------------------------------------------------------------------------
 
-//        Retrofit(baseUrl).get("/spott/posts",  Parser.toJson(cameraRange))
-//            .subscribe({ response ->
-//                logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
-//
-//                val string  = response.body()
-//                val photos = Parser.fromJson<ArrayList<MapCluster>>(string!!)
-//
-//                if(photos!=null){
-//                    mapView.addItems(photos)
-//                }
-//                if(photos.size==0){
-//                    mapView.noPhoto()
-//                }
-//            }, { throwable ->
-//                logd(TAG, throwable.message)
-//                if (throwable is HttpException) {
-//                    logd(
-//                        TAG,
-//                        "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
-//                    )
-//                }
-//            })
+        Retrofit(baseUrl).get("/spott/posts",  Parser.toJson(cameraRange))
+            .subscribe({ response ->
+                logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
+
+                val string  = response.body()
+                val photos = Parser.fromJson<ArrayList<MapCluster>>(string!!)
+
+                if(photos!=null){
+                    mapView.addItems(photos)
+                }
+                if(photos.size==0){
+                    mapView.noPhoto()
+                }
+            }, { throwable ->
+                logd(TAG, throwable.message)
+                if (throwable is HttpException) {
+                    logd(
+                        TAG,
+                        "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
+                    )
+                }
+            })
 
     }
 

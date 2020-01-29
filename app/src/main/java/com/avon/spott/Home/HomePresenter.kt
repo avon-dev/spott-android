@@ -22,6 +22,11 @@ class HomePresenter(val homeView:HomeContract.View) : HomeContract.Presenter {
                 val photos = Parser.fromJson<ArrayList<Home>>(string!!)
 
                 //photos로 처리할 예정
+                if(start!=0){
+                    homeView.removeLoading()
+                }
+                homeView.addItems(photos)
+
 
             }, { throwable ->
                 logd(TAG, throwable.message)
