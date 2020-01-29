@@ -1,8 +1,6 @@
 package com.avon.spott
 
 import android.media.Image
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.avon.spott.Utils.loge
 import java.io.File
 import java.io.FileOutputStream
@@ -13,7 +11,6 @@ internal class ImageSaver(
     private val file: File
 ) : Runnable {
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
     override fun run() {
         val buffer = image.planes[0].buffer
         val bytes = ByteArray(buffer.remaining())
