@@ -3,11 +3,13 @@ package com.avon.spott
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.*
 import android.hardware.camera2.*
 import android.media.ImageReader
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
@@ -59,7 +61,7 @@ class CameraFragment : Fragment(), View.OnClickListener,
         override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) = Unit
     }
 
-    private lateinit var cameraId: String
+    private var cameraId: String = "0"
     private lateinit var textureView: AutoFitTextureView
     private var captureSession: CameraCaptureSession? = null
     private var cameraDevice: CameraDevice? = null
@@ -166,7 +168,12 @@ class CameraFragment : Fragment(), View.OnClickListener,
     private var swap:Boolean = false
     private lateinit var seekbar: SeekBar
     private lateinit var overlay: ImageView
+    private lateinit var close: ImageView
     private lateinit var recycler: RecyclerView
+    var fingerSpacing:Float = 0f
+    var zoomLevel:Float = 1f
+    var maximumZoomLevel:Float = 1f
+    lateinit var zoom:Rect
 
     interface ClickListener { fun Click(uri:String) }
     private val clickListener = object: ClickListener {
@@ -175,8 +182,8 @@ class CameraFragment : Fragment(), View.OnClickListener,
             if(overlay.isVisible) {
                     overlay.visibility = View.GONE
                     seekbar.visibility = View.GONE
-            }
-            else {
+                    close.visibility = View.GONE
+            } else {
                 Glide.with(view!!.context)
                     .load("https://cdn.pixabay.com/photo/2017/08/06/12/06/people-2591874_1280.jpg")
                     .placeholder(android.R.drawable.progress_indeterminate_horizontal)
@@ -187,6 +194,7 @@ class CameraFragment : Fragment(), View.OnClickListener,
 
                 overlay.visibility = View.VISIBLE
                 seekbar.visibility = View.VISIBLE
+                close.visibility = View.VISIBLE
             }
         }
     }
@@ -199,13 +207,16 @@ class CameraFragment : Fragment(), View.OnClickListener,
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        textureView = view.findViewById(R.id.texture_camera_f)
+        overlay = view.findViewById<ImageView>(R.id.img_overlay_camera_f)
+        close = view.findViewById<ImageView>(R.id.img_close_camera_f)
+
         view.findViewById<View>(R.id.imgbtn_shoot_camera_f).setOnClickListener(this)
         view.findViewById<View>(R.id.imgbtn_gallery_camera_f).setOnClickListener(this)
         view.findViewById<View>(R.id.imgbtn_back_camera_f).setOnClickListener(this)
         view.findViewById<View>(R.id.imgbtn_swap_camera_f).setOnClickListener(this)
         view.findViewById<View>(R.id.imgbtn_scrap_camera_f).setOnClickListener(this)
-        textureView = view.findViewById(R.id.texture_camera_f)
-        overlay = view.findViewById<ImageView>(R.id.img_overlay_camera_f)
+        close.setOnClickListener(this)
 
         seekbar = view.findViewById<SeekBar>(R.id.seekbar_opacity_camera_f)
         seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -221,6 +232,18 @@ class CameraFragment : Fragment(), View.OnClickListener,
         recycler = view.findViewById(R.id.recycler_camera_f)
         recycler.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.HORIZONTAL, false)
         recycler.adapter = CameraAdapter(view.context, clickListener)
+
+//        val manager = activity!!.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+
+
+
+        textureView.setOnTouchListener { v, event ->
+
+            if (event.pointerCount == 2) {
+
+            }
+            true
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -233,7 +256,8 @@ class CameraFragment : Fragment(), View.OnClickListener,
 //        file = File(activity!!.getExternalFilesDir(null), PIC_FILE_NAME)
 //        file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), PIC_FILE_NAME)
 //        file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).absolutePath, PIC_FILE_NAME)
-        file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).absolutePath + File.separator + "Camera", PIC_FILE_NAME)
+//        file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).absolutePath + File.separator + "Camera", PIC_FILE_NAME)
+        file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).absolutePath + File.separator + "spott", PIC_FILE_NAME)
 
 //        file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString(), PIC_FILE_NAME)
 //        file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + File.separator + "spott", PIC_FILE_NAME)
@@ -324,6 +348,13 @@ class CameraFragment : Fragment(), View.OnClickListener,
         }
     }
 
+    private fun createFolder() {
+        val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "spott")
+        if(!file.exists()) {
+            file.mkdir()
+        }
+    }
+
     private fun openCamera(width: Int, height: Int) {
         val cameraPermission = ContextCompat.checkSelfPermission(activity!!, Manifest.permission.CAMERA)
         val storagePermission = ContextCompat.checkSelfPermission(activity!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -331,6 +362,8 @@ class CameraFragment : Fragment(), View.OnClickListener,
             requestCameraPermission()
             return
         }
+
+        createFolder()
 
 //        val storagePermission = ContextCompat.checkSelfPermission(activity!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)
 //        if (storagePermission  != PackageManager.PERMISSION_GRANTED) {
@@ -459,11 +492,14 @@ class CameraFragment : Fragment(), View.OnClickListener,
                     textureView.setAspectRatio(previewSize.height, previewSize.width)
                 }
 
+                maximumZoomLevel = characteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM)
+
                 if(!swap) {
                     this.cameraId = cameraId
                 } else {
                     swap = false
                 }
+
                 return
             }
         } catch (e: CameraAccessException) {
@@ -546,9 +582,16 @@ class CameraFragment : Fragment(), View.OnClickListener,
             captureSession?.capture(previewRequestBuilder.build(), captureCallback, backgroundHandler)
             state = STATE_PREVIEW
             captureSession?.setRepeatingRequest(previewRequest, captureCallback, backgroundHandler)
+
+            view!!.context.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)))
+
         } catch (e: CameraAccessException) {
             loge(TAG, e.toString())
         }
+    }
+
+        fun volumeCapture() {
+        lockFocus()
     }
 
     private fun lockFocus() {
@@ -576,6 +619,13 @@ class CameraFragment : Fragment(), View.OnClickListener,
                     recycler.visibility = View.INVISIBLE
                 else
                     recycler.visibility = View.VISIBLE
+            }
+            R.id.img_close_camera_f -> {
+                if(overlay.isVisible) {
+                    overlay.visibility = View.GONE
+                    seekbar.visibility = View.GONE
+                    close.visibility = View.GONE
+                }
             }
         }
     }

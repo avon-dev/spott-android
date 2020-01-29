@@ -57,20 +57,39 @@
             android:id="@+id/recycler_camera_f"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
     </FrameLayout>
 
-    <ImageView
-        android:id="@+id/img_overlay_camera_f"
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@id/texture_camera_f"
         android:layout_alignTop="@id/texture_camera_f"
         android:layout_alignEnd="@id/texture_camera_f"
-        android:layout_alignBottom="@id/texture_camera_f"
-        android:src="@color/colorPrimary"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        android:layout_alignBottom="@id/texture_camera_f">
+
+        <ImageView
+            android:id="@+id/img_overlay_camera_f"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@color/colorPrimary"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/img_close_camera_f"
+            android:layout_width="36dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:adjustViewBounds="true"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_close_black_24dp"
+            tools:srcCompat="@drawable/ic_close_black_24dp"
+            tools:visibility="visible" />
+    </FrameLayout>
+
 
     <SeekBar
         android:id="@+id/seekbar_opacity_camera_f"
