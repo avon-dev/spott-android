@@ -63,6 +63,7 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
             val file = File(addPhotoView.getPath(Uri.parse(photo)))
             val size = (file.length()/1024).toString() //사이즈 크기 kB
             logd(TAG, "File size : " + size)
+
             /*----------------서버에 이미지 업로드 테스트용 이미지 2개 생성 ---------------------------------
             * 변경예정사항 : 1. 윤곽선이미지 추가해야함. 2. 이미지 이름 바꿔야함.*/
             val timeStamp = SimpleDateFormat("yyyyMMddHHmmss").format(Date())

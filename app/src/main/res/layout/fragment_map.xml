@@ -8,11 +8,6 @@
     tools:context=".Map.MapFragment">
 
 
-    <!-- Here is the -->
-
-<!--            app:layout_behavior="@string/appbar_scrolling_view_behavior" />-->
-
-
 
     <fragment
         android:id="@+id/frag_googlemap_map_f"
@@ -26,27 +21,6 @@
          그냥 버튼만 있을 경우
          backdrop fragment이 올라왔을 때도 여전히 버튼이 보임.(버튼 아래로 올라옴.)  -->
 
-<!--    <LinearLayout-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="center_horizontal|top"-->
-<!--        android:orientation="vertical">-->
-
-<!--        <Button-->
-<!--            android:animateLayoutChanges="true"-->
-<!--            android:id="@+id/btn_find_map_f"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="45dp"-->
-<!--            android:layout_margin="12dp"-->
-<!--            android:background="@drawable/btn_map_text"-->
-<!--            android:paddingLeft="20dp"-->
-<!--            android:paddingRight="20dp"-->
-<!--            android:text="@string/text_find_thisplace"-->
-<!--            android:textColor="@color/colorPrimary"-->
-<!--            android:visibility="gone"-->
-<!--            tools:visibility="visible" />-->
-
-<!--    </LinearLayout>-->
 
 
     <ImageButton
@@ -71,16 +45,130 @@
     <!-- This is the backdrop view. The magic happens when you add the
          layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" -->
 
-    <fragment
+<!--    <fragment-->
+<!--        android:id="@+id/frag_list_map_f"-->
+<!--        android:name="com.avon.spott.MapListFragment"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        app:behavior_hideable="false"-->
+<!--        app:behavior_peekHeight="50dp"-->
+<!--        app:behavior_skipCollapsed="true"-->
+<!--        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />-->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/frag_list_map_f"
-        android:name="com.avon.spott.MapListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/default_background"
+        android:orientation="vertical"
         app:behavior_hideable="false"
         app:behavior_peekHeight="50dp"
         app:behavior_skipCollapsed="true"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        >
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/img_updown_maplist_f"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:adjustViewBounds="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_keyboard_arrow_up_black_24dp"
+                tools:ignore="VectorDrawableCompat" />
+
+            <TextView
+                android:id="@+id/text_all_maplist_f"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:text="@string/text_all"
+                android:textColor="@color/text_black"
+                android:textSize="14dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_spotnumber_maplist_f"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"
+                android:textColor="@color/text_black"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/text_all_maplist_f"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="100" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/background_grey"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_maplist_f"
+            android:layout_width="0dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="24dp"
+            android:clipToPadding="false"
+            android:layout_height="0dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view" />
+
+        <TextView
+            android:id="@+id/text_nophoto_maplist_f"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_photo"
+            android:textColor="@color/text_grey"
+            android:textSize="14dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/recycler_maplist_f"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view"
+            tools:visibility="visible" />
+
+<!--        <ProgressBar-->
+<!--            android:id="@+id/progress_maplist_f"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:indeterminateDrawable="@drawable/progress"-->
+<!--            android:visibility="gone"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/recycler_maplist_f"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/recycler_maplist_f"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/recycler_maplist_f"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/view"-->
+<!--            tools:visibility="visible" />-->
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -9,14 +9,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.avon.spott.R
+import com.avon.spott.Utils.logd
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.android.synthetic.main.fragment_map_list.*
 import kotlinx.android.synthetic.main.fragment_mypage.*
 import kotlinx.android.synthetic.main.fragment_scrap.*
 
 fun BottomNavigationView.setupWithNavController(navGraphIds: List<Int>, fragmentManager: FragmentManager,
                                                 containerId: Int, intent: Intent) {
+
+    val TAG = "NavigationExtensions"
 
     val graphIdToTagMap = SparseArray<String>()
 
@@ -61,12 +65,11 @@ fun BottomNavigationView.setupWithNavController(navGraphIds: List<Int>, fragment
 
     //네비게이션 아이템 선택했을 때
     setOnNavigationItemSelectedListener { item ->
-
         if (fragmentManager.isStateSaved) {
             false
         } else {
             val newlySelectedItemTag = graphIdToTagMap[item.itemId]
-
+            logd(TAG, "[[[NE]]] newlySelectedItemTag : " +  graphIdToTagMap[item.itemId])
 
             if (selectedItemTag != newlySelectedItemTag) {
 
@@ -80,12 +83,18 @@ fun BottomNavigationView.setupWithNavController(navGraphIds: List<Int>, fragment
                 if (firstFragmentTag != newlySelectedItemTag) {
 
                     fragmentManager.beginTransaction()
-                        .setCustomAnimations(
-                            R.anim.nav_default_enter_anim,
-                            R.anim.nav_default_exit_anim,
-                            R.anim.nav_default_pop_enter_anim,
-                            R.anim.nav_default_pop_exit_anim
-                        )
+/*   <버그 해결> 2020-01-28
+버그 : 1. (매우 빠르게) 하단네비게이션 다른 탭 눌렀다가 다시 원래있던 네비게이션 탭을 눌렀을 때, 화면에 아무것도 안나오는 현상.
+      2. 로그를 찍어보니, 기존 플래그먼트의 onDestroyView가 안 실행되고 onStop까지만 진행됨. 다시 생성될 때도 onCreateView가 아닌 onStart부터 시작됨.
+      3. 1번과정을 느리게 하니 onDestroyView가 한박자 늦게 실햄됨 확인.
+해결 : 하단네비게이션 탭 변환시 애니메이션 전환 효과를 없앰.
+*            */
+//                        .setCustomAnimations(
+//                            R.anim.nav_default_enter_anim,
+//                            R.anim.nav_default_exit_anim,
+//                            R.anim.nav_default_pop_enter_anim,
+//                            R.anim.nav_default_pop_exit_anim
+//                        )
                         .attach(selectedFragment)
                         .setPrimaryNavigationFragment(selectedFragment)
                         .apply {
@@ -93,7 +102,7 @@ fun BottomNavigationView.setupWithNavController(navGraphIds: List<Int>, fragment
                             graphIdToTagMap.forEach { _, fragmentTagIter ->
                                 if (fragmentTagIter != newlySelectedItemTag) {
                                     detach(fragmentManager.findFragmentByTag(firstFragmentTag)!!)
-                                    println(" 10. fragmentTagIter 디테치드!!!   :  "+ fragmentTagIter)
+                                    logd(TAG, "[[[NE]]] detached all other Fragments")
                                 }
                             }
                         }
@@ -104,6 +113,7 @@ fun BottomNavigationView.setupWithNavController(navGraphIds: List<Int>, fragment
                 selectedItemTag = newlySelectedItemTag
                 isOnFirstFragment = selectedItemTag == firstFragmentTag
                 selectedNavController.value = selectedFragment.navController
+                logd(TAG, "[[[NE]]] before true")
                 true
             } else {
                 false
@@ -116,7 +126,7 @@ fun BottomNavigationView.setupWithNavController(navGraphIds: List<Int>, fragment
 
     // 백스택 변화에 따른 BottomNavigationView의 아이템 처리
     fragmentManager.addOnBackStackChangedListener {
-
+        logd(TAG, "[[[NE]]] addOnBackStackChangedListener")
         if (!isOnFirstFragment && !fragmentManager.isOnBackStack(firstFragmentTag)) {
             this.selectedItemId = firstFragmentGraphId
         }
@@ -129,7 +139,6 @@ fun BottomNavigationView.setupWithNavController(navGraphIds: List<Int>, fragment
     }
 
 }
-
 
 private fun BottomNavigationView.setupItemReselected(graphIdToTagMap: SparseArray<String>,
                                                      fragmentManager: FragmentManager) {
@@ -152,7 +161,7 @@ private fun BottomNavigationView.setupItemReselected(graphIdToTagMap: SparseArra
             if(selectedFragment.tag== "bottomNavigation#0"){
                 selectedFragment.recycler_home_f.smoothScrollToPosition(0)
             }else if(selectedFragment.tag== "bottomNavigation#1"){
-                selectedFragment.recycler_map_f.smoothScrollToPosition(0)
+                selectedFragment.recycler_maplist_f.smoothScrollToPosition(0)
             }else if(selectedFragment.tag == "bottomNavigation#2"){
                 selectedFragment.recycler_scrap_f.smoothScrollToPosition(0)
             }else if(selectedFragment.tag == "bottomNavigation#3"){

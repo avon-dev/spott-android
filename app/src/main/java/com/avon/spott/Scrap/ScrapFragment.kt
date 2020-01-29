@@ -12,11 +12,14 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.avon.spott.R
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
+import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_scrap.*
 import kotlinx.android.synthetic.main.fragment_scrap.view.*
 
 class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
+
+    private val TAG = "forScrapFragment"
 
     private lateinit var scrapPresenter: ScrapPresenter
     override lateinit var presenter: ScrapContract.Presenter
@@ -40,7 +43,6 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
         //-----------------------------------------------------
 
         return root
-
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -58,10 +60,13 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
 
 
     override fun onStart() {
+        logd(TAG, "  onStart")
         super.onStart()
         //툴바 안보이게
         mToolbar.visibility = View.GONE
     }
+
+
 
     fun init(){
         scrapPresenter = ScrapPresenter(this)
