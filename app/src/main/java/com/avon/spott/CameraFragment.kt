@@ -239,10 +239,6 @@ class CameraFragment : Fragment(), View.OnClickListener,
 
         textureView.setOnTouchListener { v, event ->
 
-            if (event.pointerCount == 2) {
-
-            }
-            true
         }
     }
 
