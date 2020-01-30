@@ -1,15 +1,20 @@
 package com.avon.spott.Home
 
 import com.avon.spott.BaseView
-import com.avon.spott.Data.Home
+import com.avon.spott.Data.HomeItem
 
 
 interface HomeContract {
 
     interface View: BaseView<Presenter>{
         fun showPhotoUi(id:Int)
-        fun addItems(homeItems: ArrayList<Home>)
-        fun removeLoading()
+        fun addItems(homeItemItems: ArrayList<HomeItem>)
+        fun removePageLoading()
+        fun clearAdapter()
+        fun getPagedItems()
+
+        var hasNext : Boolean
+        var refreshTimeStamp:String
     }
 
     interface Presenter{

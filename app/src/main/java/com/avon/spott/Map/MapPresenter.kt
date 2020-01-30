@@ -52,7 +52,7 @@ class MapPresenter (val mapView:MapContract.View) : MapContract.Presenter {
         }
     }
 
-//    val adddummy = addDummy() //테스트 코드 추가
+    val adddummy = addDummy() //테스트 코드 추가
 
     override fun getPhotos(baseUrl:String, latLngBounds: LatLngBounds) {
 
@@ -72,7 +72,7 @@ class MapPresenter (val mapView:MapContract.View) : MapContract.Presenter {
 //        mapView.addItems(newArryList)
         //-----------------------------------------------------------------------------------
 
-        Retrofit(baseUrl).get("/spott/posts",  Parser.toJson(cameraRange))
+        Retrofit(baseUrl).get("/spott/posts/map",  Parser.toJson(cameraRange))
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 

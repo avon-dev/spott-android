@@ -3,6 +3,7 @@ package com.avon.spott.Mypage
 import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -12,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -256,14 +258,17 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener {
                     logd(TAG, "photopath : " + mPhotoPath)
 
                     val options = UCrop.Options()
-                    options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE)
+                    options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.SCALE)
                     options.setToolbarTitle("")
                     options.setToolbarCropDrawable(R.drawable.ic_arrow_forward_black_24dp)
                     options.setActiveControlsWidgetColor(ContextCompat.getColor(context!!, R.color.colorPrimary))
                     options.setStatusBarColor(ContextCompat.getColor(context!!, R.color.bg_black))
-                    options.setAspectRatioOptions(0,
-                        AspectRatio("4X3", 4f, 3f),
-                        AspectRatio("1X1", 1f, 1f)
+                    options.setAspectRatioOptions(2,
+                        AspectRatio("16 : 9", 16f, 9f),
+                        AspectRatio("4 : 3", 4f, 3f),
+                        AspectRatio("1 : 1", 1f, 1f),
+                        AspectRatio("3 : 4", 3f, 4f),
+                        AspectRatio("9 : 16", 9f, 16f)
                     )
 
                     /* 현재시간을 임시 파일 이름에 넣는 이유 : 중복방지
@@ -274,9 +279,6 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener {
                             resources.getDimension(R.dimen.upload_heigth).toInt())
                         .withOptions(options)
                         .start(context!!, this)
-
-                        //uCrop 넣기 전(다음 페이지 진행)
-//                     presenter.openAddPhoto(mPhotoPath.toString())
 
                 }
             }else if(requestCode == UCrop.REQUEST_CROP){

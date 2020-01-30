@@ -2,6 +2,7 @@ package com.avon.spott.Scrap
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,9 +35,18 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
         val root = inflater.inflate(R.layout.fragment_scrap, container, false)
 
         //------[임시]swiperefreshlayout 컨트롤 + 임시 스크랩숫자------------------
-        root.text_guide_scrap_f.setOnClickListener {
-            if (swiperefresh_scrap_f.isRefreshing)
-                swiperefresh_scrap_f.isRefreshing = false
+
+        root.swiperefresh_scrap_f.setOnRefreshListener {
+
+                Handler().postDelayed({
+                    logd(TAG, "refreshed!!!")
+
+                    if(root.swiperefresh_scrap_f.isRefreshing){
+                        root.swiperefresh_scrap_f.isRefreshing = false
+                    }
+                }, 2000) //로딩 주기
+
+
         }
 
         root.text_scraps_scrap_f.text = "10"

@@ -3,7 +3,6 @@ package com.avon.spott.Map
 
 import android.Manifest
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.*
 import android.graphics.drawable.Drawable
@@ -24,16 +23,12 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.avon.spott.AddPhoto.AddPhotoActivity
 import com.avon.spott.Data.MapCluster
-import com.avon.spott.EmailLogin.EmailLoginActivity
 import com.avon.spott.R
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
-import com.avon.spott.Main.MainActivity.Companion.toFirstMapFragment
 import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
@@ -45,7 +40,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
@@ -53,7 +47,6 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import com.google.maps.android.ui.IconGenerator
 import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.android.synthetic.main.fragment_map.view.*
-import kotlinx.android.synthetic.main.fragment_map_list.*
 import kotlin.collections.ArrayList
 
 class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapReadyCallback,
@@ -73,7 +66,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     private lateinit var mapAdapter: MapAdapter
     private lateinit var layoutManager : GridLayoutManager
 
-    //테스트중.
+    //bottomsheet recyclerview save
     lateinit var bottomconst:ConstraintLayout
     private lateinit var mBundleRecyclerViewState :Bundle
     private lateinit var mRecyclerview :RecyclerView
@@ -140,7 +133,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
         val root = inflater.inflate(R.layout.fragment_map, container, false)
 
-        bottomconst = root.findViewById<ConstraintLayout>(R.id.frag_list_map_f)
+        bottomconst = root.findViewById<ConstraintLayout>(R.id.const_bottomsheet_map_f)
 
         mRecyclerview = root.findViewById(R.id.recycler_maplist_f)
 
@@ -173,12 +166,12 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
                         if(start < selectedItems!!.size){ //가져올 아이템이 남아있으면 실행
 
                             mapAdapter.addLoadingItem() //로딩아이템 생성 생성
+                            recyclerView.smoothScrollToPosition(recyclerView.adapter!!.itemCount-1)
 
                             Handler().postDelayed({
                                 getPagedItems()
                             }, 600) //로딩 주기 0.6s
                         }
-
                     }
                 }
             }

@@ -78,7 +78,7 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
 
             val newPhoto = NewPhoto(latLng.latitude, latLng.longitude, caption)
 
-            Retrofit(baseUrl).postPhoto("/spott/posts", Parser.toJson(newPhoto), images)
+            Retrofit(baseUrl).postPhoto("/spott/posts/map", Parser.toJson(newPhoto), images)
                 .subscribe({ response ->
                     logd(
                         TAG,
