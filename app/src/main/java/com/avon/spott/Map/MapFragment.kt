@@ -29,7 +29,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.avon.spott.Data.MapCluster
 import com.avon.spott.R
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
+import com.avon.spott.PhotoRenderer
 import com.avon.spott.Utils.logd
+import com.avon.spott.getMarkerBitmapFromView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -56,6 +58,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
     companion object{
          lateinit var mBottomSheetBehavior : BottomSheetBehavior<ConstraintLayout?>
+         var selectedMarker : Marker? = null //선택한 마커
     }
 
     //presenter
@@ -68,8 +71,6 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
     //bottomsheet recyclerview save
     lateinit var bottomconst:ConstraintLayout
-    private lateinit var mBundleRecyclerViewState :Bundle
-    private lateinit var mRecyclerview :RecyclerView
 
     //googlemap
     private lateinit var mMap : GoogleMap
@@ -80,7 +81,6 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     private lateinit var  mCustomClusterItemRenderer : PhotoRenderer
 
     //전에 선택된 마커 처리
-    private var selectedMarker : Marker? = null //선택한 마커
     private var selectedMarkerView : View? = null //선택했던 마커뷰
     private var selectedCluster : Cluster<MapCluster>? = null //선택한 클러스터
     private var selectedItems : ArrayList<MapCluster>? = null//선택된 아이템
@@ -135,7 +135,6 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
         bottomconst = root.findViewById<ConstraintLayout>(R.id.const_bottomsheet_map_f)
 
-        mRecyclerview = root.findViewById(R.id.recycler_maplist_f)
 
         configureBackdrop()  //바텀시트 처리
 
@@ -154,6 +153,9 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
         super.onActivityCreated(savedInstanceState)
         init()
+
+        recycler_maplist_f.layoutManager = layoutManager
+        recycler_maplist_f.adapter = mapAdapter
 
         // 리사이클러뷰 끝까지 스크롤 할 때 리스너
         recycler_maplist_f.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -204,36 +206,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
            text_spotnumber_maplist_f.text = selectedItems!!.size.toString()
          }
 
-
-        mRecyclerview.layoutManager = layoutManager
-        mRecyclerview.adapter = mapAdapter
-
-
     }
-
-    override fun onResume() {
-        super.onResume()
-
-        logd(TAG, "onResume")
-
-        if (::mBundleRecyclerViewState.isInitialized) {
-            val listState : Parcelable = mBundleRecyclerViewState.getParcelable("recycler_state")
-            logd(TAG, "mRecyclerview : "+ mRecyclerview)
-
-                mRecyclerview.layoutManager!!.onRestoreInstanceState(listState)
-        }
-    }
-
-    override fun onPause(){
-        logd(TAG, "onPause")
-        super.onPause()
-        mBundleRecyclerViewState = Bundle()
-        val listState =   mRecyclerview.layoutManager!!.onSaveInstanceState()
-        mBundleRecyclerViewState.putParcelable("recycler_state", listState)
-    }
-
-
-
 
     override fun onStop() {
         logd(TAG, "onStop")
@@ -243,15 +216,14 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         //현재 내 위치 받아오기 제거
         mFusedLocationClient.removeLocationUpdates(locationCallback)
         mylocation = null
-
-
-        mRecyclerview.layoutManager = null
     }
 
 
     override fun onDestroyView() {
         logd(TAG, "onDestroyView")
         super.onDestroyView()
+
+        recycler_maplist_f.layoutManager = null
     }
 
 
@@ -444,143 +416,6 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         logd(TAG, "movePosition")
     }
 
-
-    /* 사진이미지가 들어있는 풍선 모양 마커 비트맵을 만드는 함수 */
-    private fun getMarkerBitmapFromView(view:View, bitmap: Bitmap, size:Int, selected:Boolean): Bitmap{
-        val markerImageView = view.findViewById(R.id.img_photo_photo_m) as ImageView
-        val countTextView = view.findViewById(R.id.text_count_photo_m) as TextView
-        val markerCardView:CardView = view.findViewById(R.id.card_photo_m) as CardView
-        val markerTriangleView = view.findViewById(R.id.view_triangle_photo_m) as View
-
-        //클러스터면(사진 여러장이면) 카운트 텍스트 보이게, 클러스터아이템이면 사라지게
-        if(size<2){
-            countTextView.visibility = View.INVISIBLE
-        }else{
-            countTextView.visibility = View.VISIBLE
-        }
-        countTextView.text = size.toString()
-
-
-        if(selected){ //선택된 클러스터 색깔 바꿈.
-            markerCardView.setCardBackgroundColor(ContextCompat.getColor(context!!, R.color.markerSelected))
-            markerTriangleView.setBackgroundResource(R.drawable.ic_signal_wifi_4_bar_select_24dp)
-        }else{ //전에 선택되었던 클러스터 색깔 다시 하얀색으로 바꿈.
-            markerCardView.setCardBackgroundColor(ContextCompat.getColor(context!!, R.color.text_white))
-            markerTriangleView.setBackgroundResource(R.drawable.ic_signal_wifi_4_bar_white_24dp)
-        }
-
-        markerImageView.setImageBitmap(bitmap)
-
-        view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-        view.layout(0,0,view.getMeasuredWidth(),view.getMeasuredHeight() )
-
-        val returnedBitmap = Bitmap.createBitmap(
-            view.getMeasuredWidth(), view.getMeasuredHeight(),
-            Bitmap.Config.ARGB_8888
-        )
-        val canvas = Canvas(returnedBitmap)
-        canvas.drawColor(Color.WHITE, PorterDuff.Mode.SRC_IN)
-        val drawable =view.getBackground()
-        if (drawable != null)
-            drawable!!.draw(canvas)
-        view.draw(canvas)
-        return returnedBitmap
-    }
-
-    /*-------------------------------[클러스터 랜더링 클래스 생성]--------------------------------------------*/
-    private inner class PhotoRenderer:DefaultClusterRenderer<MapCluster>(context!!, mMap, clusterManager){
-
-        val customMarkerView:View
-        private val mClusterIconGenerator = IconGenerator(context)
-
-        private val icon: Bitmap
-
-        init{
-            customMarkerView = LayoutInflater.from(context).inflate(R.layout.marker_photo, null)
-            mClusterIconGenerator.setContentView(customMarkerView)
-
-            //임시로 불러와지는 비트맵을 만든다. -> empty bitmap (임시 비트맵을 안만들면 구글 기본 빨간 마커가 보인다.)
-            var conf: Bitmap.Config = Bitmap.Config.ARGB_8888 // see other conf types
-            var bmp = Bitmap.createBitmap(50, 50, conf) // this creates a MUTABLE bitmap
-
-            icon = bmp
-        }
-
-        override fun onBeforeClusterItemRendered(item: MapCluster?, markerOptions: MarkerOptions?) {
-            //클러스터아이템 만들어지기 전 임시로 나오는 아이콘 지정 -> empty bitmap
-            markerOptions?.icon(BitmapDescriptorFactory.fromBitmap(icon))
-        }
-
-        override fun onClusterItemRendered(clusterItem: MapCluster?, marker: Marker?) {
-            selectedMarker = null //선택된 클러스터 null로 만듦. -> 새로 클러스터링이 되면 선택했던 클러스터 없어지게함.
-            mBottomSheetBehavior?.state =  BottomSheetBehavior.STATE_COLLAPSED //리스트플래그먼트는 내려가게함.
-
-            Glide.with(context!!)
-                .asBitmap()
-                .load(clusterItem!!.posts_image)
-                .fitCenter()
-                .into(object :CustomTarget<Bitmap>(){
-                    override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?) {
-                        marker!!.setIcon(BitmapDescriptorFactory.fromBitmap(
-                            getMarkerBitmapFromView(customMarkerView, bitmap, 1,false)))
-                    }
-                    override fun onLoadCleared(placeholder: Drawable?) {
-                    }
-                    override fun onLoadFailed(errorDrawable: Drawable?) {
-                        super.onLoadFailed(errorDrawable)
-                        logd(TAG, "onLoadFailed" + errorDrawable)
-                    }
-                })
-        }
-
-
-        override fun onBeforeClusterRendered(cluster: Cluster<MapCluster>?, markerOptions: MarkerOptions?) {
-            //클러스터 만들어지기 전 임시로 나오는 아이콘 지정 -> empty bitmap
-            markerOptions!!.icon(BitmapDescriptorFactory.fromBitmap(icon))
-        }
-
-        override fun onClusterRendered(cluster: Cluster<MapCluster>?, marker: Marker?) {
-            selectedMarker = null//선택된 클러스터 null로 만듦. -> 새로 클러스터링이 되면 선택했던 클러스터 없어지게함.
-            mBottomSheetBehavior?.state =  BottomSheetBehavior.STATE_COLLAPSED //맵리스트플래그먼트(하단플래그먼트)는 내려가게함.
-
-            val firstItem = cluster!!.items.iterator().next()   //첫번째 아이템 선택
-
-            //클러스터 순서 테스트중....
-            logd("clustertesting", "----------------------------------------------------")
-            logd("clustertesting", "size  : "+cluster!!.items.size.toString())
-            logd("clustertesting", "first : " +cluster!!.items.iterator().next())
-            logd("clustertesting", "all   : " +cluster.items)
-
-
-            Glide.with(context!!)
-                .asBitmap()
-                .load(firstItem.posts_image)
-                .fitCenter()
-                .into(object :CustomTarget<Bitmap>(){
-                    override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?){
-                        marker!!.setIcon(
-                            BitmapDescriptorFactory.fromBitmap(
-                                getMarkerBitmapFromView(customMarkerView,bitmap, cluster.size, false)))
-                    }
-                    override fun onLoadCleared(placeholder: Drawable?) {
-                    }
-
-                    override fun onLoadFailed(errorDrawable: Drawable?) {
-                        super.onLoadFailed(errorDrawable)
-                            logd(TAG, "onLoadFailed" + errorDrawable)
-                    }
-
-                })
-        }
-
-        override fun shouldRenderAsCluster(cluster: Cluster<MapCluster>?): Boolean {
-            // 언제나 클러스터가 일어나게함. 클러스터아이템이 2개 이상이면 클러스터가 일어나게함.
-            return cluster!!.size > 1
-        }
-    }
-    /*-------------------------------[클러스터 랜더링 클래스 끝]--------------------------------------------*/
-
-
     override fun onClusterItemClick(item: MapCluster?): Boolean { //클러스터아이템(사진 한 장) 눌렀을 때 일어나는 일
         if(mBottomSheetBehavior?.state ==  BottomSheetBehavior.STATE_EXPANDED){
             return true   //맵리스트플래그먼트(하단플래그먼트)가 올라온 상태라면 클러스터 클릭안되게
@@ -605,7 +440,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
                     override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?) {
                         selectedMarker!!.setIcon(BitmapDescriptorFactory.fromBitmap(
                             // 전에 선택했던 클러스터 아이템의 이미지를 넣은 클러스터 마커의 비트맵(테두리 하얀색 마커)을 만든다.
-                            getMarkerBitmapFromView(selectedMarkerView!!, bitmap, selectedCluster!!.size,false)))
+                         getMarkerBitmapFromView(selectedMarkerView!!, bitmap, selectedCluster!!.size,false, context!!)))
                         newCluster(cluster) // 새로 선택된 클러스터의 이미지를 넣은 클러스터 마커의 비트맵(테두리 파란색 마커)을 만든다.
                     }
                     override fun onLoadCleared(placeholder: Drawable?) {
@@ -637,16 +472,15 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
                 override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?){
                     selectedMarker!!.setIcon(
                         BitmapDescriptorFactory.fromBitmap(
-                            getMarkerBitmapFromView(selectedMarkerView!!, bitmap, cluster.size, true)))
+                            getMarkerBitmapFromView(selectedMarkerView!!, bitmap, cluster.size, true, context!!)))
                 }
                 override fun onLoadCleared(placeholder: Drawable?) {
                 }
-                override fun onLoadFailed(errorDrawable: Drawable?) {
-                    super.onLoadFailed(errorDrawable)
-                    logd(TAG, "onLoadFailed" + errorDrawable)
-                }
+//                override fun onLoadFailed(errorDrawable: Drawable?) {
+//                    super.onLoadFailed(errorDrawable)
+//                    logd(TAG, "onLoadFailed" + errorDrawable)
+//                }
             })
-
 
         val clusterMapItems = ArrayList<MapCluster>()
         clusterMapItems.addAll(cluster!!.items)
@@ -716,7 +550,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     private fun setClusterManager(){
         clusterManager = ClusterManager<MapCluster>(context, mMap)
 
-        mCustomClusterItemRenderer = PhotoRenderer()
+        mCustomClusterItemRenderer = PhotoRenderer(context!!, mMap, clusterManager, true)
         clusterManager!!.renderer = mCustomClusterItemRenderer
         clusterManager!!.renderer.setAnimation(false)
 

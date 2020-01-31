@@ -13,25 +13,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-<!--    <EditText-->
-<!--        android:id="@+id/edit_searchplace_addphoto_a"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginHorizontal="16dp"-->
-<!--        android:background="@drawable/corner_round_whitetext"-->
-<!--        android:drawableLeft="@drawable/ic_search_black_24dp"-->
-<!--        android:drawablePadding="2dp"-->
-<!--        android:ems="10"-->
-<!--        android:hint="@string/hint_search_place"-->
-<!--        android:inputType="textPersonName"-->
-<!--        android:paddingLeft="13dp"-->
-<!--        android:paddingTop="5dp"-->
-<!--        android:paddingBottom="5dp"-->
-<!--        android:textSize="12sp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/include_toolbar_addphoto_a" />-->
-
     <fragment
         android:id="@+id/frag_googlemap_addphoto_a"
         android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -47,11 +28,11 @@
         android:id="@+id/edit_caption_addphoto_a"
         android:layout_width="0dp"
         android:layout_height="80dp"
-        android:focusableInTouchMode="true"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/corner_round_whitetext"
         android:ems="10"
+        android:focusableInTouchMode="true"
         android:gravity="start|top"
         android:hint="@string/hint_caption"
         android:inputType="textMultiLine"
@@ -69,11 +50,11 @@
         android:id="@+id/switch_private_addphoto_a"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="10dp"
-        android:text="@string/text_private"
-        android:textSize="14dp"
+        android:switchMinWidth="60dp"
+        android:thumb="@drawable/switch_thumb_selector"
+        android:track="@drawable/switch_track_selector"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -131,9 +112,33 @@
         app:layout_constraintTop_toTopOf="@+id/frag_googlemap_addphoto_a"
         app:srcCompat="@drawable/ic_search_24px" />
 
+    <TextView
+        android:id="@+id/text_public_addphoto_a"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="13dp"
+        android:text="공개"
+        android:textColor="@color/text_white"
+        android:textSize="10dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/switch_private_addphoto_a"
+        app:layout_constraintStart_toStartOf="@+id/switch_private_addphoto_a"
+        app:layout_constraintTop_toTopOf="@+id/switch_private_addphoto_a"
+        tools:visibility="gone" />
 
-    <!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
-<!--    </ScrollView>-->
+    <TextView
+        android:id="@+id/text_private_addphoto_a"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="7dp"
+        android:text="비공개"
+        android:textColor="@color/text_white"
+        android:textSize="10dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/switch_private_addphoto_a"
+        app:layout_constraintEnd_toEndOf="@+id/switch_private_addphoto_a"
+        app:layout_constraintTop_toTopOf="@+id/switch_private_addphoto_a"
+        tools:visibility="visible" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

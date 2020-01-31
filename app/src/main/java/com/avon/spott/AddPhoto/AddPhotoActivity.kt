@@ -50,6 +50,18 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         //처음 키보드 올라오기 방지용
         text_guide_addphoto_a.requestFocus()
 
+        switch_private_addphoto_a.setOnCheckedChangeListener { buttonView, isChecked ->
+            if(isChecked){
+                text_public_addphoto_a.visibility = View.VISIBLE
+                text_private_addphoto_a.visibility = View.GONE
+            }else{
+                text_public_addphoto_a.visibility = View.GONE
+                text_private_addphoto_a.visibility = View.VISIBLE
+            }
+        }
+
+        switch_private_addphoto_a.isChecked = true
+
         init()
     }
 
@@ -62,7 +74,8 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
     override fun onClick(v: View?) {
         when(v?.id) {
             R.id.text_upload_addphoto_a->{
-                presenter.sendPhoto(getString(R.string.baseurl),intent.getStringExtra("photo"), edit_caption_addphoto_a.text.toString(), markerLatLng)
+                presenter.sendPhoto(getString(R.string.baseurl),intent.getStringExtra("photo"),
+                    edit_caption_addphoto_a.text.toString(), markerLatLng, switch_private_addphoto_a.isChecked)
             }
             R.id.img_back_toolbar ->{ presenter.navigateUp() }
         }
@@ -96,13 +109,6 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
     }
 
     override fun getPath(uri: Uri): String {
-        //UCrop 이전
-//        val projection = arrayOf(MediaStore.Images.Media.DATA)
-//        val cursor = managedQuery(uri, projection, null, null, null)
-//        startManagingCursor(cursor)
-//        val column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-//        cursor.moveToFirst()
-//        return cursor.getString(column_index)
 
         val path:String
         val projection = arrayOf(MediaStore.Images.Media.DATA)

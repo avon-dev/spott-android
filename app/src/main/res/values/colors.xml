@@ -23,5 +23,6 @@
 
     <color name="shadowBlack">#1F000000</color>
 
+    <color name="switchBackground">#7DA5DF</color>
 
 </resources>

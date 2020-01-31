@@ -40,9 +40,6 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
     private var checkInit = false
 
-    private lateinit var mRecyclerview :RecyclerView
-    private lateinit var mBundleRecyclerViewState :Bundle
-
     val homeInterListener = object :homeInter{
         override fun itemClick(id: Int) {
             presenter.openPhoto(id)
@@ -64,8 +61,6 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         logd(TAG, "onCreateView")
 
-        mRecyclerview = root.findViewById(R.id.recycler_home_f)
-
         return root
     }
 
@@ -75,20 +70,13 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
         init()
 
-//        val layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        recycler_home_f.layoutManager = layoutManager
+        recycler_home_f.adapter = homeAdapter
 
-        //아이템이 재배치 되는 코드
-//        layoutManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
-
-//        mRecyclerview.layoutManager = layoutManager
-//        homeAdapter = HomeAdapter(context!!, homeInterListener)
-//        mRecyclerview.adapter = homeAdapter
-
-        mRecyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-
+        recycler_home_f.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                if(!mRecyclerview.canScrollVertically(1)){ // 맨 아래에서 스크롤 할 때
+                if(!recycler_home_f.canScrollVertically(1)){ // 맨 아래에서 스크롤 할 때
                     if(!pageLoading && hasNext){ //이미 페이징을 불러오는 동안 중복요청하지 않게하기위함. + 다음 가져올 페이지가 있는지 여부확인
                         logd("ScrollTEST","END")
                         pageLoading = true
@@ -96,7 +84,7 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
                         recyclerView.smoothScrollToPosition(recyclerView.adapter!!.itemCount-1)
 
                         Handler().postDelayed({
-                        presenter.getPhotos(getString(R.string.testurl), start)
+                            presenter.getPhotos(getString(R.string.baseurl), start)
                         }, 400) //로딩 주기
                     }
                 }
@@ -111,13 +99,13 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
                 start = 0
                 refreshTimeStamp = ""
 
-                presenter.getPhotos(getString(R.string.testurl), start)
+                presenter.getPhotos(getString(R.string.baseurl), start)
             }, 600) //로딩 주기
 
         }
 
         if(!checkInit) { //처음 사진을 가져오는 코드 (처음 이후에는 리프레쉬 전까지 가져오지않는다.)
-            presenter.getPhotos(getString(R.string.testurl), start)
+            presenter.getPhotos(getString(R.string.baseurl), start)
             checkInit = true
         }
 
@@ -130,29 +118,11 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         super.onStart()
         //툴바 안보이게
         mToolbar.visibility = View.GONE
-
-        mRecyclerview.layoutManager = layoutManager
-        mRecyclerview.adapter = homeAdapter
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (::mBundleRecyclerViewState.isInitialized) {
-            val listState : Parcelable = mBundleRecyclerViewState.getParcelable("recycler_state")
-            mRecyclerview.layoutManager!!.onRestoreInstanceState(listState)
-        }
-    }
-
-    override fun onPause(){
-        super.onPause()
-        mBundleRecyclerViewState = Bundle()
-        val listState =   mRecyclerview.layoutManager!!.onSaveInstanceState()
-        mBundleRecyclerViewState.putParcelable("recycler_state", listState)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        mRecyclerview.layoutManager = null
+    override fun onDestroyView() {
+        super.onDestroyView()
+        recycler_home_f.layoutManager = null
     }
 
     fun init(){
