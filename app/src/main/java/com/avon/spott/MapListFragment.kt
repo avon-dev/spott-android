@@ -1,14 +1,12 @@
 package com.avon.spott
 
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.avon.spott.Utils.logd
-import kotlinx.android.synthetic.main.fragment_map_list.*
 
 
 class MapListFragment: Fragment() { //MapFragment 아래에 있는 childfragment

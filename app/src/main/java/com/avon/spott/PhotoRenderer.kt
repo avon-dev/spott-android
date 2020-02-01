@@ -58,11 +58,11 @@ class PhotoRenderer(mcontext: Context, mMap:GoogleMap, clusterManager: ClusterMa
             mBottomSheetBehavior?.state =  BottomSheetBehavior.STATE_COLLAPSED //리스트플래그먼트는 내려가게함.
         }else{
             if( selectedMarkerMypage != null) {
+                mapRecyclerView.isEnabled = false
                 animSlide(context, mapRecyclerView, false)
                 selectedMarkerMypage = null
             }
         }
-
 
         Glide.with(context)
             .asBitmap()
@@ -71,8 +71,12 @@ class PhotoRenderer(mcontext: Context, mMap:GoogleMap, clusterManager: ClusterMa
             .into(object : CustomTarget<Bitmap>(){
 
                 override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?) {
-                    marker!!.setIcon(BitmapDescriptorFactory.fromBitmap(
+                    try{
+                        marker!!.setIcon(BitmapDescriptorFactory.fromBitmap(
                         getMarkerBitmapFromView(customMarkerView, bitmap, 1,false, context)))
+                    }catch (e:Exception){
+                      e.printStackTrace()
+                    }
                 }
                 override fun onLoadCleared(placeholder: Drawable?) {
                 }
@@ -96,12 +100,17 @@ class PhotoRenderer(mcontext: Context, mMap:GoogleMap, clusterManager: ClusterMa
                 BottomSheetBehavior.STATE_COLLAPSED //맵리스트플래그먼트(하단플래그먼트)는 내려가게함.
         }else{
             if( selectedMarkerMypage != null) {
+                mapRecyclerView.isEnabled = false
                 animSlide(context, mapRecyclerView, false)
                 selectedMarkerMypage = null
             }
         }
 
-        val firstItem = cluster!!.items.iterator().next()   //첫번째 아이템 선택
+        val sortItmes = cluster!!.items.sortedByDescending { mapCluster: MapCluster? -> mapCluster!!.id }
+
+        val firstItem = sortItmes[0]  //첫번째 아이템 선택
+
+//        val firstItem = cluster!!.items.iterator().next()   //첫번째 아이템 선택
 
         //클러스터 순서 테스트중....
         logd(TAG, "----------------------------------------------------")
@@ -116,9 +125,21 @@ class PhotoRenderer(mcontext: Context, mMap:GoogleMap, clusterManager: ClusterMa
             .fitCenter()
             .into(object :CustomTarget<Bitmap>(){
                 override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?){
-                    marker!!.setIcon(
-                        BitmapDescriptorFactory.fromBitmap(
-                            getMarkerBitmapFromView(customMarkerView,bitmap, cluster.size, false, context)))
+                    try {
+                        marker!!.setIcon(
+                            BitmapDescriptorFactory.fromBitmap(
+                                getMarkerBitmapFromView(
+                                    customMarkerView,
+                                    bitmap,
+                                    cluster.size,
+                                    false,
+                                    context
+                                )
+                            )
+                        )
+                    }catch (e:Exception){
+                        e.printStackTrace()
+                    }
                 }
                 override fun onLoadCleared(placeholder: Drawable?) {
                 }

@@ -3,7 +3,6 @@ package com.avon.spott.Mypage
 import android.Manifest
 import android.app.Activity
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -15,14 +14,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.avon.spott.AddPhoto.AddPhotoActivity
 import com.avon.spott.Data.MapCluster
@@ -30,7 +28,6 @@ import com.avon.spott.EditMyinfo.EditMyInfoActivity
 import com.avon.spott.R
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
 import com.avon.spott.Main.controlToobar
-import com.avon.spott.Map.MapFragment
 import com.avon.spott.PhotoRenderer
 import com.avon.spott.Utils.logd
 import com.avon.spott.animSlide
@@ -48,7 +45,6 @@ import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropActivity
 import com.yalantis.ucrop.model.AspectRatio
 import kotlinx.android.synthetic.main.fragment_mypage.*
-import kotlinx.android.synthetic.main.fragment_mypage.view.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import java.io.File
 import java.text.SimpleDateFormat
@@ -68,10 +64,12 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
 
         //Map recyclerview
         lateinit var mapRecyclerView: RecyclerView
+        var mapRecyclerViewShow = false //마이페이지 맵 리사이클러뷰 visible 여부
 
+        var mypageChange = false //내가 작성한 사진이 변화가 있는 지 여부
     }
 
-    var Mypageselectgrid = true
+    var Mypageselectgrid = true //마이페이지 그리드 탭이 보이는지 여부
 
     private lateinit var mypagePresenter: MypagePresenter
     override lateinit var presenter: MypageContract.Presenter
@@ -84,6 +82,10 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
     private lateinit var mypageAdapter: MypageAdapter
     private lateinit var layoutManager : GridLayoutManager
 
+    //Map recyclerview
+    private lateinit var mypageMapAdapter: MypageMapAdapter
+    private lateinit var maplayoutManager: LinearLayoutManager
+
     //googlemap clustering
     private lateinit var clusterManager : ClusterManager<MapCluster>
     private lateinit var  mCustomClusterItemRenderer : PhotoRenderer
@@ -92,6 +94,9 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
     private var selectedMarkerView : View? = null //선택했던 마커뷰
     private var selectedCluster : Cluster<MapCluster>? = null //선택한 클러스터
     private var selectedItems : ArrayList<MapCluster>? = null//선택된 아이템
+
+    //서버에서 불러온 내 전체 아이템들
+    private var wholeItems:ArrayList<MapCluster>? = null
 
     val mypageInterListener = object : mypageInter{
         override fun itemClick(id:Int){
@@ -102,8 +107,14 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        //Grid recyclerview 용
         layoutManager = GridLayoutManager(context!!, 3)
         mypageAdapter = MypageAdapter(context!!, mypageInterListener)
+
+        //Map recyclerview 용
+        maplayoutManager = LinearLayoutManager(context!!, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL,
+            false)
+        mypageMapAdapter = MypageMapAdapter(context!!, mypageInterListener)
 
     }
 
@@ -128,6 +139,9 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
 
         recycler_grid_mypage_f.layoutManager  = layoutManager
         recycler_grid_mypage_f.adapter = mypageAdapter
+
+        mapRecyclerView.layoutManager = maplayoutManager
+        mapRecyclerView.adapter = mypageMapAdapter
 
         ////////마이페이지 뷰 선택 --- 일단 나중에
         val topButtonsListner = View.OnClickListener {
@@ -156,20 +170,41 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         }
         ////////////////////////////////////////////////////////
 
+        if(mapRecyclerViewShow){
+            mapRecyclerView.visibility = View.VISIBLE
+        }else{
+            mapRecyclerView.visibility = View.GONE
+        }
+
+        if(mypageChange){ //마이페이지에 변화가 있으면 새로 불러온다.
+            mypageAdapter.clearItemsAdapter()
+            mypageAdapter.notifyDataSetChanged()
+
+            mypageMapAdapter.clearItemsAdapter()
+            mypageMapAdapter.notifyDataSetChanged()
+
+            clusterManager.clearItems()
+            clusterManager.cluster()
+
+            mapRecyclerView.visibility = View.GONE
+            selectedMarkerMypage = null
+
+            presenter.getMyphotos(getString(R.string.testurl))
+        }
+
     }
 
     override fun onStart() {
         super.onStart()
 
-        //-----임시 데이터-----------------------------
-        Glide.with(this)
-            .load(R.mipmap.ic_launcher)
-             .into(mToolbar.img_profile_toolbar)
-        mToolbar.text_name_toolbar.text="MyNickName"
-        //--------------------------------------------
         // 툴바 유저이미지, 유저닉네임, 알람, 메뉴 보이게
         controlToobar(View.GONE, View.VISIBLE, View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.VISIBLE)
         mToolbar.visibility = View.VISIBLE
+
+
+        if( wholeItems!=null &&  wholeItems!!.size == 0){ //서버에서 불러왔던 사진아이템 사이즈가 0이면 사진없음 문구 보이게
+            text_nophoto_mypage_f.visibility = View.VISIBLE
+        }
 
     }
 
@@ -177,6 +212,15 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         super.onDestroyView()
 
         recycler_grid_mypage_f.layoutManager = null
+        mapRecyclerView.layoutManager = null
+
+        if(mapRecyclerView.visibility == View.VISIBLE){
+            mapRecyclerViewShow = true
+        }else if(mapRecyclerView.visibility == View.GONE){
+            mapRecyclerViewShow = false
+        }
+
+
     }
 
     fun init(){
@@ -193,18 +237,35 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
     }
 
     override fun onClusterClick(cluster: Cluster<MapCluster>?): Boolean {
+
+
             if(selectedMarkerMypage != null){  //전에 선택했던 마커는 다시 하얀색으로 바꾸기
+                val sortItmes = selectedCluster!!.items.sortedByDescending { mapCluster: MapCluster? -> mapCluster!!.id }
+                val firstItem = sortItmes[0]  //첫번째 아이템 선택
+
                 Glide.with(context!!)
                     .asBitmap()
-                    .load(selectedCluster!!.items.iterator().next().posts_image)
+                    .load(firstItem.posts_image)
                     .fitCenter()
                     .into(object : CustomTarget<Bitmap>(){
                         override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?) {
-                            selectedMarkerMypage!!.setIcon(
-                                BitmapDescriptorFactory.fromBitmap(
-                                // 전에 선택했던 클러스터 아이템의 이미지를 넣은 클러스터 마커의 비트맵(테두리 하얀색 마커)을 만든다.
-                                getMarkerBitmapFromView(selectedMarkerView!!, bitmap, selectedCluster!!.size,false, context!!)))
-                            newCluster(cluster) // 새로 선택된 클러스터의 이미지를 넣은 클러스터 마커의 비트맵(테두리 파란색 마커)을 만든다.
+                            try {
+                                selectedMarkerMypage!!.setIcon(
+                                    BitmapDescriptorFactory.fromBitmap(
+                                        // 전에 선택했던 클러스터 아이템의 이미지를 넣은 클러스터 마커의 비트맵(테두리 하얀색 마커)을 만든다.
+                                        getMarkerBitmapFromView(
+                                            selectedMarkerView!!,
+                                            bitmap,
+                                            selectedCluster!!.size,
+                                            false,
+                                            context!!
+                                        )
+                                    )
+                                )
+                                newCluster(cluster) // 새로 선택된 클러스터의 이미지를 넣은 클러스터 마커의 비트맵(테두리 파란색 마커)을 만든다.
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
                         }
                         override fun onLoadCleared(placeholder: Drawable?) {
                         }
@@ -216,14 +277,21 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
     }
 
     private fun newCluster(cluster: Cluster<MapCluster>?){
-        val firstItem = cluster!!.items.iterator().next() //첫번째 아이템 선택
+//        val firstItem = cluster!!.items.iterator().next() //첫번째 아이템 선택
+
+        maplayoutManager.scrollToPosition(0)
 
         if(selectedCluster==cluster&& selectedMarkerMypage!=null){
 
+            mapRecyclerView.isEnabled = false
             animSlide(context!!, mapRecyclerView, false)
+
             selectedMarkerMypage = null
         }else {
-            logd(TAG, "새로 선택!!")
+
+            val sortItmes = cluster!!.items.sortedByDescending { mapCluster: MapCluster? -> mapCluster!!.id }
+
+            val firstItem = sortItmes[0] //첫번째 아이템 선택
 
             selectedCluster = cluster
             selectedMarkerMypage = mCustomClusterItemRenderer.getMarker(cluster)
@@ -238,6 +306,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
                         bitmap: Bitmap,
                         transition: Transition<in Bitmap>?
                     ) {
+                        try {
                         selectedMarkerMypage!!.setIcon(
                             BitmapDescriptorFactory.fromBitmap(
                                 getMarkerBitmapFromView(
@@ -249,6 +318,9 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
                                 )
                             )
                         )
+                        }catch (e:Exception){
+                            e.printStackTrace()
+                        }
                     }
 
                     override fun onLoadCleared(placeholder: Drawable?) {
@@ -256,11 +328,16 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
                 })
 
             val clusterMapItems = ArrayList<MapCluster>()
-            clusterMapItems.addAll(cluster!!.items)
+            clusterMapItems.addAll(sortItmes)
 
             selectedItems = clusterMapItems //선택된 아이템 변경
+            mypageMapAdapter.clearItemsAdapter()
+            mypageMapAdapter.addItemsAdapter(selectedItems!!)
+            mypageMapAdapter.notifyDataSetChanged()
 
+            mapRecyclerView.isEnabled = true
             animSlide(context!!, mapRecyclerView, true)
+
 
             val center: CameraUpdate = CameraUpdateFactory.newLatLng(cluster.position)
             mMap.animateCamera(center, 400, null)
@@ -281,19 +358,29 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         mMap.setOnCameraIdleListener(clusterManager)
         clusterManager!!.setOnClusterClickListener(this)
         clusterManager!!.setOnClusterItemClickListener(this)
-        presenter.getMyphotos(getString(R.string.testurl))
+
+        presenter.getMyphotos(getString(R.string.baseurl))
     }
 
-    override fun addItmes(mypageItems: ArrayList<MapCluster>) { //프레젠터에서 넘어온 아이템을 클러스터와 어댑터에 뿌림.
+    override fun addItems(mypageItems: ArrayList<MapCluster>) { //프레젠터에서 넘어온 아이템을 클러스터와 어댑터에 뿌림.
         logd(TAG, "넘어온 아이템은 " + mypageItems)
+        wholeItems = mypageItems
+
         clusterManager.addItems(mypageItems)
         clusterManager.cluster()
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(mypageItems[0].latitude, mypageItems[0].longitude), 11f))
 
         mypageAdapter.addItemsAdapter(mypageItems)
         mypageAdapter.notifyDataSetChanged()
 
+    }
+
+    override fun noPhoto(){
+        text_nophoto_mypage_f.visibility = View.VISIBLE
+    }
+
+    override fun movePosition(latLng: LatLng, zoom: Float) {
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
     }
 
     override fun showPhotoUi(id:Int) {//PhotoFragment로 이동
@@ -373,7 +460,50 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
 
     }
 
-    override fun checkPermission(): Boolean {
+    inner class MypageMapAdapter(val context: Context, val mypageInterListener:mypageInter):RecyclerView.Adapter<MypageMapAdapter.ViewHolder>() {
+        private var itemsList = ArrayList<MapCluster>()
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MypageMapAdapter.ViewHolder {
+            val view = LayoutInflater.from(context).inflate(R.layout.item_photo_square_mypagemap, parent, false)
+            return ViewHolder(view)
+        }
+
+        override fun getItemCount(): Int {
+            return itemsList.size
+        }
+
+        fun clearItemsAdapter() {
+            itemsList.clear()
+        }
+
+        fun addItemsAdapter(mapItems : ArrayList<MapCluster>){
+            logd(TAG, "addItemsAdapter!!!!!")
+            itemsList.addAll(mapItems)
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            itemsList[position].let{
+                logd(TAG, "onBindViewHolder!!!! " + it.posts_image)
+                Glide.with(holder.itemView.context)
+                    .load(it.posts_image)
+                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                    .error(android.R.drawable.stat_notify_error)
+                    .into(holder.photo)
+
+
+                holder.itemView.setOnClickListener {
+                    mypageInterListener.itemClick(itemsList[position].id)
+                }
+            }
+        }
+
+        inner class ViewHolder(itemView:View):RecyclerView.ViewHolder(itemView){
+            val photo = itemView.findViewById<ImageView>(R.id.img_photo_photo_squareMypageMap_i) as ImageView
+        }
+    }
+
+
+        override fun checkPermission(): Boolean {
         val result = ActivityCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (result == PackageManager.PERMISSION_DENIED) return false
         return true
@@ -444,6 +574,13 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         if(resultCode == UCrop.RESULT_ERROR){
             logd(TAG, "error : Ucrop result error")
         }
+    }
+
+    override fun setUserInfo(nickname:String, photo:String){
+        Glide.with(this)
+            .load(photo)
+            .into(mToolbar.img_profile_toolbar)
+        mToolbar.text_name_toolbar.text=nickname
     }
 
 }

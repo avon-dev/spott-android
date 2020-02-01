@@ -72,7 +72,7 @@ class MapPresenter (val mapView:MapContract.View) : MapContract.Presenter {
 //        mapView.addItems(newArryList)
         //-----------------------------------------------------------------------------------
 
-        Retrofit(baseUrl).get("/spott/posts/map",  Parser.toJson(cameraRange))
+        Retrofit(baseUrl).get("/spott/map/posts",  Parser.toJson(cameraRange))
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 

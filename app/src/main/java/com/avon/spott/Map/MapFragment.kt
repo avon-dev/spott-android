@@ -9,18 +9,14 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
-import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -40,13 +36,10 @@ import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
-import com.google.maps.android.clustering.view.DefaultClusterRenderer
-import com.google.maps.android.ui.IconGenerator
 import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.android.synthetic.main.fragment_map.view.*
 import kotlin.collections.ArrayList
@@ -403,11 +396,12 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
         mMap.uiSettings.isRotateGesturesEnabled = false //지도 방향 고정시키기(회전 불가)
 
-        mMap.setMinZoomPreference(8f) //지도 최대 축소 지정
+//        mMap.setMinZoomPreference(8f) //지도 최대 축소 지정
 
         setClusterManager() //클러스터 세팅
 
         presenter.getLastPosition() //카메라 포지션 옮기기. (처음실행 : 서울, 그외 : 최근에 봤던 곳)
+
 
     }
 
@@ -431,17 +425,27 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
             return true
         }
 
+
+
         if(selectedMarker !=null){ //전에 선택했던 마커는 다시 하얀색으로 바꾸기
+            val sortItmes = selectedCluster!!.items.sortedByDescending { mapCluster: MapCluster? -> mapCluster!!.id }
+            val firstItem = sortItmes[0]  //첫번째 아이템 선택
+
             Glide.with(context!!)
                 .asBitmap()
-                .load(selectedCluster!!.items.iterator().next().posts_image) //전에 선택했던 클러스터의 첫번째 이미지 url가져온다.
+                .load(firstItem.posts_image) //전에 선택했던 클러스터의 첫번째 이미지 url가져온다.
                 .fitCenter()
                 .into(object :CustomTarget<Bitmap>(){
                     override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?) {
-                        selectedMarker!!.setIcon(BitmapDescriptorFactory.fromBitmap(
-                            // 전에 선택했던 클러스터 아이템의 이미지를 넣은 클러스터 마커의 비트맵(테두리 하얀색 마커)을 만든다.
-                         getMarkerBitmapFromView(selectedMarkerView!!, bitmap, selectedCluster!!.size,false, context!!)))
-                        newCluster(cluster) // 새로 선택된 클러스터의 이미지를 넣은 클러스터 마커의 비트맵(테두리 파란색 마커)을 만든다.
+                        try {
+                            selectedMarker!!.setIcon(BitmapDescriptorFactory.fromBitmap(
+                                // 전에 선택했던 클러스터 아이템의 이미지를 넣은 클러스터 마커의 비트맵(테두리 하얀색 마커)을 만든다.
+                                getMarkerBitmapFromView(selectedMarkerView!!, bitmap, selectedCluster!!.size,false, context!!)))
+                            newCluster(cluster) // 새로 선택된 클러스터의 이미지를 넣은 클러스터 마커의 비트맵(테두리 파란색 마커)을 만든다.
+                        }catch (e:Exception){
+                             e.printStackTrace()
+                        }
+
                     }
                     override fun onLoadCleared(placeholder: Drawable?) {
                     }
@@ -458,7 +462,9 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     private fun newCluster(cluster: Cluster<MapCluster>?){ //새로 선택한 클러스터 처리
         text_spotnumber_maplist_f.text = cluster!!.size.toString()
 
-        val firstItem = cluster!!.items.iterator().next() //첫번째 아이템 선택
+        val sortItmes = cluster!!.items.sortedByDescending { mapCluster: MapCluster? -> mapCluster!!.id }
+
+        val firstItem = sortItmes[0] //첫번째 아이템 선택
 
         selectedCluster = cluster
         selectedMarker = mCustomClusterItemRenderer.getMarker(cluster)
@@ -470,20 +476,21 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
             .fitCenter()
             .into(object :CustomTarget<Bitmap>(){
                 override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?){
-                    selectedMarker!!.setIcon(
-                        BitmapDescriptorFactory.fromBitmap(
-                            getMarkerBitmapFromView(selectedMarkerView!!, bitmap, cluster.size, true, context!!)))
+                    try {
+                        selectedMarker!!.setIcon(
+                            BitmapDescriptorFactory.fromBitmap(
+                                getMarkerBitmapFromView(selectedMarkerView!!, bitmap, cluster.size, true, context!!)))
+                    }catch (e:Exception){
+                        e.printStackTrace()
+                    }
+
                 }
                 override fun onLoadCleared(placeholder: Drawable?) {
                 }
-//                override fun onLoadFailed(errorDrawable: Drawable?) {
-//                    super.onLoadFailed(errorDrawable)
-//                    logd(TAG, "onLoadFailed" + errorDrawable)
-//                }
             })
 
         val clusterMapItems = ArrayList<MapCluster>()
-        clusterMapItems.addAll(cluster!!.items)
+        clusterMapItems.addAll(sortItmes)
 
         selectedItems = clusterMapItems //선택된 아이템 변경.
 

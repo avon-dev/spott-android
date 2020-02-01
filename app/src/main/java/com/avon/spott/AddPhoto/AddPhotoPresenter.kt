@@ -1,6 +1,5 @@
 package com.avon.spott.AddPhoto
 
-import android.media.ExifInterface
 import android.net.Uri
 import com.avon.spott.Data.NewPhoto
 import com.avon.spott.Utils.ExifExtractor
@@ -13,7 +12,6 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.HttpException
 import java.io.File
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList

@@ -1,15 +1,12 @@
 package com.avon.spott.AddPhoto
 
 
-import android.media.ExifInterface
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import android.widget.Toast
-import androidx.loader.app.LoaderManager
-import androidx.loader.content.CursorLoader
 import com.avon.spott.R
 import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
@@ -23,8 +20,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_add_photo.*
 import kotlinx.android.synthetic.main.toolbar.view.*
-import java.io.IOException
-import java.util.*
 
 class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClickListener,
     OnMapReadyCallback {
