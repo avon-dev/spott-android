@@ -1,7 +1,9 @@
 package com.avon.spott.Main
 
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.util.SparseArray
+import android.view.animation.AccelerateInterpolator
 import androidx.core.util.forEach
 import androidx.core.util.set
 import androidx.fragment.app.FragmentManager
@@ -9,6 +11,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.avon.spott.Utils.logd
+import com.avon.spott.betterSmoothScrollToPosition
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_map.*
@@ -157,9 +160,15 @@ private fun BottomNavigationView.setupItemReselected(graphIdToTagMap: SparseArra
 
             //리사이클러뷰있는 스크랩 플래그먼트면 리사이클러뷰 스크롤 UP, (아이템 없어도 터지지 않음.)
             if(selectedFragment.tag== "bottomNavigation#0"){
-                selectedFragment.recycler_home_f.smoothScrollToPosition(0)
+//                selectedFragment.recycler_home_f.smoothScrollToPosition(0)
+
+                selectedFragment.recycler_home_f.betterSmoothScrollToPosition(0)
+
+
             }else if(selectedFragment.tag== "bottomNavigation#1"){
-                selectedFragment.recycler_maplist_f.smoothScrollToPosition(0)
+//                selectedFragment.recycler_maplist_f.smoothScrollToPosition(0)
+                selectedFragment.recycler_maplist_f.betterSmoothScrollToPosition(0)
+
             }else if(selectedFragment.tag == "bottomNavigation#2"){
                 selectedFragment.recycler_scrap_f.smoothScrollToPosition(0)
             }else if(selectedFragment.tag == "bottomNavigation#3"){

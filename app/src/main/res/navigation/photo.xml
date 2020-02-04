@@ -28,7 +28,17 @@
         android:id="@+id/photomapFragment"
         android:name="com.avon.spott.Photomap.PhotoMapFragment"
         android:label="fragment_photomap"
-        tools:layout="@layout/fragment_photomap" />
+        tools:layout="@layout/fragment_photomap">
+        <argument
+            android:name="photoLat"
+            app:argType="float"/>
+        <argument
+            android:name="photoLng"
+            app:argType="float"/>
+        <argument
+            android:name="photoUrl"
+            app:argType="string"/>
+    </fragment>
 
     <fragment
         android:id="@+id/commentFragment"

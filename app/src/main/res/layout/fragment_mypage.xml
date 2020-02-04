@@ -20,34 +20,81 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="VectorDrawableCompat" />
 
+<!--기존 그리드/맵 선택 코드-->
+<!--    <LinearLayout-->
+<!--        android:id="@+id/linearLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:orientation="horizontal"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
+<!--        <ImageButton-->
+<!--            android:id="@+id/imgbtn_grid_mypage_f"-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="fill_parent"-->
+<!--            android:layout_weight="1"-->
+<!--            android:background="@drawable/btn_selector_mypage_f"-->
+<!--            app:srcCompat="@drawable/ic_grid_on_selector" />-->
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/imgbtn_map_mypage_f"-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="fill_parent"-->
+<!--            android:layout_weight="1"-->
+<!--            android:background="@drawable/btn_selector_mypage_f"-->
+<!--            app:srcCompat="@drawable/ic_map_selector" />-->
+
+<!--    </LinearLayout>-->
+
+
+    <!--테스트중인 탭 그리드/맵 선택 코드-->
+
+    <View
+        android:id="@+id/view3"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:orientation="horizontal"
+        android:layout_height="0.5dp"
+        android:background="@color/background_grey"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageButton
-            android:id="@+id/imgbtn_grid_mypage_f"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:background="@drawable/btn_selector_mypage_f"
-            app:srcCompat="@drawable/ic_grid_on_selector" />
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/default_background"
+        android:padding="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view3">
 
-        <ImageButton
-            android:id="@+id/imgbtn_map_mypage_f"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:background="@drawable/btn_selector_mypage_f"
-            app:srcCompat="@drawable/ic_map_selector" />
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/tab_layout_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tabIconTint="@drawable/tab_content_color_selector"
+            app:tabIndicator="@drawable/tab_background_selected"
+            app:tabIndicatorColor="@color/colorPrimary"
+            app:tabIndicatorHeight="40dp"
+            app:tabMode="fixed" />
 
-    </LinearLayout>
+    </FrameLayout>
 
+
+    <View
+        android:id="@+id/view4"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/background_grey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
 
     <FrameLayout
         android:id="@+id/frame_mypage_f"
@@ -56,7 +103,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+        app:layout_constraintTop_toBottomOf="@+id/view4">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/const_grid_mypage_f"
@@ -80,12 +127,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:paddingVertical="8dp"
                 android:paddingHorizontal="4dp"
+                android:paddingVertical="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

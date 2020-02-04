@@ -617,7 +617,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         }
     }
 
-    override fun progress(boolean: Boolean){
+    override fun showProgressbar(boolean: Boolean){
         progress_map_f.visibility = if(boolean) View.VISIBLE else View.GONE
     }
 
@@ -645,7 +645,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
                         mylocationClick = false
                         showMylocation()
                         moveToMylocation()
-                        progress(false)
+                        showProgressbar(false)
                     }
 
                 }

@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<set xmlns:android="http://schemas.android.com/apk/res/android">
+<set xmlns:android="http://schemas.android.com/apk/res/android" android:interpolator="@android:anim/accelerate_interpolator">
+
+  <!-- 뷰가 등장해서 1.1배로 커지는 애니메이션   -->
+    <scale android:duration="100"
+           android:fromXScale="0.0"
+           android:fromYScale="0.0"
+           android:toXScale="1.1"
+           android:toYScale="1.1"
+           android:pivotX="50%"
+           android:pivotY="50%"/>
+
+  <!-- 뷰가 원래크기로 작아지는 애니메이션   -->
+    <scale android:duration="50"
+           android:startOffset="100"
+           android:fromXScale="1.1"
+           android:fromYScale="1.1"
+           android:toXScale="1.0"
+           android:toYScale="1.0"
+           android:pivotX="50%"
+           android:pivotY="50%"/>
 
 </set>

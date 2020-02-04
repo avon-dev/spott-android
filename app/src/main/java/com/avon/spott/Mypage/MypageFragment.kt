@@ -13,7 +13,9 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -39,12 +41,14 @@ import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
+import com.google.android.material.tabs.TabLayout
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropActivity
 import com.yalantis.ucrop.model.AspectRatio
 import kotlinx.android.synthetic.main.fragment_mypage.*
+import kotlinx.android.synthetic.main.fragment_mypage.view.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import java.io.File
 import java.text.SimpleDateFormat
@@ -98,6 +102,10 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
     //서버에서 불러온 내 전체 아이템들
     private var wholeItems:ArrayList<MapCluster>? = null
 
+    //유저의 닉네임과 아이디
+    private var userNickname:String? = null
+    private var userPhoto:String? = null
+
     val mypageInterListener = object : mypageInter{
         override fun itemClick(id:Int){
             presenter.openPhoto(id)
@@ -144,31 +152,70 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         mapRecyclerView.adapter = mypageMapAdapter
 
         ////////마이페이지 뷰 선택 --- 일단 나중에
-        val topButtonsListner = View.OnClickListener {
-            if(it.id == R.id.imgbtn_grid_mypage_f) {
-                imgbtn_grid_mypage_f.isSelected= true
-                imgbtn_map_mypage_f.isSelected = false
-                const_grid_mypage_f.visibility = View.VISIBLE
-                const_map_mypage_f.visibility = View.GONE
-                Mypageselectgrid = true
-            }else{
-                imgbtn_grid_mypage_f.isSelected=false
-                imgbtn_map_mypage_f.isSelected = true
-                const_grid_mypage_f.visibility = View.GONE
-                const_map_mypage_f.visibility = View.VISIBLE
-                Mypageselectgrid = false
-            }
-        }
+//        val topButtonsListner = View.OnClickListener {
+//            if(it.id == R.id.imgbtn_grid_mypage_f) {
+//                imgbtn_grid_mypage_f.isSelected= true
+//                imgbtn_map_mypage_f.isSelected = false
+//                const_grid_mypage_f.visibility = View.VISIBLE
+//                const_map_mypage_f.visibility = View.GONE
+//                Mypageselectgrid = true
+//            }else{
+//                imgbtn_grid_mypage_f.isSelected=false
+//                imgbtn_map_mypage_f.isSelected = true
+//                const_grid_mypage_f.visibility = View.GONE
+//                const_map_mypage_f.visibility = View.VISIBLE
+//                Mypageselectgrid = false
+//            }
+//        }
+//
+//        imgbtn_grid_mypage_f.setOnClickListener(topButtonsListner)
+//        imgbtn_map_mypage_f.setOnClickListener(topButtonsListner)
+//
+//        if(Mypageselectgrid){
+//            imgbtn_grid_mypage_f.performClick()
+//        }else{
+//            imgbtn_map_mypage_f.performClick()
+//        }
 
-        imgbtn_grid_mypage_f.setOnClickListener(topButtonsListner)
-        imgbtn_map_mypage_f.setOnClickListener(topButtonsListner)
+
+        ////////////////////////////////////////////////////////
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_grid_on_white_24dp))
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_map_white_24dp))
+
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                when(tab!!.position){
+                    0 -> {
+                        const_grid_mypage_f.visibility = View.VISIBLE
+                        const_map_mypage_f.visibility = View.GONE
+                        Mypageselectgrid = true
+                    }
+                    1 -> {
+                        const_grid_mypage_f.visibility = View.GONE
+                        const_map_mypage_f.visibility = View.VISIBLE
+                        Mypageselectgrid = false
+                    }
+                }
+            }
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
+        })
+
 
         if(Mypageselectgrid){
-            imgbtn_grid_mypage_f.performClick()
+           tabLayout.getTabAt(0)!!.select()
+            const_grid_mypage_f.visibility = View.VISIBLE
+            const_map_mypage_f.visibility = View.GONE
         }else{
-            imgbtn_map_mypage_f.performClick()
+            tabLayout.getTabAt(1)!!.select()
+            const_grid_mypage_f.visibility = View.GONE
+            const_map_mypage_f.visibility = View.VISIBLE
         }
-        ////////////////////////////////////////////////////////
+        ///////////////////////////
+
+
 
         if(mapRecyclerViewShow){
             mapRecyclerView.visibility = View.VISIBLE
@@ -190,6 +237,13 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
             selectedMarkerMypage = null
 
             presenter.getMyphotos(getString(R.string.testurl))
+        }
+
+        if(userNickname!=null){
+            Glide.with(this)
+                .load(userPhoto)
+                .into(mToolbar.img_profile_toolbar)
+            mToolbar.text_name_toolbar.text=userNickname
         }
 
     }
@@ -548,11 +602,11 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
                     options.setActiveControlsWidgetColor(ContextCompat.getColor(context!!, R.color.colorPrimary))
                     options.setStatusBarColor(ContextCompat.getColor(context!!, R.color.bg_black))
                     options.setAspectRatioOptions(2,
-                        AspectRatio("16 : 9", 16f, 9f),
+//                        AspectRatio("16 : 9", 16f, 9f),
                         AspectRatio("4 : 3", 4f, 3f),
                         AspectRatio("1 : 1", 1f, 1f),
-                        AspectRatio("3 : 4", 3f, 4f),
-                        AspectRatio("9 : 16", 9f, 16f)
+                        AspectRatio("3 : 4", 3f, 4f)
+//                        AspectRatio("9 : 16", 9f, 16f)
                     )
 
                     /* 현재시간을 임시 파일 이름에 넣는 이유 : 중복방지
@@ -577,6 +631,9 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
     }
 
     override fun setUserInfo(nickname:String, photo:String){
+        userNickname = nickname
+        userPhoto = photo
+
         Glide.with(this)
             .load(photo)
             .into(mToolbar.img_profile_toolbar)

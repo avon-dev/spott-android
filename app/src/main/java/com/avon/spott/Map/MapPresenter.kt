@@ -47,7 +47,7 @@ class MapPresenter (val mapView:MapContract.View) : MapContract.Presenter {
             mapView.showMylocation()
             mapView.moveToMylocation()
         }else{
-            mapView.progress(true)
+            mapView.showProgressbar(true)
             mapView.startLocationUpdates()
         }
     }

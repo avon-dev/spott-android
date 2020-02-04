@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
+import com.avon.spott.Utils.logd
 
 /* 사진이미지가 들어있는 풍선 모양 마커 비트맵을 만드는 함수 */
 fun getMarkerBitmapFromView(view: View, bitmap: Bitmap, size:Int, selected:Boolean, context:Context): Bitmap {
@@ -50,5 +51,7 @@ fun getMarkerBitmapFromView(view: View, bitmap: Bitmap, size:Int, selected:Boole
     if (drawable != null)
         drawable!!.draw(canvas)
     view.draw(canvas)
+
+    logd("markerBitmap","here" + returnedBitmap)
     return returnedBitmap
 }

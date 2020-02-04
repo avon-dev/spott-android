@@ -2,4 +2,8 @@
 <resources>
     <dimen name="upload_width">1936px</dimen>
     <dimen name="upload_heigth">1936px</dimen>
+
+    <dimen name="custom_wrap_content">-2</dimen>
+    <dimen name="custom_match_parent">-1</dimen>
+
 </resources>
