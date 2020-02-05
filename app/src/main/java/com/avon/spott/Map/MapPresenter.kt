@@ -72,16 +72,15 @@ class MapPresenter (val mapView:MapContract.View) : MapContract.Presenter {
 //        mapView.addItems(newArryList)
         //-----------------------------------------------------------------------------------
 
-        Retrofit(baseUrl).get("/spott/map/posts",  Parser.toJson(cameraRange))
+        Retrofit(baseUrl).get(App.prefs.temporary_token,"/spott/map/posts",  Parser.toJson(cameraRange))
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 
                 val string  = response.body()
                 val photos = Parser.fromJson<ArrayList<MapCluster>>(string!!)
 
-                if(photos!=null){
-                    mapView.addItems(photos)
-                }
+                 mapView.addItems(photos)
+
                 if(photos.size==0){
                     mapView.noPhoto()
                 }

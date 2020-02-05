@@ -17,7 +17,7 @@ interface MypageContract {
         fun openGallery()
         fun noPhoto()
         fun movePosition(latLng: LatLng, zoom: Float)
-        fun setUserInfo(nickname:String, photo:String)
+        fun setUserInfo(nickname:String, photo:String?)
     }
 
     interface Presenter{

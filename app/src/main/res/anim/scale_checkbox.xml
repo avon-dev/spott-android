@@ -3,8 +3,8 @@
 
   <!-- 뷰가 등장해서 1.1배로 커지는 애니메이션   -->
     <scale android:duration="100"
-           android:fromXScale="0.0"
-           android:fromYScale="0.0"
+           android:fromXScale="0.5"
+           android:fromYScale="0.5"
            android:toXScale="1.1"
            android:toYScale="1.1"
            android:pivotX="50%"

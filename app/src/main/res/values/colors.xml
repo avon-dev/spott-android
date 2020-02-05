@@ -26,4 +26,6 @@
     <color name="switch_background">#7DA5DF</color>
     <color name="like_red">#D64D4D</color>
 
+    <color name="photo_detail_background">#D9000000</color>
+
 </resources>

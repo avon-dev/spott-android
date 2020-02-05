@@ -30,23 +30,46 @@ class Retrofit(baseUrl:String) {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    fun get(url: String, sending: String): Observable<Response<String>> {
-        return retrofitService.get(url, sending)
+
+    fun get(token: String, url: String, sending: String): Observable<Response<String>> {
+        return retrofitService.get("jwt "+token, url, sending)
             .subscribeOn(Schedulers.io())
             .map { t -> if (t.isSuccessful) t else throw HttpException(t) }
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    fun post(url: String, sending: String): Observable<Response<String>> {
-        return retrofitService.post(url, sending)
+    fun post(token: String, url: String, sending: String): Observable<Response<String>> {
+        return retrofitService.post("jwt "+token, url, sending)
             .subscribeOn(Schedulers.io())
             .map { t -> if (t.isSuccessful) t else throw HttpException(t) }
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    fun postPhoto(url:String, sending: String, imageFile : ArrayList<MultipartBody.Part>)
+    fun delete(token: String, url: String, sending: String): Observable<Response<String>> {
+        return retrofitService.delete("jwt "+token, url, sending)
+            .subscribeOn(Schedulers.io())
+            .map { t -> if (t.isSuccessful) t else throw HttpException(t) }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun postPhoto(token: String, url:String, sending: String, imageFile : ArrayList<MultipartBody.Part>)
             : Observable<Response<String>> {
-        return retrofitService.postPhoto(url, sending, imageFile)
+        return retrofitService.postPhoto("jwt "+token, url, sending, imageFile)
+            .subscribeOn(Schedulers.io())
+            .map { t -> if (t.isSuccessful) t else throw HttpException(t) }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    /**  토큰 테스트용!!!!! 임시 토큰 2020-02-04   */
+    fun postNonHeader(url: String, sending: String): Observable<Response<String>> {
+        return retrofitService.postNonHeader(url, sending)
+            .subscribeOn(Schedulers.io())
+            .map { t -> if (t.isSuccessful) t else throw HttpException(t) }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun getNonHeader(url: String, sending: String): Observable<Response<String>> {
+        return retrofitService.getNonToken(url, sending)
             .subscribeOn(Schedulers.io())
             .map { t -> if (t.isSuccessful) t else throw HttpException(t) }
             .observeOn(AndroidSchedulers.mainThread())

@@ -10,6 +10,9 @@ class MySharedPreferences (context: Context) {
     val PREF_KEY_POSITION_LNG = "mylastlng"
     val PREF_KEY_POSITION_ZOOM = "mylastzoom"
 
+    /**  토큰 테스트용!!!!! 임시 토큰 2020-02-04   */
+    val PRED_KEY_TEST_FOR_TOKEN = "temporary_token"
+
     // 파일 이름과 데이터를 저장할 Key 값을 만들고 prefs 인스턴스 초기화
     val prefs: SharedPreferences = context.getSharedPreferences(PREFS_FILENAME, Context.MODE_PRIVATE)
 
@@ -27,4 +30,10 @@ class MySharedPreferences (context: Context) {
     var mylastzoom: Float //마지막 확대값, 줌값
         get() = prefs.getFloat(PREF_KEY_POSITION_ZOOM, 0.0f)
         set(value) = prefs.edit().putFloat(PREF_KEY_POSITION_ZOOM,  value).apply()
+
+    /**  토큰 테스트용!!!!! 임시 토큰 2020-02-04   */
+    var temporary_token:String //임시 토큰
+        get() = prefs.getString(PRED_KEY_TEST_FOR_TOKEN, "")
+        set(value) = prefs.edit().putString(PRED_KEY_TEST_FOR_TOKEN, value).apply()
+
 }

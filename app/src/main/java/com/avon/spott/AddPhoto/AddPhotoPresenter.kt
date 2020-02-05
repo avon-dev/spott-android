@@ -2,10 +2,7 @@ package com.avon.spott.AddPhoto
 
 import android.net.Uri
 import com.avon.spott.Data.NewPhoto
-import com.avon.spott.Utils.ExifExtractor
-import com.avon.spott.Utils.Parser
-import com.avon.spott.Utils.Retrofit
-import com.avon.spott.Utils.logd
+import com.avon.spott.Utils.*
 import com.google.android.gms.maps.model.LatLng
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -76,7 +73,7 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
 
             val newPhoto = NewPhoto(latLng.latitude, latLng.longitude, caption, public)
 
-            Retrofit(baseUrl).postPhoto("/spott/posts", Parser.toJson(newPhoto), images)
+            Retrofit(baseUrl).postPhoto(App.prefs.temporary_token, "/spott/posts", Parser.toJson(newPhoto), images)
                 .subscribe({ response ->
                     logd(
                         TAG,

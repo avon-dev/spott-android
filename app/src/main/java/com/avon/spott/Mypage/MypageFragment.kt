@@ -49,6 +49,7 @@ import com.yalantis.ucrop.UCropActivity
 import com.yalantis.ucrop.model.AspectRatio
 import kotlinx.android.synthetic.main.fragment_mypage.*
 import kotlinx.android.synthetic.main.fragment_mypage.view.*
+import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import java.io.File
 import java.text.SimpleDateFormat
@@ -240,10 +241,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         }
 
         if(userNickname!=null){
-            Glide.with(this)
-                .load(userPhoto)
-                .into(mToolbar.img_profile_toolbar)
-            mToolbar.text_name_toolbar.text=userNickname
+            setUserInfo(userNickname!!, userPhoto)
         }
 
     }
@@ -630,13 +628,18 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         }
     }
 
-    override fun setUserInfo(nickname:String, photo:String){
+    override fun setUserInfo(nickname:String, photo:String?){
         userNickname = nickname
         userPhoto = photo
 
-        Glide.with(this)
-            .load(photo)
-            .into(mToolbar.img_profile_toolbar)
+        if(photo==null){
+            img_profile_toolbar.setImageResource(R.drawable.ic_account_circle_grey_36dp)
+        }else{
+            Glide.with(this)
+                .load(photo)
+                .into(mToolbar.img_profile_toolbar)
+        }
+
         mToolbar.text_name_toolbar.text=nickname
     }
 

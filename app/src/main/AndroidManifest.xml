@@ -20,6 +20,9 @@
         android:theme="@style/AppTheme">
 
         <activity
+            android:name=".PhotoEnlargementActivity"
+            android:theme="@style/Transparent"></activity>
+        <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>

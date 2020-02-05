@@ -2,6 +2,7 @@ package com.avon.spott.Mypage
 
 import com.avon.spott.Data.MapCluster
 import com.avon.spott.Data.MypageResult
+import com.avon.spott.Utils.App
 import com.avon.spott.Utils.Parser
 import com.avon.spott.Utils.Retrofit
 import com.avon.spott.Utils.logd
@@ -42,7 +43,7 @@ class MypagePresenter(val mypageView:MypageContract.View):MypageContract.Present
 
     override fun getMyphotos(baseUrl: String) {
 
-        Retrofit(baseUrl).get("/spott/mypage",  "")
+        Retrofit(baseUrl).get(App.prefs.temporary_token, "/spott/mypage",  "")
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 

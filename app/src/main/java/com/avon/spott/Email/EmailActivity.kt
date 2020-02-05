@@ -10,11 +10,14 @@ import com.avon.spott.Data.Number
 import com.avon.spott.Data.User
 import com.avon.spott.Password.PasswordActivity
 import com.avon.spott.R
+import com.avon.spott.Utils.logd
 import kotlinx.android.synthetic.main.activity_email.*
 import kotlinx.android.synthetic.main.toolbar.*
 
 
 class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListener {
+
+    private val TAG = "forEmailActivity"
 
     override lateinit var presenter: EmailContract.Presenter
     private lateinit var signUpPresenter: EmailPresenter
