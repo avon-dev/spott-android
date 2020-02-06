@@ -170,10 +170,6 @@ class CameraFragment : Fragment(), View.OnClickListener,
     private lateinit var overlay: ImageView
     private lateinit var close: ImageView
     private lateinit var recycler: RecyclerView
-    var fingerSpacing:Float = 0f
-    var zoomLevel:Float = 1f
-    var maximumZoomLevel:Float = 1f
-    lateinit var zoom:Rect
 
     interface ClickListener { fun Click(uri:String) }
     private val clickListener = object: ClickListener {
@@ -198,6 +194,11 @@ class CameraFragment : Fragment(), View.OnClickListener,
             }
         }
     }
+
+
+    // zoom
+    private var fingerDistance: Float? = null
+    private var zoom = 1f
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -233,13 +234,44 @@ class CameraFragment : Fragment(), View.OnClickListener,
         recycler.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.HORIZONTAL, false)
         recycler.adapter = CameraAdapter(view.context, clickListener)
 
-//        val manager = activity!!.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+        textureView.setOnTouchListener({ _, event ->
+            if (event.action != MotionEvent.ACTION_MOVE || event.pointerCount <= 1) {
+                fingerDistance = null
+                return@setOnTouchListener true
+            }
+            val newFingerDistance = with(event) {
+                val x = getX(0) - getX(1)
+                val y = getY(0) - getY(1)
+                Math.sqrt(x.toDouble() * x + y * y) * resources.displayMetrics.density
+            }
+            if (fingerDistance != null) {
+                val manager = activity?.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+                val characteristics = manager.getCameraCharacteristics(cameraId)
+                val maxZoom = Math.min(MAX_ZOOM_FACTOR, characteristics.get(
+                    CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM))
+                val zoomChange = (newFingerDistance - fingerDistance!!) * ZOOM_GESTURE_SENSITIVITY
+                zoom = Math.min(maxZoom, Math.max(1f, zoom + zoomChange.toFloat()))
+                val sensorSize = characteristics.get(
+                    CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE)!!
+                val cropW = (sensorSize.width() * (1 - 1 / zoom) / 2).toInt()
+                val cropH = (sensorSize.width() * (1 - 1 / zoom) / 2).toInt()
+                val zoomRect = Rect(cropW, cropH,
+                    sensorSize.width() - cropW,
+                    sensorSize.height() - cropH)
+                previewRequestBuilder.set(CaptureRequest.SCALER_CROP_REGION, zoomRect)
+
+            }
+            fingerDistance = newFingerDistance.toFloat()
+            try {
+                captureSession
+                    ?.setRepeatingRequest(previewRequestBuilder.build(), captureCallback, null)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            true
+        })
 
 
-
-        textureView.setOnTouchListener { v, event ->
-
-        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -488,8 +520,6 @@ class CameraFragment : Fragment(), View.OnClickListener,
                     textureView.setAspectRatio(previewSize.height, previewSize.width)
                 }
 
-                maximumZoomLevel = characteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM)
-
                 if(!swap) {
                     this.cameraId = cameraId
                 } else {
@@ -663,6 +693,10 @@ class CameraFragment : Fragment(), View.OnClickListener,
 
         private val MAX_PREVIEW_WIDTH = 1920
         private val MAX_PREVIEW_HEIGHT = 1080
+
+        // zoom
+        private const val ZOOM_GESTURE_SENSITIVITY = .0005f
+        private const val MAX_ZOOM_FACTOR = 3f
 
         init {
             ORIENTATIONS.append(Surface.ROTATION_0, 90)
