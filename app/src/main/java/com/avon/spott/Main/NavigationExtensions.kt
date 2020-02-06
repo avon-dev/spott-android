@@ -3,6 +3,7 @@ package com.avon.spott.Main
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.util.SparseArray
+import android.view.View
 import android.view.animation.AccelerateInterpolator
 import androidx.core.util.forEach
 import androidx.core.util.set
@@ -170,7 +171,10 @@ private fun BottomNavigationView.setupItemReselected(graphIdToTagMap: SparseArra
                 selectedFragment.recycler_maplist_f.betterSmoothScrollToPosition(0)
 
             }else if(selectedFragment.tag == "bottomNavigation#2"){
-                selectedFragment.recycler_scrap_f.smoothScrollToPosition(0)
+//                selectedFragment.recycler_scrap_f.smoothScrollToPosition(0)
+
+                selectedFragment.scroll_scrap_f.smoothScrollTo(0,0)
+
             }else if(selectedFragment.tag == "bottomNavigation#3"){
                 selectedFragment.recycler_grid_mypage_f.smoothScrollToPosition(0)
             }

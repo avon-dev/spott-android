@@ -20,7 +20,7 @@ interface HomeContract {
     interface Presenter{
         fun openPhoto(id:Int)
         fun getPhotos(baseUrl:String, start:Int)
-        fun getToken(baseUrl: String, testUrl:String, start:Int)
+        fun getToken(baseUrl: String, start:Int)
     }
 
 }

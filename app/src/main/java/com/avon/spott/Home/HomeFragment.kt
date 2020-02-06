@@ -68,10 +68,10 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
 // 표준시, 지방시 변환 테스트중..........................................................................
 //        root.edit_search_home_f.setText(formatCreated( "2020-02-01T16:30:16.480169+09:00"))
-
-        val df =  DateFormat.getTimeInstance()
-        df.timeZone = TimeZone.getTimeZone("gmt")
-        root.edit_search_home_f.setText(df.format(Date()))
+//
+//        val df =  DateFormat.getTimeInstance()
+//        df.timeZone = TimeZone.getTimeZone("gmt")
+//        root.edit_search_home_f.setText(df.format(Date()))
 //..................................................................................................
 
         return root
@@ -119,7 +119,7 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
         if(!checkInit) {
             //처음 사진을 가져오는 코드 (처음 이후에는 리프레쉬 전까지 가져오지않는다.)
-            presenter.getToken(getString(R.string.testurl), getString(R.string.baseurl), start)
+            presenter.getToken(getString(R.string.baseurl), start)
 
             checkInit = true
         }
@@ -179,7 +179,6 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         homeAdapter.removePageLoadingItem()
     }
 
-
     override fun clearAdapter(){
         if (swiperefresh_home_f.isRefreshing) {
             homeAdapter.clearItemsAdapter()
@@ -223,6 +222,7 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
             isLoadingAdded = true
             addPage(HomeItem("",0))
         }
+
         fun removePageLoadingItem(){
             isLoadingAdded = false
             val position = itemsList.size -1
@@ -231,12 +231,11 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
                 itemsList.remove(item)
                 notifyItemRemoved(position)
         }
+
         fun addPage(homeItemItem:HomeItem){
             itemsList.add(homeItemItem)
             notifyItemInserted(itemsList.size-1)
         }
-
-
 
         fun getItem(position: Int):HomeItem{
             return itemsList.get(position)

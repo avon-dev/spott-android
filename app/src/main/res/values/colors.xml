@@ -28,4 +28,7 @@
 
     <color name="photo_detail_background">#D9000000</color>
 
+    <color name="scrap_unslected_background">#80000000</color>
+    <color name="scrap_selected_background">#CC3A619C</color>
+
 </resources>

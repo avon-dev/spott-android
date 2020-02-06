@@ -18,13 +18,13 @@ class HomePresenter(val homeView:HomeContract.View) : HomeContract.Presenter {
 
 //    val adddummy = addDummy() //테스트 코드 추가
 
-    override fun getToken(baseUrl: String, testUrl:String, start:Int) {
+    override fun getToken(baseUrl: String, start:Int) {
         if(App.prefs.temporary_token!=""){
             logd(TAG, "토큰 있음")
             getPhotos(baseUrl, start)
         }else{
             logd(TAG, "토큰 없음")
-            Retrofit(testUrl).postNonHeader( "/spott/home/token","")
+            Retrofit(baseUrl).postNonHeader( "/spott/home/token","")
                 .subscribe({ response ->
                     logd(TAG, response.body())
                     val newToken = response.body()

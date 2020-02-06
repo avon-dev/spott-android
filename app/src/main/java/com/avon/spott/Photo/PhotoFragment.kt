@@ -13,6 +13,7 @@ import com.avon.spott.R
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.Main.controlToobar
 import com.avon.spott.PhotoEnlargementActivity
+import com.avon.spott.Scrap.ScrapFragment.Companion.scrapChange
 import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_photo.*
@@ -142,9 +143,16 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.imgbtn_map_photo_f -> {presenter.openPhotoMap(
-                photoLat!!, photoLng!!, postPhotoUrl!!)}
-            R.id.imgbtn_camera_photo_f->{showToast(backPhotoUrl!!)}  //임시데이터, 나중에 카메라액티비티로 연결되게 바꿔야함.
+            R.id.imgbtn_map_photo_f -> {
+                if(photoLat!=null){
+                    presenter.openPhotoMap(photoLat!!, photoLng!!, postPhotoUrl!!)
+                }
+            }
+            R.id.imgbtn_camera_photo_f->{
+                if(backPhotoUrl!=null){
+                    showToast(backPhotoUrl!!)   //임시데이터, 나중에 카메라액티비티로 연결되게 바꿔야함
+                }
+            }
             R.id.const_comment_photo_f -> {presenter.openComment()}
             R.id.text_nickname_photo_f -> {presenter.openUser()}
             R.id.img_photo_photo_f -> {
@@ -245,11 +253,12 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
 
     override fun scrapResultDone(){
-
         checkbox_scrap_photo_f.startAnimation(AnimationUtils.loadAnimation(context!!, R.anim.scale_checkbox))
 
         scrapProgressing = false
         checkbox_scrap_photo_f.isClickable = true
+
+        scrapChange = true
     }
 
     override fun scrapResultError(){

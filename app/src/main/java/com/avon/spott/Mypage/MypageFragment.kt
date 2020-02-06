@@ -237,7 +237,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
             mapRecyclerView.visibility = View.GONE
             selectedMarkerMypage = null
 
-            presenter.getMyphotos(getString(R.string.testurl))
+            presenter.getMyphotos(getString(R.string.baseurl))
         }
 
         if(userNickname!=null){

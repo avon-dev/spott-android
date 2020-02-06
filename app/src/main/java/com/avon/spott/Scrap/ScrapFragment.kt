@@ -7,10 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.avon.spott.Data.ScrapItem
 import com.avon.spott.R
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
 import com.avon.spott.Utils.logd
@@ -22,13 +26,46 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
 
     private val TAG = "forScrapFragment"
 
+    companion object{
+        var scrapChange = false
+    }
+
     private lateinit var scrapPresenter: ScrapPresenter
     override lateinit var presenter: ScrapContract.Presenter
 
+    private lateinit var scrapAdapter: ScrapAdapter
+    private lateinit var layoutManager : GridLayoutManager
+
+    private var checkInit = false
+
+    private var scrapCount = 0
+
     val scrapInterListener = object :scrapInter{
-        override fun itemClick() {
-            presenter.openPhoto()
+        override fun itemClick(id: Int) {
+            presenter.openPhoto(id)
         }
+
+
+        override fun deleteScraps(scrapItems: ArrayList<ScrapItem>){
+            presenter.deleteScraps(getString(R.string.baseurl), scrapItems)
+        }
+
+        override fun returnText() {
+            showReady(false)
+        }
+
+        override fun counttext(count: Int) {
+            newCount(count)
+        }
+
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        layoutManager = GridLayoutManager(context!!, 2)
+
+        scrapAdapter = ScrapAdapter(context!!, scrapInterListener)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -46,10 +83,8 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
                     }
                 }, 2000) //로딩 주기
 
-
         }
 
-        root.text_scraps_scrap_f.text = "10"
         //-----------------------------------------------------
 
         return root
@@ -59,15 +94,27 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
         super.onActivityCreated(savedInstanceState)
         init()
 
-        //---------------리사이클러뷰테스트 코드------------------------------
-        val layoutManager = GridLayoutManager(context!!, 2)
-
         recycler_scrap_f.layoutManager = layoutManager
-        recycler_scrap_f.adapter = ScrapAdapter(context!!, scrapInterListener)
-        //-----------------------------------------------------------------
+        recycler_scrap_f.adapter = scrapAdapter
+
+        if(!checkInit){
+            presenter.getScraps(getString(R.string.baseurl))
+            checkInit = true
+        }else{
+
+            text_scraps_scrap_f.text = scrapCount.toString()
+
+            if(scrapChange){
+                scrapAdapter.clearItemsAdapter()
+                scrapAdapter.notifyDataSetChanged()
+                presenter.getScraps(getString(R.string.baseurl))
+                scrapChange = false
+            }
+        }
+
+
 
     }
-
 
     override fun onStart() {
         logd(TAG, "  onStart")
@@ -76,85 +123,190 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
         mToolbar.visibility = View.GONE
     }
 
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        scrapAdapter.stopSelecting()
+        recycler_scrap_f.layoutManager = null
+    }
 
     fun init(){
         scrapPresenter = ScrapPresenter(this)
+
+        text_delete_scrap_f.setOnClickListener(this)
+        text_deleteready_scrap_f.setOnClickListener(this)
     }
 
-    override fun showPhotoUi() {
-        findNavController().navigate(R.id.action_scrapFragment_to_photo)
+    override fun showPhotoUi(id:Int) { //PhotoFragment로 이동
+        val bundle = bundleOf("photoId" to id)
+        findNavController().navigate(R.id.action_scrapFragment_to_photo, bundle)
     }
 
     override fun onClick(v: View?) {
         when(v?.id){
+            R.id.text_deleteready_scrap_f ->{
+                scrapAdapter.readyToSelect()
 
+               showReady(true)
+            }
+
+            R.id.text_delete_scrap_f ->{
+                scrapAdapter.deleteScraps()
+            }
         }
     }
 
     interface scrapInter{
-        fun itemClick()
+        fun itemClick(id: Int)
+        fun deleteScraps(scrapItems: ArrayList<ScrapItem>)
+        fun returnText()
+        fun counttext(count: Int)
     }
 
 
     inner class ScrapAdapter(val context: Context, val scrapInterListener:scrapInter) : RecyclerView.Adapter<ScrapAdapter.ViewHolder>() {
 
+        private var itemsList = ArrayList<ScrapItem>()
+
+        private var selectingReady = false
+        private var isDeleting = false
+        var deletelist = ArrayList<ScrapItem>()
+
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScrapAdapter.ViewHolder {
-            val view = LayoutInflater.from(context).inflate(R.layout.item_photo_square, parent, false)
+            val view = LayoutInflater.from(context).inflate(R.layout.item_scrap, parent, false)
             return ViewHolder(view)
         }
 
         override fun getItemCount(): Int {
-            return 10
+            return itemsList.size
         }
 
+        fun clearItemsAdapter() {
+            itemsList.clear()
+        }
+
+        fun addItemsAdapter(scrapItems: ArrayList<ScrapItem>){
+            itemsList.addAll(scrapItems)
+        }
+
+        fun readyToSelect(){
+            selectingReady = true
+            notifyDataSetChanged()
+        }
+
+        fun stopSelecting(){
+            selectingReady = false
+            deletelist.clear()
+            notifyDataSetChanged()
+        }
+
+        fun deleteItemsAdater(scrapItems: ArrayList<ScrapItem>){
+            selectingReady = false
+            itemsList.removeAll(scrapItems)
+            deletelist.clear()
+            isDeleting = false
+            notifyDataSetChanged()
+            scrapInterListener.returnText()
+            scrapInterListener.counttext(itemsList.size)
+        }
+
+        fun deleteItemsError(){
+            isDeleting = false
+        }
+
+        fun deleteScraps(){
+            if(!isDeleting){
+               if( deletelist.size>0) {
+                   isDeleting = true
+                   scrapInterListener.deleteScraps(deletelist)
+               }else{
+                   stopSelecting()
+                   scrapInterListener.returnText()
+               }
+            }
+
+        }
+
+
         override fun onBindViewHolder(holder:ScrapFragment.ScrapAdapter.ViewHolder, position: Int) {
-
-            //------------임시 데이터들---------------------------------------------------------------
-            if (position == 0 || position == 5) {
+            itemsList[position].let {
                 Glide.with(holder.itemView.context)
-                    .load("https://cdn.pixabay.com/photo/2017/08/06/12/06/people-2591874_1280.jpg")
-                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                    .error(android.R.drawable.stat_notify_error)
-                    .into(holder.photo)
-            } else if (position == 1 || position == 6) {
-                Glide.with(holder.itemView.context)
-                    .load("https://cdn.pixabay.com/photo/2017/06/23/17/41/morocco-2435391_960_720.jpg")
-                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                    .error(android.R.drawable.stat_notify_error)
-                    .into(holder.photo)
-
-            } else if (position == 2 || position == 7) {
-                Glide.with(holder.itemView.context)
-                    .load("https://cdn.pixabay.com/photo/2012/10/10/11/05/space-station-60615_960_720.jpg")
-                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                    .error(android.R.drawable.stat_notify_error)
-                    .into(holder.photo)
-            } else if (position == 3 || position == 8) {
-                Glide.with(holder.itemView.context)
-                    .load("https://cdn.pixabay.com/photo/2017/08/02/00/16/people-2568954_1280.jpg")
-                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                    .error(android.R.drawable.stat_notify_error)
-                    .into(holder.photo)
-            } else if (position == 4 || position == 9) {
-                Glide.with(holder.itemView.context)
-                    .load("https://cdn.pixabay.com/photo/2016/11/29/06/45/beach-1867881_1280.jpg")
+                    .load(it.posts_image)
                     .placeholder(android.R.drawable.progress_indeterminate_horizontal)
                     .error(android.R.drawable.stat_notify_error)
                     .into(holder.photo)
             }
-            //---------------------------------------------------------------------------------------------------
 
             holder.itemView.setOnClickListener {
-                scrapInterListener.itemClick()
+                if(!selectingReady){
+                    scrapInterListener.itemClick(itemsList[position].id)
+                }else{
+                    if(!holder.check){
+                        holder.check = true
+                        holder.selectBackground.setBackgroundResource(R.color.scrap_selected_background)
+                        holder.selectCheck.setBackgroundResource(R.drawable.ic_check_white_36dp)
+                        deletelist.add(itemsList[position])
+                    }else{
+                        holder.check = false
+                        holder.selectBackground.setBackgroundResource(R.color.scrap_unslected_background)
+                        holder.selectCheck.setBackgroundResource(R.drawable.ic_check_tpwhite_36dp)
+                        deletelist.remove(itemsList[position])
+                    }
+                }
+            }
+
+            if(selectingReady){
+                holder.selectBackground.visibility = View.VISIBLE
+            }else{
+                deletelist.clear()
+                holder.selectBackground.visibility = View.GONE
+                holder.check = false
+                holder.selectBackground.setBackgroundResource(R.color.scrap_unslected_background)
+                holder.selectCheck.setBackgroundResource(R.drawable.ic_check_tpwhite_36dp)
             }
         }
 
         inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            val photo = itemView.findViewById<ImageView>(R.id.img_photo_photo_square_i) as ImageView
+            val photo = itemView.findViewById<ImageView>(R.id.img_photo_scrap_i) as ImageView
+
+            val selectBackground = itemView.findViewById<LinearLayout>(R.id.linear_background_scrap_i)
+            val selectCheck = itemView.findViewById<ImageView>(R.id.img_check_scrap_i)
+
+            var check = false
 
         }
 
+    }
+
+    override fun addItems(scrapItems:ArrayList<ScrapItem>){
+        scrapAdapter.addItemsAdapter(scrapItems)
+        scrapAdapter.notifyDataSetChanged()
+
+        scrapCount = scrapItems.size
+        text_scraps_scrap_f.text = scrapCount.toString()
+    }
+
+    override fun showReady(boolean: Boolean){
+       text_deleteready_scrap_f.visibility = if(boolean) View.GONE else View.VISIBLE
+        text_delete_scrap_f.visibility = if(boolean) View.VISIBLE else View.GONE
+    }
+
+    override fun deleteDone(scrapItems: ArrayList<ScrapItem>){
+        scrapAdapter.deleteItemsAdater(scrapItems)
+    }
+
+    override fun deleteError(){
+        scrapAdapter.deleteItemsError()
+        showToast("서버 연결에 오류가 발생했습니다.")
+    }
+
+    override fun showToast(string: String) {
+        Toast.makeText(this.context, string, Toast.LENGTH_SHORT).show()
+    }
+
+    fun newCount(count:Int) {
+        text_scraps_scrap_f.text = count.toString()
+        scrapCount = count
     }
 
 }
