@@ -40,6 +40,11 @@ class CameraXActivity : AppCompatActivity() {
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
                 true
             }
+            KeyEvent.KEYCODE_BACK -> {
+                val intent = Intent(KEY_EVENT_ACTION).apply { putExtra(KEY_EVENT_EXTRA, keyCode) }
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+                true
+            }
             else -> super.onKeyDown(keyCode, event)
         }
     }

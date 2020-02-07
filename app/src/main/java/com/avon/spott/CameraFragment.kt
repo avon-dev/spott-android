@@ -749,7 +749,6 @@ class CameraFragment : Fragment(), View.OnClickListener,
     inner class CameraAdapter(val context:Context, val clickListener:ClickListener): RecyclerView.Adapter<CameraAdapter.ViewHolder>() {
 
 
-
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(context).inflate(R.layout.item_photo_square2, parent, false)
             return ViewHolder(view)

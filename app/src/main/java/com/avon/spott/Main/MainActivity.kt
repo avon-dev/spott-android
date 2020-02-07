@@ -6,7 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.fragment.NavHostFragment
-import com.avon.spott.Camera.CameraActivity
+import com.avon.spott.Camera.CameraXActivity
 import com.avon.spott.Map.MapFragment.Companion.mBottomSheetBehavior
 import com.avon.spott.R
 import com.avon.spott.Utils.logd
@@ -49,8 +49,8 @@ class MainActivity : AppCompatActivity(), MainContract.View, View.OnClickListene
     }
 
     override fun showCameraUi(){
-        startActivity(Intent(this, CameraActivity::class.java))
-//        startActivity(Intent(this, CameraXActivity::class.java))
+//        startActivity(Intent(this, CameraActivity::class.java))
+        startActivity(Intent(this, CameraXActivity::class.java))
     }
 
     override fun navigateUp() {
