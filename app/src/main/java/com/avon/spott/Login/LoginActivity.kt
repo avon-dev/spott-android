@@ -8,7 +8,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.avon.spott.CameraXTest
+import com.avon.spott.Camera.CameraXActivity
 import com.avon.spott.Email.EmailActivity
 import com.avon.spott.EmailLogin.EmailLoginActivity
 import com.avon.spott.Main.MainActivity
@@ -49,7 +49,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
 
         span.setSpan(object : ClickableSpan() {
             override fun onClick(widget: View) {
-                Intent(this@LoginActivity, CameraXTest::class.java).let { startActivity(it) }
+                Intent(this@LoginActivity, CameraXActivity::class.java).let { startActivity(it) }
             }
         }, 20, 31, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         text_privacyinfo_login_a.movementMethod = LinkMovementMethod.getInstance()
