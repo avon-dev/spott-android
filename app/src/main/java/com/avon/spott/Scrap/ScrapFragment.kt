@@ -71,22 +71,6 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_scrap, container, false)
 
-        //------[임시]swiperefreshlayout 컨트롤 + 임시 스크랩숫자------------------
-
-        root.swiperefresh_scrap_f.setOnRefreshListener {
-
-                Handler().postDelayed({
-                    logd(TAG, "refreshed!!!")
-
-                    if(root.swiperefresh_scrap_f.isRefreshing){
-                        root.swiperefresh_scrap_f.isRefreshing = false
-                    }
-                }, 2000) //로딩 주기
-
-        }
-
-        //-----------------------------------------------------
-
         return root
     }
 
@@ -97,12 +81,16 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
         recycler_scrap_f.layoutManager = layoutManager
         recycler_scrap_f.adapter = scrapAdapter
 
+
         if(!checkInit){
             presenter.getScraps(getString(R.string.baseurl))
             checkInit = true
         }else{
 
             text_scraps_scrap_f.text = scrapCount.toString()
+            if(scrapCount==0){
+                text_noscrap_scrap_f.visibility = View.VISIBLE
+            }
 
             if(scrapChange){
                 scrapAdapter.clearItemsAdapter()
@@ -284,6 +272,11 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
 
         scrapCount = scrapItems.size
         text_scraps_scrap_f.text = scrapCount.toString()
+        if(scrapCount ==0){
+            text_noscrap_scrap_f.visibility = View.VISIBLE
+        }else{
+            text_noscrap_scrap_f.visibility = View.GONE
+        }
     }
 
     override fun showReady(boolean: Boolean){
@@ -307,6 +300,12 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
     fun newCount(count:Int) {
         text_scraps_scrap_f.text = count.toString()
         scrapCount = count
+
+        if(count==0){
+            text_noscrap_scrap_f.visibility = View.VISIBLE
+        }
+
     }
+
 
 }

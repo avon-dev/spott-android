@@ -45,7 +45,7 @@ class HomePresenter(val homeView:HomeContract.View) : HomeContract.Presenter {
         }
     }
 
-    override fun getPhotos(baseUrl:String, start:Int){ //수정 예정 사항, 여기에 start와 정렬 방식을 보내줘야함.
+    override fun getPhotos(baseUrl:String, start:Int){
 
          val homePaging = HomePaging(start, homeView.refreshTimeStamp)
          Retrofit(baseUrl).get(App.prefs.temporary_token,"/spott/home/posts", Parser.toJson(homePaging))

@@ -48,6 +48,21 @@
         <action
             android:id="@+id/action_commentFragment_to_userFragment"
             app:destination="@id/userFragment" />
+        <argument
+            android:name="photoId"
+            app:argType="integer" />
+        <argument
+            android:name="userPhoto"
+            app:argType="string" />
+        <argument
+            android:name="userNickname"
+            app:argType="string" />
+        <argument
+            android:name="photoCaption"
+            app:argType="string" />
+        <argument
+            android:name="photoDateTime"
+            app:argType="string" />
     </fragment>
 
     <fragment

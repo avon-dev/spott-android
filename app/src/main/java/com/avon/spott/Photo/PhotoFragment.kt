@@ -27,11 +27,19 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
     private lateinit var photoPresenter : PhotoPresenter
     override lateinit var presenter : PhotoContract.Presenter
 
+    //photoMapFragment 넘겨줄 데이터
     private var photoLat:Double? = null
     private var photoLng:Double? = null
     private var postPhotoUrl:String? = null
 
+    //photoCameraActivity(가명) 넘겨줄 데이터
     private var backPhotoUrl:String? = null
+
+    //commentFragment 넘겨줄 데이터
+    private var userPhoto:String? = null
+    private var userNickName:String? = null
+    private var caption:String? = null
+    private var dateTime:String? = null
 
     private var likeProgressing : Boolean = false //좋아요 처리중 여부
     private var scrapProgressing : Boolean = false //스크랩 처리중 여부
@@ -40,10 +48,6 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_photo, container, false)
-
-        //주미 라이브러리 쓰면 이미지뷰 클릭 안됨.
-//        val builder = Zoomy.Builder(activity).target(root.img_photo_photo_f)
-//        builder.register()
 
         return root
     }
@@ -61,7 +65,6 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         scrapProgressing = true
         presenter.getPhotoDetail(getString(R.string.baseurl), photoId!!)
 
-
     }
 
     override fun onStart() {
@@ -71,15 +74,10 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         controlToobar(View.VISIBLE, View.GONE, View.GONE, View.GONE, View.VISIBLE, View.GONE, View.GONE)
         MainActivity.mToolbar.visibility = View.VISIBLE
 
-
-        //스크랩, 좋아요 체크박스 눌렀을 때 뷰 등장하는 애니메이션 효과
-//        val animation = AnimationUtils.loadAnimation(context!!, R.anim.scale_checkbox)
         checkbox_scrap_photo_f.setOnCheckedChangeListener { buttonView, isChecked ->
             if(!scrapProgressing){
                 scrapProgressing = true
                 checkbox_scrap_photo_f.isClickable = false
-
-//                checkbox_scrap_photo_f.startAnimation(animation)
 
                 if(checkbox_scrap_photo_f.isChecked){
                     presenter.postScrap(getString(R.string.baseurl), arguments?.getInt("photoId")!!)
@@ -95,8 +93,6 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
                 likeProgressing = true
                 checkbox_like_photo_f.isClickable = false
-
-//                checkbox_like_photo_f.startAnimation(animation)
 
                 if(checkbox_like_photo_f.isChecked) {
                     presenter.postLike(getString(R.string.baseurl), arguments?.getInt("photoId")!!)
@@ -115,6 +111,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         imgbtn_camera_photo_f.setOnClickListener(this)
         const_comment_photo_f.setOnClickListener(this)
         text_nickname_photo_f.setOnClickListener(this)
+        img_userphoto_photo_f.setOnClickListener(this)
         img_photo_photo_f.setOnClickListener(this)
 
     }
@@ -128,7 +125,16 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
     }
 
     override fun showCommentUi() {
-        findNavController().navigate(R.id.action_photoFragment_to_commentFragment)
+        val bundle = Bundle()
+        bundle.putInt("photoId", arguments?.getInt("photoId")!!)
+        if(userPhoto==null){
+            userPhoto = ""
+        }
+        bundle.putString("userPhoto", userPhoto)
+        bundle.putString("userNickname", userNickName)
+        bundle.putString("photoCaption", caption)
+        bundle.putString("photoDateTime", dateTime)
+        findNavController().navigate(R.id.action_photoFragment_to_commentFragment, bundle)
     }
 
     override fun showUserUi() {
@@ -155,6 +161,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
             }
             R.id.const_comment_photo_f -> {presenter.openComment()}
             R.id.text_nickname_photo_f -> {presenter.openUser()}
+            R.id.img_userphoto_photo_f -> {presenter.openUser()}
             R.id.img_photo_photo_f -> {
                 logd(TAG, "postPhotoUrl : "+postPhotoUrl)
                 if(postPhotoUrl!=null){
@@ -210,6 +217,11 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         this.photoLng = photoLng
         this.postPhotoUrl = postPhotoUrl
         this.backPhotoUrl = backPhotoUrl
+
+        this.userPhoto = userPhoto
+        this.userNickName = userNickName
+        this.caption = caption
+        this.dateTime = dateTime
 
 
         checkbox_like_photo_f.isChecked = likeChecked

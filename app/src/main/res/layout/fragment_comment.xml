@@ -33,42 +33,36 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <ImageButton
-                        android:id="@+id/imgbtn_profile_comment_f"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/img_profile_comment_f"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="15dp"
-                        android:background="@color/default_background"
-                        android:scaleType="fitCenter"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/baseline_face_24" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/text_nickname_comment_f"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_marginStart="10dp"
-                        android:layout_marginLeft="10dp"
                         android:gravity="center"
-                        android:text="userNickName"
-                        app:layout_constraintBottom_toBottomOf="@id/imgbtn_profile_comment_f"
-                        app:layout_constraintStart_toEndOf="@id/imgbtn_profile_comment_f"
-                        app:layout_constraintTop_toTopOf="@id/imgbtn_profile_comment_f"
-                        tools:text="userNickName"/>
+                        app:layout_constraintBottom_toBottomOf="@id/img_profile_comment_f"
+                        app:layout_constraintStart_toEndOf="@id/img_profile_comment_f"
+                        app:layout_constraintTop_toTopOf="@id/img_profile_comment_f"
+                        tools:text="userNickName" />
 
                     <TextView
                         android:id="@+id/text_content_comment_f"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="content 내용\n#댓글내용"
                         android:textColor="@color/text_black"
                         android:textSize="15dp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@id/imgbtn_profile_comment_f"
-                        app:layout_constraintTop_toBottomOf="@id/imgbtn_profile_comment_f"
+                        app:layout_constraintStart_toStartOf="@id/img_profile_comment_f"
+                        app:layout_constraintTop_toBottomOf="@id/img_profile_comment_f"
                         app:layout_goneMarginTop="15dp"
                         tools:text="content 내용\n#댓글내용" />
 
@@ -77,9 +71,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="2019년 12월 32일"
                         android:textSize="12dp"
-                        app:layout_constraintStart_toStartOf="@id/imgbtn_profile_comment_f"
+                        app:layout_constraintStart_toStartOf="@id/img_profile_comment_f"
                         app:layout_constraintTop_toBottomOf="@id/text_content_comment_f"
                         app:layout_goneMarginTop="15dp"
                         tools:text="2019년 12월 32일" />
@@ -100,16 +93,25 @@
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swiperefresh_comment_f"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_comment_f"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:listitem="@layout/item_comment"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_comment_f"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/item_comment"/>
+
+            </LinearLayout>
+
+
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
@@ -118,7 +120,7 @@
         android:id="@+id/text_blank2_comment_f"
         android:layout_width="0dp"
         android:layout_height="5dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="10dp"
         android:background="#E0E0E0"
         app:layout_constraintBottom_toTopOf="@id/imgbtn_write_comment_f"
         app:layout_constraintEnd_toEndOf="parent"
@@ -130,17 +132,15 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
         android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
         android:background="@drawable/round_border"
         android:inputType="textMultiLine"
         android:maxLines="5"
         android:padding="10dp"
-        app:layout_constraintBottom_toTopOf="@id/text_blank3_comment_f"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/imgbtn_write_comment_f"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_blank2_comment_f"/>
+        app:layout_constraintTop_toBottomOf="@id/text_blank2_comment_f" />
 
     <ImageButton
         android:id="@+id/imgbtn_write_comment_f"
@@ -156,15 +156,15 @@
         app:layout_constraintTop_toTopOf="@id/edit_comment_comment_f"
         app:srcCompat="@drawable/baseline_send_24"/>
 
-    <TextView
-        android:id="@+id/text_blank3_comment_f"
-        android:layout_width="0dp"
-        android:layout_height="5dp"
-        android:background="#E0E0E0"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_goneMarginTop="5dp"/>
+<!--    <TextView-->
+<!--        android:id="@+id/text_blank3_comment_f"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="5dp"-->
+<!--        android:background="#E0E0E0"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_goneMarginTop="5dp"/>-->
 
     <View
         android:id="@+id/view2"

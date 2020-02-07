@@ -8,29 +8,23 @@
     android:layout_height="wrap_content"
     >
 
-    <ImageButton
-        android:id="@+id/imgbtn_profile_comment_i"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/img_profile_comment_i"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginTop="8dp"
-        android:adjustViewBounds="true"
-        android:background="@color/default_background"
-        android:scaleType="fitCenter"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/baseline_face_24" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/text_nickname_comment_i"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
         android:gravity="center"
-        android:text="userNickName"
-        app:layout_constraintBottom_toBottomOf="@id/imgbtn_profile_comment_i"
-        app:layout_constraintStart_toEndOf="@id/imgbtn_profile_comment_i"
-        app:layout_constraintTop_toTopOf="@id/imgbtn_profile_comment_i"
+        app:layout_constraintBottom_toBottomOf="@id/img_profile_comment_i"
+        app:layout_constraintStart_toEndOf="@id/img_profile_comment_i"
+        app:layout_constraintTop_toTopOf="@id/img_profile_comment_i"
         tools:text="userNickName" />
 
     <ImageButton
@@ -38,38 +32,39 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
         android:adjustViewBounds="true"
         android:background="@color/default_background"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/text_nickname_comment_i"
         app:layout_constraintStart_toEndOf="@id/text_nickname_comment_i"
-        app:layout_constraintTop_toTopOf="@id/imgbtn_profile_comment_i"
-        app:srcCompat="@drawable/baseline_edit_24" />
+        app:layout_constraintTop_toTopOf="@id/img_profile_comment_i"
+        app:srcCompat="@drawable/baseline_edit_24"
+        tools:visibility="visible" />
 
     <ImageButton
         android:id="@+id/imgbtn_remove_comment_i"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
         android:adjustViewBounds="true"
         android:background="@color/default_background"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/imgbtn_edit_comment_i"
         app:layout_constraintStart_toEndOf="@id/imgbtn_edit_comment_i"
         app:layout_constraintTop_toTopOf="@id/imgbtn_edit_comment_i"
-        app:srcCompat="@drawable/baseline_delete_24"/>
+        app:srcCompat="@drawable/baseline_delete_24"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/text_content_comment_i"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="content 내용 \n \n#댓글내용"
         android:textColor="@color/text_black"
         android:textSize="15dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/imgbtn_profile_comment_i"
-        app:layout_constraintTop_toBottomOf="@id/imgbtn_profile_comment_i"
+        app:layout_constraintStart_toStartOf="@id/img_profile_comment_i"
+        app:layout_constraintTop_toBottomOf="@id/img_profile_comment_i"
         tools:text="content 내용 \n \n#댓글내용" />
 
     <TextView
@@ -81,7 +76,7 @@
         android:text="2019년 12월 32일"
         android:textSize="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/imgbtn_profile_comment_i"
+        app:layout_constraintStart_toStartOf="@id/img_profile_comment_i"
         app:layout_constraintTop_toBottomOf="@id/text_content_comment_i"
         app:layout_constraintVertical_bias="0.0"
         tools:text="2019년 12월 32일" />
