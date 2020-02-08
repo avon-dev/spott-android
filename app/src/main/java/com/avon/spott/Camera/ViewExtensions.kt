@@ -14,6 +14,7 @@ const val FLAGS_FULLSCREEN =
 // 밀리세컨즈 UI 애니메이션
 const val ANIMATION_FAST_MILLIS = 50L
 const val ANIMATION_SLOW_MILLS = 100L
+const val ANIMATION_ONE_SECOND = 1000L
 
 // 애니메이션을 트리거하기 위해 버튼을 누르는 동안 약간의 지연을 포함하여 버튼 클릭을 시뮬레이션한다.
 fun ImageButton.simulateClick(delay: Long = ANIMATION_FAST_MILLIS) {
