@@ -52,6 +52,13 @@ class Retrofit(baseUrl:String) {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    fun patch(token: String, url: String, sending: String): Observable<Response<String>> {
+        return retrofitService.patch("jwt "+token, url, sending)
+            .subscribeOn(Schedulers.io())
+            .map { t -> if (t.isSuccessful) t else throw HttpException(t) }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
     fun postPhoto(token: String, url:String, sending: String, imageFile : ArrayList<MultipartBody.Part>)
             : Observable<Response<String>> {
         return retrofitService.postPhoto("jwt "+token, url, sending, imageFile)

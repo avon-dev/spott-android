@@ -21,6 +21,10 @@ interface RetrofitService {
     @DELETE
     fun delete(@Header("Authorization") token :String, @Url url: String, @Query("sending") sending: String): Observable<Response<String>>
 
+    @FormUrlEncoded
+    @PATCH
+    fun patch(@Header("Authorization") token :String, @Url url: String, @Field("sending") sending: String): Observable<Response<String>>
+
     @Multipart
     @POST
     fun postPhoto(@Header("Authorization") token :String,

@@ -1,9 +1,7 @@
 package com.avon.spott.Comment
 
-import com.avon.spott.Data.BooleanResult
-import com.avon.spott.Data.CommentPost
-import com.avon.spott.Data.CommentResult
-import com.avon.spott.Data.HomePaging
+import android.app.AlertDialog
+import com.avon.spott.Data.*
 import com.avon.spott.Utils.App
 import com.avon.spott.Utils.Parser
 import com.avon.spott.Utils.logd
@@ -96,5 +94,73 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
         }else{
             commentView.enableSending(false)
         }
+    }
+
+    override fun updateComment(baseurl: String, photoId: Int, commentId:Int,
+                               alertDialog: AlertDialog, position: Int, content: String){
+
+        val sending = CommentUpdate(content)
+        logd(TAG, "URL은? "+"/spott/posts/"+photoId.toString()+"/comment/"+commentId.toString())
+        logd(TAG, "Sending은? "+Parser.toJson(sending))
+
+        Retrofit(baseurl).patch(App.prefs.temporary_token,"/spott/posts/"+photoId.toString()+"/comment/"+commentId.toString(),
+            Parser.toJson(sending))
+
+            .subscribe({ response ->
+                logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
+
+                val string  = response.body()
+
+                val result = Parser.fromJson<BooleanResult>(string!!)
+
+                if(result.result){
+                    commentView.updateDone(alertDialog, position, content)
+                }else{
+                    commentView.showToast("댓글 수정에 실패했습니다")
+                }
+
+            }, { throwable ->
+                logd(TAG, throwable.message)
+                if (throwable is HttpException) {
+                    logd(
+                        TAG,
+                        "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
+                    )
+                }
+
+                commentView.showToast("댓글 수정에 실패했습니다")
+            })
+
+    }
+
+    override fun deleteComment(baseurl: String, photoId: Int, commentId: Int,
+                      alertDialog: AlertDialog, position: Int){
+        Retrofit(baseurl).delete(App.prefs.temporary_token,"/spott/posts/"+photoId.toString()+"/comment/"+commentId.toString(),
+            "")
+
+            .subscribe({ response ->
+                logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
+
+                val string  = response.body()
+
+                val result = Parser.fromJson<BooleanResult>(string!!)
+
+                if(result.result){
+                    commentView.deleteDone(alertDialog, position)
+                }else{
+                    commentView.showToast("댓글 삭제에 실패했습니다")
+                }
+
+            }, { throwable ->
+                logd(TAG, throwable.message)
+                if (throwable is HttpException) {
+                    logd(
+                        TAG,
+                        "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
+                    )
+                }
+
+                commentView.showToast("댓글 삭제에 실패했습니다")
+            })
     }
 }

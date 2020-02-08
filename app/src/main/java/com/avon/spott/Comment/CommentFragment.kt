@@ -1,6 +1,7 @@
 package com.avon.spott.Comment
 
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
@@ -22,11 +23,12 @@ import com.avon.spott.Data.NickPhoto
 import com.avon.spott.R
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.Main.controlToobar
+import com.avon.spott.Utils.DateTimeFormatter.Companion.formatCreated
 import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.android.synthetic.main.dialog_comment.view.*
 import kotlinx.android.synthetic.main.fragment_comment.*
-import kotlinx.android.synthetic.main.fragment_comment.view.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
 
@@ -52,9 +54,19 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
     private var checkInit = false
 
+    private var baseurl = ""
+
     val commentInterListener = object :commentInter{
         override fun userClick(){
             presenter.openPhoto()
+        }
+
+        override fun editComment(alertDialog: AlertDialog, position: Int, content: String, commentId:Int) {
+            presenter.updateComment(baseurl, photoId, commentId, alertDialog, position, content)
+        }
+
+        override fun deleteComment(alertDialog: AlertDialog, position: Int, commentId:Int) {
+            presenter.deleteComment(baseurl, photoId, commentId, alertDialog, position)
         }
     }
 
@@ -74,6 +86,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_comment, container, false)
 
+        baseurl = getString(R.string.baseurl)
 //        //------[임시]swiperefreshlayout 컨트롤용------------------
 //        root.imgbtn_write_comment_f.setOnClickListener {
 //            if (swiperefresh_comment_f.isRefreshing)
@@ -106,7 +119,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                         recyclerView.smoothScrollToPosition(recyclerView.adapter!!.itemCount-1)
 
                         Handler().postDelayed({
-                            presenter.getComments(getString(R.string.testurl), start, photoId)
+                            presenter.getComments(baseurl, start, photoId)
                         }, 400) //로딩 주기
                     }
                 }
@@ -121,17 +134,16 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                 start = 0
                 refreshTimeStamp = ""
 
-                presenter.getComments(getString(R.string.testurl), start, photoId)
+                presenter.getComments(baseurl, start, photoId)
             }, 600) //로딩 주기
         }
 
         if(!checkInit) {
             //처음 사진을 가져오는 코드 (처음 이후에는 리프레쉬 전까지 가져오지않는다.)
-            presenter.getComments(getString(R.string.testurl), start, photoId)
+            presenter.getComments(baseurl, start, photoId)
 
             checkInit = true
         }
-
 
     }
 
@@ -188,7 +200,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.text_nickname_comment_f -> {presenter.openPhoto()}
-            R.id.imgbtn_write_comment_f -> {presenter.postCommnet(getString(R.string.testurl),
+            R.id.imgbtn_write_comment_f -> {presenter.postCommnet(baseurl,
                 photoId, edit_comment_comment_f.text.toString())}
         }
     }
@@ -196,6 +208,8 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
     //리사이클러뷰 아이템 클릭을 위한 인터페이스
     interface commentInter{
         fun userClick()
+        fun editComment(alertDialog: AlertDialog, position: Int, content: String, commentId:Int)
+        fun deleteComment(alertDialog: AlertDialog, position: Int, commentId:Int)
     }
 
     override fun addItems(commentItems: ArrayList<Comment>) {
@@ -267,7 +281,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
             val item = getItem(position)
 
             itemsList.remove(item)
-            notifyItemRemoved(position)
+            notifyDataSetChanged()
         }
 
         fun addPage(commentItem:Comment){
@@ -285,6 +299,16 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
             }else return ITEM
         }
 
+        fun commentEdited(position: Int, content:String){
+            itemsList[position].contents = content
+            notifyDataSetChanged()
+        }
+
+        fun commentDeleted(position: Int){
+            itemsList.removeAt(position)
+            notifyItemRemoved(position)
+        }
+
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             if(getItemViewType(position)==ITEM) {
                 val itemViewholder :ItemViewHolder = holder as ItemViewHolder
@@ -297,12 +321,64 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
                     itemViewholder.nickname.text = it.user.nickname
                     itemViewholder.content.text = it.contents
-                    itemViewholder.date.text = it.created
+                    itemViewholder.date.text = formatCreated(it.created)
 
                     if(it.myself){
                         itemViewholder.editor.visibility = View.VISIBLE
                         itemViewholder.remover.visibility = View.VISIBLE
+                    }else{
+                        itemViewholder.editor.visibility = View.GONE
+                        itemViewholder.remover.visibility = View.GONE
                     }
+
+
+                    fun editORdelete(delete:Boolean){ //댓글 수정 or 삭제
+                        val mDialogView = LayoutInflater.from(holder.itemView.context).inflate(R.layout.dialog_comment, null)
+                        //AlertDialogBuilder
+
+                        val mBuilder = AlertDialog.Builder(holder.itemView.context)
+                            .setView(mDialogView)
+
+                        val  mAlertDialog = mBuilder.show()
+                        mAlertDialog.setCanceledOnTouchOutside(false)
+
+                        if(delete){
+                            mDialogView.text_warning_comment_d.visibility = View.VISIBLE
+                            mDialogView.text_header_comment_d.text = getString(R.string.delete_comment)
+                            mDialogView.text_done_comment_d.text = getString(R.string.delete)
+                            mDialogView.text_done_comment_d.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.like_red))
+                        }else{
+                            mDialogView.edit_comment_d.visibility = View.VISIBLE
+                            mDialogView.edit_comment_d.setText(itemViewholder.content.text)
+                            mDialogView.edit_comment_d.setSelection(itemViewholder.content.text.length) //커서 뒤로 보내주는 역할
+                        }
+
+                        mDialogView.text_cancel_comment_d.setOnClickListener {
+                            mAlertDialog.dismiss()
+                        }
+
+                        mDialogView.text_done_comment_d.setOnClickListener {
+                            if(delete){
+                                commentInterListener.deleteComment(mAlertDialog, position, itemsList[position].id)
+                            }else{
+                                commentInterListener.editComment(mAlertDialog, position,
+                                    mDialogView.edit_comment_d.text.toString(), itemsList[position].id)
+                            }
+                        }
+                    }
+
+                    //아이템 수정하기 클릭시
+                    itemViewholder.editor.setOnClickListener{
+                        editORdelete(false)
+                    }
+
+                    //아이템 삭제하기 클릭시
+                    itemViewholder.remover.setOnClickListener{
+                        editORdelete(true)
+                    }
+
+
+
                 }
 
                 //아이템 닉네임 클릭시 이벤트 -> 유저페이지로 이동
@@ -313,16 +389,6 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                 //아이템 유저 사진 클릭시 이벤트 -> 유저페이지로 이동
                 itemViewholder.photo.setOnClickListener {
                     commentInterListener.userClick()
-                }
-
-                //아이템 수정하기 클릭시
-                itemViewholder.editor.setOnClickListener{
-
-                }
-
-                //아이템 삭제하기 클릭시
-                itemViewholder.remover.setOnClickListener{
-
                 }
 
             }else{
@@ -360,11 +426,25 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
     override fun postDone() {
         edit_comment_comment_f.setText("")
 
-        start = 0
-        refreshTimeStamp = ""
-        swiperefresh_comment_f.isRefreshing = true
-        presenter.getComments(getString(R.string.testurl), start, photoId)
+        Handler().postDelayed({
+            start = 0
+            refreshTimeStamp = ""
+            swiperefresh_comment_f.isRefreshing = true
 
+            presenter.getComments(baseurl, start, photoId)
+        }, 600) //로딩 주기
+
+    }
+
+    override fun updateDone(alertDialog: AlertDialog, position: Int, content: String) {
+        commentAdapter.commentEdited(position, content)
+        alertDialog.dismiss()
+
+    }
+
+    override fun deleteDone(alertDialog: AlertDialog, position: Int){
+        commentAdapter.commentDeleted(position)
+        alertDialog.dismiss()
     }
 
 
