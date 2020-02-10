@@ -17,25 +17,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".Camera.CameraXActivity"
-            android:screenOrientation="fullUser"
+        <activity android:name=".EditCaptionActivity"></activity>
+        <activity
+            android:name=".Camera.CameraXActivity"
+            android:clearTaskOnLaunch="true"
             android:rotationAnimation="seamless"
-            android:clearTaskOnLaunch="true">
+            android:screenOrientation="fullUser">
 
             <!-- Register as a system camera app -->
             <intent-filter>
                 <action android:name="android.media.action.IMAGE_CAPTURE" />
-                <action android:name="android.media.action.STILL_IMAGE_CAMERA"/>
+                <action android:name="android.media.action.STILL_IMAGE_CAMERA" />
                 <action android:name="android.media.action.VIDEO_CAMERA" />
-                <category android:name="android.intent.category.DEFAULT"/>
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
             <!-- App links for http/s -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="http" />
                 <data android:scheme="https" />
                 <data android:host="com.avon.spott" />
@@ -43,14 +47,13 @@
             </intent-filter>
 
             <!-- Declare notch support -->
-            <meta-data android:name="android.notch_support" android:value="true"/>
-
+            <meta-data
+                android:name="android.notch_support"
+                android:value="true" />
         </activity>
-
-
         <activity
             android:name=".PhotoEnlargementActivity"
-            android:theme="@style/Transparent"></activity>
+            android:theme="@style/Transparent" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
