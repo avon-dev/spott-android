@@ -2,4 +2,6 @@
 <resources>
     <dimen name="upload_width">1936px</dimen>
     <dimen name="upload_heigth">1936px</dimen>
+
+    <dimen name="stroke_small">4dp</dimen>
 </resources>

@@ -2,8 +2,10 @@ package com.avon.spott.Utils
 
 import android.app.Application
 import android.content.Context
+import androidx.camera.camera2.Camera2Config
+import androidx.camera.core.CameraXConfig
 
-class App : Application() {
+class App : Application(), CameraXConfig.Provider {
 
     companion object {
         lateinit var prefs : MySharedPreferences
@@ -19,5 +21,10 @@ class App : Application() {
 
     fun getContext(): Context {
         return mContext
+    }
+
+    // CameraXConfig.Provider : CameraX에 대한 구성을 제공하기 위해 구현될 수 있는 인터페이스.
+    override fun getCameraXConfig(): CameraXConfig {
+        return Camera2Config.defaultConfig()
     }
 }

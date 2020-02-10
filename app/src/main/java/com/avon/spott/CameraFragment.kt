@@ -3,11 +3,13 @@ package com.avon.spott
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.*
 import android.hardware.camera2.*
 import android.media.ImageReader
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
@@ -15,12 +17,17 @@ import android.os.HandlerThread
 import android.util.Size
 import android.util.SparseIntArray
 import android.view.*
+import android.widget.ImageView
+import android.widget.SeekBar
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.avon.spott.Utils.loge
+import com.bumptech.glide.Glide
 import java.io.File
 import java.util.*
 import java.util.Arrays.asList
@@ -54,7 +61,7 @@ class CameraFragment : Fragment(), View.OnClickListener,
         override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) = Unit
     }
 
-    private lateinit var cameraId: String
+    private var cameraId: String = "0"
     private lateinit var textureView: AutoFitTextureView
     private var captureSession: CameraCaptureSession? = null
     private var cameraDevice: CameraDevice? = null
@@ -159,6 +166,39 @@ class CameraFragment : Fragment(), View.OnClickListener,
     }
 
     private var swap:Boolean = false
+    private lateinit var seekbar: SeekBar
+    private lateinit var overlay: ImageView
+    private lateinit var close: ImageView
+    private lateinit var recycler: RecyclerView
+
+    interface ClickListener { fun Click(uri:String) }
+    private val clickListener = object: ClickListener {
+        override fun Click(uri:String) {
+
+            if(overlay.isVisible) {
+                    overlay.visibility = View.GONE
+                    seekbar.visibility = View.GONE
+                    close.visibility = View.GONE
+            } else {
+                Glide.with(view!!.context)
+                    .load("https://cdn.pixabay.com/photo/2017/08/06/12/06/people-2591874_1280.jpg")
+                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                    .error(android.R.drawable.stat_notify_error)
+                    .into(overlay)
+
+                overlay.alpha = seekbar.progress.toFloat() * 0.01f
+
+                overlay.visibility = View.VISIBLE
+                seekbar.visibility = View.VISIBLE
+                close.visibility = View.VISIBLE
+            }
+        }
+    }
+
+
+    // zoom
+    private var fingerDistance: Float? = null
+    private var zoom = 1f
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -168,13 +208,70 @@ class CameraFragment : Fragment(), View.OnClickListener,
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        textureView = view.findViewById(R.id.texture_camera_f)
+        overlay = view.findViewById<ImageView>(R.id.img_overlay_camera_f)
+        close = view.findViewById<ImageView>(R.id.img_close_camera_f)
+
         view.findViewById<View>(R.id.imgbtn_shoot_camera_f).setOnClickListener(this)
         view.findViewById<View>(R.id.imgbtn_gallery_camera_f).setOnClickListener(this)
         view.findViewById<View>(R.id.imgbtn_back_camera_f).setOnClickListener(this)
         view.findViewById<View>(R.id.imgbtn_swap_camera_f).setOnClickListener(this)
         view.findViewById<View>(R.id.imgbtn_scrap_camera_f).setOnClickListener(this)
+        close.setOnClickListener(this)
 
-        textureView = view.findViewById(R.id.texture_camera_f)
+        seekbar = view.findViewById<SeekBar>(R.id.seekbar_opacity_camera_f)
+        seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                overlay.alpha = progress.toFloat() * 0.01f
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+
+        recycler = view.findViewById(R.id.recycler_camera_f)
+        recycler.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.HORIZONTAL, false)
+        recycler.adapter = CameraAdapter(view.context, clickListener)
+
+        textureView.setOnTouchListener({ _, event ->
+            if (event.action != MotionEvent.ACTION_MOVE || event.pointerCount <= 1) {
+                fingerDistance = null
+                return@setOnTouchListener true
+            }
+            val newFingerDistance = with(event) {
+                val x = getX(0) - getX(1)
+                val y = getY(0) - getY(1)
+                Math.sqrt(x.toDouble() * x + y * y) * resources.displayMetrics.density
+            }
+            if (fingerDistance != null) {
+                val manager = activity?.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+                val characteristics = manager.getCameraCharacteristics(cameraId)
+                val maxZoom = Math.min(MAX_ZOOM_FACTOR, characteristics.get(
+                    CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM))
+                val zoomChange = (newFingerDistance - fingerDistance!!) * ZOOM_GESTURE_SENSITIVITY
+                zoom = Math.min(maxZoom, Math.max(1f, zoom + zoomChange.toFloat()))
+                val sensorSize = characteristics.get(
+                    CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE)!!
+                val cropW = (sensorSize.width() * (1 - 1 / zoom) / 2).toInt()
+                val cropH = (sensorSize.width() * (1 - 1 / zoom) / 2).toInt()
+                val zoomRect = Rect(cropW, cropH,
+                    sensorSize.width() - cropW,
+                    sensorSize.height() - cropH)
+                previewRequestBuilder.set(CaptureRequest.SCALER_CROP_REGION, zoomRect)
+
+            }
+            fingerDistance = newFingerDistance.toFloat()
+            try {
+                captureSession
+                    ?.setRepeatingRequest(previewRequestBuilder.build(), captureCallback, null)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            true
+        })
+
+
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -187,7 +284,8 @@ class CameraFragment : Fragment(), View.OnClickListener,
 //        file = File(activity!!.getExternalFilesDir(null), PIC_FILE_NAME)
 //        file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), PIC_FILE_NAME)
 //        file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).absolutePath, PIC_FILE_NAME)
-        file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).absolutePath + File.separator + "Camera", PIC_FILE_NAME)
+//        file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).absolutePath + File.separator + "Camera", PIC_FILE_NAME)
+        file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).absolutePath + File.separator + "spott", PIC_FILE_NAME)
 
 //        file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString(), PIC_FILE_NAME)
 //        file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + File.separator + "spott", PIC_FILE_NAME)
@@ -278,6 +376,13 @@ class CameraFragment : Fragment(), View.OnClickListener,
         }
     }
 
+    private fun createFolder() {
+        val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "spott")
+        if(!file.exists()) {
+            file.mkdir()
+        }
+    }
+
     private fun openCamera(width: Int, height: Int) {
         val cameraPermission = ContextCompat.checkSelfPermission(activity!!, Manifest.permission.CAMERA)
         val storagePermission = ContextCompat.checkSelfPermission(activity!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -285,6 +390,8 @@ class CameraFragment : Fragment(), View.OnClickListener,
             requestCameraPermission()
             return
         }
+
+        createFolder()
 
 //        val storagePermission = ContextCompat.checkSelfPermission(activity!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)
 //        if (storagePermission  != PackageManager.PERMISSION_GRANTED) {
@@ -418,6 +525,7 @@ class CameraFragment : Fragment(), View.OnClickListener,
                 } else {
                     swap = false
                 }
+
                 return
             }
         } catch (e: CameraAccessException) {
@@ -500,9 +608,16 @@ class CameraFragment : Fragment(), View.OnClickListener,
             captureSession?.capture(previewRequestBuilder.build(), captureCallback, backgroundHandler)
             state = STATE_PREVIEW
             captureSession?.setRepeatingRequest(previewRequest, captureCallback, backgroundHandler)
+
+            view!!.context.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)))
+
         } catch (e: CameraAccessException) {
             loge(TAG, e.toString())
         }
+    }
+
+        fun volumeCapture() {
+        lockFocus()
     }
 
     private fun lockFocus() {
@@ -526,11 +641,18 @@ class CameraFragment : Fragment(), View.OnClickListener,
 //                Toast.makeText(context, "w: ${textureView.width}, h: ${textureView.height}", Toast.LENGTH_SHORT).show()
             }
             R.id.imgbtn_scrap_camera_f -> {
-                val v = view!!.findViewById<View>(R.id.img_temp1_camera_f)
-                if(v.isVisible) v.visibility = View.INVISIBLE
-                else v.visibility = View.VISIBLE
+                if(recycler.isVisible)
+                    recycler.visibility = View.INVISIBLE
+                else
+                    recycler.visibility = View.VISIBLE
             }
-
+            R.id.img_close_camera_f -> {
+                if(overlay.isVisible) {
+                    overlay.visibility = View.GONE
+                    seekbar.visibility = View.GONE
+                    close.visibility = View.GONE
+                }
+            }
         }
     }
 
@@ -571,6 +693,10 @@ class CameraFragment : Fragment(), View.OnClickListener,
 
         private val MAX_PREVIEW_WIDTH = 1920
         private val MAX_PREVIEW_HEIGHT = 1080
+
+        // zoom
+        private const val ZOOM_GESTURE_SENSITIVITY = .0005f
+        private const val MAX_ZOOM_FACTOR = 3f
 
         init {
             ORIENTATIONS.append(Surface.ROTATION_0, 90)
@@ -618,5 +744,59 @@ class CameraFragment : Fragment(), View.OnClickListener,
 
         @JvmStatic
         fun newInstance(): CameraFragment = CameraFragment()
+    }
+
+    inner class CameraAdapter(val context:Context, val clickListener:ClickListener): RecyclerView.Adapter<CameraAdapter.ViewHolder>() {
+
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            val view = LayoutInflater.from(context).inflate(R.layout.item_photo_square2, parent, false)
+            return ViewHolder(view)
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            if (position == 0 || position == 5) {
+                Glide.with(holder.itemView.context)
+                    .load("https://cdn.pixabay.com/photo/2017/08/06/12/06/people-2591874_1280.jpg")
+                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                    .error(android.R.drawable.stat_notify_error)
+                    .into(holder.photo)
+            } else if (position == 1 || position == 6) {
+                Glide.with(holder.itemView.context)
+                    .load("https://cdn.pixabay.com/photo/2017/06/23/17/41/morocco-2435391_960_720.jpg")
+                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                    .error(android.R.drawable.stat_notify_error)
+                    .into(holder.photo)
+
+            } else if (position == 2 || position == 7) {
+                Glide.with(holder.itemView.context)
+                    .load("https://cdn.pixabay.com/photo/2012/10/10/11/05/space-station-60615_960_720.jpg")
+                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                    .error(android.R.drawable.stat_notify_error)
+                    .into(holder.photo)
+            } else if (position == 3 || position == 8) {
+                Glide.with(holder.itemView.context)
+                    .load("https://cdn.pixabay.com/photo/2017/08/02/00/16/people-2568954_1280.jpg")
+                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                    .error(android.R.drawable.stat_notify_error)
+                    .into(holder.photo)
+            } else if (position == 4 || position == 9) {
+                Glide.with(holder.itemView.context)
+                    .load("https://cdn.pixabay.com/photo/2016/11/29/06/45/beach-1867881_1280.jpg")
+                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                    .error(android.R.drawable.stat_notify_error)
+                    .into(holder.photo)
+            }
+
+            holder.itemView.setOnClickListener {
+                clickListener.Click("https://cdn.pixabay.com/photo/2016/11/29/06/45/beach-1867881_1280.jpg")
+            }
+
+        }
+        override fun getItemCount(): Int = 10
+
+        inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+            val photo = itemView.findViewById<ImageView>(R.id.img_photo_photo_square_i2) as ImageView
+        }
     }
 }
