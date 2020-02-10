@@ -3,14 +3,12 @@ package com.avon.spott.Main
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.fragment.NavHostFragment
 import com.avon.spott.Camera.CameraXActivity
 import com.avon.spott.Map.MapFragment.Companion.mBottomSheetBehavior
 import com.avon.spott.R
-import com.avon.spott.Utils.App
 import com.avon.spott.Utils.logd
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -33,7 +31,7 @@ class MainActivity : AppCompatActivity(), MainContract.View, View.OnClickListene
         super.onCreate(savedInstanceState)
         logd(TAG, "onCreate" + savedInstanceState)
          setContentView(R.layout.activity_main)
-         mToolbar = this.findViewById<ConstraintLayout>(R.id.include_toolbar)
+         mToolbar = this.findViewById<ConstraintLayout>(R.id.include_toolbar_main_a)
         if (savedInstanceState == null){
             setupBottomNavigationBar()
         }

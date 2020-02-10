@@ -152,33 +152,6 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         mapRecyclerView.layoutManager = maplayoutManager
         mapRecyclerView.adapter = mypageMapAdapter
 
-        ////////마이페이지 뷰 선택 --- 일단 나중에
-//        val topButtonsListner = View.OnClickListener {
-//            if(it.id == R.id.imgbtn_grid_mypage_f) {
-//                imgbtn_grid_mypage_f.isSelected= true
-//                imgbtn_map_mypage_f.isSelected = false
-//                const_grid_mypage_f.visibility = View.VISIBLE
-//                const_map_mypage_f.visibility = View.GONE
-//                Mypageselectgrid = true
-//            }else{
-//                imgbtn_grid_mypage_f.isSelected=false
-//                imgbtn_map_mypage_f.isSelected = true
-//                const_grid_mypage_f.visibility = View.GONE
-//                const_map_mypage_f.visibility = View.VISIBLE
-//                Mypageselectgrid = false
-//            }
-//        }
-//
-//        imgbtn_grid_mypage_f.setOnClickListener(topButtonsListner)
-//        imgbtn_map_mypage_f.setOnClickListener(topButtonsListner)
-//
-//        if(Mypageselectgrid){
-//            imgbtn_grid_mypage_f.performClick()
-//        }else{
-//            imgbtn_map_mypage_f.performClick()
-//        }
-
-
         ////////////////////////////////////////////////////////
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_grid_on_white_24dp))
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_map_white_24dp))
@@ -224,21 +197,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
             mapRecyclerView.visibility = View.GONE
         }
 
-        if(mypageChange){ //마이페이지에 변화가 있으면 새로 불러온다.
-            mypageAdapter.clearItemsAdapter()
-            mypageAdapter.notifyDataSetChanged()
 
-            mypageMapAdapter.clearItemsAdapter()
-            mypageMapAdapter.notifyDataSetChanged()
-
-            clusterManager.clearItems()
-            clusterManager.cluster()
-
-            mapRecyclerView.visibility = View.GONE
-            selectedMarkerMypage = null
-
-            presenter.getMyphotos(getString(R.string.baseurl))
-        }
 
         if(userNickname!=null){
             setUserInfo(userNickname!!, userPhoto)
@@ -256,6 +215,24 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
 
         if( wholeItems!=null &&  wholeItems!!.size == 0){ //서버에서 불러왔던 사진아이템 사이즈가 0이면 사진없음 문구 보이게
             text_nophoto_mypage_f.visibility = View.VISIBLE
+        }
+
+        if(mypageChange){ //마이페이지에 변화가 있으면 새로 불러온다.
+            mypageChange = false
+
+            mypageAdapter.clearItemsAdapter()
+            mypageAdapter.notifyDataSetChanged()
+
+            mypageMapAdapter.clearItemsAdapter()
+            mypageMapAdapter.notifyDataSetChanged()
+
+            clusterManager.clearItems()
+            clusterManager.cluster()
+
+            mapRecyclerView.visibility = View.GONE
+            selectedMarkerMypage = null
+
+            presenter.getMyphotos(getString(R.string.baseurl))
         }
 
     }

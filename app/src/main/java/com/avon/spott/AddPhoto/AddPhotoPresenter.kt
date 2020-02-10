@@ -2,6 +2,7 @@ package com.avon.spott.AddPhoto
 
 import android.net.Uri
 import com.avon.spott.Data.NewPhoto
+import com.avon.spott.Mypage.MypageFragment.Companion.mypageChange
 import com.avon.spott.Utils.*
 import com.google.android.gms.maps.model.LatLng
 import okhttp3.MediaType
@@ -82,6 +83,7 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
                     val result = response.body()
                     if (result != null) {
                         addPhotoView.showToast("성공") /**  성공 메세지 수정해야함.  */
+                        mypageChange = true
                         addPhotoView.navigateUp()
                     }
                 }, { throwable ->
@@ -92,6 +94,8 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
                             TAG,
                             "http exception code: ${exception.code()}, http exception message: ${exception.message()}"
                         )
+
+                        addPhotoView.showToast("서버 연결에 오류가 발생했습니다")
                     }
                 })
 

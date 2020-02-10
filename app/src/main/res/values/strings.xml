@@ -93,9 +93,15 @@
     <string name="cancel">취소</string>
     <string name="done">완료</string>
     <string name="delete">삭제</string>
+    <string name="edit">편집</string>
+
+    <string name="editing_caption">설명 편집</string>
 
     <string name="edit_comment">댓글 수정</string>
     <string name="delete_comment">댓글 삭제</string>
     <string name="text_warning_comment_d">삭제된 댓글은 복구할 수 없습니다.\n댓글을 삭제하시겠습니까?</string>
+    <string name="text_warning_deleting_photo">삭제된 사진은 복구할 수 없습니다.\n\n사진을 삭제하시겠습니까?\n</string>
+
+    <string name="text_no_photo">해당 사진을 찾을 수 없습니다.</string>
 
 </resources>

@@ -1,7 +1,9 @@
 package com.avon.spott.Photo
 
+import com.avon.spott.Data.BooleanResult
 import com.avon.spott.Data.LikeScrapResult
 import com.avon.spott.Data.PhotoResult
+import com.avon.spott.Mypage.MypageFragment
 import com.avon.spott.Utils.App
 import com.avon.spott.Utils.DateTimeFormatter.Companion.formatCreated
 import com.avon.spott.Utils.Parser
@@ -43,7 +45,7 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
                 photoView.setPhotoDetail(result.user.profile_image, result.user.nickname,
                     result.posts_image, result.back_image, result.latitude, result.longitude,
                     result.contents, result.comment, formatCreated(result.created), result.count,
-                    result.like_checked, result.scrap_checked)
+                    result.like_checked, result.scrap_checked, result.myself)
 
             }, { throwable ->
                 logd(TAG, throwable.message)
@@ -53,6 +55,7 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
                         "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
                     )
                 }
+                photoView.showNoPhotoDialog()
             })
     }
 
@@ -161,6 +164,39 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
 
                 photoView.showToast("서버 연결에 오류가 발생했습니다")
                 photoView.scrapResultError()
+            })
+    }
+
+    override fun openEditCaption() {
+        photoView.showEditCaptionUi()
+    }
+
+    override fun deletePhoto(baseUrl: String, photoId: Int) {
+        Retrofit(baseUrl).delete(App.prefs.temporary_token, "/spott/posts/"+photoId,  "")
+            .subscribe({ response ->
+                logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
+
+                val string  = response.body()
+                val result = Parser.fromJson<BooleanResult>(string!!)
+                if(result.result){
+                MypageFragment.mypageChange = true
+                photoView.navigateUp()
+                }else{
+                    photoView.showToast("사진이 삭제되지 않았습니다\n다시 시도하세요")
+                }
+
+
+            }, { throwable ->
+                logd(TAG, throwable.message)
+                if (throwable is HttpException) {
+                    logd(
+                        TAG,
+                        "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
+                    )
+                }
+
+                photoView.showToast("사진이 삭제되지 않았습니다\n다시 시도하세요")
+
             })
     }
 

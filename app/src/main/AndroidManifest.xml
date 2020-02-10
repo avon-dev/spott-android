@@ -17,7 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EditCaptionActivity"></activity>
+        <activity android:name=".EditCaption.EditCaptionActivity"></activity>
         <activity
             android:name=".Camera.CameraXActivity"
             android:clearTaskOnLaunch="true"

@@ -1,28 +1,38 @@
 package com.avon.spott.Photo
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.avon.spott.EditCaption.EditCaptionActivity
 import com.avon.spott.R
 import com.avon.spott.Main.MainActivity
+import com.avon.spott.Main.MainActivity.Companion.mToolbar
 import com.avon.spott.Main.controlToobar
+import com.avon.spott.Mypage.MypageFragment.Companion.mypageChange
 import com.avon.spott.PhotoEnlargementActivity
 import com.avon.spott.Scrap.ScrapFragment.Companion.scrapChange
 import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_photo.*
-import kotlin.math.log
+import kotlinx.android.synthetic.main.toolbar.view.*
 
 
 class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
     private val TAG = "forPhotoFragment"
+
+    companion object{
+        var captionChange = false
+    }
 
     private lateinit var photoPresenter : PhotoPresenter
     override lateinit var presenter : PhotoContract.Presenter
@@ -45,6 +55,8 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
     private var scrapProgressing : Boolean = false //스크랩 처리중 여부
 
     private var likeCount = 0
+
+    private var myself = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_photo, container, false)
@@ -102,6 +114,11 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
             }
 
         }
+
+        if(captionChange){
+            captionChange = false
+            presenter.getPhotoDetail(getString(R.string.baseurl), arguments?.getInt("photoId")!!)
+        }
     }
 
     fun init(){
@@ -113,6 +130,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         text_nickname_photo_f.setOnClickListener(this)
         img_userphoto_photo_f.setOnClickListener(this)
         img_photo_photo_f.setOnClickListener(this)
+        MainActivity.mToolbar.img_more_toolbar.setOnClickListener(this)
 
     }
 
@@ -169,6 +187,44 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
                 }
             }
 
+            R.id.img_more_toolbar -> {
+                if(postPhotoUrl!= null){
+                    if(myself){ //내가 쓴 글인 경우
+                        val builder = AlertDialog.Builder(context)
+
+//                        val arrayList = arrayOf(getString(R.string.edit), getString(R.string.delete))
+//                        val adapter = ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, arrayList)
+
+                        val arrayList = ArrayList<String>()
+                        arrayList.add(getString(R.string.edit))
+                        arrayList.add(getString(R.string.delete))
+                        val adapter = ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, arrayList)
+
+                        val listener = object :DialogInterface.OnClickListener{
+                            override fun onClick(dialog: DialogInterface?, which: Int) {
+                                when(which){
+                                    0 -> { // 편집 눌렀을 때
+                                        presenter.openEditCaption()
+                                    }
+                                    1 -> { //삭제 눌렀을 때
+                                        showDeleteDialog()
+                                    }
+                                }
+                            }
+                        }
+
+                        builder.setAdapter(adapter, listener)
+                        builder.show()
+
+
+
+
+                    }else{ //내가 쓴 글이 아닌 경우
+
+                    }
+                }
+            }
+
         }
     }
 
@@ -179,7 +235,8 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
     override fun setPhotoDetail(userPhoto:String?, userNickName:String, postPhotoUrl: String,
                                 backPhotoUrl:String, photoLat:Double, photoLng:Double,
                                 caption:String, comments:Int, dateTime:String, likeCount:Int,
-                                likeChecked:Boolean, scrapChecked:Boolean){
+                                likeChecked:Boolean, scrapChecked:Boolean, myself:Boolean){
+        this.myself = myself
 
         if(userPhoto==null){
             logd(TAG,"null")
@@ -283,6 +340,45 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         checkbox_scrap_photo_f.isClickable = true
     }
 
+    override fun showEditCaptionUi() {
+        val nextIntent = Intent(context, EditCaptionActivity::class.java)
+        nextIntent.putExtra("caption", caption)
+        nextIntent.putExtra("photoId", arguments?.getInt("photoId"))
+        startActivity(nextIntent)
+    }
+
+    private fun showDeleteDialog(){
+        val builder = AlertDialog.Builder(context!!)
+        builder.setMessage(getString(R.string.text_warning_deleting_photo))
+
+
+        builder.setPositiveButton(android.R.string.yes){dialog, which ->
+            presenter.deletePhoto(getString(R.string.testurl), arguments?.getInt("photoId")!!)
+        }
+        builder.setNegativeButton(android.R.string.no) { dialog, which ->
+        }
+
+        val  mAlertDialog =  builder.show()
+        mAlertDialog.setCanceledOnTouchOutside(false)
+
+    }
+
+    override fun navigateUp(){
+        mToolbar.img_back_toolbar.performClick()
+    }
+
+    override fun showNoPhotoDialog(){
+        val builder = AlertDialog.Builder(context!!)
+        builder.setMessage(getString(R.string.text_no_photo))
+
+        builder.setPositiveButton(android.R.string.yes){dialog, which ->
+            navigateUp()
+        }
+
+        val  mAlertDialog =  builder.show()
+        mAlertDialog.setCanceledOnTouchOutside(false)
+
+    }
 
 
 
