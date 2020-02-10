@@ -9,3 +9,7 @@ fun logd(TAG:String, msg:String?) {
 fun loge(TAG:String, msg:String?) {
     Log.e(TAG, msg)
 }
+
+fun loge(TAG:String, msg:String, cause:Throwable?) {
+    Log.e(TAG, msg, cause)
+}
