@@ -35,7 +35,6 @@
 
     <ProgressBar
         android:id="@+id/progress_map_f"
-        android:indeterminateDrawable="@drawable/progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -56,7 +55,7 @@
 <!--        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/frag_list_map_f"
+        android:id="@+id/const_bottomsheet_map_f"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/default_background"
@@ -130,12 +129,12 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_maplist_f"
             android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:paddingHorizontal="4dp"
             android:paddingTop="16dp"
             android:paddingBottom="24dp"
-            android:clipToPadding="false"
-            android:layout_height="0dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:scrollbars="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

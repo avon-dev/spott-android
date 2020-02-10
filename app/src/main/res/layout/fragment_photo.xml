@@ -23,7 +23,8 @@
             <ImageView
                 android:id="@+id/img_photo_photo_f"
                 android:layout_width="0dp"
-                android:layout_height="220dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="1:1"
                 android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -35,11 +36,10 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginStart="24dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginTop="190dp"
+                android:translationY="-30dp"
                 android:background="@drawable/btn_circle"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/img_photo_photo_f"
+                app:layout_constraintTop_toBottomOf="@+id/img_photo_photo_f"
                 app:srcCompat="@drawable/ic_map_white_32dp"
                 tools:ignore="VectorDrawableCompat" />
 
@@ -47,12 +47,11 @@
                 android:id="@+id/imgbtn_camera_photo_f"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_marginTop="190dp"
                 android:layout_marginEnd="24dp"
-                android:layout_marginRight="24dp"
                 android:background="@drawable/btn_circle"
+                android:translationY="-30dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/img_photo_photo_f"
+                app:layout_constraintTop_toTopOf="@+id/imgbtn_map_photo_f"
                 app:srcCompat="@drawable/ic_camera_alt_white_32dp"
                 tools:ignore="VectorDrawableCompat" />
 
@@ -61,27 +60,26 @@
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@+id/img_photo_photo_f"
                 app:layout_constraintTop_toTopOf="@+id/img_photo_photo_f"
                 app:srcCompat="@drawable/ic_lock_black_24dp"
-                tools:ignore="VectorDrawableCompat" />
+                tools:ignore="VectorDrawableCompat"
+                tools:visibility="visible" />
 
-            <ImageView
-                android:id="@+id/img_scrap_photo_f"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="15dp"
-                android:tint="@color/trans_grey"
-                android:layout_marginRight="15dp"
-                app:layout_constraintEnd_toEndOf="@+id/img_photo_photo_f"
-                app:layout_constraintTop_toTopOf="@+id/img_photo_photo_f"
-                app:srcCompat="@drawable/ic_bookmark_border_black_24dp"
-                tools:ignore="VectorDrawableCompat" />
 
-            <ImageView
+            <CheckBox
+                android:id="@+id/checkbox_scrap_photo_f"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:button="@drawable/checkbox_scrap"
+                app:layout_constraintBottom_toBottomOf="@+id/checkbox_like_photo_f"
+                app:layout_constraintEnd_toStartOf="@+id/checkbox_like_photo_f"
+                app:layout_constraintTop_toTopOf="@+id/checkbox_like_photo_f" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/img_userphoto_photo_f"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -89,40 +87,34 @@
                 android:layout_marginLeft="16dp"
                 app:layout_constraintBottom_toBottomOf="@+id/text_nickname_photo_f"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/text_nickname_photo_f"
-                app:srcCompat="@mipmap/ic_launcher_round" />
+                app:layout_constraintTop_toTopOf="@+id/text_nickname_photo_f"/>
 
             <TextView
                 android:id="@+id/text_nickname_photo_f"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="30dp"
                 android:textColor="@color/text_grey"
                 app:layout_constraintStart_toEndOf="@+id/img_userphoto_photo_f"
                 app:layout_constraintTop_toBottomOf="@+id/imgbtn_map_photo_f"
                 tools:text="userNickName" />
 
-            <ImageView
-                android:id="@+id/img_like_photo_f"
+            <CheckBox
+                android:id="@+id/checkbox_like_photo_f"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
                 android:layout_marginRight="4dp"
+                android:button="@drawable/checkbox_like"
                 app:layout_constraintBottom_toBottomOf="@+id/text_like_photo_f"
                 app:layout_constraintEnd_toStartOf="@+id/text_like_photo_f"
-                app:layout_constraintTop_toTopOf="@+id/text_like_photo_f"
-                app:srcCompat="@drawable/ic_favorite_grey_24dp"
-                tools:ignore="VectorDrawableCompat" />
+                app:layout_constraintTop_toTopOf="@+id/text_like_photo_f" />
 
             <TextView
                 android:id="@+id/text_like_photo_f"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
                 android:text="-"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imgbtn_camera_photo_f"

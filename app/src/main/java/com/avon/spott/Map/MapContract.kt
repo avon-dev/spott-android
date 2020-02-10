@@ -18,7 +18,7 @@ interface MapContract {
         fun showPermissionDialog()
         fun showMylocation()
         fun moveToMylocation()
-        fun progress(boolean: Boolean)
+        fun showProgressbar(boolean: Boolean)
         fun startLocationUpdates()
         var   mylocation : LatLng?
     }

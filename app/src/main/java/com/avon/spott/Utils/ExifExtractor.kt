@@ -1,7 +1,6 @@
 package com.avon.spott.Utils
 
 import android.media.ExifInterface
-import android.net.Uri
 import com.google.android.gms.maps.model.LatLng
 import java.io.IOException
 

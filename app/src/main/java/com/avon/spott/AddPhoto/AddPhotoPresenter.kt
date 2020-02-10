@@ -1,19 +1,14 @@
 package com.avon.spott.AddPhoto
 
-import android.media.ExifInterface
 import android.net.Uri
 import com.avon.spott.Data.NewPhoto
-import com.avon.spott.Utils.ExifExtractor
-import com.avon.spott.Utils.Parser
-import com.avon.spott.Utils.Retrofit
-import com.avon.spott.Utils.logd
+import com.avon.spott.Utils.*
 import com.google.android.gms.maps.model.LatLng
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.HttpException
 import java.io.File
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -50,7 +45,7 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
         addPhotoView.addMarker(latLng)
     }
 
-    override fun sendPhoto(baseUrl:String, photo: String, caption: String, latLng: LatLng?) {
+    override fun sendPhoto(baseUrl:String, photo: String, caption: String, latLng: LatLng?, public:Boolean) {
         if(latLng==null){ //사진에 대한 위치정보가 없을 때
             addPhotoView.showToast("사진의 위치를 표시해주세요")
         }else if(caption.trim().length==0) { //사진에 대한 설명이 없을 때 (빈공간 제외)
@@ -76,9 +71,9 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
             )
             /* -------------------------------------------------------------------------------------- */
 
-            val newPhoto = NewPhoto(latLng.latitude, latLng.longitude, caption)
+            val newPhoto = NewPhoto(latLng.latitude, latLng.longitude, caption, public)
 
-            Retrofit(baseUrl).postPhoto("/spott/posts", Parser.toJson(newPhoto), images)
+            Retrofit(baseUrl).postPhoto(App.prefs.temporary_token, "/spott/posts", Parser.toJson(newPhoto), images)
                 .subscribe({ response ->
                     logd(
                         TAG,

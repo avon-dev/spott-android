@@ -6,6 +6,7 @@ interface MainContract{
     interface View:BaseView<Presenter>{
         fun navigateUp()
         fun showCameraUi()
+
     }
 
     interface Presenter{

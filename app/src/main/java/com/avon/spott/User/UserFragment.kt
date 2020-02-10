@@ -15,6 +15,7 @@ import com.avon.spott.R
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.Main.controlToobar
 import com.bumptech.glide.Glide
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_mypage.*
 import kotlinx.android.synthetic.main.fragment_mypage.view.*
 import kotlinx.android.synthetic.main.toolbar.view.*
@@ -58,32 +59,69 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener {
 
 
         ////////마이페이지 뷰 선택 --- 일단 나중에
-        val topButtonsListner = View.OnClickListener {
-            if(it.id == R.id.imgbtn_grid_mypage_f) {
-                imgbtn_grid_mypage_f.isSelected= true
-                imgbtn_map_mypage_f.isSelected = false
-                const_grid_mypage_f.visibility = View.VISIBLE
-                const_map_mypage_f.visibility = View.GONE
-                Userselectgrid = true
-            }else{
-                imgbtn_grid_mypage_f.isSelected=false
-                imgbtn_map_mypage_f.isSelected = true
-                const_grid_mypage_f.visibility = View.GONE
-                const_map_mypage_f.visibility = View.VISIBLE
-                Userselectgrid = false
-            }
-        }
-
-        imgbtn_grid_mypage_f.setOnClickListener(topButtonsListner)
-        imgbtn_map_mypage_f.setOnClickListener(topButtonsListner)
-
-        if(Userselectgrid){
-            imgbtn_grid_mypage_f.performClick()
-        }else{
-            imgbtn_map_mypage_f.performClick()
-        }
+//        val topButtonsListner = View.OnClickListener {
+//            if(it.id == R.id.imgbtn_grid_mypage_f) {
+//                imgbtn_grid_mypage_f.isSelected= true
+//                imgbtn_map_mypage_f.isSelected = false
+//                const_grid_mypage_f.visibility = View.VISIBLE
+//                const_map_mypage_f.visibility = View.GONE
+//                Userselectgrid = true
+//            }else{
+//                imgbtn_grid_mypage_f.isSelected=false
+//                imgbtn_map_mypage_f.isSelected = true
+//                const_grid_mypage_f.visibility = View.GONE
+//                const_map_mypage_f.visibility = View.VISIBLE
+//                Userselectgrid = false
+//            }
+//        }
+//
+//        imgbtn_grid_mypage_f.setOnClickListener(topButtonsListner)
+//        imgbtn_map_mypage_f.setOnClickListener(topButtonsListner)
+//
+//        if(Userselectgrid){
+//            imgbtn_grid_mypage_f.performClick()
+//        }else{
+//            imgbtn_map_mypage_f.performClick()
+//        }
 
         ////////////////////////////////////////////////////////
+
+        ////////////////////////////////////////////////////////
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_grid_on_white_24dp))
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_map_white_24dp))
+
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                when(tab!!.position){
+                    0 -> {
+                        const_grid_mypage_f.visibility = View.VISIBLE
+                        const_map_mypage_f.visibility = View.GONE
+                        Userselectgrid = true
+                    }
+                    1 -> {
+                        const_grid_mypage_f.visibility = View.GONE
+                        const_map_mypage_f.visibility = View.VISIBLE
+                        Userselectgrid = false
+                    }
+                }
+            }
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
+        })
+
+
+        if(Userselectgrid){
+            tabLayout.getTabAt(0)!!.select()
+            const_grid_mypage_f.visibility = View.VISIBLE
+            const_map_mypage_f.visibility = View.GONE
+        }else{
+            tabLayout.getTabAt(1)!!.select()
+            const_grid_mypage_f.visibility = View.GONE
+            const_map_mypage_f.visibility = View.VISIBLE
+        }
+        ///////////////////////////
 
     }
 

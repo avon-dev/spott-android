@@ -13,15 +13,32 @@ interface RetrofitService {
 
     @FormUrlEncoded
     @POST
-    fun post(@Url url: String, @Field("sending") sending: String): Observable<Response<String>>
+    fun post(@Header("Authorization") token :String, @Url url: String, @Field("sending") sending: String): Observable<Response<String>>
 
     @GET
-    fun get(@Url url: String, @Query("sending") sending: String): Observable<Response<String>>
+    fun get(@Header("Authorization") token :String, @Url url: String, @Query("sending") sending: String): Observable<Response<String>>
+
+    @DELETE
+    fun delete(@Header("Authorization") token :String, @Url url: String, @Query("sending") sending: String): Observable<Response<String>>
+
+    @FormUrlEncoded
+    @PATCH
+    fun patch(@Header("Authorization") token :String, @Url url: String, @Field("sending") sending: String): Observable<Response<String>>
 
     @Multipart
     @POST
-    fun postPhoto(@Url url: String,
+    fun postPhoto(@Header("Authorization") token :String,
+                  @Url url: String,
                   @Part("sending") sending: String,
                   @Part imageFile : ArrayList<MultipartBody.Part>): Observable<Response<String>>
+
+
+    /**  토큰 테스트용!!!!! 임시 토큰 2020-02-04   */
+    @POST
+    fun postNonHeader(@Url url: String, @Query("sending") sending: String): Observable<Response<String>>
+
+    @GET
+    fun getNonToken(@Url url: String, @Query("sending") sending: String): Observable<Response<String>>
+
 
 }

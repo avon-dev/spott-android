@@ -25,7 +25,7 @@ class NicknamePresenter(val nicknameView: NicknameContract.View) : NicknameContr
     }
 
     override fun signUp(baseUrl: String, user: User) {
-        Retrofit(baseUrl).post("/spott/user", Parser.toJson(user)).subscribe({ response ->
+        Retrofit(baseUrl).postNonHeader("/spott/user", Parser.toJson(user)).subscribe({ response ->
             logd(TAG, "response code: ${response.code()}, response body : ${response.body()}")
             val result = response.body()?.let { Parser.fromJson<NicknmaeResult>(it) }
             if (result != null) {

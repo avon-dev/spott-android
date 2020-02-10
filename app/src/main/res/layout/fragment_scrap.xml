@@ -57,87 +57,107 @@
         app:layout_constraintTop_toTopOf="@+id/text_scraps_scrap_f" />
 
     <TextView
-        android:id="@+id/text_delete_scrap_f"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/text_deleteready_scrap_f"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:text="@string/select_delete"
         android:textColor="@color/text_black"
         android:textSize="14dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:text="@string/select_delete"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/view_top_scarp_f"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/coordinator_comment_f"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+
+    <TextView
+        android:id="@+id/text_delete_scrap_f"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/text_scrap_select"
+        android:gravity="center"
+        android:text="@string/select_delete"
+        android:textColor="@color/text_white"
+        android:textSize="14dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/view_top_scarp_f"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+<!--    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
+<!--        android:id="@+id/swiperefresh_scrap_f"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:orientation="vertical"-->
+<!--        app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.0"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/view_top_scarp_f">-->
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll_scrap_f"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_top_scarp_f">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/text_guide_scrap_f"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/background_grey"
+                    android:gravity="center"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="5dp"
+                    android:text="@string/text_guide_scrap_f"
+                    android:textColor="@color/text_white"
+                    android:textSize="13dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_scrap_f"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:clipToPadding="false"
+                    android:paddingHorizontal="4dp"
+                    android:paddingTop="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/text_guide_scrap_f"
+                    android:nestedScrollingEnabled="false"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+
+<!--    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
+
+    <TextView
+        android:id="@+id/text_noscrap_scrap_f"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="스크랩한 사진이 없습니다."
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_top_scarp_f">
-
-        <com.google.android.material.appbar.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/default_background"
-            android:fitsSystemWindows="true"
-            app:elevation="0dp">
-
-            <com.google.android.material.appbar.CollapsingToolbarLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
-                app:layout_scrollFlags="scroll|snap">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/text_guide_scrap_f"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/text_scrap_guide"
-                        android:gravity="center"
-                        android:paddingHorizontal="10dp"
-                        android:paddingVertical="5dp"
-                        android:text="@string/text_guide_scrap_f"
-                        android:textColor="@color/text_white"
-                        android:textSize="13dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0" />
-
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.appbar.CollapsingToolbarLayout>
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swiperefresh_scrap_f"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:paddingVertical="8dp"
-                android:clipToPadding="false"
-                android:id="@+id/recycler_scrap_f"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-
-                />
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        app:layout_constraintTop_toBottomOf="@+id/view_top_scarp_f"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

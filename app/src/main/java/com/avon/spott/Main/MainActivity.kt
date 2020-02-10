@@ -3,12 +3,14 @@ package com.avon.spott.Main
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.fragment.NavHostFragment
 import com.avon.spott.Camera.CameraXActivity
 import com.avon.spott.Map.MapFragment.Companion.mBottomSheetBehavior
 import com.avon.spott.R
+import com.avon.spott.Utils.App
 import com.avon.spott.Utils.logd
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -35,7 +37,8 @@ class MainActivity : AppCompatActivity(), MainContract.View, View.OnClickListene
         if (savedInstanceState == null){
             setupBottomNavigationBar()
         }
-         init()
+        init()
+
     }
 
 
@@ -93,9 +96,9 @@ class MainActivity : AppCompatActivity(), MainContract.View, View.OnClickListene
             val selectedFragment = mapFragments as NavHostFragment
             val navController = selectedFragment.navController
             if (navController.currentDestination?.id == navController.graph.startDestination) {
-                if (mBottomSheetBehavior?.state != BottomSheetBehavior.STATE_COLLAPSED) {
+                if (mBottomSheetBehavior.state != BottomSheetBehavior.STATE_COLLAPSED) {
                     logd(TAG, "STATE_EXPANDED")
-                    mBottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+                    mBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                     return
                 }
             }else{

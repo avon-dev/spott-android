@@ -41,10 +41,10 @@ class EmailPresenter(val emailView: EmailContract.View) : EmailContract.Presente
     }
 
     override fun sendEmail(isEmail:Boolean, baseUrl: String, email: String) {
-        if (isEmail) {
+        if (!isEmail) { // 2020-02-04 수정(민석):  "!" 추가
             emailView.showError("이메일을 확인해주세요")
         } else {
-            Retrofit(baseUrl).get("/spott/email-authen", Parser.toJson(User(email)))
+            Retrofit(baseUrl).getNonHeader("/spott/email-authen", Parser.toJson(User(email)))
                 .subscribe({ response ->
                     logd(TAG, response.body())
                     val number = response.body()?.let { Parser.fromJson<Number>(it) }
