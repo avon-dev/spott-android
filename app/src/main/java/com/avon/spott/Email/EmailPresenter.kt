@@ -2,10 +2,7 @@ package com.avon.spott.Email
 
 import com.avon.spott.Data.Number
 import com.avon.spott.Data.User
-import com.avon.spott.Utils.Parser
-import com.avon.spott.Utils.Retrofit
-import com.avon.spott.Utils.Validator
-import com.avon.spott.Utils.logd
+import com.avon.spott.Utils.*
 import retrofit2.HttpException
 
 class EmailPresenter(val emailView: EmailContract.View) : EmailContract.Presenter {
@@ -25,11 +22,11 @@ class EmailPresenter(val emailView: EmailContract.View) : EmailContract.Presente
     }
 
     override fun isEmail(email: String) {
-        emailView.isEmail(Validator.validEmail(email))
+        emailView.validEmail(Validator.validEmail(email))
     }
 
     override fun isNumber(number: String) {
-        emailView.isNumber(Validator.validNumber(number))
+        emailView.validNumber(Validator.validNumber(number))
     }
 
     override fun confirm(number: Number, str: String) {
@@ -54,7 +51,7 @@ class EmailPresenter(val emailView: EmailContract.View) : EmailContract.Presente
                 }, { throwable ->
                     logd(TAG, throwable.message)
                     if (throwable is HttpException) {
-                        logd(
+                        loge(
                             TAG,
                             "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
                         )

@@ -6,6 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.avon.spott.Data.User
+import com.avon.spott.Email.INTENT_EXTRA_USER
 import com.avon.spott.Nickname.NicknameActivity
 import com.avon.spott.R
 import io.reactivex.disposables.CompositeDisposable
@@ -17,7 +18,6 @@ class PasswordActivity : AppCompatActivity(), PasswordContract.View, View.OnClic
     lateinit var passwordPresenter: PasswordPresenter
     override lateinit var presenter: PasswordContract.Presenter
 
-    val INTENT_EXTRA_USER = "user"
     private lateinit var user: User
 
     private var isPassword: Boolean = false

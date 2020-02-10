@@ -7,8 +7,8 @@ interface EmailContract {
     interface View : BaseView<Presenter> {
         fun showPasswordUi()
         fun navigateUp()
-        fun isEmail(valid: Boolean)
-        fun isNumber(bool:Boolean)
+        fun validEmail(valid: Boolean)
+        fun validNumber(bool:Boolean)
         fun getNumber(number:Number)
         fun showError(msg:String)
     }

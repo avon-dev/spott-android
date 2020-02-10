@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.avon.spott.Data.Token
 import com.avon.spott.Data.User
+import com.avon.spott.Email.INTENT_EXTRA_USER
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.R
 import kotlinx.android.synthetic.main.activity_nickname.*
@@ -19,7 +20,6 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
     override lateinit var presenter: NicknameContract.Presenter
     private lateinit var nicknamePresenter: NicknamePresenter
 
-    val INTENT_EXTRA_USER = "user"
     private lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
