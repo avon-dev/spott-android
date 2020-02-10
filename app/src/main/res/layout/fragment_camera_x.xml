@@ -84,6 +84,15 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <ImageView
+        android:id="@+id/img_overlay_camerax_f"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/preview_viewfinder_camerax_f"
+        app:layout_constraintTop_toTopOf="@id/preview_viewfinder_camerax_f"
+        tools:visibility="visible" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_camerax_f"
         android:layout_width="0dp"
@@ -92,15 +101,6 @@
         app:layout_constraintBottom_toTopOf="@id/constriant_ui_container_camerax_f"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        tools:visibility="visible" />
-
-    <ImageView
-        android:id="@+id/img_overlay_camerax_f"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/preview_viewfinder_camerax_f"
-        app:layout_constraintTop_toTopOf="@id/preview_viewfinder_camerax_f"
         tools:visibility="visible" />
 
     <!--    <ImageView-->

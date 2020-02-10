@@ -518,7 +518,7 @@ class CameraXFragment : Fragment() {
         opacitySeekbar.visibility = View.VISIBLE
         closeImage.visibility = View.VISIBLE
 
-        rightRotation.visibility = View.VISIBLE
+//        rightRotation.visibility = View.VISIBLE
     }
 
     // 오버랩된거 숨기기
@@ -526,7 +526,7 @@ class CameraXFragment : Fragment() {
         overlayImage.visibility = View.GONE
         opacitySeekbar.visibility = View.GONE
         closeImage.visibility = View.GONE
-        rightRotation.visibility = View.GONE
+//        rightRotation.visibility = View.GONE
     }
 
     companion object {
