@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import com.avon.spott.Camera.EMAIL_RESENDING_MILLS
 import com.avon.spott.Data.Number
 import com.avon.spott.Data.User
 import com.avon.spott.Password.PasswordActivity
@@ -29,7 +30,7 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
     private var isEmail: Boolean = false
 
     private var isSending: Boolean = true
-    private val resendingTime = 60000L
+    private val resendingTime = EMAIL_RESENDING_MILLS
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
