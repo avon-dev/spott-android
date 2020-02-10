@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
@@ -74,6 +75,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         super.onCreate(savedInstanceState)
 
         layoutManager = LinearLayoutManager(context!!)
+
         commentAdapter = CommentAdapter(context!!, commentInterListener)
 
 
@@ -87,12 +89,6 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         val root = inflater.inflate(R.layout.fragment_comment, container, false)
 
         baseurl = getString(R.string.baseurl)
-//        //------[임시]swiperefreshlayout 컨트롤용------------------
-//        root.imgbtn_write_comment_f.setOnClickListener {
-//            if (swiperefresh_comment_f.isRefreshing)
-//                swiperefresh_comment_f.isRefreshing = false
-//        }
-//        //-----------------------------------------------------
 
         photoId = arguments?.getInt("photoId")!!
 
@@ -426,11 +422,13 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
     override fun postDone() {
         edit_comment_comment_f.setText("")
 
+        swiperefresh_comment_f.isRefreshing = true
+        val imm = context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view!!.windowToken, 0)
+
         Handler().postDelayed({
             start = 0
             refreshTimeStamp = ""
-            swiperefresh_comment_f.isRefreshing = true
-
             presenter.getComments(baseurl, start, photoId)
         }, 600) //로딩 주기
 

@@ -68,17 +68,16 @@
                 tools:ignore="VectorDrawableCompat"
                 tools:visibility="visible" />
 
+
             <CheckBox
                 android:id="@+id/checkbox_scrap_photo_f"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="15dp"
+                android:layout_marginEnd="16dp"
                 android:button="@drawable/checkbox_scrap"
-                android:layout_marginRight="15dp"
-                app:layout_constraintEnd_toEndOf="@+id/img_photo_photo_f"
-                app:layout_constraintTop_toTopOf="@+id/img_photo_photo_f"/>
-
+                app:layout_constraintBottom_toBottomOf="@+id/checkbox_like_photo_f"
+                app:layout_constraintEnd_toStartOf="@+id/checkbox_like_photo_f"
+                app:layout_constraintTop_toTopOf="@+id/checkbox_like_photo_f" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/img_userphoto_photo_f"

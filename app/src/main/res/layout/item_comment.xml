@@ -31,7 +31,7 @@
         android:id="@+id/imgbtn_edit_comment_i"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="24dp"
         android:adjustViewBounds="true"
         android:background="@color/default_background"
         android:visibility="gone"
