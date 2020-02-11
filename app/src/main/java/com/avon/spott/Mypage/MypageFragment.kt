@@ -67,8 +67,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
     companion object{
         var selectedMarkerMypage : Marker? = null //선택한 마커
 
-        //Map recyclerview
-        lateinit var mapRecyclerView: RecyclerView
+        lateinit var mapRecyclerView: RecyclerView  //Map recyclerview
         var mapRecyclerViewShow = false //마이페이지 맵 리사이클러뷰 visible 여부
 
         var mypageChange = false //내가 작성한 사진이 변화가 있는 지 여부
@@ -306,7 +305,6 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
     }
 
     private fun newCluster(cluster: Cluster<MapCluster>?){
-//        val firstItem = cluster!!.items.iterator().next() //첫번째 아이템 선택
 
         maplayoutManager.scrollToPosition(0)
 
@@ -610,7 +608,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         userPhoto = photo
 
         if(photo==null){
-            img_profile_toolbar.setImageResource(R.drawable.ic_account_circle_grey_36dp)
+            mToolbar.img_profile_toolbar.setImageResource(R.drawable.ic_account_circle_grey_36dp)
         }else{
             Glide.with(this)
                 .load(photo)

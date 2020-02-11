@@ -14,8 +14,8 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
 
     init{ commentView.presenter = this}
 
-    override fun openPhoto() {
-        commentView.showPhotoUi()
+    override fun openUser(userId:Int) {
+        commentView.showUserUi(userId)
     }
 
     override fun getComments(baseurl: String, start: Int, photoId: Int) {

@@ -14,6 +14,8 @@ interface AddPhotoContract {
         fun movePosition(latLng: LatLng, zoom:Float)
         fun addMarker(latLng: LatLng)
         fun focusEdit()
+        fun showLoading(boolean: Boolean)
+        fun enableTouching(boolean: Boolean)
     }
 
     interface Presenter{

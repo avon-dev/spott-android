@@ -12,7 +12,7 @@ class PhotoContract {
         fun setPhotoDetail(userPhoto:String?, userNickName:String, postPhotoUrl: String,
                            backPhotoUrl:String, photoLat:Double, photoLng:Double,
                            caption:String, comments:Int, dateTime:String, likeCount:Int,
-                           likeChecked:Boolean, scrapChecked:Boolean, myself:Boolean)
+                           likeChecked:Boolean, scrapChecked:Boolean, myself:Boolean, userId:Int)
         fun showPhotoEnlagement(photoUrl: String)
         fun likeResultDone(count:Int)
         fun likeResultError()

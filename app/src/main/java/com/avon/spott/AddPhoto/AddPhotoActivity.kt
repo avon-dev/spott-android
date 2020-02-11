@@ -1,12 +1,16 @@
 package com.avon.spott.AddPhoto
 
 
+import android.content.ComponentName
+import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import android.widget.Toast
 import com.avon.spott.R
 import com.avon.spott.Utils.logd
@@ -83,13 +87,6 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         //인텐트로 받아온 사진 이미지 처리(이미지뷰에 넣기 + 위치 정보 있으면 가져오기)
         presenter.usePhoto(intent.getStringExtra("photo"))
 
-        //맵 클릭 리스너
-//        mMap.setOnMapClickListener(object : GoogleMap.OnMapClickListener{
-//            override fun onMapClick(latlng: LatLng) {
-//                logd(TAG, "MapClick : " +latlng)
-//            }
-//        })
-
         //맵 롱클릭 리스너
         mMap.setOnMapLongClickListener(object : GoogleMap.OnMapLongClickListener{
             override fun onMapLongClick(latlng: LatLng) {
@@ -140,7 +137,6 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         mMap.clear()
         val makerOptions = MarkerOptions()
         makerOptions.position(latLng)
-//            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)) //기본 마커 파란색
               .icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_where_to_vote_black_48))
         mMap.addMarker(makerOptions)
 
@@ -150,6 +146,20 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
 
     override fun focusEdit(){ //설명 editText 포커스
         edit_caption_addphoto_a.requestFocus()
+    }
+
+    override fun showLoading(boolean: Boolean){
+        linear_loading_addphoto_a.visibility = if(boolean) View.VISIBLE else View.GONE
+    }
+
+    override fun enableTouching(boolean: Boolean){
+        if(!boolean){
+            window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        }else{
+            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        }
+
     }
 
 }

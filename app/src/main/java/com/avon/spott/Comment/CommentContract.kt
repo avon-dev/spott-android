@@ -7,7 +7,7 @@ import com.avon.spott.Data.Comment
 interface CommentContract {
 
     interface View: BaseView<Presenter> {
-        fun showPhotoUi()
+        fun showUserUi(userId:Int)
         fun removePageLoading()
         fun clearAdapter()
         fun addItems(commentItems:ArrayList<Comment>)
@@ -22,7 +22,7 @@ interface CommentContract {
     }
 
     interface Presenter{
-        fun openPhoto()
+        fun openUser(userId:Int)
         fun getComments(baseurl:String, start:Int, photoId:Int)
         fun checkEditString(string:String)
         fun postCommnet(baseurl: String, photoId: Int, caption:String)

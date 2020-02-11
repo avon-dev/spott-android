@@ -20,7 +20,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.avon.spott.Data.Comment
-import com.avon.spott.Data.NickPhoto
+import com.avon.spott.Data.UserInfo
 import com.avon.spott.R
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.Main.controlToobar
@@ -58,8 +58,8 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
     private var baseurl = ""
 
     val commentInterListener = object :commentInter{
-        override fun userClick(){
-            presenter.openPhoto()
+        override fun userClick(userId:Int){
+            presenter.openUser(userId)
         }
 
         override fun editComment(alertDialog: AlertDialog, position: Int, content: String, commentId:Int) {
@@ -189,13 +189,15 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         imgbtn_write_comment_f.setOnClickListener(this)
     }
 
-    override fun showPhotoUi() {
-        findNavController().navigate(R.id.action_commentFragment_to_userFragment)
+    override fun showUserUi(userId:Int) {
+        val bundle = Bundle()
+        bundle.putInt("userId", userId)
+        findNavController().navigate(R.id.action_commentFragment_to_userFragment, bundle)
     }
 
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.text_nickname_comment_f -> {presenter.openPhoto()}
+            R.id.text_nickname_comment_f -> {presenter.openUser(arguments?.getInt("userId")!!)}
             R.id.imgbtn_write_comment_f -> {presenter.postCommnet(baseurl,
                 photoId, edit_comment_comment_f.text.toString())}
         }
@@ -203,7 +205,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
     //리사이클러뷰 아이템 클릭을 위한 인터페이스
     interface commentInter{
-        fun userClick()
+        fun userClick(userId:Int)
         fun editComment(alertDialog: AlertDialog, position: Int, content: String, commentId:Int)
         fun deleteComment(alertDialog: AlertDialog, position: Int, commentId:Int)
     }
@@ -268,7 +270,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         //리싸이클러뷰 아래로 드래그시 페이징 로딩아이템 추가
         fun addPageLoadingItem() {
             isLoadingAdded = true
-            addPage(Comment(0, NickPhoto("",""),false,"",""))
+            addPage(Comment(0, UserInfo("","",0),false,"",""))
         }
 
         fun removePageLoadingItem(){
@@ -315,6 +317,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                         .error(android.R.drawable.stat_notify_error)
                         .into(itemViewholder.photo)
 
+
                     itemViewholder.nickname.text = it.user.nickname
                     itemViewholder.content.text = it.contents
                     itemViewholder.date.text = formatCreated(it.created)
@@ -322,9 +325,11 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                     if(it.myself){
                         itemViewholder.editor.visibility = View.VISIBLE
                         itemViewholder.remover.visibility = View.VISIBLE
+                        itemViewholder.reporter.visibility = View.GONE
                     }else{
                         itemViewholder.editor.visibility = View.GONE
                         itemViewholder.remover.visibility = View.GONE
+                        itemViewholder.reporter.visibility = View.VISIBLE
                     }
 
 
@@ -373,19 +378,25 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                         editORdelete(true)
                     }
 
+                    itemViewholder.reporter.setOnClickListener {
+                        /** 댓글 신고 처리하는 코드 넣어야함.*/
+                    }
+
+                    //아이템 닉네임 클릭시 이벤트 -> 유저페이지로 이동
+                    itemViewholder.nickname.setOnClickListener {
+                        commentInterListener.userClick(itemsList[position].user.id)
+                    }
+
+                    //아이템 유저 사진 클릭시 이벤트 -> 유저페이지로 이동
+                    itemViewholder.photo.setOnClickListener {
+                        commentInterListener.userClick(itemsList[position].user.id)
+                    }
+
 
 
                 }
 
-                //아이템 닉네임 클릭시 이벤트 -> 유저페이지로 이동
-                itemViewholder.nickname.setOnClickListener {
-                    commentInterListener.userClick()
-                }
 
-                //아이템 유저 사진 클릭시 이벤트 -> 유저페이지로 이동
-                itemViewholder.photo.setOnClickListener {
-                    commentInterListener.userClick()
-                }
 
             }else{
 
@@ -401,6 +412,9 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
             val editor = itemView!!.findViewById<ImageButton>(R.id.imgbtn_edit_comment_i)
             val remover = itemView!!.findViewById<ImageButton>(R.id.imgbtn_remove_comment_i)
+            val reporter = itemView!!.findViewById<ImageButton>(R.id.imgbtn_report_comment_i)
+
+//            var userId = 0
         }
 
         inner class LoadingViewHolder(itemView:View):RecyclerView.ViewHolder(itemView){

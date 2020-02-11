@@ -53,6 +53,8 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
             addPhotoView.showToast("사진에 대한 설명을 입력해주세요")
             addPhotoView.focusEdit() //editText 포커스
         }else{
+            addPhotoView.showLoading(true)
+            addPhotoView.enableTouching(false)
 
             var images = ArrayList<MultipartBody.Part>()
 
@@ -94,7 +96,8 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
                             TAG,
                             "http exception code: ${exception.code()}, http exception message: ${exception.message()}"
                         )
-
+                        addPhotoView.enableTouching(true)
+                        addPhotoView.showLoading(false)
                         addPhotoView.showToast("서버 연결에 오류가 발생했습니다")
                     }
                 })

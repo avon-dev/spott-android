@@ -51,6 +51,9 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
     private var caption:String? = null
     private var dateTime:String? = null
 
+    //userFragment 넘겨줄 데이터
+    private var userId:Int = 0
+
     private var likeProgressing : Boolean = false //좋아요 처리중 여부
     private var scrapProgressing : Boolean = false //스크랩 처리중 여부
 
@@ -152,11 +155,14 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         bundle.putString("userNickname", userNickName)
         bundle.putString("photoCaption", caption)
         bundle.putString("photoDateTime", dateTime)
+        bundle.putInt("userId", userId)
         findNavController().navigate(R.id.action_photoFragment_to_commentFragment, bundle)
     }
 
     override fun showUserUi() {
-        findNavController().navigate(R.id.action_photoFragment_to_userFragment)
+        val bundle = Bundle()
+        bundle.putInt("userId", userId)
+        findNavController().navigate(R.id.action_photoFragment_to_userFragment, bundle)
     }
 
     override fun showPhotoEnlagement(photoUrl: String) {
@@ -192,9 +198,6 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
                     if(myself){ //내가 쓴 글인 경우
                         val builder = AlertDialog.Builder(context)
 
-//                        val arrayList = arrayOf(getString(R.string.edit), getString(R.string.delete))
-//                        val adapter = ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, arrayList)
-
                         val arrayList = ArrayList<String>()
                         arrayList.add(getString(R.string.edit))
                         arrayList.add(getString(R.string.delete))
@@ -216,10 +219,26 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
                         builder.setAdapter(adapter, listener)
                         builder.show()
 
-
-
-
                     }else{ //내가 쓴 글이 아닌 경우
+
+                        val builder = AlertDialog.Builder(context)
+
+                        val arrayList = ArrayList<String>()
+                        arrayList.add(getString(R.string.report))
+                        val adapter = ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, arrayList)
+
+                        val listener = object :DialogInterface.OnClickListener{
+                            override fun onClick(dialog: DialogInterface?, which: Int) {
+                                when(which){
+                                    0 -> { // 신고 눌렀을 때
+                                        /** 사진(게시글) 신고 처리하는 코드 넣어야함.*/
+                                    }
+                                }
+                            }
+                        }
+
+                        builder.setAdapter(adapter, listener)
+                        builder.show()
 
                     }
                 }
@@ -235,7 +254,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
     override fun setPhotoDetail(userPhoto:String?, userNickName:String, postPhotoUrl: String,
                                 backPhotoUrl:String, photoLat:Double, photoLng:Double,
                                 caption:String, comments:Int, dateTime:String, likeCount:Int,
-                                likeChecked:Boolean, scrapChecked:Boolean, myself:Boolean){
+                                likeChecked:Boolean, scrapChecked:Boolean, myself:Boolean, userId:Int){
         this.myself = myself
 
         if(userPhoto==null){
@@ -280,6 +299,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         this.caption = caption
         this.dateTime = dateTime
 
+        this.userId = userId
 
         checkbox_like_photo_f.isChecked = likeChecked
         checkbox_scrap_photo_f.isChecked = scrapChecked
@@ -347,10 +367,9 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         startActivity(nextIntent)
     }
 
-    private fun showDeleteDialog(){
+    private fun showDeleteDialog(){  /// 다이얼로그 아래 마진 없애야함.
         val builder = AlertDialog.Builder(context!!)
         builder.setMessage(getString(R.string.text_warning_deleting_photo))
-
 
         builder.setPositiveButton(android.R.string.yes){dialog, which ->
             presenter.deletePhoto(getString(R.string.testurl), arguments?.getInt("photoId")!!)
@@ -367,9 +386,10 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         mToolbar.img_back_toolbar.performClick()
     }
 
-    override fun showNoPhotoDialog(){
+    override fun showNoPhotoDialog(){  /// 다이얼로그 아래 마진 없애야함.
         val builder = AlertDialog.Builder(context!!)
         builder.setMessage(getString(R.string.text_no_photo))
+        builder.setCancelable(false)
 
         builder.setPositiveButton(android.R.string.yes){dialog, which ->
             navigateUp()

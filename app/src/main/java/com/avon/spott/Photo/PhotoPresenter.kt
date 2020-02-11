@@ -45,7 +45,7 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
                 photoView.setPhotoDetail(result.user.profile_image, result.user.nickname,
                     result.posts_image, result.back_image, result.latitude, result.longitude,
                     result.contents, result.comment, formatCreated(result.created), result.count,
-                    result.like_checked, result.scrap_checked, result.myself)
+                    result.like_checked, result.scrap_checked, result.myself, result.user.id)
 
             }, { throwable ->
                 logd(TAG, throwable.message)

@@ -63,6 +63,9 @@
         <argument
             android:name="photoDateTime"
             app:argType="string" />
+        <argument
+            android:name="userId"
+            app:argType="integer" />
     </fragment>
 
     <fragment
@@ -73,6 +76,9 @@
         <action
             android:id="@+id/action_userFragment_to_photoFragment"
             app:destination="@id/photoFragment" />
+        <argument
+            android:name="photoId"
+            app:argType="integer" />
     </fragment>
 
 </navigation>
