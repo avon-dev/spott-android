@@ -93,8 +93,7 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
                     user.nickname = edit_nickname_a.text.toString()
                     presenter.signUp(getString(R.string.baseurl), user)
                 } else {
-                    Toast.makeText(this@NicknameActivity, "닉네임을 4글자 이상 작성해주세요", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(this@NicknameActivity, "닉네임을 4글자 이상 작성해주세요", Toast.LENGTH_SHORT).show()
                 }
             }
         }
