@@ -32,4 +32,6 @@
     <color name="scrap_unslected_background">#80000000</color>
     <color name="scrap_selected_background">#CC3A619C</color>
 
+    <color name="hashtag_highlight">#C5D1E6</color>
+
 </resources>

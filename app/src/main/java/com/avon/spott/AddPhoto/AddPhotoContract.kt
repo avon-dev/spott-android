@@ -1,6 +1,7 @@
 package com.avon.spott.AddPhoto
 
 import android.net.Uri
+import android.text.Editable
 import com.avon.spott.BaseView
 import com.google.android.gms.maps.model.LatLng
 
@@ -16,13 +17,17 @@ interface AddPhotoContract {
         fun focusEdit()
         fun showLoading(boolean: Boolean)
         fun enableTouching(boolean: Boolean)
+        fun addHashtag(hashtag:String)
+        fun highlightHashtag(boolean:Boolean,editable: Editable?, start:Int, end:Int)
+        fun getCursorPostion():Int
     }
 
     interface Presenter{
-        fun sendPhoto(baseUrl:String, photo: String, caption: String, latLng: LatLng?, public:Boolean)
+        fun sendPhoto(baseUrl:String, photo: String, caption: String, latLng: LatLng?, hashArrayList: ArrayList<String>)
         fun navigateUp()
         fun usePhoto(photo: String)
         fun newMarker(latLng: LatLng)
+        fun checkEdit(editable: Editable?)
     }
 
 }

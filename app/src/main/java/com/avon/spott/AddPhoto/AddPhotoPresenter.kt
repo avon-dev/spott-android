@@ -1,7 +1,12 @@
 package com.avon.spott.AddPhoto
 
+import android.graphics.Color
 import android.net.Uri
+import android.text.Editable
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import com.avon.spott.Data.NewPhoto
+import com.avon.spott.Data.NewPhotoHash
 import com.avon.spott.Mypage.MypageFragment.Companion.mypageChange
 import com.avon.spott.Utils.*
 import com.google.android.gms.maps.model.LatLng
@@ -46,7 +51,7 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
         addPhotoView.addMarker(latLng)
     }
 
-    override fun sendPhoto(baseUrl:String, photo: String, caption: String, latLng: LatLng?, public:Boolean) {
+    override fun sendPhoto(baseUrl:String, photo: String, caption: String, latLng: LatLng?, hashArrayList: ArrayList<String>) {
         if(latLng==null){ //사진에 대한 위치정보가 없을 때
             addPhotoView.showToast("사진의 위치를 표시해주세요")
         }else if(caption.trim().length==0) { //사진에 대한 설명이 없을 때 (빈공간 제외)
@@ -74,9 +79,23 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
             )
             /* -------------------------------------------------------------------------------------- */
 
-            val newPhoto = NewPhoto(latLng.latitude, latLng.longitude, caption, public)
+            var sending = ""
+            if(hashArrayList.size ==0) {
+                val newPhoto = NewPhoto(latLng.latitude, latLng.longitude, caption)
+                sending = Parser.toJson(newPhoto)
+            }else{
+                var hashString = ""
+                for(hash in hashArrayList){
+                    hashString+= hash
+                }
 
-            Retrofit(baseUrl).postPhoto(App.prefs.temporary_token, "/spott/posts", Parser.toJson(newPhoto), images)
+                val newPhotoHash =NewPhotoHash(latLng.latitude, latLng.longitude, caption, hashString)
+                sending = Parser.toJson(newPhotoHash)
+            }
+
+            logd(TAG, "sending : "+sending)
+
+            Retrofit(baseUrl).postPhoto(App.prefs.temporary_token, "/spott/posts", sending, images)
                 .subscribe({ response ->
                     logd(
                         TAG,
@@ -109,6 +128,26 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
 
     override fun navigateUp() {
         addPhotoView.navigateUp()
+    }
+
+    override fun checkEdit(editable: Editable?) {
+        val matcher = Validator.validHashtag(editable.toString())
+        while (matcher.find()){
+            if(matcher.group(1) != "") {
+                val hashtag = "#" + matcher.group(1)
+                addPhotoView.addHashtag(hashtag)
+                var start = 0
+                var end = 0
+                while(start != -1){
+                    start = editable!!.indexOf(hashtag, end) //end 다음 번째의 hashtag 위치를 찾음. (중복 가능) 더 이상 없으면 -1이 반환됨.
+                    if(start<0) break
+                    end = start + hashtag.length
+                    addPhotoView.highlightHashtag(true, editable, start, end)
+                }
+            }else{
+                addPhotoView.highlightHashtag(false, editable, addPhotoView.getCursorPostion()-1, addPhotoView.getCursorPostion())
+            }
+        }
     }
 
 }

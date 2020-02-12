@@ -3,15 +3,22 @@ package com.avon.spott.AddPhoto
 
 import android.content.ComponentName
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.Spanned
+import android.text.style.BackgroundColorSpan
+import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import com.avon.spott.R
 import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
@@ -37,6 +44,8 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
 
     private lateinit var mMap : GoogleMap
 
+    private val hashArrayList = ArrayList<String>() //해시태그리스트
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_photo)
@@ -50,17 +59,17 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         //처음 키보드 올라오기 방지용
         text_guide_addphoto_a.requestFocus()
 
-        switch_private_addphoto_a.setOnCheckedChangeListener { buttonView, isChecked ->
-            if(isChecked){
-                text_public_addphoto_a.visibility = View.VISIBLE
-                text_private_addphoto_a.visibility = View.GONE
-            }else{
-                text_public_addphoto_a.visibility = View.GONE
-                text_private_addphoto_a.visibility = View.VISIBLE
-            }
-        }
-
-        switch_private_addphoto_a.isChecked = true
+//        switch_private_addphoto_a.setOnCheckedChangeListener { buttonView, isChecked ->
+//            if(isChecked){
+//                text_public_addphoto_a.visibility = View.VISIBLE
+//                text_private_addphoto_a.visibility = View.GONE
+//            }else{
+//                text_public_addphoto_a.visibility = View.GONE
+//                text_private_addphoto_a.visibility = View.VISIBLE
+//            }
+//        }
+//
+//        switch_private_addphoto_a.isChecked = true
 
         init()
     }
@@ -69,13 +78,19 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         addPhotoPresenter = AddPhotoPresenter(this)
         text_upload_addphoto_a.setOnClickListener(this)
         include_toolbar_addphoto_a.img_back_toolbar.setOnClickListener(this)
+
+        edit_caption_addphoto_a.addTextChangedListener {
+            hashArrayList.clear()
+
+            presenter.checkEdit(it)
+        }
     }
 
     override fun onClick(v: View?) {
         when(v?.id) {
             R.id.text_upload_addphoto_a->{
-                presenter.sendPhoto(getString(R.string.baseurl),intent.getStringExtra("photo"),
-                    edit_caption_addphoto_a.text.toString(), markerLatLng, switch_private_addphoto_a.isChecked)
+                presenter.sendPhoto(getString(R.string.testurl),intent.getStringExtra("photo"),
+                    edit_caption_addphoto_a.text.toString(), markerLatLng, hashArrayList)
             }
             R.id.img_back_toolbar ->{ presenter.navigateUp() }
         }
@@ -159,7 +174,21 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         }else{
             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         }
+    }
 
+    override fun addHashtag(hashtag:String){
+        hashArrayList.add(hashtag)
+    }
+
+    override fun highlightHashtag(boolean:Boolean,editable: Editable?, start:Int, end:Int){ //해시태그 하이라이트 켜고 끄는 함수
+        editable!!.setSpan(
+            BackgroundColorSpan(ContextCompat.getColor(this,
+                if(boolean) R.color.hashtag_highlight else R.color.default_background)),
+            start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+    }
+
+    override fun getCursorPostion():Int{ //EditText의 현재 커서 위치
+        return edit_caption_addphoto_a.selectionEnd
     }
 
 }
