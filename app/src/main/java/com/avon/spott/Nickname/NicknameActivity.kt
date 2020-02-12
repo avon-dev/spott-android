@@ -72,22 +72,34 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
         }
     }
 
-    override fun showMainUi(token:Token) {
+    override fun getToken(token:Token) {
         val pref = getSharedPreferences("pref", Context.MODE_PRIVATE)
         val ed = pref.edit()
         ed.putString("access", token.access)
         ed.putString("refresh", token.refresh)
         ed.apply()
 
+        // 토큰 값 디코딩 가능한지 확인해보기 jwt는 인코딩이니 디코딩이 될 것이라 생각
+        // 디코딩하면 남은 기간 체크
+        // 남은 기간에 따른 토큰 재발급에 관련된 로직 필요
+
+        showMainUi()
+    }
+
+    private fun showMainUi() {
         val intent = Intent(this@NicknameActivity, MainActivity::class.java)
         startActivity(intent)
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
+
+            // 뒤로가기
             R.id.img_back_toolbar -> {
                 presenter.navigateUp()
             }
+
+            // 가입하기
             R.id.btn_confirm_nickname_a -> {
                 if (edit_nickname_a.text.length > 3) {
                     user.nickname = edit_nickname_a.text.toString()

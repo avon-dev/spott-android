@@ -34,6 +34,7 @@ interface RetrofitService {
 
 
     /**  토큰 테스트용!!!!! 임시 토큰 2020-02-04   */
+
     @POST
     fun postNonHeader(@Url url: String, @Query("sending") sending: String): Observable<Response<String>>
 

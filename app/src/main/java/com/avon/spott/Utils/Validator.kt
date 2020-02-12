@@ -13,7 +13,9 @@ class Validator {
 //            val reg = Regex("((?=.*\\d)(?=.*[a-zA-Z])(?=.*\\W).{6,20})")
 
             // 최소 8자리에 숫자, 문자, 특수문자 각각 1개 이상 포함
-            val reg = Regex("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,20}$")
+            val reg = Regex("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&].{8,20}$")
+//            val reg = Regex("(?=.[a-zA-Z0-9].{8,20})")
+
 
             return string.matches(reg)
         }

@@ -36,7 +36,9 @@ class PasswordActivity : AppCompatActivity(), PasswordContract.View, View.OnClic
     }
 
     fun init() {
-        user = intent?.getParcelableExtra(INTENT_EXTRA_USER)!!
+        // 임시
+        user = User("email")
+//        user = intent.getParcelableExtra(INTENT_EXTRA_USER)
 
         passwordPresenter = PasswordPresenter(this)
 
@@ -44,7 +46,7 @@ class PasswordActivity : AppCompatActivity(), PasswordContract.View, View.OnClic
 
         img_back_toolbar.setOnClickListener(this)
         btn_confirm_password_a.setOnClickListener(this)
-        btn_confirm_password_a.isClickable = false
+        btn_confirm_password_a.isClickable = isCheck
 
         edit_password_a.addTextChangedListener {
             presenter.isPassword(it.toString())
@@ -63,6 +65,17 @@ class PasswordActivity : AppCompatActivity(), PasswordContract.View, View.OnClic
 
     override fun isCheck(warn: Boolean) {
         isCheck = warn
+        if (isPassword and isCheck) {
+            btn_confirm_password_a.apply {
+                isClickable = true
+                setBackgroundResource(R.drawable.corner_round_primary)
+            }
+        } else {
+            btn_confirm_password_a.apply {
+                isClickable = false
+                setBackgroundResource(R.drawable.corner_round_graybtn)
+            }
+        }
     }
 
     override fun showWarning() {

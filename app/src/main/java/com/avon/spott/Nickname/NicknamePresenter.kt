@@ -49,7 +49,7 @@ class NicknamePresenter(val nicknameView: NicknameContract.View) : NicknameContr
             logd(TAG, response.body())
             response.body()?.let {
                 val token = Parser.fromJson<Token>(it)
-                nicknameView.showMainUi(token)
+                nicknameView.getToken(token)
             }
         }, { throwable ->
             loge(TAG, throwable.message)
