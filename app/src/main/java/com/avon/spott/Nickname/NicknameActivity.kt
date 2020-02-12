@@ -27,7 +27,6 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
         setContentView(R.layout.activity_nickname)
 
         init()
-
     }
 
     private fun init() {
@@ -46,10 +45,18 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
     }
 
     override fun enableSignUp(enable: Boolean) {
+        val btnConfirm = btn_confirm_nickname_a
+
         if (enable) {
-            btn_confirm_nickname_a.setBackgroundResource(R.drawable.corner_round_primary)
+            btnConfirm.apply {
+                setBackgroundResource(R.drawable.corner_round_primary)
+                isEnabled = true
+            }
         } else {
-            btn_confirm_nickname_a.setBackgroundResource(R.drawable.corner_round_graybtn)
+            btnConfirm.apply {
+                setBackgroundResource(R.drawable.corner_round_graybtn)
+                isEnabled = false
+            }
         }
     }
 

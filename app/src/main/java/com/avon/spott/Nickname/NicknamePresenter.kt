@@ -6,6 +6,7 @@ import com.avon.spott.Data.User
 import com.avon.spott.Utils.Parser
 import com.avon.spott.Utils.Retrofit
 import com.avon.spott.Utils.logd
+import com.avon.spott.Utils.loge
 import retrofit2.HttpException
 
 class NicknamePresenter(val nicknameView: NicknameContract.View) : NicknameContract.Presenter {
@@ -32,10 +33,10 @@ class NicknamePresenter(val nicknameView: NicknameContract.View) : NicknameContr
                 nicknameView.signUp(result.result)
             }
         }, { throwable ->
-            logd(TAG, throwable.message)
+            loge(TAG, throwable.message)
             if (throwable is HttpException) {
                 val exception = throwable
-                logd(
+                loge(
                     TAG,
                     "http exception code: ${exception.code()}, http exception message: ${exception.message()}"
                 )
@@ -51,9 +52,9 @@ class NicknamePresenter(val nicknameView: NicknameContract.View) : NicknameContr
                 nicknameView.showMainUi(token)
             }
         }, { throwable ->
-            logd(TAG, throwable.message)
+            loge(TAG, throwable.message)
             if (throwable is HttpException) {
-                logd(
+                loge(
                     TAG,
                     "http exception code: ${throwable.code()}, http exception message: ${throwable.message()}"
                 )
