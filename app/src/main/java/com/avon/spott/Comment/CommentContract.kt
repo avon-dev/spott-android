@@ -16,6 +16,8 @@ interface CommentContract {
         fun showToast(string: String)
         fun updateDone(alertDialog: AlertDialog, position: Int, content: String)
         fun deleteDone(alertDialog: AlertDialog, position: Int)
+        fun setHashCaption(text:String, hashList:ArrayList<Array<Int>>)
+        fun setCaption(text: String)
 
         var hasNext : Boolean
         var refreshTimeStamp:String
@@ -30,6 +32,7 @@ interface CommentContract {
                           alertDialog: AlertDialog, position: Int, content: String)
         fun deleteComment(baseurl: String, photoId: Int, commentId: Int,
                           alertDialog: AlertDialog, position: Int)
+        fun getHash(text:String)
     }
 
 }

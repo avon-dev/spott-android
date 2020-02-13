@@ -3,7 +3,16 @@ package com.avon.spott.Photo
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -254,7 +263,8 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
     override fun setPhotoDetail(userPhoto:String?, userNickName:String, postPhotoUrl: String,
                                 backPhotoUrl:String, photoLat:Double, photoLng:Double,
                                 caption:String, comments:Int, dateTime:String, likeCount:Int,
-                                likeChecked:Boolean, scrapChecked:Boolean, myself:Boolean, userId:Int){
+                                likeChecked:Boolean, scrapChecked:Boolean, myself:Boolean,
+                                userId:Int,hasHash:Boolean){
         this.myself = myself
 
         if(userPhoto==null){
@@ -279,7 +289,10 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
             .error(android.R.drawable.stat_notify_error)
             .into(img_photo_photo_f)
 
-        text_caption_photo_f.text = caption
+        if(!hasHash){
+            text_caption_photo_f.text = caption
+        }
+
 
         if(comments==0){
             text_allcomment_photo_f.text = "댓글 쓰기"
@@ -372,7 +385,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         builder.setMessage(getString(R.string.text_warning_deleting_photo))
 
         builder.setPositiveButton(android.R.string.yes){dialog, which ->
-            presenter.deletePhoto(getString(R.string.testurl), arguments?.getInt("photoId")!!)
+            presenter.deletePhoto(getString(R.string.baseurl), arguments?.getInt("photoId")!!)
         }
         builder.setNegativeButton(android.R.string.no) { dialog, which ->
         }
@@ -397,6 +410,47 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
         val  mAlertDialog =  builder.show()
         mAlertDialog.setCanceledOnTouchOutside(false)
+
+    }
+
+
+    override fun setCaption(text:String, hashList:ArrayList<Array<Int>>){
+
+        var spannableString = SpannableString(text)
+
+           val startList = ArrayList<Int>()
+            for (hash in hashList) {
+                if(!startList.contains(hash[0])){
+                    startList.add(hash[0])
+
+                    val start = hash[0]
+                    val end = hash[1]
+
+
+                    spannableString.setSpan(object : ClickableSpan() {
+                        override fun updateDrawState(ds: TextPaint) {
+                            super.updateDrawState(ds)
+                            ds.isUnderlineText = false
+
+                        }
+                        override fun onClick(widget: View) {
+                            showToast(text.substring(start,end))
+                        }
+                    }, start, end,  Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                spannableString.setSpan(
+//                    ForegroundColorSpan(Color.parseColor("#47bd3c")),
+//                    start,
+//                    end,
+//                    0
+//
+//                )
+                }
+
+            }
+        logd(TAG, "startList : "+startList.toString())
+
+        text_caption_photo_f.text = spannableString
+        text_caption_photo_f.movementMethod = LinkMovementMethod.getInstance()
 
     }
 

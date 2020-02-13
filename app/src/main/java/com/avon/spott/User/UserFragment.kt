@@ -99,7 +99,7 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
 
         if(!checkInit) {
             //처음 사진을 가져오는 코드 (처음 이후에는 리프레쉬 전까지 가져오지않는다.)
-            presenter.getUserphotos(getString(R.string.testurl), arguments?.getInt("userId")!!)
+            presenter.getUserphotos(getString(R.string.baseurl), arguments?.getInt("userId")!!)
 
             checkInit = true
         }

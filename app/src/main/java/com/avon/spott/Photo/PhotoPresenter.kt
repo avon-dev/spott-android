@@ -4,11 +4,8 @@ import com.avon.spott.Data.BooleanResult
 import com.avon.spott.Data.LikeScrapResult
 import com.avon.spott.Data.PhotoResult
 import com.avon.spott.Mypage.MypageFragment
-import com.avon.spott.Utils.App
+import com.avon.spott.Utils.*
 import com.avon.spott.Utils.DateTimeFormatter.Companion.formatCreated
-import com.avon.spott.Utils.Parser
-import com.avon.spott.Utils.Retrofit
-import com.avon.spott.Utils.logd
 import retrofit2.HttpException
 
 class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presenter{
@@ -41,11 +38,31 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
                 val string  = response.body()
                 val result = Parser.fromJson<PhotoResult>(string!!)
 
+                val hashArrayList = ArrayList<Array<Int>>()
+
+                val matcher = Validator.validHashtag(result.contents)
+                while (matcher.find()){
+                    if(matcher.group(1) != "") {
+//                        val hashtag = "#" + matcher.group(1)
+//                        logd("hashhash", "hash"+hashtag)
+//
+//                        hashArrayList.add(hashtag)
+                      val currentSapn =arrayOf(matcher.start(), matcher.end())
+                        hashArrayList.add(currentSapn)
+                    }
+                }
+
+                var hasHash = false
+                if(hashArrayList.size>0){
+                    photoView.setCaption(result.contents, hashArrayList)
+                    hasHash = true
+                }
+
 
                 photoView.setPhotoDetail(result.user.profile_image, result.user.nickname,
                     result.posts_image, result.back_image, result.latitude, result.longitude,
                     result.contents, result.comment, formatCreated(result.created), result.count,
-                    result.like_checked, result.scrap_checked, result.myself, result.user.id)
+                    result.like_checked, result.scrap_checked, result.myself, result.user.id, hasHash)
 
             }, { throwable ->
                 logd(TAG, throwable.message)

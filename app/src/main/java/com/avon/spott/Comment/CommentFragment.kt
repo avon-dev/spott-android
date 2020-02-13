@@ -6,6 +6,11 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Handler
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -30,6 +35,7 @@ import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.dialog_comment.view.*
 import kotlinx.android.synthetic.main.fragment_comment.*
+import kotlinx.android.synthetic.main.fragment_photo.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
 
@@ -166,6 +172,8 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
 
         //PhotoFragment에서 넘어온 게시글 데이터
+        presenter.getHash(arguments?.getString("photoCaption").toString())
+
         if(arguments?.getString("userPhoto")!=""){
             Glide.with(context!!)
                 .load(arguments?.getString("userPhoto"))
@@ -177,7 +185,6 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         }
 
         text_nickname_comment_f.text = arguments?.getString("userNickname").toString()
-        text_content_comment_f.text = arguments?.getString("photoCaption").toString()
         text_date_comment_f.text = arguments?.getString("photoDateTime").toString()
 
         edit_comment_comment_f.addTextChangedListener {
@@ -457,6 +464,43 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
     override fun deleteDone(alertDialog: AlertDialog, position: Int){
         commentAdapter.commentDeleted(position)
         alertDialog.dismiss()
+    }
+
+    override fun setCaption(text: String) {
+        text_content_comment_f.text = text
+    }
+
+    override fun setHashCaption(text:String, hashList:ArrayList<Array<Int>>){
+
+        var spannableString = SpannableString(text)
+
+        val startList = ArrayList<Int>()
+        for (hash in hashList) {
+            if(!startList.contains(hash[0])){
+                startList.add(hash[0])
+
+                val start = hash[0]
+                val end = hash[1]
+
+
+                spannableString.setSpan(object : ClickableSpan() {
+                    override fun updateDrawState(ds: TextPaint) {
+                        super.updateDrawState(ds)
+                        ds.isUnderlineText = false
+
+                    }
+                    override fun onClick(widget: View) {
+                        showToast(text.substring(start,end))
+                    }
+                }, start, end,  Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+
+        }
+        logd(TAG, "startList : "+startList.toString())
+
+        text_content_comment_f.text = spannableString
+        text_content_comment_f.movementMethod = LinkMovementMethod.getInstance()
+
     }
 
 

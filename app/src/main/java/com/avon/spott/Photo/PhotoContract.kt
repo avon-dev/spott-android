@@ -1,5 +1,6 @@
 package com.avon.spott.Photo
 
+import android.text.SpannableString
 import com.avon.spott.BaseView
 
 class PhotoContract {
@@ -12,7 +13,8 @@ class PhotoContract {
         fun setPhotoDetail(userPhoto:String?, userNickName:String, postPhotoUrl: String,
                            backPhotoUrl:String, photoLat:Double, photoLng:Double,
                            caption:String, comments:Int, dateTime:String, likeCount:Int,
-                           likeChecked:Boolean, scrapChecked:Boolean, myself:Boolean, userId:Int)
+                           likeChecked:Boolean, scrapChecked:Boolean, myself:Boolean, userId:Int
+                            ,hasHash:Boolean)
         fun showPhotoEnlagement(photoUrl: String)
         fun likeResultDone(count:Int)
         fun likeResultError()
@@ -20,6 +22,7 @@ class PhotoContract {
         fun scrapResultError()
         fun navigateUp()
         fun showNoPhotoDialog()
+        fun setCaption(text:String, hashList:ArrayList<Array<Int>>)
 
     }
 

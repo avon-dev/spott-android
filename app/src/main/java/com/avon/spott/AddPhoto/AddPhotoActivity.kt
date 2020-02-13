@@ -8,10 +8,12 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.text.Editable
-import android.text.Spanned
+import android.text.*
+import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
 import android.text.style.BackgroundColorSpan
+import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
@@ -32,6 +34,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_add_photo.*
 import kotlinx.android.synthetic.main.toolbar.view.*
+import java.util.regex.Pattern
 
 class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClickListener,
     OnMapReadyCallback {
@@ -79,17 +82,20 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         text_upload_addphoto_a.setOnClickListener(this)
         include_toolbar_addphoto_a.img_back_toolbar.setOnClickListener(this)
 
-        edit_caption_addphoto_a.addTextChangedListener {
-            hashArrayList.clear()
 
+        edit_caption_addphoto_a.addTextChangedListener {
+
+            hashArrayList.clear()
             presenter.checkEdit(it)
+
+
         }
     }
 
     override fun onClick(v: View?) {
         when(v?.id) {
             R.id.text_upload_addphoto_a->{
-                presenter.sendPhoto(getString(R.string.testurl),intent.getStringExtra("photo"),
+                presenter.sendPhoto(getString(R.string.baseurl),intent.getStringExtra("photo"),
                     edit_caption_addphoto_a.text.toString(), markerLatLng, hashArrayList)
             }
             R.id.img_back_toolbar ->{ presenter.navigateUp() }
@@ -178,13 +184,36 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
 
     override fun addHashtag(hashtag:String){
         hashArrayList.add(hashtag)
+        logd("hashtest","hashtest : "+hashArrayList)
     }
 
     override fun highlightHashtag(boolean:Boolean,editable: Editable?, start:Int, end:Int){ //해시태그 하이라이트 켜고 끄는 함수
-        editable!!.setSpan(
-            BackgroundColorSpan(ContextCompat.getColor(this,
-                if(boolean) R.color.hashtag_highlight else R.color.default_background)),
-            start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        logd("highlightHash","start : "+start.toString() + " end : "+end.toString() + boolean)
+//        editable!!.setSpan(
+//            BackgroundColorSpan(ContextCompat.getColor(this,
+//                if(boolean) R.color.hashtag_highlight else R.color.text_white)),
+//            start, end, 0)
+        if(boolean){
+            editable!!.setSpan(object : ClickableSpan() {
+                override fun updateDrawState(ds: TextPaint) {
+                    super.updateDrawState(ds)
+                    ds.isUnderlineText = false
+                    ds.bgColor = resources.getColor(R.color.hashtag_highlight)
+                    ds.color = resources.getColor(R.color.text_black)
+                }
+                override fun onClick(widget: View) {
+                }
+            }, start, end,  SPAN_EXCLUSIVE_EXCLUSIVE)
+        }else{
+            val spans = editable!!.getSpans(0,editable.toString().length,ClickableSpan::class.java)
+            for(span in spans){
+                editable!!.removeSpan(span)
+            }
+
+        }
+
+
     }
 
     override fun getCursorPostion():Int{ //EditText의 현재 커서 위치
