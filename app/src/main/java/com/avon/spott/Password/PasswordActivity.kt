@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.toolbar.*
 
 class PasswordActivity : AppCompatActivity(), PasswordContract.View, View.OnClickListener {
 
-    lateinit var passwordPresenter: PasswordPresenter
+    private lateinit var passwordPresenter: PasswordPresenter
     override lateinit var presenter: PasswordContract.Presenter
 
     private lateinit var user: User
@@ -37,8 +37,8 @@ class PasswordActivity : AppCompatActivity(), PasswordContract.View, View.OnClic
 
     fun init() {
         // 임시
-        user = User("email")
-//        user = intent.getParcelableExtra(INTENT_EXTRA_USER)
+//        user = User("email")
+        user = intent.getParcelableExtra(INTENT_EXTRA_USER)
 
         passwordPresenter = PasswordPresenter(this)
 

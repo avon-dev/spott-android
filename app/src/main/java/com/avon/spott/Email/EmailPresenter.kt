@@ -49,7 +49,7 @@ class EmailPresenter(val emailView: EmailContract.View) : EmailContract.Presente
                         emailView.getNumber(number)
                     }
                 }, { throwable ->
-                    logd(TAG, throwable.message)
+                    loge(TAG, throwable.message)
                     if (throwable is HttpException) {
                         loge(
                             TAG,
