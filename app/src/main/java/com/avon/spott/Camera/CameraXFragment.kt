@@ -1,14 +1,12 @@
 package com.avon.spott.Camera
 
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -36,11 +34,10 @@ import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.avon.spott.R
-import com.avon.spott.REQUEST_CAMERA_PERMISSION
-import com.avon.spott.REQUEST_STORAGE_PERMISSION
 import com.avon.spott.Utils.logd
 import com.avon.spott.Utils.loge
 import com.bumptech.glide.Glide
@@ -154,16 +151,11 @@ class CameraXFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        val cameraPermission =
-            ContextCompat.checkSelfPermission(activity!!, Manifest.permission.CAMERA)
-        val storagePermission = ContextCompat.checkSelfPermission(
-            activity!!,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-        if (cameraPermission != PackageManager.PERMISSION_GRANTED || storagePermission != PackageManager.PERMISSION_GRANTED) {
-            requestCameraPermission()
+        if (!PermissionsFragment.hasPermissions(requireContext())) {
+            Navigation.findNavController(requireActivity(), R.id.fragment_container_camerax).navigate(
+                CameraXFragmentDirections.actionCameraToPermissions()
+            )
         }
-
 
     }
 
@@ -494,20 +486,6 @@ class CameraXFragment : Fragment() {
 
         }, mainExecutor)
 
-    }
-
-    // 권한 얻기 (Permission)
-    private fun requestCameraPermission() {
-        if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-            requestPermissions(arrayOf(Manifest.permission.CAMERA), REQUEST_CAMERA_PERMISSION)
-        }
-
-        if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            requestPermissions(
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                REQUEST_STORAGE_PERMISSION
-            )
-        }
     }
 
     // 오버랩으로 보여주기

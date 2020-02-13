@@ -11,15 +11,15 @@ import androidx.navigation.Navigation
 import com.avon.spott.R
 
 private const val PERMISSIONS_REQUEST_CODE = 10
-//private val PERMISSIONS_REQUIRED = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-private val PERMISSIONS_REQUIRED = arrayOf(Manifest.permission.CAMERA)
+private val PERMISSIONS_REQUIRED = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//private val PERMISSIONS_REQUIRED = arrayOf(Manifest.permission.CAMERA)
 
 class PermissionsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if(hasPermissions(requireContext())) {
+        if(!hasPermissions(requireContext())) {
             requestPermissions(PERMISSIONS_REQUIRED, PERMISSIONS_REQUEST_CODE)
         } else {
             Navigation.findNavController(requireActivity(), R.id.fragment_container_camerax).navigate(
@@ -37,6 +37,8 @@ class PermissionsFragment : Fragment() {
                 Navigation.findNavController(requireActivity(), R.id.fragment_container_camerax).navigate(
                     PermissionsFragmentDirections.actionPermissionsToCamera()
                 )
+            } else {
+                
             }
         }
     }
