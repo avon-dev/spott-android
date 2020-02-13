@@ -3,10 +3,7 @@ package com.avon.spott.Nickname
 import com.avon.spott.Data.NicknmaeResult
 import com.avon.spott.Data.Token
 import com.avon.spott.Data.User
-import com.avon.spott.Utils.Parser
-import com.avon.spott.Utils.Retrofit
-import com.avon.spott.Utils.logd
-import com.avon.spott.Utils.loge
+import com.avon.spott.Utils.*
 import retrofit2.HttpException
 
 class NicknamePresenter(val nicknameView: NicknameContract.View) : NicknameContract.Presenter {
@@ -22,7 +19,7 @@ class NicknamePresenter(val nicknameView: NicknameContract.View) : NicknameContr
     }
 
     override fun isNickname(nickname: String) {
-        nicknameView.enableSignUp(nickname.length > 3)
+        nicknameView.enableSignUp(Validator.validNickname(nickname))
     }
 
     override fun signUp(baseUrl: String, user: User) {

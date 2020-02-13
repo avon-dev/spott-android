@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,7 +11,7 @@
         layout="@layout/toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/edit_nickname_a"
@@ -23,9 +22,9 @@
         android:layout_marginEnd="16dp"
         android:background="@drawable/corner_round_whitetext"
         android:hint="@string/hint_nickname"
-        android:inputType="number|textPersonName"
+        android:inputType="textEmailAddress"
         android:padding="15dp"
-        android:textSize="14sp"
+        android:textSize="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/include_toolbar_nickname_a" />
@@ -37,7 +36,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/text_warnmessage_number_a"
         android:textColor="#EB685B"
-        android:textSize="14sp"
+        android:textSize="14dp"
         android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@+id/edit_nickname_a"
         app:layout_constraintTop_toBottomOf="@+id/edit_nickname_a"
@@ -48,10 +47,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:background="@drawable/corner_round_primary"
+        android:background="@drawable/corner_round_graybtn"
+        android:clickable="false"
         android:text="@string/join"
         android:textColor="#ffffff"
-        android:textSize="12sp"
+        android:textSize="12dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@id/edit_nickname_a"
         app:layout_constraintStart_toStartOf="@id/edit_nickname_a"

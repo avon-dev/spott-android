@@ -50,12 +50,12 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
         if (enable) {
             btnConfirm.apply {
                 setBackgroundResource(R.drawable.corner_round_primary)
-                isEnabled = true
+                isClickable = true
             }
         } else {
             btnConfirm.apply {
                 setBackgroundResource(R.drawable.corner_round_graybtn)
-                isEnabled = false
+                isClickable = false
             }
         }
     }

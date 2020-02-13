@@ -23,5 +23,12 @@ class Validator {
         fun validNumber(number:String):Boolean {
             return number.length > 0
         }
+
+        fun validNickname(nickname:String):Boolean {
+            // 4자리 이상의 영문 또는 숫자만 가능
+            val reg = Regex("(?=.*^[A-za-z0-9]).{4,}")
+
+            return nickname.matches(reg)
+        }
     }
 }
