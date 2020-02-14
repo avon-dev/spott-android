@@ -1,10 +1,11 @@
 package com.avon.spott.EmailLogin
 
+import android.annotation.SuppressLint
 import com.avon.spott.Data.Token
-import com.avon.spott.Utils.Parser
 import com.avon.spott.Utils.Retrofit
-import com.avon.spott.Utils.Validator
 import com.avon.spott.Utils.logd
+import com.avon.spott.Utils.loge
+import com.google.gson.GsonBuilder
 import retrofit2.HttpException
 
 class EmailLoginPresenter(val emailLoginView: EmailLoginContract.View) :
@@ -24,25 +25,24 @@ class EmailLoginPresenter(val emailLoginView: EmailLoginContract.View) :
         emailLoginView.navigateUp()
     }
 
-    override fun isEmail(email: String) {
-        emailLoginView.isEmail(Validator.validEmail(email))
-    }
+    @SuppressLint("CheckResult")
+    override fun signIn(baseUrl: String, email: String, password: String) {
 
-    override fun isPassword(pw: String) {
-        emailLoginView.isPassword(Validator.validPassword(pw))
-    }
-
-    override fun signIn(baseurl:String, email: String, password: String) {
-        Retrofit(baseurl).signIn("/spott/token", email, password).subscribe({ response ->
-            logd(TAG, response.body())
-            response.body()?.let {
-                val token = Parser.fromJson<Token>(it)
+        Retrofit(baseUrl).signIn("/spott/token", email, password).subscribe({ response ->
+            logd(TAG, "response code: ${response.code()}, response body : ${response.body()}")
+            val jsonObj = response.body()
+            if(jsonObj != null) {
+                val token = GsonBuilder().create().fromJson(jsonObj, Token::class.java)
                 emailLoginView.showMainUi(token)
             }
         }, { throwable ->
-            logd(TAG, throwable.message)
+            loge(TAG, throwable.message)
             if (throwable is HttpException) {
-                logd(TAG, "http exception code: ${throwable.code()}, http exception message: ${throwable.message()}")
+                val exception = throwable
+                loge(
+                    TAG,
+                    "http exception code: ${exception.code()}, http exception message: ${exception.message()}"
+                )
             }
         })
     }

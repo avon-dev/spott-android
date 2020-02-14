@@ -31,7 +31,7 @@
             android:adjustViewBounds="true"
             android:background="@color/default_background"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/baseline_face_24" />
+            app:srcCompat="@drawable/ic_account_circle_grey_36dp" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/text_profile_editmyinfo_a"
@@ -47,12 +47,17 @@
             android:textSize="14sp" />
     </FrameLayout>
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <EditText
         android:id="@+id/edit_nickname_editmyinfo_a"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:background="@android:color/transparent"
+        android:clickable="false"
+        android:focusable="false"
+        android:gravity="center"
         android:hint="@string/hint_nickname"
+        android:textSize="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/frame_profile_editmyinfo_a" />
@@ -106,10 +111,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_email_editmyinfo_a" />
 
-    <EditText
+    <TextView
         android:id="@+id/text_blank2_editmyinfo_a"
         style="@style/blank"
-        android:clickable="false"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"

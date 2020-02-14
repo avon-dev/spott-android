@@ -3,7 +3,9 @@ package com.avon.spott.EditMyinfo
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.avon.spott.Data.UserInfo
 import com.avon.spott.Login.LoginActivity
 import com.avon.spott.R
 import com.avon.spott.Utils.MySharedPreferences
@@ -15,12 +17,16 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
     override lateinit var presenter: EditMyInfoContract.Presenter
     private lateinit var editmyinfoPresenter: EditMyInfoPresenter
 
+    private var editable:Boolean = false
+    private lateinit var buffNickname: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_my_info)
 
         init()
     }
+
 
     private fun init() {
         editmyinfoPresenter = EditMyInfoPresenter(this)
@@ -31,10 +37,31 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
         btn_changepw_editmyinfo_a.setOnClickListener(this)
         btn_withdrawal_editmyinfo_a.setOnClickListener(this)
         btn_signout_editmyinfo_a.setOnClickListener(this)
+
+        val access = MySharedPreferences(applicationContext).prefs.getString("access", "")
+
+        if (access != null) // Shared에 토큰값이 있을 때
+            presenter.getUser(getString(R.string.baseurl), access)
     }
 
     override fun navigateUp() {
         onBackPressed()
+    }
+
+    override fun getUserInfo(userInfo: UserInfo) {
+        buffNickname = userInfo.nickname.toString()
+
+        edit_nickname_editmyinfo_a.setText(userInfo.nickname)
+        if(userInfo.profile_image != null) { // 프로필 이미지 있으면 이미지 세팅하기
+            // 이미지 세팅하고, 편집 글씨 지울까? 말까?
+        }
+    }
+
+    override fun getNickname(result: Boolean) {
+        if(!result) {
+            edit_nickname_editmyinfo_a.setText(buffNickname)
+            Toast.makeText(applicationContext, "다시 시도해주세요", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun loginActivity() { // 로그아웃
@@ -56,7 +83,28 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
             }
 
             R.id.imgbtn_editnickname_editmyinfo_a -> { // 닉네임 수정
-                imgbtn_editnickname_editmyinfo_a.setImageResource(R.drawable.ic_done_black_24dp)
+                editable = !editable
+
+                if(editable) { // 닉네임 변경하기
+                    imgbtn_editnickname_editmyinfo_a.setImageResource(R.drawable.ic_done_black_24dp)
+
+                    edit_nickname_editmyinfo_a.apply {
+                        isFocusableInTouchMode = true
+                        isFocusable = true
+                    }
+                }else { // 닉네임 변경 완료
+                    imgbtn_editnickname_editmyinfo_a.setImageResource(R.drawable.baseline_edit_24)
+
+                    edit_nickname_editmyinfo_a.apply {
+                        isClickable = false
+                        isFocusable = false
+                    }
+
+                    val token = MySharedPreferences(applicationContext).prefs.getString("access", "")
+
+                    if(token != null)
+                        presenter.setNickname(getString(R.string.baseurl), token, edit_nickname_editmyinfo_a.text.toString())
+                }
 
             }
 

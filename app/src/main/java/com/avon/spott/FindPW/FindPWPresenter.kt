@@ -10,14 +10,20 @@ class FindPWPresenter(val findPWView: FindPWContract.View) : FindPWContract.Pres
 
     private val TAG = "FindPWPresenter"
 
-    init { findPWView.presenter = this}
+    init {
+        findPWView.presenter = this
+    }
 
-    override fun navigateUp() { findPWView.navigateUp() }
+    override fun navigateUp() {
+        findPWView.navigateUp()
+    }
 
-    override fun isEmail(email: String) { findPWView.isEmail(Validator.validEmail(email)) }
+    override fun isEmail(email: String) {
+        findPWView.isEmail(Validator.validEmail(email))
+    }
 
     @SuppressLint("CheckResult")
-    override fun sendEmail(email: String, baseUrl:String) {
+    override fun sendEmail(email: String, baseUrl: String) {
         Retrofit(baseUrl).getNonHeader("/spott/email-authen", Parser.toJson(User(email)))
             .subscribe({ response ->
                 logd(TAG, response.body())
@@ -29,7 +35,10 @@ class FindPWPresenter(val findPWView: FindPWContract.View) : FindPWContract.Pres
             }, { throwable ->
                 loge(TAG, throwable.message)
                 if (throwable is HttpException) {
-                    loge(TAG, "http exception : code ${throwable.code()}, message ${throwable.message()}")
+                    loge(
+                        TAG,
+                        "http exception : code ${throwable.code()}, message ${throwable.message()}"
+                    )
                 }
             })
     }

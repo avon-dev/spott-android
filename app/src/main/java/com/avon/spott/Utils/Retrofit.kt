@@ -1,5 +1,6 @@
 package com.avon.spott.Utils
 
+import com.google.gson.JsonObject
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -23,13 +24,19 @@ class Retrofit(baseUrl:String) {
             .build()
     }
 
-    fun signIn(url:String, email:String, password:String):Observable<Response<String>> {
+    fun signIn(url:String, email:String, password:String): Observable<Response<JsonObject>> {
         return retrofitService.signIn(url, email, password)
             .subscribeOn(Schedulers.io())
             .map { t -> if (t.isSuccessful) t else throw HttpException(t) }
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    fun get(token:String, url:String): Observable<Response<String>> {
+        return retrofitService.get("jwt "+token, url)
+            .subscribeOn(Schedulers.io())
+            .map { t -> if (t.isSuccessful) t else throw HttpException(t) }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
 
     fun get(token: String, url: String, sending: String): Observable<Response<String>> {
         return retrofitService.get("jwt "+token, url, sending)
@@ -82,4 +89,10 @@ class Retrofit(baseUrl:String) {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    fun postFieldNonHeader(url: String, sending: String): Observable<Response<String>> {
+        return retrofitService.postFieldNonHeader(url, sending)
+            .subscribeOn(Schedulers.io())
+            .map { t -> if (t.isSuccessful) t else throw HttpException(t) }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
 }

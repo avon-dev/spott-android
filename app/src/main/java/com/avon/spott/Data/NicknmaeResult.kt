@@ -1,3 +1,3 @@
 package com.avon.spott.Data
 
-data class NicknmaeResult(val result:Boolean)
+data class NicknmaeResult(val sign_up:Boolean)

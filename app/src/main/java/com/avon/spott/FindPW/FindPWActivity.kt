@@ -19,7 +19,7 @@ class FindPWActivity : AppCompatActivity(), FindPWContract.View, View.OnClickLis
 
     private val resending = EMAIL_FIND_RESENDING_MILLS
 
-    private var transmitable = true
+    private var transmitable = true // 이메일을 보낼 수 있는 상태인지?
 
     private var startTime: Long = 0L
 
@@ -76,7 +76,7 @@ class FindPWActivity : AppCompatActivity(), FindPWContract.View, View.OnClickLis
         Toast.makeText(this@FindPWActivity, "인증번호가 전송되었습니다 ${number.code}", Toast.LENGTH_SHORT)
             .show()
 
-        btn_send_findpw_a.postDelayed({
+        btn_send_findpw_a.postDelayed({ // 30초에 한번 보낼 수 있도록 설정
             btn_send_findpw_a.setBackgroundResource(R.drawable.corner_round_primary)
             transmitable = true
         }, resending)

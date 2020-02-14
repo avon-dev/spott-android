@@ -1,5 +1,6 @@
 package com.avon.spott.Email
 
+import android.annotation.SuppressLint
 import com.avon.spott.Data.Number
 import com.avon.spott.Data.User
 import com.avon.spott.Utils.*
@@ -37,26 +38,24 @@ class EmailPresenter(val emailView: EmailContract.View) : EmailContract.Presente
         }
     }
 
-    override fun sendEmail(isEmail:Boolean, baseUrl: String, email: String) {
-        if (!isEmail) { // 2020-02-04 수정(민석):  "!" 추가
-            emailView.showError("이메일을 확인해주세요")
-        } else {
-            Retrofit(baseUrl).getNonHeader("/spott/email-authen", Parser.toJson(User(email)))
-                .subscribe({ response ->
-                    logd(TAG, response.body())
-                    val number = response.body()?.let { Parser.fromJson<Number>(it) }
-                    if (!number?.code?.equals("")!!) {
+    @SuppressLint("CheckResult")
+    override fun sendEmail(baseUrl: String, email: String) {
+        Retrofit(baseUrl).getNonHeader("/spott/email-authen", Parser.toJson(User(email)))
+            .subscribe({ response ->
+                logd(TAG, response.body())
+                val number = response.body()?.let { Parser.fromJson<Number>(it) }
+
+                if(number != null) {
+                    if (!number.duplication && !number.code.equals(""))
                         emailView.getNumber(number)
-                    }
-                }, { throwable ->
-                    loge(TAG, throwable.message)
-                    if (throwable is HttpException) {
-                        loge(
-                            TAG,
-                            "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
-                        )
-                    }
-                })
-        }
+                    else
+                        emailView.showError("이미 가입한 이메일입니다")
+                }
+            }, { throwable ->
+                loge(TAG, throwable.message)
+                if (throwable is HttpException) {
+                    loge(TAG, "http exception : code ${throwable.code()}, message ${throwable.message()}" )
+                }
+            })
     }
 }

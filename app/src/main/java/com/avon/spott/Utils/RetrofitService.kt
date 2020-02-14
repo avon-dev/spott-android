@@ -1,5 +1,6 @@
 package com.avon.spott.Utils
 
+import com.google.gson.JsonObject
 import io.reactivex.Observable
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -9,11 +10,14 @@ interface RetrofitService {
 
     @FormUrlEncoded
     @POST
-    fun signIn(@Url url: String, @Field("email") email: String, @Field("password") password: String): Observable<Response<String>>
+    fun signIn(@Url url: String, @Field("user_uid") email: String, @Field("password") password: String): Observable<Response<JsonObject>>
 
     @FormUrlEncoded
     @POST
     fun post(@Header("Authorization") token :String, @Url url: String, @Field("sending") sending: String): Observable<Response<String>>
+
+    @GET
+    fun get(@Header("Authorization") token:String, @Url url:String):Observable<Response<String>>
 
     @GET
     fun get(@Header("Authorization") token :String, @Url url: String, @Query("sending") sending: String): Observable<Response<String>>
@@ -41,5 +45,9 @@ interface RetrofitService {
     @GET
     fun getNonToken(@Url url: String, @Query("sending") sending: String): Observable<Response<String>>
 
+
+    @FormUrlEncoded
+    @POST
+    fun postFieldNonHeader(@Url url: String, @Field("sending") sending: String): Observable<Response<String>>
 
 }

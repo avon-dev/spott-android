@@ -79,10 +79,6 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
         ed.putString("refresh", token.refresh)
         ed.apply()
 
-        // 토큰 값 디코딩 가능한지 확인해보기 jwt는 인코딩이니 디코딩이 될 것이라 생각
-        // 디코딩하면 남은 기간 체크
-        // 남은 기간에 따른 토큰 재발급에 관련된 로직 필요
-
         showMainUi()
     }
 
