@@ -16,6 +16,8 @@ class HomePresenter(val homeView:HomeContract.View) : HomeContract.Presenter {
     init{ homeView.presenter = this}
     override fun openPhoto(id:Int) { homeView.showPhotoUi(id)}
 
+    override fun openSearch(){homeView.showSearchUi()}
+
 //    val adddummy = addDummy() //테스트 코드 추가
 
     override fun getToken(baseUrl: String, start:Int) {

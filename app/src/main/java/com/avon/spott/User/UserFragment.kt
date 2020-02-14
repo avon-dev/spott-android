@@ -19,7 +19,7 @@ import com.avon.spott.Data.MapCluster
 import com.avon.spott.R
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
-import com.avon.spott.Main.controlToobar
+import com.avon.spott.Main.controlToolbar
 import com.avon.spott.Utils.logd
 import com.avon.spott.animSlide
 import com.avon.spott.getMarkerBitmapFromView
@@ -110,7 +110,7 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
         super.onStart()
 
         // 툴바 유저이미지, 유저닉네임 보이게
-        controlToobar(View.VISIBLE, View.VISIBLE, View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE)
+        controlToolbar(View.VISIBLE, View.VISIBLE, View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE)
         MainActivity.mToolbar.visibility = View.VISIBLE
 
         if( wholeItems!=null &&  wholeItems!!.size == 0){ //서버에서 불러왔던 사진아이템 사이즈가 0이면 사진없음 문구 보이게

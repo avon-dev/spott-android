@@ -19,6 +19,7 @@ class UserPresenter (val userView:UserContract.View):UserContract.Presenter {
     }
 
     override fun getUserphotos(baseurl: String, userId: Int) {
+        logd(TAG, "userId : " +userId.toString())
 
         Retrofit(baseurl).get(App.prefs.temporary_token, "/spott/mypage/"+userId.toString(),  "")
             .subscribe({ response ->

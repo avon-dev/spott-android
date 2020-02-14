@@ -41,8 +41,8 @@
             android:id="@+id/img_profile_toolbar"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
             android:visibility="gone"
+            android:layout_marginLeft="10dp"
             app:srcCompat="@mipmap/ic_launcher"
             tools:layout_editor_absoluteX="40dp"
             tools:layout_editor_absoluteY="8dp"
@@ -52,8 +52,8 @@
             android:id="@+id/text_name_toolbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
             android:textColor="@android:color/black"
+            android:layout_marginLeft="5dp"
             android:textSize="18dp"
             android:visibility="gone"
             tools:layout_editor_absoluteX="40dp"
@@ -69,9 +69,11 @@
             android:layout_gravity="center"
             android:textColor="@android:color/black"
             android:textSize="18dp"
+            android:visibility="visible"
             tools:layout_editor_absoluteX="206dp"
             tools:layout_editor_absoluteY="16dp"
-            tools:text="title" />
+            tools:text="title"
+            tools:visibility="visible" />
 
 
         <ImageView
@@ -79,8 +81,8 @@
             android:layout_width="28dp"
             android:layout_height="?attr/actionBarSize"
             android:layout_gravity="right"
-            android:layout_marginRight="10dp"
             android:visibility="gone"
+            android:layout_marginRight="10dp"
             app:srcCompat="@drawable/ic_more_horiz_black_24dp"
             tools:ignore="VectorDrawableCompat"
             tools:layout_editor_absoluteX="376dp"
@@ -110,6 +112,27 @@
             tools:ignore="VectorDrawableCompat"
             tools:layout_editor_absoluteX="341dp"
             tools:visibility="visible" />
+
+        <EditText
+            android:id="@+id/edit_search_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:background="@drawable/corner_round_whitetext"
+            android:drawableLeft="@drawable/ic_search_black_24dp"
+            android:drawablePadding="5dip"
+            android:ems="10"
+            android:layout_marginRight="10dp"
+            android:fallbackLineSpacing="true"
+            android:hint="검색"
+            android:inputType="textPersonName"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp"
+            android:textSize="12sp"
+            android:visibility="gone"
+            tools:layout_editor_absoluteX="163dp"
+            tools:layout_editor_absoluteY="10dp" />
 
     </androidx.appcompat.widget.Toolbar>
 

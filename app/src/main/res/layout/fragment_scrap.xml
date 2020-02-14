@@ -10,7 +10,7 @@
         android:id="@+id/view_top_scarp_f"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="?attr/actionBarSize"
         android:background="@color/background_grey"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

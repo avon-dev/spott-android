@@ -1,6 +1,5 @@
 package com.avon.spott.Photo
 
-import android.text.SpannableString
 import com.avon.spott.BaseView
 
 class PhotoContract {

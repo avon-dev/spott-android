@@ -29,7 +29,7 @@ import com.avon.spott.Data.MapCluster
 import com.avon.spott.EditMyinfo.EditMyInfoActivity
 import com.avon.spott.R
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
-import com.avon.spott.Main.controlToobar
+import com.avon.spott.Main.controlToolbar
 import com.avon.spott.PhotoRenderer
 import com.avon.spott.Utils.logd
 import com.avon.spott.animSlide
@@ -208,7 +208,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         super.onStart()
 
         // 툴바 유저이미지, 유저닉네임, 알람, 메뉴 보이게
-        controlToobar(View.GONE, View.VISIBLE, View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.VISIBLE)
+        controlToolbar(View.GONE, View.VISIBLE, View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.VISIBLE, View.GONE)
         mToolbar.visibility = View.VISIBLE
 
 

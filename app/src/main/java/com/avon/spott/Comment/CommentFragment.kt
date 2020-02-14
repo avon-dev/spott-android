@@ -28,7 +28,7 @@ import com.avon.spott.Data.Comment
 import com.avon.spott.Data.UserInfo
 import com.avon.spott.R
 import com.avon.spott.Main.MainActivity
-import com.avon.spott.Main.controlToobar
+import com.avon.spott.Main.controlToolbar
 import com.avon.spott.Utils.DateTimeFormatter.Companion.formatCreated
 import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
@@ -153,7 +153,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         super.onStart()
 
         // 툴바 뒤로가기, 타이틀 보이게
-        controlToobar(View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.GONE, View.GONE, View.GONE)
+        controlToolbar(View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE)
         MainActivity.mToolbar.text_title_toolbar.text = getString(R.string.comment)
         MainActivity.mToolbar.visibility = View.VISIBLE
     }

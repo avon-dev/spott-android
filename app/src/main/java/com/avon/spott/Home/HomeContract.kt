@@ -12,6 +12,7 @@ interface HomeContract {
         fun removePageLoading()
         fun clearAdapter()
         fun getPagedItems()
+        fun showSearchUi()
 
         var hasNext : Boolean
         var refreshTimeStamp:String
@@ -19,6 +20,7 @@ interface HomeContract {
 
     interface Presenter{
         fun openPhoto(id:Int)
+        fun openSearch()
         fun getPhotos(baseUrl:String, start:Int)
         fun getToken(baseUrl: String, start:Int)
     }

@@ -65,15 +65,6 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         logd(TAG, "onCreateView")
 
-
-// 표준시, 지방시 변환 테스트중..........................................................................
-//        root.edit_search_home_f.setText(formatCreated( "2020-02-01T16:30:16.480169+09:00"))
-//
-//        val df =  DateFormat.getTimeInstance()
-//        df.timeZone = TimeZone.getTimeZone("gmt")
-//        root.edit_search_home_f.setText(df.format(Date()))
-//..................................................................................................
-
         return root
     }
 
@@ -143,6 +134,7 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
     fun init(){
         homePresenter = HomePresenter(this)
+        img_search_home_f.setOnClickListener(this)
     }
 
     override fun showPhotoUi(id:Int) { //PhotoFragment로 이동
@@ -150,9 +142,13 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         findNavController().navigate(R.id.action_homeFragment_to_photo, bundle)
     }
 
+    override fun showSearchUi() {
+        findNavController().navigate(R.id.action_homeFragment_to_search)
+    }
+
     override fun onClick(v: View?) {
         when(v?.id){
-
+            R.id.img_search_home_f ->{presenter.openSearch()}
         }
     }
 

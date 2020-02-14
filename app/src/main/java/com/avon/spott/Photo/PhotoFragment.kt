@@ -25,7 +25,7 @@ import com.avon.spott.EditCaption.EditCaptionActivity
 import com.avon.spott.R
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
-import com.avon.spott.Main.controlToobar
+import com.avon.spott.Main.controlToolbar
 import com.avon.spott.Mypage.MypageFragment.Companion.mypageChange
 import com.avon.spott.PhotoEnlargementActivity
 import com.avon.spott.Scrap.ScrapFragment.Companion.scrapChange
@@ -95,10 +95,10 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         super.onStart()
 
         //툴바 처리 (뒤로가기 + 더보기)
-        controlToobar(View.VISIBLE, View.GONE, View.GONE, View.GONE, View.VISIBLE, View.GONE, View.GONE)
+        controlToolbar(View.VISIBLE, View.GONE, View.GONE, View.GONE, View.VISIBLE, View.GONE, View.GONE, View.GONE)
         MainActivity.mToolbar.visibility = View.VISIBLE
 
-        checkbox_scrap_photo_f.setOnCheckedChangeListener { buttonView, isChecked ->
+        checkbox_scrap_photo_f.setOnCheckedChangeListener { _, _ ->
             if(!scrapProgressing){
                 scrapProgressing = true
                 checkbox_scrap_photo_f.isClickable = false
@@ -112,7 +112,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
         }
 
-        checkbox_like_photo_f.setOnCheckedChangeListener { buttonView, isChecked ->
+        checkbox_like_photo_f.setOnCheckedChangeListener { _, _ ->
             if(!likeProgressing){
 
                 likeProgressing = true
@@ -210,7 +210,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
                         val arrayList = ArrayList<String>()
                         arrayList.add(getString(R.string.edit))
                         arrayList.add(getString(R.string.delete))
-                        val adapter = ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, arrayList)
+                        val adapter = ArrayAdapter<String>(context!!, android.R.layout.simple_list_item_1, arrayList)
 
                         val listener = object :DialogInterface.OnClickListener{
                             override fun onClick(dialog: DialogInterface?, which: Int) {
@@ -234,7 +234,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
                         val arrayList = ArrayList<String>()
                         arrayList.add(getString(R.string.report))
-                        val adapter = ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, arrayList)
+                        val adapter = ArrayAdapter<String>(context!!, android.R.layout.simple_list_item_1, arrayList)
 
                         val listener = object :DialogInterface.OnClickListener{
                             override fun onClick(dialog: DialogInterface?, which: Int) {
@@ -384,10 +384,10 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         val builder = AlertDialog.Builder(context!!)
         builder.setMessage(getString(R.string.text_warning_deleting_photo))
 
-        builder.setPositiveButton(android.R.string.yes){dialog, which ->
+        builder.setPositiveButton(android.R.string.yes){_, _ ->
             presenter.deletePhoto(getString(R.string.baseurl), arguments?.getInt("photoId")!!)
         }
-        builder.setNegativeButton(android.R.string.no) { dialog, which ->
+        builder.setNegativeButton(android.R.string.no) {_, _ ->
         }
 
         val  mAlertDialog =  builder.show()
@@ -404,7 +404,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         builder.setMessage(getString(R.string.text_no_photo))
         builder.setCancelable(false)
 
-        builder.setPositiveButton(android.R.string.yes){dialog, which ->
+        builder.setPositiveButton(android.R.string.yes){_, _ ->
             navigateUp()
         }
 
