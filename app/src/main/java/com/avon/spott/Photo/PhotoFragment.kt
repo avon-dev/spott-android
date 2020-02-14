@@ -418,10 +418,10 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
         var spannableString = SpannableString(text)
 
-           val startList = ArrayList<Int>()
+//           val startList = ArrayList<Int>()
             for (hash in hashList) {
-                if(!startList.contains(hash[0])){
-                    startList.add(hash[0])
+//                if(!startList.contains(hash[0])){
+//                    startList.add(hash[0])
 
                     val start = hash[0]
                     val end = hash[1]
@@ -437,17 +437,10 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
                             showToast(text.substring(start,end))
                         }
                     }, start, end,  Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-//                spannableString.setSpan(
-//                    ForegroundColorSpan(Color.parseColor("#47bd3c")),
-//                    start,
-//                    end,
-//                    0
-//
-//                )
-                }
+
+//                }
 
             }
-        logd(TAG, "startList : "+startList.toString())
 
         text_caption_photo_f.text = spannableString
         text_caption_photo_f.movementMethod = LinkMovementMethod.getInstance()

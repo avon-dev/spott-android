@@ -167,10 +167,6 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
         val matcher = Validator.validHashtag(text)
         while (matcher.find()){
             if(matcher.group(1) != "") {
-//                        val hashtag = "#" + matcher.group(1)
-//                        logd("hashhash", "hash"+hashtag)
-//
-//                        hashArrayList.add(hashtag)
                 val currentSapn =arrayOf(matcher.start(), matcher.end())
                 hashArrayList.add(currentSapn)
             }

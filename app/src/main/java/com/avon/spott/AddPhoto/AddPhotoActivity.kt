@@ -11,12 +11,7 @@ import android.provider.MediaStore
 import android.text.*
 import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
 import android.text.style.BackgroundColorSpan
-import android.text.style.ClickableSpan
-import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -189,24 +184,17 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
 
     override fun highlightHashtag(boolean:Boolean,editable: Editable?, start:Int, end:Int){ //해시태그 하이라이트 켜고 끄는 함수
 
-        logd("highlightHash","start : "+start.toString() + " end : "+end.toString() + boolean)
-//        editable!!.setSpan(
-//            BackgroundColorSpan(ContextCompat.getColor(this,
-//                if(boolean) R.color.hashtag_highlight else R.color.text_white)),
-//            start, end, 0)
         if(boolean){
-            editable!!.setSpan(object : ClickableSpan() {
-                override fun updateDrawState(ds: TextPaint) {
-                    super.updateDrawState(ds)
-                    ds.isUnderlineText = false
-                    ds.bgColor = resources.getColor(R.color.hashtag_highlight)
-                    ds.color = resources.getColor(R.color.text_black)
-                }
-                override fun onClick(widget: View) {
-                }
-            }, start, end,  SPAN_EXCLUSIVE_EXCLUSIVE)
-        }else{
-            val spans = editable!!.getSpans(0,editable.toString().length,ClickableSpan::class.java)
+            editable!!.setSpan(
+                BackgroundColorSpan(ContextCompat.getColor(this, R.color.hashtag_highlight)),
+                start,
+                end,
+                SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+
+
+        }else{ //하이라이트 제거
+            val spans = editable!!.getSpans(0,editable.toString().length, BackgroundColorSpan::class.java)
             for(span in spans){
                 editable!!.removeSpan(span)
             }

@@ -133,11 +133,8 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
 
     override fun checkEdit(editable: Editable?) {
 
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O || Build.VERSION.SDK_INT < Build.VERSION_CODES.N) { //안드로이드 너겟(7.0, 7.1)제외
-            addPhotoView.highlightHashtag(false, editable, 0, editable.toString().length)
-//        }
+        addPhotoView.highlightHashtag(false, editable, 0, editable.toString().length)
 
-//        val hashArrayList = ArrayList<Array<Int>>()
         val matcher = Validator.validHashtag( editable.toString())
         while (matcher.find()){
             if(matcher.group(1) != "") {
@@ -145,41 +142,11 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
 
                 addPhotoView.addHashtag(hashtag)
 
-                val currentSapn =arrayOf(matcher.start(), matcher.end())
                 addPhotoView.highlightHashtag(true, editable, matcher.start(), matcher.end())
-//                hashArrayList.add(currentSapn)
-//                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O || Build.VERSION.SDK_INT < Build.VERSION_CODES.N) { //안드로이드 너겟(7.0, 7.1)제외
-//                    var start = 0
-//                    var end = 0
-//                    while(start != -1){
-//                        start =  editable!!.indexOf(hashtag, end) //end 다음 번째의 hashtag 위치를 찾음. (중복 가능) 더 이상 없으면 -1이 반환됨.
-//                        if(start<0) break
-//                        end = start + hashtag.length
-//                        addPhotoView.highlightHashtag(true, editable, start, end)
-//                    }
-//                }
+
             }
         }
 
-//        if(hashArrayList.size>0){
-//            val startList = ArrayList<Int>()
-//            val resultList = ArrayList<Array<Int>>()
-//            for(array in hashArrayList){
-//                logd(" 끝까지", "hashArrayList : "+hashArrayList.size)
-//                logd(" 끝까지", "startList : "+startList.toString())
-//                logd(" 끝까지", "resultList : "+resultList.size)
-//                if(!startList.contains(array[0])){
-//                    startList.add(array[0])
-//                    resultList.add(array)
-//                }
-//            }
-//
-//            for(array in resultList){
-//
-//                addPhotoView.highlightHashtag(true, editable, array[0], array[1])
-//                logd(" 끝까지", "칼라체인지")
-//            }
-//        }
 
     }
 

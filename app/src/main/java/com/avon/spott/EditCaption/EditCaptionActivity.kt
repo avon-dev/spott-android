@@ -88,30 +88,19 @@ class EditCaptionActivity : AppCompatActivity(), EditCaptionContract.View, View.
 
     override fun highlightHashtag(boolean:Boolean, editable: Editable?, start:Int, end:Int){ //해시태그 하이라이트 켜고 끄는 함수
 
-        logd("highlightHash","highlightHash : "+editable.toString())
         if(boolean){
-            editable!!.setSpan(object : ClickableSpan() {
-                override fun updateDrawState(ds: TextPaint) {
-                    super.updateDrawState(ds)
-                    ds.isUnderlineText = false
-                    ds.bgColor = resources.getColor(R.color.hashtag_highlight)
-                    ds.color = resources.getColor(R.color.text_black)
-                }
-                override fun onClick(widget: View) {
-                }
-            }, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            editable!!.setSpan(
+                BackgroundColorSpan(ContextCompat.getColor(this, R.color.hashtag_highlight)),
+                start,
+                end,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
         }else{
-            val spans = editable!!.getSpans(0,editable.toString().length, ClickableSpan::class.java)
+            val spans = editable!!.getSpans(0,editable.toString().length, BackgroundColorSpan::class.java)
             for(span in spans){
                 editable!!.removeSpan(span)
             }
-
         }
-//        editable!!.setSpan(
-//            BackgroundColorSpan(
-//                ContextCompat.getColor(this,
-//                    if(boolean) R.color.hashtag_highlight else R.color.text_white)),
-//            start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
     }
 

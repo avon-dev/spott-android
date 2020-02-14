@@ -43,10 +43,7 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
                 val matcher = Validator.validHashtag(result.contents)
                 while (matcher.find()){
                     if(matcher.group(1) != "") {
-//                        val hashtag = "#" + matcher.group(1)
-//                        logd("hashhash", "hash"+hashtag)
-//
-//                        hashArrayList.add(hashtag)
+
                       val currentSapn =arrayOf(matcher.start(), matcher.end())
                         hashArrayList.add(currentSapn)
                     }

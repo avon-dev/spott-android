@@ -421,7 +421,6 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
             val remover = itemView!!.findViewById<ImageButton>(R.id.imgbtn_remove_comment_i)
             val reporter = itemView!!.findViewById<ImageButton>(R.id.imgbtn_report_comment_i)
 
-//            var userId = 0
         }
 
         inner class LoadingViewHolder(itemView:View):RecyclerView.ViewHolder(itemView){
@@ -474,14 +473,13 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
         var spannableString = SpannableString(text)
 
-        val startList = ArrayList<Int>()
+//        val startList = ArrayList<Int>()
         for (hash in hashList) {
-            if(!startList.contains(hash[0])){
-                startList.add(hash[0])
+//            if(!startList.contains(hash[0])){
+//                startList.add(hash[0])
 
                 val start = hash[0]
                 val end = hash[1]
-
 
                 spannableString.setSpan(object : ClickableSpan() {
                     override fun updateDrawState(ds: TextPaint) {
@@ -493,10 +491,10 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                         showToast(text.substring(start,end))
                     }
                 }, start, end,  Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            }
+//            }
 
         }
-        logd(TAG, "startList : "+startList.toString())
+//        logd(TAG, "startList : "+startList.toString())
 
         text_content_comment_f.text = spannableString
         text_content_comment_f.movementMethod = LinkMovementMethod.getInstance()
