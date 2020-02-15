@@ -52,6 +52,13 @@ class Retrofit(baseUrl:String) {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    fun delete(token: String, url:String): Observable<Response<String>> {
+        return retrofitService.delete("jwt "+token, url)
+            .subscribeOn(Schedulers.io())
+            .map { t -> if (t.isSuccessful) t else throw HttpException(t) }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
     fun delete(token: String, url: String, sending: String): Observable<Response<String>> {
         return retrofitService.delete("jwt "+token, url, sending)
             .subscribeOn(Schedulers.io())

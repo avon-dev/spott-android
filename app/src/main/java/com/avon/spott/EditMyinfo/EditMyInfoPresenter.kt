@@ -32,8 +32,12 @@ class EditMyInfoPresenter(val editMyInfoView:EditMyInfoContract.View) : EditMyIn
         })
     }
 
+    override fun isNickname(nickname: String) { // 닉네임을 맞게 입력했는지
+        editMyInfoView.validNickname(Validator.validNickname(nickname))
+    }
+
     @SuppressLint("CheckResult")
-    override fun setNickname(baseUrl:String, token:String, nickname: String) {
+    override fun changeNickname(baseUrl:String, token:String, nickname: String) {
         val userInfo = UserInfo()
         userInfo.nickname = nickname
         val sending = Parser.toJson(userInfo)
@@ -43,8 +47,28 @@ class EditMyInfoPresenter(val editMyInfoView:EditMyInfoContract.View) : EditMyIn
             val result = response.body()?.let { Parser.fromJson<BooleanResult>(it) }
             if(result != null)
                 editMyInfoView.getNickname(result.result)
-        }, {
+        }, { throwable ->
+            loge(TAG, throwable.message)
+            if (throwable is HttpException) {
+                loge(TAG, "http exception code: ${throwable.code()}, http exception message: ${throwable.message()}")
+            }
+        })
+    }
 
+    @SuppressLint("CheckResult")
+    override fun withDrawl(baseUrl: String, token: String) {
+        Retrofit(baseUrl).delete(token, "/spott/users").subscribe({ response ->
+            logd(TAG, "response : ${response.body()}")
+
+            val result = response.body()?.let { Parser.fromJson<BooleanResult>(it) }
+            if(result != null)
+                editMyInfoView.withDrawl(result.result)
+
+        }, { throwable ->
+            loge(TAG, throwable.message)
+            if (throwable is HttpException) {
+                loge(TAG, "http exception code: ${throwable.code()}, http exception message: ${throwable.message()}")
+            }
         })
     }
 

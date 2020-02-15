@@ -11,9 +11,9 @@
     <include
         android:id="@+id/include_toolbar_editmyinfo_a"
         layout="@layout/toolbar"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
         android:id="@+id/frame_profile_editmyinfo_a"
@@ -56,7 +56,6 @@
         android:clickable="false"
         android:focusable="false"
         android:gravity="center"
-        android:hint="@string/hint_nickname"
         android:textSize="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -69,10 +68,10 @@
         android:background="@color/default_background"
         android:paddingLeft="10dp"
         android:scaleType="fitCenter"
-        app:srcCompat="@drawable/baseline_edit_24"
         app:layout_constraintBottom_toBottomOf="@id/edit_nickname_editmyinfo_a"
         app:layout_constraintStart_toEndOf="@id/edit_nickname_editmyinfo_a"
-        app:layout_constraintTop_toTopOf="@id/edit_nickname_editmyinfo_a" />
+        app:layout_constraintTop_toTopOf="@id/edit_nickname_editmyinfo_a"
+        app:srcCompat="@drawable/baseline_edit_24" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/text_blank1_editmyinfo_a"
@@ -88,16 +87,18 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/default_background"
+        android:clickable="false"
         android:drawableLeft="@drawable/baseline_mail_24"
         android:drawablePadding="10dp"
         android:gravity="start|center_vertical"
         android:hint="@string/hint_email"
         android:paddingLeft="20dp"
+        android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_blank1_editmyinfo_a" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/btn_changepw_editmyinfo_a"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -116,9 +117,10 @@
         style="@style/blank"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_changepw_editmyinfo_a" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_changepw_editmyinfo_a" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_withdrawal_editmyinfo_a"

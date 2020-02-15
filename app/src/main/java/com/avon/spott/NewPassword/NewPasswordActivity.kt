@@ -22,8 +22,9 @@ class NewPasswordActivity : AppCompatActivity(), NewPasswordContract.View, View.
 
     private fun init() {
         img_back_toolbar.setOnClickListener(this)
-        text_title_toolbar.text = getString(R.string.newpw)
+        btn_confirm_newpassword_a.setOnClickListener(this)
 
+        text_title_toolbar.text = getString(R.string.newpw)
 
         edit_newpassword_a.addTextChangedListener { // email check 하기
             presenter.isPassword(edit_newpassword_a.text.toString())
@@ -33,7 +34,9 @@ class NewPasswordActivity : AppCompatActivity(), NewPasswordContract.View, View.
             presenter.isCheck(edit_newpassword_a.text.toString(), edit_check_newpassword_a.text.toString())
         }
 
-        btn_confirm_newpassword_a.setOnClickListener(this)
+
+
+
     }
 
 

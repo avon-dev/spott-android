@@ -17,7 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NewPassword.NewPasswordActivity"></activity>
+        <activity android:name=".ChangePassword.ChangePasswordActivity"></activity>
+        <activity android:name=".NewPassword.NewPasswordActivity" />
         <activity
             android:name=".Camera.CameraXActivity"
             android:clearTaskOnLaunch="true"

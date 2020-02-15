@@ -31,7 +31,7 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
     private fun init() {
 
         // 임시
-        edit_username_emaillogin_a.setText("baek2@seunghyun.com")
+        edit_username_emaillogin_a.setText("baek3@seunghyun.com")
         edit_password_emaillogin_a.setText("seunghyun1!")
 
 

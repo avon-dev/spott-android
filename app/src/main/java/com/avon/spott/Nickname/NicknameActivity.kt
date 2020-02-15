@@ -84,6 +84,8 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
 
     private fun showMainUi() {
         val intent = Intent(this@NicknameActivity, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }
 
