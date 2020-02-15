@@ -108,6 +108,8 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
     // 인증번호 받기
     override fun getNumber(number: Number) {
 
+        hideLoading()
+
         if (!isShowing) {
             edit_number_email_a.visibility = View.VISIBLE
             text_numbermessage_email_a.visibility = View.VISIBLE
@@ -136,7 +138,19 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
 
     // 에러 보여주기
     override fun showError(msg: String) {
+        hideLoading()
+
         Toast.makeText(this@EmailActivity, msg, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showLoading() {
+        text_block_email_a.visibility = View.VISIBLE
+        progressbar_wait_email_a.visibility = View.VISIBLE
+    }
+
+    private fun hideLoading() {
+        text_block_email_a.visibility = View.INVISIBLE
+        progressbar_wait_email_a.visibility = View.INVISIBLE
     }
 
     override fun onClick(v: View?) {
@@ -146,6 +160,9 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
             }
             R.id.btn_send_email_a -> {
                 if (transmitable) { // 이메일 인증을 서버에 요청가능 할 때
+
+                    showLoading()
+
                     presenter.sendEmail(
                         getString(R.string.baseurl),
                         edit_email_email_a.text.toString()

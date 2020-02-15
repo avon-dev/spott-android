@@ -86,7 +86,7 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
         edit_nickname_editmyinfo_a.setText(userInfo.nickname)
         if(userInfo.profile_image != null) { // 프로필 이미지 있으면 이미지 세팅하기
             // 이미지 세팅하고, 편집 글씨 지울까? 말까?
-            Glide.with(applicationContext)
+            Glide.with(this@EditMyInfoActivity)
                 .load(userInfo.profile_image)
                 .placeholder(android.R.drawable.progress_indeterminate_horizontal)
                 .error(android.R.drawable.stat_notify_error)

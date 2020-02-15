@@ -7,8 +7,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.avon.spott.Data.Token
-import com.avon.spott.EditMyinfo.EditMyInfoActivity
 import com.avon.spott.FindPW.FindPWActivity
+import com.avon.spott.Main.MainActivity
 import com.avon.spott.R
 import kotlinx.android.synthetic.main.activity_email_login.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -57,14 +57,16 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
 //        logd(TAG, "decode\n${str}")
 //        logd(TAG, "decode\n${str2}")
 
-
-//        val intent = Intent(this@EmailLoginActivity, MainActivity::class.java)
-//        startActivity(intent)
-
-        // 임시
-        Intent(this@EmailLoginActivity, EditMyInfoActivity::class.java).let {
+        Intent(applicationContext, MainActivity::class.java).let {
+            it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(it)
         }
+
+        // 임시
+//        Intent(applicationContext, EditMyInfoActivity::class.java).let {
+//            startActivity(it)
+//        }
 
     }
 
