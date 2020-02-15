@@ -1,22 +1,45 @@
 package com.avon.spott.EditMyinfo
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
+import com.avon.spott.Camera.PermissionsFragment.Companion.hasPermissions
 import com.avon.spott.ChangePassword.ChangePasswordActivity
 import com.avon.spott.Data.UserInfo
 import com.avon.spott.Login.LoginActivity
 import com.avon.spott.R
 import com.avon.spott.Utils.MySharedPreferences
+import com.avon.spott.Utils.logd
+import com.bumptech.glide.Glide
+import com.yalantis.ucrop.UCrop
+import com.yalantis.ucrop.UCropActivity
+import com.yalantis.ucrop.model.AspectRatio
 import kotlinx.android.synthetic.main.activity_edit_my_info.*
 import kotlinx.android.synthetic.main.toolbar.*
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
+
+private const val PERMISSIONS_REQUEST_CODE = 10
+private val PERMISSIONS_REQUIRED = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
 class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.OnClickListener {
+
+    private val TAG = "EditMyInfoActivity"
+
+    private val CROPPED_PROFILE_IMAGE_NAME = "ProfileCropImage.jpg"
 
     override lateinit var presenter: EditMyInfoContract.Presenter
     private lateinit var editmyinfoPresenter: EditMyInfoPresenter
@@ -39,7 +62,7 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
         text_title_toolbar.setText(getString(R.string.title_editmyinfo))
 
         img_back_toolbar.setOnClickListener(this)
-        frame_profile_editmyinfo_a.setOnClickListener(this)
+        img_profile_editmyinfo_a.setOnClickListener(this)
         imgbtn_editnickname_editmyinfo_a.setOnClickListener(this)
         btn_changepw_editmyinfo_a.setOnClickListener(this)
         btn_withdrawal_editmyinfo_a.setOnClickListener(this)
@@ -49,7 +72,6 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
 
         if (access != null) // Shared에 토큰값이 있을 때
             presenter.getUser(getString(R.string.baseurl), access)
-
 
         edit_nickname_editmyinfo_a.addTextChangedListener {
             presenter.isNickname(edit_nickname_editmyinfo_a.text.toString())
@@ -64,6 +86,11 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
         edit_nickname_editmyinfo_a.setText(userInfo.nickname)
         if(userInfo.profile_image != null) { // 프로필 이미지 있으면 이미지 세팅하기
             // 이미지 세팅하고, 편집 글씨 지울까? 말까?
+            Glide.with(applicationContext)
+                .load(userInfo.profile_image)
+                .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                .error(android.R.drawable.stat_notify_error)
+                .into(img_profile_editmyinfo_a)
         }
     }
 
@@ -73,6 +100,11 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
 
     override fun validNickname(valid: Boolean) {
         validNickname = valid
+    }
+
+    override fun changedProfile(result:Boolean, photoUri: Uri) {
+        if(result)
+            img_profile_editmyinfo_a.setImageURI(photoUri)
     }
 
     override fun getNickname(result: Boolean) {
@@ -100,14 +132,84 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
         startActivity(intent)
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if(requestCode == PERMISSIONS_REQUEST_CODE) {
+            if (PackageManager.PERMISSION_GRANTED == grantResults.firstOrNull()) { // 권한이 있으면
+                val pickPhoto = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                pickPhoto.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                startActivityForResult(pickPhoto, 102)
+            } else { // 없으면
+
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK && null != data) {
+            if(requestCode == 102) {
+                if (data.getData() != null) {
+                    var mPhotoPath: Uri = data.getData()
+                    logd(TAG, "photopath : " + mPhotoPath)
+
+                    val options = UCrop.Options()
+                    options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.SCALE)
+                    options.setToolbarTitle("")
+                    options.setToolbarCropDrawable(R.drawable.ic_arrow_forward_black_24dp)
+                    options.setActiveControlsWidgetColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
+                    options.setStatusBarColor(ContextCompat.getColor(applicationContext, R.color.bg_black))
+                    options.setAspectRatioOptions(2,
+//                        AspectRatio("16 : 9", 16f, 9f),
+                        AspectRatio("4 : 3", 4f, 3f),
+                        AspectRatio("1 : 1", 1f, 1f),
+                        AspectRatio("3 : 4", 3f, 4f)
+//                        AspectRatio("9 : 16", 9f, 16f)
+                    )
+                    options.setCircleDimmedLayer(true)
+
+                    /* 현재시간을 임시 파일 이름에 넣는 이유 : 중복방지
+                    / (안넣으면 AddPhotoActivity의 이미지뷰에 다른 사진 보여진다.) */
+                    val timeStamp = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
+                    UCrop.of(mPhotoPath, Uri.fromFile(File(applicationContext.cacheDir, timeStamp+CROPPED_PROFILE_IMAGE_NAME)))
+                        .withMaxResultSize(resources.getDimension(R.dimen.upload_width).toInt(),
+                            resources.getDimension(R.dimen.upload_heigth).toInt())
+                        .withOptions(options)
+                        .start(this)
+                }
+            } else if(requestCode == UCrop.REQUEST_CROP){
+                var mCropPath: Uri? = UCrop.getOutput(data)
+                logd(TAG, "croppath : " + mCropPath)
+//                presenter.openAddPhoto(mCropPath.toString())
+
+                val token = MySharedPreferences(applicationContext).prefs.getString("access", "")
+                if(token != null && mCropPath != null) {
+                    presenter.setProfileImage(getString(R.string.baseurl), token, mCropPath)
+                }
+            }
+        }
+        if(resultCode == UCrop.RESULT_ERROR){
+            logd(TAG, "error : Ucrop result error")
+        }
+    }
+
     override fun onClick(v: View) {
         when (v.id) {
             R.id.img_back_toolbar -> { // 뒤로가기
                 presenter.navigateUp()
             }
-
-            R.id.frame_profile_editmyinfo_a -> { // 프로필 이미지 편집
-
+            R.id.img_profile_editmyinfo_a -> { // 프로필 이미지 편집
+                if(!hasPermissions(applicationContext)) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        requestPermissions(PERMISSIONS_REQUIRED, PERMISSIONS_REQUEST_CODE)
+                    }
+                } else {
+                    val pickPhoto = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                    pickPhoto.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    startActivityForResult(pickPhoto, 102)
+                }
             }
 
             R.id.imgbtn_editnickname_editmyinfo_a -> { // 닉네임 수정

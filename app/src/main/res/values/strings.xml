@@ -104,6 +104,7 @@
     <string name="toast_check_changepassword">비밀번호를 확인해주세요</string>
     <string name="toast_fail_changepw">다시 시도해주세요</string>
     <string name="toast_success_changepw">비밀번호가 변경되었습니다</string>
+    <string name="toast_duplication_nickname">중복된 닉네임입니다</string>
 
     <string name="title_editmyinfo">내 정보 수정</string>
 

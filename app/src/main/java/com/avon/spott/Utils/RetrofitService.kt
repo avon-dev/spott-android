@@ -39,6 +39,12 @@ interface RetrofitService {
                   @Part("sending") sending: String,
                   @Part imageFile : ArrayList<MultipartBody.Part>): Observable<Response<String>>
 
+    @Multipart
+    @PATCH
+    fun patchPhoto(@Header("Authorization") token :String,
+                  @Url url: String,
+                  @Part profile_image : MultipartBody.Part): Observable<Response<String>>
+
 
     /**  토큰 테스트용!!!!! 임시 토큰 2020-02-04   */
 

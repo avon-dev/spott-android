@@ -1,10 +1,17 @@
 package com.avon.spott.EditMyinfo
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import com.avon.spott.Data.BooleanResult
 import com.avon.spott.Data.UserInfo
 import com.avon.spott.Utils.*
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.HttpException
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 class EditMyInfoPresenter(val editMyInfoView:EditMyInfoContract.View) : EditMyInfoContract.Presenter {
 
@@ -34,6 +41,34 @@ class EditMyInfoPresenter(val editMyInfoView:EditMyInfoContract.View) : EditMyIn
 
     override fun isNickname(nickname: String) { // 닉네임을 맞게 입력했는지
         editMyInfoView.validNickname(Validator.validNickname(nickname))
+    }
+
+    @SuppressLint("CheckResult")
+    override fun setProfileImage(baseUrl: String, token: String, photoUri: Uri) {
+        val file = File(photoUri.path)
+        val size = (file.length()/1024).toString() //사이즈 크기 kB
+        logd(TAG, "File size : " + size)
+
+        /*----------------서버에 이미지 업로드 테스트용 이미지 2개 생성 ---------------------------------
+        * 변경예정사항 : 1. 윤곽선이미지 추가해야함. 2. 이미지 이름 바꿔야함.*/
+        val timeStamp = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
+        var requestBody: RequestBody = RequestBody.create(MediaType.parse("image/jpeg"), file)
+        val sendImage = MultipartBody.Part.createFormData("profile_image", "p"+timeStamp+".jpg", requestBody)
+        /* -------------------------------------------------------------------------------------- */
+
+        Retrofit(baseUrl).patchPhoto(token, "/spott/users", sendImage).subscribe({ response ->
+            logd(TAG, "response : ${response.body()}")
+
+            val result = response.body()?.let { Parser.fromJson<BooleanResult>(it) }
+            if(result != null)
+                editMyInfoView.changedProfile(result.result, photoUri)
+        }, { throwable ->
+            loge(TAG, throwable.message)
+            if (throwable is HttpException) {
+                loge(TAG, "http exception code: ${throwable.code()}, http exception message: ${throwable.message()}")
+            }
+        })
+
     }
 
     @SuppressLint("CheckResult")

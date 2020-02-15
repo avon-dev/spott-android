@@ -81,6 +81,13 @@ class Retrofit(baseUrl:String) {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    fun patchPhoto(token:String, url:String, imageFile:MultipartBody.Part) : Observable<Response<String>> {
+        return retrofitService.patchPhoto("jwt "+token, url, imageFile)
+            .subscribeOn(Schedulers.io())
+            .map { t -> if (t.isSuccessful) t else throw HttpException(t) }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
     /**  토큰 테스트용!!!!! 임시 토큰 2020-02-04   */
     fun postNonHeader(url: String, sending: String): Observable<Response<String>> {
         return retrofitService.postNonHeader(url, sending)

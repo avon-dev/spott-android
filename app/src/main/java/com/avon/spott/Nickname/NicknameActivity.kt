@@ -68,7 +68,7 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
         if (result) {
             presenter.getToken(getString(R.string.baseurl), user.email, user.password!!)
         } else {
-            Toast.makeText(this@NicknameActivity, "이미 가입한 닉네임입니다", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@NicknameActivity, getString(R.string.toast_duplication_nickname), Toast.LENGTH_SHORT).show()
         }
     }
 

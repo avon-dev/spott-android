@@ -2,13 +2,11 @@ package com.avon.spott.Camera
 
 
 import android.annotation.SuppressLint
-import android.app.Activity.RESULT_OK
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.hardware.display.DisplayManager
@@ -16,6 +14,7 @@ import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.DisplayMetrics
 import android.view.*
 import android.webkit.MimeTypeMap
@@ -306,22 +305,23 @@ class CameraXFragment : Fragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            try {
-
-                val inputStream = activity!!.getContentResolver().openInputStream(data?.getData())
-                val bitmap = BitmapFactory.decodeStream(inputStream)
-                inputStream.close()
-
-                overlayImage.setImageBitmap(bitmap)
-                showOverlayImage()
-            } catch (e: Exception) {
-                loge(TAG, "failed getImage in Gallery", e)
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
+//        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+//            try {
+//
+//                val inputStream = activity!!.getContentResolver().openInputStream(data?.getData())
+//                val bitmap = BitmapFactory.decodeStream(inputStream)
+//                inputStream.close()
+//
+//                overlayImage.setImageBitmap(bitmap)
+//                showOverlayImage()
+//            } catch (e: Exception) {
+//                loge(TAG, "failed getImage in Gallery", e)
+//            }
+//        } else {
+//            super.onActivityResult(requestCode, resultCode, data)
+//        }
     }
 
 
@@ -407,11 +407,15 @@ class CameraXFragment : Fragment() {
 
         // 갤러리에서 사진 가져오기
         view!!.findViewById<ImageButton>(R.id.imgbtn_gallery_camerax_f).setOnClickListener {
-            val intent = Intent().apply {
-                setType("image/*")
-                setAction(Intent.ACTION_GET_CONTENT)
-            }
-            startActivityForResult(intent, REQUEST_CODE)
+
+            val pickPhoto = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            pickPhoto.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            startActivityForResult(pickPhoto, REQUEST_CODE)
+//            val intent = Intent().apply {
+//                setType("image/*")
+//                setAction(Intent.ACTION_GET_CONTENT)
+//            }
+//            startActivityForResult(intent, REQUEST_CODE)
         }
 
 //        view!!.findViewById<SeekBar>(R.id.seekbar_zoom_camerax_f).setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
