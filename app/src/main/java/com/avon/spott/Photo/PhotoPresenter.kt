@@ -27,7 +27,16 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
     }
 
     override fun openPhotoEnlargement(photoUrl: String){
-        photoView.showPhotoEnlagement(photoUrl)
+        photoView.showPhotoEnlagementUi(photoUrl)
+    }
+
+    override fun openHashtag(hashtag: String) {
+        var sending = hashtag.substring(1) // #제거
+        photoView.showHashtagUi(sending)
+    }
+
+    override fun openEditCaption() {
+        photoView.showEditCaptionUi()
     }
 
     override fun getPhotoDetail(baseUrl:String, photoId:Int){
@@ -181,9 +190,6 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
             })
     }
 
-    override fun openEditCaption() {
-        photoView.showEditCaptionUi()
-    }
 
     override fun deletePhoto(baseUrl: String, photoId: Int) {
         Retrofit(baseUrl).delete(App.prefs.temporary_token, "/spott/posts/"+photoId,  "")

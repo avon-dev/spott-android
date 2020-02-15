@@ -2,6 +2,7 @@ package com.avon.spott.Search
 
 import android.content.Context
 import android.os.Bundle
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -12,8 +13,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.avon.spott.Data.SearchItem
 import com.avon.spott.Data.SearchRecent
 import com.avon.spott.Data.SearchResult
 import com.avon.spott.Main.MainActivity
@@ -41,10 +44,18 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
     private lateinit var recentAdapter: RecentAdapter
     private lateinit var recentLayoutManager: LinearLayoutManager
 
+    lateinit var watcher : TextWatcher
+
     val searchInterListener = object : searchInter{
-        override fun hashItemClick(hash: String) {}
-        override fun recentTextClick(recent: String) {}
-        override fun userItemClick(userId: Int) {}
+        override fun hashItemClick(hash: String) {
+            presenter.openHashtag(hash)
+        }
+        override fun recentTextClick(recent: String) {
+
+        }
+        override fun userItemClick(userId: Int) {
+            presenter.openUser(userId)
+        }
 
     }
 
@@ -70,6 +81,7 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+
         init()
 
         recycler_result_search_f.layoutManager = resultLayoutManager
@@ -77,6 +89,32 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
 
         recycler_recent_search_f.layoutManager = recentLayoutManager
         recycler_recent_search_f.adapter = recentAdapter
+
+        val imm = context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+        recycler_result_search_f.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                imm.hideSoftInputFromWindow(view!!.windowToken, 0)
+            }
+        })
+
+        recycler_recent_search_f.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                imm.hideSoftInputFromWindow(view!!.windowToken, 0)
+            }
+        })
+
+
+        ///=================네비게이션 실험==============================
+        text_deleteall_search_f.setOnClickListener {
+            presenter.openUser(8)
+        }
+        text_recent_search_f.setOnClickListener {
+            presenter.openHashtag("#배가고프다")
+        }
+        //==========================================================
     }
 
     override fun onStart() {
@@ -86,10 +124,33 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
         controlToolbar(View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE, View.VISIBLE)
         MainActivity.mToolbar.visibility = View.VISIBLE
 
+        watcher =
+            mToolbar.edit_search_toolbar.addTextChangedListener {
+                if(it!!.trim().length>0){
+                    mToolbar.edit_search_toolbar.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        R.drawable.ic_search_black_24dp, 0, R.drawable.ic_close_black_24dp,0)
+                    scroll_recent_search_f.visibility = View. GONE
+                    const_result_search_f.visibility = View.VISIBLE
+
+                    presenter.getSearching(getString(R.string.baseurl), it.toString())
+
+                }else{
+                    mToolbar.edit_search_toolbar.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        R.drawable.ic_search_black_24dp, 0, 0,0)
+
+                    scroll_recent_search_f.visibility = View.VISIBLE
+                    const_result_search_f.visibility = View.GONE
+                }
+            }
+
+
     }
 
     override fun onStop() {
         super.onStop()
+        mToolbar.edit_search_toolbar.removeTextChangedListener(watcher)
+
+
         val imm = context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view!!.windowToken, 0)
     }
@@ -101,26 +162,15 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
         recycler_recent_search_f.layoutManager = null
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        mToolbar.edit_search_toolbar.setText("")
+    }
+
     fun init(){
         searchPresenter = SearchPresenter(this)
 
-        mToolbar.edit_search_toolbar.addTextChangedListener {
-            if(it!!.trim().length>0){
-                mToolbar.edit_search_toolbar.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                    R.drawable.ic_search_black_24dp, 0, R.drawable.ic_close_black_24dp,0)
-                scroll_recent_search_f.visibility = View. GONE
-                const_result_search_f.visibility = View.VISIBLE
-
-                presenter.getSearching(getString(R.string.baseurl), it.toString())
-
-            }else{
-                mToolbar.edit_search_toolbar.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                    R.drawable.ic_search_black_24dp, 0, 0,0)
-
-                scroll_recent_search_f.visibility = View.VISIBLE
-                const_result_search_f.visibility = View.GONE
-            }
-        }
 
         mToolbar.edit_search_toolbar.setOnTouchListener(object : View.OnTouchListener {
             override fun onTouch(v: View?, event: MotionEvent?): Boolean {
@@ -149,7 +199,19 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
         }
     }
 
-    override fun addResultItems(resultItems:ArrayList<SearchResult>){
+    override fun showUserUi(userId: Int) {
+        val bundle = Bundle()
+        bundle.putInt("SearcheduserId", userId)
+        findNavController().navigate(R.id.action_searchFragment_to_searchedUserFragment, bundle)
+    }
+
+    override fun showHashtag(hashtag: String) {
+        val bundle = Bundle()
+        bundle.putString("Searchedhashtag", hashtag)
+        findNavController().navigate(R.id.action_searchFragment_to_searchedHashtagFragment,bundle)
+    }
+
+    override fun addResultItems(resultItems:ArrayList<SearchItem>){
         resultAdapter.addItemsAdapter(resultItems)
         resultAdapter.notifyDataSetChanged()
     }
@@ -177,7 +239,7 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
 
     inner class ResultAdapter(val context: Context, val searchInterListnener:searchInter):RecyclerView.Adapter<ResultAdapter.ViewHolder>(){
 
-        private var itemsList = ArrayList<SearchResult>()
+        private var itemsList = ArrayList<SearchItem>()
 
         override fun onCreateViewHolder(parent: ViewGroup,viewType: Int): ResultAdapter.ViewHolder {
             val view =  LayoutInflater.from(context).inflate(R.layout.item_search_result, parent, false)
@@ -188,7 +250,7 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
             return itemsList.size
         }
 
-        fun addItemsAdapter(searchItems:ArrayList<SearchResult>){
+        fun addItemsAdapter(searchItems:ArrayList<SearchItem>){
             itemsList.addAll(searchItems)
         }
 
@@ -198,28 +260,33 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
 
         override fun onBindViewHolder(holder: ResultAdapter.ViewHolder, position: Int) {
             itemsList[position].let{
-                if(itemsList[position].isHash){
+                if(itemsList[position].is_tag){
                     holder.userPhoto.visibility = View.GONE
                     holder.bigHash.visibility = View.VISIBLE
-                    holder.resultText.text = it.tag
+                    holder.resultText.text = it.name
 
                     holder.itemView.setOnClickListener{
-                        searchInterListnener.hashItemClick(itemsList[position].tag!!)
+                        searchInterListnener.hashItemClick(itemsList[position].name!!)
                     }
 
                 }else{
                     holder.userPhoto.visibility = View.VISIBLE
                     holder.bigHash.visibility = View.GONE
-                    holder.resultText.text = it.userName
+                    holder.resultText.text = it.nickname
 
-                    Glide.with(holder.itemView.context)
-                        .load(it.userPhoto)
-                        .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                        .error(android.R.drawable.stat_notify_error)
-                        .into(holder.userPhoto)
+                    if(it.profile_image  ==null){
+                        holder.userPhoto.setImageResource(R.drawable.ic_account_circle_grey_36dp)
+                    }else{
+                        Glide.with(holder.itemView.context)
+                            .load(it.profile_image)
+                            .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                            .error(android.R.drawable.stat_notify_error)
+                            .into(holder.userPhoto)
+                    }
+
 
                     holder.itemView.setOnClickListener{
-                        searchInterListnener.userItemClick(itemsList[position].userId!!)
+                        searchInterListnener.userItemClick(itemsList[position].id!!)
                     }
 
                 }

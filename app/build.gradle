@@ -102,5 +102,7 @@ dependencies {
     // CameraX Lifecycle library
 ////    implementation "androidx.camera:camera-lifecycle:1.0.0-alpha02"
 
+    //google place api
+    implementation 'com.google.android.gms:play-services-places:17.0.0'
 
 }

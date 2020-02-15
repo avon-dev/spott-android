@@ -5,10 +5,12 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -67,6 +69,9 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
         }
     }
 
+    private var fromSearch = false
+    private var userId = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -80,6 +85,14 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
         val root =  inflater.inflate(R.layout.fragment_user, container, false)
 
         logd(TAG, "user's id : "+arguments?.getInt("userId"))
+        logd(TAG, "from search user' id : "+arguments?.getInt("SearcheduserId"))
+
+        if(arguments?.getInt("userId")!=0){
+            userId = arguments?.getInt("userId")!!
+        }else{
+            userId = arguments?.getInt("SearcheduserId")!!
+            fromSearch = true
+        }
 
         return root
     }
@@ -97,12 +110,21 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
         recycler_grid_user_f.layoutManager  = layoutManager
         recycler_grid_user_f.adapter = userAdapter
 
+
+        swiperefresh_user_f.setOnRefreshListener {
+            Handler().postDelayed({
+                presenter.getUserphotos(getString(R.string.baseurl), userId)
+            }, 600) //로딩 주기
+        }
+
         if(!checkInit) {
             //처음 사진을 가져오는 코드 (처음 이후에는 리프레쉬 전까지 가져오지않는다.)
-            presenter.getUserphotos(getString(R.string.baseurl), arguments?.getInt("userId")!!)
+            presenter.getUserphotos(getString(R.string.baseurl), userId)
 
             checkInit = true
         }
+
+        swiperefresh_user_f.setColorSchemeColors(ContextCompat.getColor(context!!, R.color.colorPrimary))
 
     }
 
@@ -136,7 +158,12 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
 
     override fun showPhotoUi(id:Int) {//PhotoFragment로 이동
         val bundle = bundleOf("photoId" to id)
-        findNavController().navigate(R.id.action_userFragment_to_photoFragment, bundle)
+        if(!fromSearch){
+            findNavController().navigate(R.id.action_userFragment_to_photoFragment, bundle)
+        }else{
+            findNavController().navigate(R.id.action_searchedUserFragment_to_photo, bundle)
+        }
+
     }
 
     override fun onClick(v: View?) {
@@ -145,7 +172,13 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
         }
     }
 
-
+    override fun clearAdapter(){
+        if(swiperefresh_user_f.isRefreshing){
+            userAdapter.clearItemsAdapter()
+            userAdapter.notifyDataSetChanged()
+            swiperefresh_user_f.isRefreshing = false
+        }
+    }
 
 
     override fun addItems(userItems:ArrayList<MapCluster>){

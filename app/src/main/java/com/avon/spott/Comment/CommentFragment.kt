@@ -202,6 +202,12 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         findNavController().navigate(R.id.action_commentFragment_to_userFragment, bundle)
     }
 
+    override fun showHashtagUi(hashtag:String){
+        val bundle = Bundle()
+        bundle.putString("hashtag", hashtag)
+        findNavController().navigate(R.id.action_commentFragment_to_hashtagFragment, bundle)
+    }
+
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.text_nickname_comment_f -> {presenter.openUser(arguments?.getInt("userId")!!)}
@@ -488,7 +494,8 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
                     }
                     override fun onClick(widget: View) {
-                        showToast(text.substring(start,end))
+//                        showToast(text.substring(start,end))
+                        presenter.openHashtag(text.substring(start,end))
                     }
                 }, start, end,  Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 //            }

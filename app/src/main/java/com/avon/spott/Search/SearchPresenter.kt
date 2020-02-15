@@ -14,6 +14,14 @@ class SearchPresenter(val searchView:SearchContract.View):SearchContract.Present
 
     init { searchView.presenter = this }
 
+    override fun openUser(userId: Int) {
+        searchView.showUserUi(userId)
+    }
+
+    override fun openHashtag(hashtag:String){
+        searchView.showHashtag(hashtag)
+    }
+
     override fun getSearching(baseUrl:String, text: String) {
         searchView.clearResultItems()
 
@@ -21,7 +29,7 @@ class SearchPresenter(val searchView:SearchContract.View):SearchContract.Present
         var tag = false
         if(text.startsWith("#")){
             tag = true
-            search_word = search_word.substring(0)
+            search_word = search_word.substring(1)
         }
 
         val sending = Parser.toJson(Search(tag, search_word))
@@ -34,9 +42,9 @@ class SearchPresenter(val searchView:SearchContract.View):SearchContract.Present
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 
                 val string  = response.body()
-                val result = Parser.fromJson<ArrayList<SearchResult>>(string!!)
+                val result = Parser.fromJson<SearchResult>(string!!)
 
-                searchView.addResultItems(result)
+                searchView.addResultItems(result.items)
 
 
             }, { throwable ->

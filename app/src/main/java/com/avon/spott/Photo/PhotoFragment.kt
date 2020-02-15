@@ -174,10 +174,16 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         findNavController().navigate(R.id.action_photoFragment_to_userFragment, bundle)
     }
 
-    override fun showPhotoEnlagement(photoUrl: String) {
+    override fun showPhotoEnlagementUi(photoUrl: String) {
         val nextIntent = Intent(context!!, PhotoEnlargementActivity::class.java)
         nextIntent.putExtra("photoUrl", photoUrl)
         startActivity(nextIntent)
+    }
+
+    override fun showHashtagUi(hashtag:String){
+        val bundle = Bundle()
+        bundle.putString("hashtag", hashtag)
+        findNavController().navigate(R.id.action_photoFragment_to_hashtagFragment, bundle)
     }
 
     override fun onClick(v: View?) {
@@ -434,7 +440,8 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
                         }
                         override fun onClick(widget: View) {
-                            showToast(text.substring(start,end))
+//                            showToast(text.substring(start,end))
+                            presenter.openHashtag(text.substring(start,end))
                         }
                     }, start, end,  Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
@@ -446,6 +453,8 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         text_caption_photo_f.movementMethod = LinkMovementMethod.getInstance()
 
     }
+
+
 
 
 

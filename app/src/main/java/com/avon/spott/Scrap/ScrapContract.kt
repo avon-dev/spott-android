@@ -12,6 +12,7 @@ interface ScrapContract {
         fun deleteDone(scrapItems: ArrayList<ScrapItem>)
         fun deleteError()
         fun showToast(string: String)
+        fun clearAdapter()
     }
 
     interface Presenter{

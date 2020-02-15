@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -80,6 +81,15 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
 
         recycler_scrap_f.layoutManager = layoutManager
         recycler_scrap_f.adapter = scrapAdapter
+
+
+        swiperefresh_scrap_f.setOnRefreshListener {
+            Handler().postDelayed({
+                presenter.getScraps(getString(R.string.baseurl))
+            }, 300) //로딩 주기
+        }
+
+        swiperefresh_scrap_f.setColorSchemeColors(ContextCompat.getColor(context!!, R.color.colorPrimary))
 
 
         if(!checkInit){
@@ -264,6 +274,14 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
 
         }
 
+    }
+
+    override fun clearAdapter(){
+        if(swiperefresh_scrap_f.isRefreshing){
+            scrapAdapter.clearItemsAdapter()
+            scrapAdapter.notifyDataSetChanged()
+            swiperefresh_scrap_f.isRefreshing = false
+        }
     }
 
     override fun addItems(scrapItems:ArrayList<ScrapItem>){

@@ -11,7 +11,7 @@ interface UserContract {
         fun setUserInfo(nickname:String, photo:String?)
         fun noPhoto()
         fun addItems(userItems:ArrayList<MapCluster>)
-//        fun movePosition(latLng: LatLng, zoom: Float)
+        fun clearAdapter()
     }
 
     interface Presenter{

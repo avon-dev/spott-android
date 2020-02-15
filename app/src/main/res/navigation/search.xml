@@ -12,17 +12,31 @@
         tools:layout="@layout/fragment_search" >
 
         <action
-            android:id="@+id/action_searchFragment_to_hashtagFragment"
-            app:destination="@id/hashtagFragment" />
+            android:id="@+id/action_searchFragment_to_searchedUserFragment"
+            app:destination="@id/searchedUserFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_searchedHashtagFragment"
+            app:destination="@id/searchedHashtagFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/hashtagFragment"
+        android:id="@+id/searchedHashtagFragment"
         android:name="com.avon.spott.Hashtag.HashtagFragment"
-        android:label ="fragment_hashtag"
+        android:label ="fragment_searchedHashtag"
         tools:layout="@layout/fragment_user">
         <action
-            android:id="@+id/action_hashtagFragment_to_photo"
+            android:id="@+id/action_searchedHashtagFragment_to_photo"
+            app:destination="@id/photo" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/searchedUserFragment"
+        android:name="com.avon.spott.User.UserFragment"
+        android:label="fragment_searchedUser"
+        tools:layout="@layout/fragment_user">
+        <action
+            android:id="@+id/action_searchedUserFragment_to_photo"
             app:destination="@id/photo" />
     </fragment>
 

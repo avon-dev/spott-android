@@ -27,6 +27,8 @@ class ScrapPresenter(val scrapView:ScrapContract.View) : ScrapContract.Presenter
                 val result = Parser.fromJson<ArrayList<ScrapResult>>(string!!)
                 logd(TAG, "result!!!!! : "+result)
 
+                scrapView.clearAdapter()
+
                 val arrayResult = ArrayList<ScrapItem>()
 
                 for(i in 0..result.size-1){

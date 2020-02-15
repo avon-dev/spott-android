@@ -150,4 +150,8 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
 
     }
 
+    override fun openFindPlace() {
+        addPhotoView.showFindPlaceUi()
+    }
+
 }

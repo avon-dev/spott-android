@@ -28,16 +28,14 @@ class UserPresenter (val userView:UserContract.View):UserContract.Presenter {
                 val string  = response.body()
                 val result = Parser.fromJson<MypageResult>(string!!)
 
+                userView.clearAdapter()
+
                 userView.setUserInfo(result.user.nickname, result.user.profile_image)
 
                 if(result.posts.size==0){
                     userView.noPhoto()
-//                    userView.movePosition(LatLng(37.56668, 126.97843), 14f) //등록한 사진이 없으면 구글맵 카메라 서울시청으로 이동
                 }
-//                else{
-//                    userView.movePosition(LatLng(result.posts[0].latitude, result.posts[0].longitude), 11f)
-//                    //등록한 사진이 있으면 가장 최신 등록된 사진의 위치로 이동
-//                }
+
 
                 userView.addItems(result.posts)
 

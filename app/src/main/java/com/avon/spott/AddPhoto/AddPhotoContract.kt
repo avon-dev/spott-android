@@ -20,6 +20,7 @@ interface AddPhotoContract {
         fun addHashtag(hashtag:String)
         fun highlightHashtag(boolean:Boolean,editable: Editable?, start:Int, end:Int)
         fun getCursorPostion():Int
+        fun showFindPlaceUi()
     }
 
     interface Presenter{
@@ -28,6 +29,7 @@ interface AddPhotoContract {
         fun usePhoto(photo: String)
         fun newMarker(latLng: LatLng)
         fun checkEdit(editable: Editable?)
+        fun openFindPlace()
     }
 
 }

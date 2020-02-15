@@ -15,6 +15,11 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
         commentView.showUserUi(userId)
     }
 
+    override fun openHashtag(hashtag: String) {
+        var sending = hashtag.substring(1) // #제거
+        commentView.showHashtagUi(sending)
+    }
+
     override fun getComments(baseurl: String, start: Int, photoId: Int) {
         val homePaging = HomePaging(start, commentView.refreshTimeStamp)
         logd(TAG, "파서테스트 = " + Parser.toJson(homePaging))

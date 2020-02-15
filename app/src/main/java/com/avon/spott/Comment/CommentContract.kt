@@ -8,6 +8,7 @@ interface CommentContract {
 
     interface View: BaseView<Presenter> {
         fun showUserUi(userId:Int)
+        fun showHashtagUi(hashtag:String)
         fun removePageLoading()
         fun clearAdapter()
         fun addItems(commentItems:ArrayList<Comment>)
@@ -19,12 +20,14 @@ interface CommentContract {
         fun setHashCaption(text:String, hashList:ArrayList<Array<Int>>)
         fun setCaption(text: String)
 
+
         var hasNext : Boolean
         var refreshTimeStamp:String
     }
 
     interface Presenter{
         fun openUser(userId:Int)
+        fun openHashtag(hashtag: String)
         fun getComments(baseurl:String, start:Int, photoId:Int)
         fun checkEditString(string:String)
         fun postCommnet(baseurl: String, photoId: Int, caption:String)

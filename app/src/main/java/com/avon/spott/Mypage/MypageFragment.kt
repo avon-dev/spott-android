@@ -9,6 +9,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
@@ -202,6 +203,15 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
             setUserInfo(userNickname!!, userPhoto)
         }
 
+        swiperefresh_mypager_f.setOnRefreshListener {
+            Handler().postDelayed({
+                presenter.getMyphotos(getString(R.string.baseurl))
+            }, 600) //로딩 주기
+        }
+
+        swiperefresh_mypager_f.setColorSchemeColors(ContextCompat.getColor(context!!, R.color.colorPrimary))
+
+
     }
 
     override fun onStart() {
@@ -387,6 +397,35 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         clusterManager!!.setOnClusterItemClickListener(this)
 
         presenter.getMyphotos(getString(R.string.baseurl))
+
+//        swiperefresh_mypager_f.setOnRefreshListener {
+//            Handler().postDelayed({
+//                presenter.getMyphotos(getString(R.string.baseurl))
+//            }, 600) //로딩 주기
+//        }
+//
+//        swiperefresh_mypager_f.setColorSchemeColors(ContextCompat.getColor(context!!, R.color.colorPrimary))
+
+    }
+
+    override fun clearAdapter(){
+        if(swiperefresh_mypager_f.isRefreshing){
+            mypageAdapter.clearItemsAdapter()
+            mypageAdapter.notifyDataSetChanged()
+
+            clusterManager.clearItems()
+            clusterManager.cluster()
+
+            mypageMapAdapter.clearItemsAdapter()
+            mypageMapAdapter.notifyDataSetChanged()
+            selectedMarkerMypage  = null
+
+            mapRecyclerView.visibility = View.GONE
+
+
+            swiperefresh_mypager_f.isRefreshing = false
+
+        }
     }
 
     override fun addItems(mypageItems: ArrayList<MapCluster>) { //프레젠터에서 넘어온 아이템을 클러스터와 어댑터에 뿌림.
@@ -574,7 +613,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
                     options.setToolbarCropDrawable(R.drawable.ic_arrow_forward_black_24dp)
                     options.setActiveControlsWidgetColor(ContextCompat.getColor(context!!, R.color.colorPrimary))
                     options.setStatusBarColor(ContextCompat.getColor(context!!, R.color.bg_black))
-                    options.setAspectRatioOptions(2,
+                    options.setAspectRatioOptions(1,
 //                        AspectRatio("16 : 9", 16f, 9f),
                         AspectRatio("4 : 3", 4f, 3f),
                         AspectRatio("1 : 1", 1f, 1f),
