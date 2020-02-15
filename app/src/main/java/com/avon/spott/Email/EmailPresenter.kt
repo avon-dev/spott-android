@@ -56,6 +56,7 @@ class EmailPresenter(val emailView: EmailContract.View) : EmailContract.Presente
                 if (throwable is HttpException) {
                     loge(TAG, "http exception : code ${throwable.code()}, message ${throwable.message()}" )
                 }
+                emailView.showError("다시 시도해주세요")
             })
     }
 }

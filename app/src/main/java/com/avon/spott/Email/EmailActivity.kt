@@ -64,6 +64,8 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
         edit_number_email_a.addTextChangedListener {
             presenter.isNumber(it.toString())
         }
+
+        text_block_email_a.setOnTouchListener { v, event -> true }
     }
 
 

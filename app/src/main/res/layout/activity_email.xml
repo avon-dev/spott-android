@@ -105,7 +105,7 @@
         android:id="@+id/text_block_email_a"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha="0.25"
+        android:alpha="0.45"
         android:background="@drawable/corner_round_graybtn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
