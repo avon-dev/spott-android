@@ -16,7 +16,7 @@ interface UserContract {
 
     interface Presenter{
         fun openPhoto(id:Int)
-        fun getUserphotos(baseurl:String, userId:Int)
+        fun getUserphotos(baseurl:String, userId:Int, fromSearch:Boolean)
 
     }
 }

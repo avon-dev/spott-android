@@ -1,5 +1,6 @@
 package com.avon.spott.User
 
+import com.avon.spott.Data.FromSearch
 import com.avon.spott.Data.MypageResult
 import com.avon.spott.Utils.App
 import com.avon.spott.Utils.Parser
@@ -18,10 +19,17 @@ class UserPresenter (val userView:UserContract.View):UserContract.Presenter {
         userView.showPhotoUi(id)
     }
 
-    override fun getUserphotos(baseurl: String, userId: Int) {
+    override fun getUserphotos(baseurl: String, userId: Int, fromSearch:Boolean) {
         logd(TAG, "userId : " +userId.toString())
 
-        Retrofit(baseurl).get(App.prefs.temporary_token, "/spott/mypage/"+userId.toString(),  "")
+        var action = 1202
+        if(fromSearch){action= 1201}
+
+        val fromSearch = FromSearch(action)
+
+        logd(TAG, "sending  : " + Parser.toJson(fromSearch))
+
+        Retrofit(baseurl).get(App.prefs.temporary_token, "/spott/mypage/"+userId.toString(),  Parser.toJson(fromSearch))
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 

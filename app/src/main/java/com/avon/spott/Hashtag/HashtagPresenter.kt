@@ -18,10 +18,16 @@ class HashtagPresenter(val hashtagView : HashtagContract.View):HashtagContract.P
         hashtagView.showPhotoUi(id)
     }
 
-    override fun getPhotos(baseUrl: String, start: Int, hashtag:String) {
+    override fun getPhotos(baseUrl: String, start: Int, hashtag:String, fromSearch:Boolean) {
 
+        //검색에서 온 게시물일 때 아닐때 구분에서 sending에 추가해줘야함.
+        var action = 1102
+        if(fromSearch){ action = 1101 }
 
-        val hashtagPaging = HashtagPaging(start, hashtagView.refreshTimeStamp, hashtag)
+        val hashtagPaging = HashtagPaging(start, hashtagView.refreshTimeStamp, hashtag, action)
+
+        logd(TAG, "hashtagPaging : $hashtagPaging")
+
         Retrofit(baseUrl).get(App.prefs.temporary_token,"/spott/tag", Parser.toJson(hashtagPaging))
 
             .subscribe({ response ->

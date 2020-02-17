@@ -22,8 +22,78 @@ class SearchPresenter(val searchView:SearchContract.View):SearchContract.Present
         searchView.showHashtag(hashtag)
     }
 
+    override fun deleteRecent(baseUrl: String, recentId: Int, position:Int) {
+
+        Retrofit(baseUrl).patch(App.prefs.temporary_token,"/spott/search", "")
+
+            .subscribe({ response ->
+                logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
+
+                val string  = response.body()
+//                val result = Parser.fromJson<SearchResult>(string!!)
+
+                searchView.deleteRecentItem(position)
+
+
+            }, { throwable ->
+                logd(TAG, throwable.message)
+                if (throwable is HttpException) {
+                    logd(
+                        TAG,
+                        "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
+                    )
+                }
+            })
+    }
+
+    override fun deleteAll(baseUrl: String) {
+        Retrofit(baseUrl).delete(App.prefs.temporary_token,"/spott/search", "")
+
+            .subscribe({ response ->
+                logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
+
+                val string  = response.body()
+//                val result = Parser.fromJson<SearchResult>(string!!)
+
+                searchView.clearRecentItems()
+
+            }, { throwable ->
+                logd(TAG, throwable.message)
+                if (throwable is HttpException) {
+                    logd(
+                        TAG,
+                        "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
+                    )
+                }
+            })
+    }
+
+    override fun getRecent(baseUrl: String) {
+
+        Retrofit(baseUrl).get(App.prefs.temporary_token,"/spott/recent", "")
+
+            .subscribe({ response ->
+                logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
+
+                val string  = response.body()
+                val result = Parser.fromJson<SearchResult>(string!!)
+
+                searchView.addRecentItems(result.items)
+
+
+            }, { throwable ->
+                logd(TAG, throwable.message)
+                if (throwable is HttpException) {
+                    logd(
+                        TAG,
+                        "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
+                    )
+                }
+            })
+
+    }
+
     override fun getSearching(baseUrl:String, text: String) {
-//        searchView.clearResultItems()
 
         var search_word = text
         var tag = false
