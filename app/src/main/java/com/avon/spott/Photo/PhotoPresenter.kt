@@ -142,7 +142,8 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
     }
 
     override fun postScrap(baseUrl: String, photoId: Int){
-        Retrofit(baseUrl).post(App.prefs.temporary_token, "/spott/scrap/"+photoId,  "")
+        /* 임시 수정 : temporary_token -> token*/
+        Retrofit(baseUrl).post(App.prefs.token, "/spott/scrap/"+photoId,  "")
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 
