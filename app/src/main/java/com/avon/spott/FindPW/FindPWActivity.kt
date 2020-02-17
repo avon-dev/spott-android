@@ -1,5 +1,6 @@
 package com.avon.spott.FindPW
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -7,10 +8,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.avon.spott.Camera.EMAIL_FIND_RESENDING_MILLS
 import com.avon.spott.Data.Number
+import com.avon.spott.NewPassword.NewPasswordActivity
 import com.avon.spott.R
 import kotlinx.android.synthetic.main.activity_find_pw.*
 import kotlinx.android.synthetic.main.toolbar.*
 
+const val FIND_PW = "find_pw"
 class FindPWActivity : AppCompatActivity(), FindPWContract.View, View.OnClickListener {
 
     override lateinit var presenter: FindPWContract.Presenter
@@ -101,6 +104,20 @@ class FindPWActivity : AppCompatActivity(), FindPWContract.View, View.OnClickLis
                     Toast.makeText(
                         applicationContext,
                         "${remainingTime}초 후 시도해주세요",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+            R.id.btn_confirm_findpw_a -> {
+                if(edit_number_findpw_a.text.toString().equals(number.code)) {
+                    Intent(this@FindPWActivity, NewPasswordActivity::class.java).let {
+                        it.putExtra(FIND_PW, edit_email_findpw_a.text.toString())
+                        startActivity(it)
+                    }
+                } else {
+                    Toast.makeText(
+                        this@FindPWActivity,
+                        getString(R.string.toast_wrong_number_findpw_a),
                         Toast.LENGTH_SHORT
                     ).show()
                 }

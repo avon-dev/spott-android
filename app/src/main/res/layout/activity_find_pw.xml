@@ -90,7 +90,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:background="@drawable/corner_round_graybtn"
+        android:background="@drawable/corner_round_primary"
         android:clickable="false"
         android:text="@string/next"
         android:textColor="#FFFFFF"
