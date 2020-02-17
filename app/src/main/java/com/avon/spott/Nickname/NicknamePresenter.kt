@@ -1,11 +1,11 @@
 package com.avon.spott.Nickname
 
+import android.annotation.SuppressLint
 import com.avon.spott.Data.NicknmaeResult
 import com.avon.spott.Data.Token
 import com.avon.spott.Data.User
-import com.avon.spott.Utils.Parser
-import com.avon.spott.Utils.Retrofit
-import com.avon.spott.Utils.logd
+import com.avon.spott.Utils.*
+import com.google.gson.GsonBuilder
 import retrofit2.HttpException
 
 class NicknamePresenter(val nicknameView: NicknameContract.View) : NicknameContract.Presenter {
@@ -21,21 +21,23 @@ class NicknamePresenter(val nicknameView: NicknameContract.View) : NicknameContr
     }
 
     override fun isNickname(nickname: String) {
-        nicknameView.enableSignUp(nickname.length > 3)
+        nicknameView.enableSignUp(Validator.validNickname(nickname))
     }
 
+    @SuppressLint("CheckResult")
     override fun signUp(baseUrl: String, user: User) {
-        Retrofit(baseUrl).postNonHeader("/spott/user", Parser.toJson(user)).subscribe({ response ->
+
+        Retrofit(baseUrl).postFieldNonHeader("/spott/account", Parser.toJson(user)).subscribe({ response ->
             logd(TAG, "response code: ${response.code()}, response body : ${response.body()}")
             val result = response.body()?.let { Parser.fromJson<NicknmaeResult>(it) }
             if (result != null) {
-                nicknameView.signUp(result.result)
+                nicknameView.signUp(result.sign_up)
             }
         }, { throwable ->
-            logd(TAG, throwable.message)
+            loge(TAG, throwable.message)
             if (throwable is HttpException) {
                 val exception = throwable
-                logd(
+                loge(
                     TAG,
                     "http exception code: ${exception.code()}, http exception message: ${exception.message()}"
                 )
@@ -43,17 +45,20 @@ class NicknamePresenter(val nicknameView: NicknameContract.View) : NicknameContr
         })
     }
 
+    @SuppressLint("CheckResult")
     override fun getToken(baseUrl: String, email: String, password: String) {
         Retrofit(baseUrl).signIn("/spott/token", email, password).subscribe({ response ->
-            logd(TAG, response.body())
-            response.body()?.let {
-                val token = Parser.fromJson<Token>(it)
-                nicknameView.showMainUi(token)
+            logd(TAG, "response code: ${response.code()}, response body : ${response.body()}")
+
+            val jsonObj = response.body()
+            if(jsonObj != null) {
+                val token = GsonBuilder().create().fromJson(jsonObj, Token::class.java)
+                nicknameView.getToken(token)
             }
         }, { throwable ->
-            logd(TAG, throwable.message)
+            loge(TAG, throwable.message)
             if (throwable is HttpException) {
-                logd(
+                loge(
                     TAG,
                     "http exception code: ${throwable.code()}, http exception message: ${throwable.message()}"
                 )

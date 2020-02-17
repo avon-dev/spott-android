@@ -3,14 +3,13 @@ package com.avon.spott.Main
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.fragment.NavHostFragment
 import com.avon.spott.Camera.CameraXActivity
+import com.avon.spott.EditMyinfo.EditMyInfoActivity
 import com.avon.spott.Map.MapFragment.Companion.mBottomSheetBehavior
 import com.avon.spott.R
-import com.avon.spott.Utils.App
 import com.avon.spott.Utils.logd
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -49,6 +48,9 @@ class MainActivity : AppCompatActivity(), MainContract.View, View.OnClickListene
         // 버튼 클릭 리스너
         mToolbar.img_back_toolbar.setOnClickListener(this)
         const_camera_main_a.setOnClickListener(this)
+
+        mToolbar.img_menu_toolbar.setOnClickListener(this)
+
     }
 
     override fun showCameraUi(){
@@ -86,6 +88,12 @@ class MainActivity : AppCompatActivity(), MainContract.View, View.OnClickListene
         when(v?.id){
             R.id.const_camera_main_a -> {presenter.openCamera()}
             R.id.img_back_toolbar -> {presenter.navigateUp()}
+            R.id.img_menu_toolbar -> {
+                // 임시
+                Intent(applicationContext, EditMyInfoActivity::class.java).let {
+                    startActivity(it)
+                }
+            }
         }
     }
 

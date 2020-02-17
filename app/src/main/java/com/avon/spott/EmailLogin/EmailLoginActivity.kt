@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
 import com.avon.spott.Data.Token
 import com.avon.spott.FindPW.FindPWActivity
 import com.avon.spott.Main.MainActivity
@@ -20,8 +19,7 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
     override lateinit var presenter: EmailLoginContract.Presenter
     private lateinit var emailLoginPresenter: EmailLoginPresenter
 
-    private var isEmail: Boolean = false
-    private var isPassword: Boolean = false
+    private val TAG = "EmailLoginActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +29,12 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
     }
 
     private fun init() {
+
+        // 임시
+        edit_username_emaillogin_a.setText("baek3@seunghyun.com")
+        edit_password_emaillogin_a.setText("seunghyun1!")
+
+
         emailLoginPresenter = EmailLoginPresenter(this)
 
         text_title_toolbar.text = getString(R.string.text_title_emaillogin)
@@ -38,14 +42,6 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
         img_back_toolbar.setOnClickListener(this)
         text_findpw_emaillogin_a.setOnClickListener(this)
         btn_login_emaillogin_a.setOnClickListener(this)
-
-        edit_username_emaillogin_a.addTextChangedListener {
-            presenter.isEmail(it.toString())
-        }
-
-        edit_password_emaillogin_a.addTextChangedListener {
-            presenter.isPassword(it.toString())
-        }
     }
 
     override fun showMainUi(token: Token) {
@@ -55,8 +51,23 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
         ed.putString("refresh", token.refresh)
         ed.apply()
 
-        val intent = Intent(this@EmailLoginActivity, MainActivity::class.java)
-        startActivity(intent)
+        // 얻은 access 토큰 값 뜯어보기 ,
+//        val str = String(Base64.decode(token.access, 0))
+//        val str2 = String(Base64.decode(token.refresh, 0))
+//        logd(TAG, "decode\n${str}")
+//        logd(TAG, "decode\n${str2}")
+
+        Intent(applicationContext, MainActivity::class.java).let {
+            it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(it)
+        }
+
+        // 임시
+//        Intent(applicationContext, EditMyInfoActivity::class.java).let {
+//            startActivity(it)
+//        }
+
     }
 
     override fun showFindPWUi() {
@@ -66,26 +77,6 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
 
     override fun navigateUp() {
         onBackPressed()
-    }
-
-    override fun isEmail(valid: Boolean) {
-        isEmail = valid
-        next()
-    }
-
-    override fun isPassword(valid: Boolean) {
-        isPassword = valid
-        next()
-    }
-
-    fun next() {
-        if (isEmail && isPassword) {
-            btn_login_emaillogin_a.isClickable = true
-            btn_login_emaillogin_a.setBackgroundResource(R.drawable.corner_round_primary)
-        } else {
-            btn_login_emaillogin_a.isClickable = false
-            btn_login_emaillogin_a.setBackgroundResource(R.drawable.corner_round_graybtn)
-        }
     }
 
     override fun showError(error: String) {
@@ -102,7 +93,18 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
                 presenter.openFindPW()
             }
 
-            R.id.btn_login_emaillogin_a -> {
+            R.id.btn_login_emaillogin_a -> { // 로그인 버튼
+
+                if (edit_username_emaillogin_a.text.toString().equals("")) {
+                    showError("이메일을 입력해주세요")
+                    return
+                }
+
+                if (edit_password_emaillogin_a.text.toString().equals("")) {
+                    showError("비밀번호를 입력해주세요")
+                    return
+                }
+
                 presenter.signIn(
                     getString(R.string.baseurl),
                     edit_username_emaillogin_a.text.toString(),

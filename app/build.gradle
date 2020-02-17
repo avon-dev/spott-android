@@ -6,6 +6,8 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
+apply plugin: "androidx.navigation.safeargs"
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -52,7 +54,7 @@ dependencies {
     //navigation
     implementation 'androidx.navigation:navigation-fragment-ktx:2.2.0-alpha01'
     implementation 'androidx.navigation:navigation-ui-ktx:2.2.0-alpha01'
-    implementation 'androidx.navigation:navigation-runtime-ktx:2.2.0-alpha01                                                                                                                     '
+    implementation 'androidx.navigation:navigation-runtime-ktx:2.2.0-alpha01'
 
     //circle imageview
     implementation 'de.hdodenhof:circleimageview:3.0.0'

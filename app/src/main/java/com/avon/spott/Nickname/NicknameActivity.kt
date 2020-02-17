@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.avon.spott.Data.Token
 import com.avon.spott.Data.User
+import com.avon.spott.Email.INTENT_EXTRA_USER
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.R
 import kotlinx.android.synthetic.main.activity_nickname.*
@@ -19,7 +20,6 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
     override lateinit var presenter: NicknameContract.Presenter
     private lateinit var nicknamePresenter: NicknamePresenter
 
-    val INTENT_EXTRA_USER = "user"
     private lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +27,6 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
         setContentView(R.layout.activity_nickname)
 
         init()
-
     }
 
     private fun init() {
@@ -46,10 +45,18 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
     }
 
     override fun enableSignUp(enable: Boolean) {
+        val btnConfirm = btn_confirm_nickname_a
+
         if (enable) {
-            btn_confirm_nickname_a.setBackgroundResource(R.drawable.corner_round_primary)
+            btnConfirm.apply {
+                setBackgroundResource(R.drawable.corner_round_primary)
+                isClickable = true
+            }
         } else {
-            btn_confirm_nickname_a.setBackgroundResource(R.drawable.corner_round_graybtn)
+            btnConfirm.apply {
+                setBackgroundResource(R.drawable.corner_round_graybtn)
+                isClickable = false
+            }
         }
     }
 
@@ -61,33 +68,42 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
         if (result) {
             presenter.getToken(getString(R.string.baseurl), user.email, user.password!!)
         } else {
-            Toast.makeText(this@NicknameActivity, "이미 가입한 닉네임입니다", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@NicknameActivity, getString(R.string.toast_duplication_nickname), Toast.LENGTH_SHORT).show()
         }
     }
 
-    override fun showMainUi(token:Token) {
+    override fun getToken(token:Token) {
         val pref = getSharedPreferences("pref", Context.MODE_PRIVATE)
         val ed = pref.edit()
         ed.putString("access", token.access)
         ed.putString("refresh", token.refresh)
         ed.apply()
 
+        showMainUi()
+    }
+
+    private fun showMainUi() {
         val intent = Intent(this@NicknameActivity, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
+
+            // 뒤로가기
             R.id.img_back_toolbar -> {
                 presenter.navigateUp()
             }
+
+            // 가입하기
             R.id.btn_confirm_nickname_a -> {
                 if (edit_nickname_a.text.length > 3) {
                     user.nickname = edit_nickname_a.text.toString()
                     presenter.signUp(getString(R.string.baseurl), user)
                 } else {
-                    Toast.makeText(this@NicknameActivity, "닉네임을 4글자 이상 작성해주세요", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(this@NicknameActivity, "닉네임을 4글자 이상 작성해주세요", Toast.LENGTH_SHORT).show()
                 }
             }
         }

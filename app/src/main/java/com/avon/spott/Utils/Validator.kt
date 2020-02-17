@@ -10,13 +10,25 @@ class Validator {
         }
 
         fun validPassword(string: String): Boolean {
-            val reg = Regex("((?=.*\\d)(?=.*[a-zA-Z])(?=.*\\W).{6,20})")
+//            val reg = Regex("((?=.*\\d)(?=.*[a-zA-Z])(?=.*\\W).{6,20})")
+
+            // 최소 8자리에 숫자, 문자, 특수문자 각각 1개 이상 포함
+            val reg = Regex("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&].{8,20}$")
+//            val reg = Regex("(?=.[a-zA-Z0-9].{8,20})")
+
 
             return string.matches(reg)
         }
 
         fun validNumber(number:String):Boolean {
             return number.length > 0
+        }
+
+        fun validNickname(nickname:String):Boolean {
+            // 4자리 이상의 영문 또는 숫자만 가능
+            val reg = Regex("(?=.*^[A-za-z0-9]).{4,}")
+
+            return nickname.matches(reg)
         }
     }
 }
