@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity(), MainContract.View, View.OnClickListene
         super.onCreate(savedInstanceState)
         logd(TAG, "onCreate" + savedInstanceState)
          setContentView(R.layout.activity_main)
-         mToolbar = this.findViewById<ConstraintLayout>(R.id.include_toolbar)
+         mToolbar = this.findViewById<ConstraintLayout>(R.id.include_toolbar_main_a)
         if (savedInstanceState == null){
             setupBottomNavigationBar()
         }

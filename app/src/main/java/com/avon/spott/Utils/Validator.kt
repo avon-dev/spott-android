@@ -1,5 +1,8 @@
 package com.avon.spott.Utils
 
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
 class Validator {
     companion object {
         fun validEmail(email: String): Boolean {
@@ -22,6 +25,13 @@ class Validator {
 
         fun validNumber(number:String):Boolean {
             return number.length > 0
+        }
+
+
+        fun validHashtag(string: String): Matcher {
+            val pattern =
+                Pattern.compile("\\#([0-9a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ\\u318D\\u119E\\u11A2\\u2022\\u2025a\\u00B7\\uFE55]*)")
+            return pattern.matcher(string)
         }
 
         fun validNickname(nickname:String):Boolean {

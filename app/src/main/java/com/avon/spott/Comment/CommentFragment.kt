@@ -6,6 +6,11 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Handler
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -20,10 +25,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.avon.spott.Data.Comment
-import com.avon.spott.Data.NickPhoto
+import com.avon.spott.Data.UserData
 import com.avon.spott.R
 import com.avon.spott.Main.MainActivity
-import com.avon.spott.Main.controlToobar
+import com.avon.spott.Main.controlToolbar
 import com.avon.spott.Utils.DateTimeFormatter.Companion.formatCreated
 import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
@@ -58,8 +63,8 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
     private var baseurl = ""
 
     val commentInterListener = object :commentInter{
-        override fun userClick(){
-            presenter.openPhoto()
+        override fun userClick(userId:Int){
+            presenter.openUser(userId)
         }
 
         override fun editComment(alertDialog: AlertDialog, position: Int, content: String, commentId:Int) {
@@ -147,7 +152,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         super.onStart()
 
         // 툴바 뒤로가기, 타이틀 보이게
-        controlToobar(View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.GONE, View.GONE, View.GONE)
+        controlToolbar(View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE)
         MainActivity.mToolbar.text_title_toolbar.text = getString(R.string.comment)
         MainActivity.mToolbar.visibility = View.VISIBLE
     }
@@ -166,6 +171,8 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
 
         //PhotoFragment에서 넘어온 게시글 데이터
+        presenter.getHash(arguments?.getString("photoCaption").toString())
+
         if(arguments?.getString("userPhoto")!=""){
             Glide.with(context!!)
                 .load(arguments?.getString("userPhoto"))
@@ -173,11 +180,10 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                 .error(android.R.drawable.stat_notify_error)
                 .into(img_profile_comment_f)
         }else{
-            img_profile_comment_f.setImageResource(R.drawable.ic_account_circle_grey_36dp)
+            img_profile_comment_f.setImageResource(R.drawable.img_person)
         }
 
         text_nickname_comment_f.text = arguments?.getString("userNickname").toString()
-        text_content_comment_f.text = arguments?.getString("photoCaption").toString()
         text_date_comment_f.text = arguments?.getString("photoDateTime").toString()
 
         edit_comment_comment_f.addTextChangedListener {
@@ -189,13 +195,21 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         imgbtn_write_comment_f.setOnClickListener(this)
     }
 
-    override fun showPhotoUi() {
-        findNavController().navigate(R.id.action_commentFragment_to_userFragment)
+    override fun showUserUi(userId:Int) {
+        val bundle = Bundle()
+        bundle.putInt("userId", userId)
+        findNavController().navigate(R.id.action_commentFragment_to_userFragment, bundle)
+    }
+
+    override fun showHashtagUi(hashtag:String){
+        val bundle = Bundle()
+        bundle.putString("hashtag", hashtag)
+        findNavController().navigate(R.id.action_commentFragment_to_hashtagFragment, bundle)
     }
 
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.text_nickname_comment_f -> {presenter.openPhoto()}
+            R.id.text_nickname_comment_f -> {presenter.openUser(arguments?.getInt("userId")!!)}
             R.id.imgbtn_write_comment_f -> {presenter.postCommnet(baseurl,
                 photoId, edit_comment_comment_f.text.toString())}
         }
@@ -203,7 +217,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
     //리사이클러뷰 아이템 클릭을 위한 인터페이스
     interface commentInter{
-        fun userClick()
+        fun userClick(userId:Int)
         fun editComment(alertDialog: AlertDialog, position: Int, content: String, commentId:Int)
         fun deleteComment(alertDialog: AlertDialog, position: Int, commentId:Int)
     }
@@ -268,7 +282,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         //리싸이클러뷰 아래로 드래그시 페이징 로딩아이템 추가
         fun addPageLoadingItem() {
             isLoadingAdded = true
-            addPage(Comment(0, NickPhoto("",""),false,"",""))
+            addPage(Comment(0, UserData("","",0),false,"",""))
         }
 
         fun removePageLoadingItem(){
@@ -315,6 +329,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                         .error(android.R.drawable.stat_notify_error)
                         .into(itemViewholder.photo)
 
+
                     itemViewholder.nickname.text = it.user.nickname
                     itemViewholder.content.text = it.contents
                     itemViewholder.date.text = formatCreated(it.created)
@@ -322,9 +337,11 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                     if(it.myself){
                         itemViewholder.editor.visibility = View.VISIBLE
                         itemViewholder.remover.visibility = View.VISIBLE
+                        itemViewholder.reporter.visibility = View.GONE
                     }else{
                         itemViewholder.editor.visibility = View.GONE
                         itemViewholder.remover.visibility = View.GONE
+                        itemViewholder.reporter.visibility = View.VISIBLE
                     }
 
 
@@ -373,19 +390,25 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                         editORdelete(true)
                     }
 
+                    itemViewholder.reporter.setOnClickListener {
+                        /** 댓글 신고 처리하는 코드 넣어야함.*/
+                    }
+
+                    //아이템 닉네임 클릭시 이벤트 -> 유저페이지로 이동
+                    itemViewholder.nickname.setOnClickListener {
+                        commentInterListener.userClick(itemsList[position].user.id)
+                    }
+
+                    //아이템 유저 사진 클릭시 이벤트 -> 유저페이지로 이동
+                    itemViewholder.photo.setOnClickListener {
+                        commentInterListener.userClick(itemsList[position].user.id)
+                    }
+
 
 
                 }
 
-                //아이템 닉네임 클릭시 이벤트 -> 유저페이지로 이동
-                itemViewholder.nickname.setOnClickListener {
-                    commentInterListener.userClick()
-                }
 
-                //아이템 유저 사진 클릭시 이벤트 -> 유저페이지로 이동
-                itemViewholder.photo.setOnClickListener {
-                    commentInterListener.userClick()
-                }
 
             }else{
 
@@ -401,6 +424,8 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
             val editor = itemView!!.findViewById<ImageButton>(R.id.imgbtn_edit_comment_i)
             val remover = itemView!!.findViewById<ImageButton>(R.id.imgbtn_remove_comment_i)
+            val reporter = itemView!!.findViewById<ImageButton>(R.id.imgbtn_report_comment_i)
+
         }
 
         inner class LoadingViewHolder(itemView:View):RecyclerView.ViewHolder(itemView){
@@ -443,6 +468,43 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
     override fun deleteDone(alertDialog: AlertDialog, position: Int){
         commentAdapter.commentDeleted(position)
         alertDialog.dismiss()
+    }
+
+    override fun setCaption(text: String) {
+        text_content_comment_f.text = text
+    }
+
+    override fun setHashCaption(text:String, hashList:ArrayList<Array<Int>>){
+
+        var spannableString = SpannableString(text)
+
+//        val startList = ArrayList<Int>()
+        for (hash in hashList) {
+//            if(!startList.contains(hash[0])){
+//                startList.add(hash[0])
+
+                val start = hash[0]
+                val end = hash[1]
+
+                spannableString.setSpan(object : ClickableSpan() {
+                    override fun updateDrawState(ds: TextPaint) {
+                        super.updateDrawState(ds)
+                        ds.isUnderlineText = false
+
+                    }
+                    override fun onClick(widget: View) {
+//                        showToast(text.substring(start,end))
+                        presenter.openHashtag(text.substring(start,end))
+                    }
+                }, start, end,  Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//            }
+
+        }
+//        logd(TAG, "startList : "+startList.toString())
+
+        text_content_comment_f.text = spannableString
+        text_content_comment_f.movementMethod = LinkMovementMethod.getInstance()
+
     }
 
 

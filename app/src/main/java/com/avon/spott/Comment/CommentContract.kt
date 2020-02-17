@@ -7,7 +7,8 @@ import com.avon.spott.Data.Comment
 interface CommentContract {
 
     interface View: BaseView<Presenter> {
-        fun showPhotoUi()
+        fun showUserUi(userId:Int)
+        fun showHashtagUi(hashtag:String)
         fun removePageLoading()
         fun clearAdapter()
         fun addItems(commentItems:ArrayList<Comment>)
@@ -16,13 +17,17 @@ interface CommentContract {
         fun showToast(string: String)
         fun updateDone(alertDialog: AlertDialog, position: Int, content: String)
         fun deleteDone(alertDialog: AlertDialog, position: Int)
+        fun setHashCaption(text:String, hashList:ArrayList<Array<Int>>)
+        fun setCaption(text: String)
+
 
         var hasNext : Boolean
         var refreshTimeStamp:String
     }
 
     interface Presenter{
-        fun openPhoto()
+        fun openUser(userId:Int)
+        fun openHashtag(hashtag: String)
         fun getComments(baseurl:String, start:Int, photoId:Int)
         fun checkEditString(string:String)
         fun postCommnet(baseurl: String, photoId: Int, caption:String)
@@ -30,6 +35,7 @@ interface CommentContract {
                           alertDialog: AlertDialog, position: Int, content: String)
         fun deleteComment(baseurl: String, photoId: Int, commentId: Int,
                           alertDialog: AlertDialog, position: Int)
+        fun getHash(text:String)
     }
 
 }

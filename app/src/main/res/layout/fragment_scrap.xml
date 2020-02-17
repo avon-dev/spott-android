@@ -10,7 +10,7 @@
         android:id="@+id/view_top_scarp_f"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="?attr/actionBarSize"
         android:background="@color/background_grey"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -86,18 +86,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-<!--    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
-<!--        android:id="@+id/swiperefresh_scrap_f"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:orientation="vertical"-->
-<!--        app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.0"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/view_top_scarp_f">-->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swiperefresh_scrap_f"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_top_scarp_f">
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scroll_scrap_f"
@@ -106,7 +103,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view_top_scarp_f">
+            app:layout_constraintTop_toBottomOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -145,8 +142,54 @@
 
         </androidx.core.widget.NestedScrollView>
 
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+<!--        <androidx.core.widget.NestedScrollView-->
+<!--            android:id="@+id/scroll_scrap_f"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/view_top_scarp_f">-->
 
-<!--    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
+<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content">-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/text_guide_scrap_f"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:background="@color/background_grey"-->
+<!--                    android:gravity="center"-->
+<!--                    android:paddingHorizontal="16dp"-->
+<!--                    android:paddingVertical="5dp"-->
+<!--                    android:text="@string/text_guide_scrap_f"-->
+<!--                    android:textColor="@color/text_white"-->
+<!--                    android:textSize="13dp"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="parent"/>-->
+
+<!--                <androidx.recyclerview.widget.RecyclerView-->
+<!--                    android:id="@+id/recycler_scrap_f"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginBottom="16dp"-->
+<!--                    android:clipToPadding="false"-->
+<!--                    android:paddingHorizontal="4dp"-->
+<!--                    android:paddingTop="8dp"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/text_guide_scrap_f"-->
+<!--                    android:nestedScrollingEnabled="false"/>-->
+
+<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+<!--        </androidx.core.widget.NestedScrollView>-->
+
+
 
     <TextView
         android:id="@+id/text_noscrap_scrap_f"

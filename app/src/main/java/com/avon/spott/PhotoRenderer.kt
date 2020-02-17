@@ -29,6 +29,7 @@ class PhotoRenderer(mcontext: Context, mMap:GoogleMap, clusterManager: ClusterMa
 
     private val context = mcontext
     private val mapFrag:Boolean = mapFrag
+
     private val TAG = "PhotoRenderer"
 
     val customMarkerView: View

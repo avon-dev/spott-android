@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.avon.spott.R
 import com.avon.spott.Main.MainActivity
-import com.avon.spott.Main.controlToobar
+import com.avon.spott.Main.controlToolbar
 import kotlinx.android.synthetic.main.fragment_alarm.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
@@ -76,7 +76,7 @@ class AlarmFragment : Fragment(), AlarmContract.View, View.OnClickListener {
         super.onStart()
 
         // 툴바 뒤로가기, 타이틀 보이게
-        controlToobar(View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.GONE, View.GONE, View.GONE)
+        controlToolbar(View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE)
         MainActivity.mToolbar.text_title_toolbar.text = getString(R.string.alarm)
         MainActivity.mToolbar.visibility = View.VISIBLE
     }

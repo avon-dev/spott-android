@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -45,6 +46,9 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
             presenter.openPhoto(id)
         }
 
+        override fun itemLongClick(photoUrl: String) {
+            presenter.openCamera(photoUrl)
+        }
 
         override fun deleteScraps(scrapItems: ArrayList<ScrapItem>){
             presenter.deleteScraps(getString(R.string.baseurl), scrapItems)
@@ -82,6 +86,15 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
         recycler_scrap_f.adapter = scrapAdapter
 
 
+        swiperefresh_scrap_f.setOnRefreshListener {
+            Handler().postDelayed({
+                presenter.getScraps(getString(R.string.baseurl))
+            }, 300) //로딩 주기
+        }
+
+        swiperefresh_scrap_f.setColorSchemeColors(ContextCompat.getColor(context!!, R.color.colorPrimary))
+
+
         if(!checkInit){
             presenter.getScraps(getString(R.string.baseurl))
             checkInit = true
@@ -99,8 +112,6 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
                 scrapChange = false
             }
         }
-
-
 
     }
 
@@ -129,6 +140,13 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
         findNavController().navigate(R.id.action_scrapFragment_to_photo, bundle)
     }
 
+    override fun showCameraUi(photoUrl: String) {
+        showToast(photoUrl)
+        /**
+         * 여기에 카메라 연결하는 코드 넣으면 됨!!!!!
+         *                                    */
+    }
+
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.text_deleteready_scrap_f ->{
@@ -145,6 +163,7 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
 
     interface scrapInter{
         fun itemClick(id: Int)
+        fun itemLongClick(photoUrl: String)
         fun deleteScraps(scrapItems: ArrayList<ScrapItem>)
         fun returnText()
         fun counttext(count: Int)
@@ -217,6 +236,7 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
 
 
         override fun onBindViewHolder(holder:ScrapFragment.ScrapAdapter.ViewHolder, position: Int) {
+
             itemsList[position].let {
                 Glide.with(holder.itemView.context)
                     .load(it.posts_image)
@@ -243,6 +263,24 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
                 }
             }
 
+             holder.itemView.isLongClickable = true
+
+            holder.itemView.setOnLongClickListener(object :View.OnLongClickListener{
+                override fun onLongClick(v: View?): Boolean {
+                     if(!selectingReady){
+                      scrapInterListener.itemLongClick(itemsList[position].back_image)
+                    }
+                    return true
+                }
+
+            })
+
+
+
+
+
+
+
             if(selectingReady){
                 holder.selectBackground.visibility = View.VISIBLE
             }else{
@@ -264,6 +302,14 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
 
         }
 
+    }
+
+    override fun clearAdapter(){
+        if(swiperefresh_scrap_f.isRefreshing){
+            scrapAdapter.clearItemsAdapter()
+            scrapAdapter.notifyDataSetChanged()
+            swiperefresh_scrap_f.isRefreshing = false
+        }
     }
 
     override fun addItems(scrapItems:ArrayList<ScrapItem>){

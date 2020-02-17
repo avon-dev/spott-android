@@ -1,45 +1,81 @@
 package com.avon.spott.User
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.avon.spott.Data.MapCluster
 import com.avon.spott.R
 import com.avon.spott.Main.MainActivity
-import com.avon.spott.Main.controlToobar
+import com.avon.spott.Main.MainActivity.Companion.mToolbar
+import com.avon.spott.Main.controlToolbar
+import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
-import com.google.android.material.tabs.TabLayout
-import kotlinx.android.synthetic.main.fragment_mypage.*
-import kotlinx.android.synthetic.main.fragment_mypage.view.*
+import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
-class UserFragment : Fragment(), UserContract.View, View.OnClickListener {
+class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
 
 
-  var Userselectgrid = true
+    private val TAG = "forUserFragment"
 
+    lateinit var mapRecyclerViewUser : RecyclerView  //Map recyclerview
 
     private lateinit var userPresenter: UserPresenter
     override lateinit var presenter: UserContract.Presenter
 
+    //Grid recyclerview
+    private lateinit var userAdapter: UserAdapter
+    private lateinit var layoutManager : GridLayoutManager
+
+    //서버에서 불러온 내 전체 아이템들
+    private var wholeItems:ArrayList<MapCluster>? = null
+
+    //유저의 닉네임과 아이디
+    private var userNickname:String? = null
+    private var userPhoto:String? = null
+
+    private var checkInit = false
+
     val userInterListener = object : userInter{
-        override fun itemClick(){
-            presenter.openPhoto()
+        override fun itemClick(id:Int){
+            presenter.openPhoto(id)
         }
     }
 
-    @SuppressLint("RestrictedApi") //floatbutton 숨기려면 해야함.
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val root =  inflater.inflate(R.layout.fragment_mypage, container, false)
+    private var fromSearch = false
+    private var userId = 0
 
-        root.floatimgbtn_addphoto_mypage.visibility = View.GONE
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        //Grid recyclerview 용
+        layoutManager = GridLayoutManager(context!!, 3)
+        userAdapter = UserAdapter(context!!, userInterListener)
+
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val root =  inflater.inflate(R.layout.fragment_user, container, false)
+
+        logd(TAG, "user's id : "+arguments?.getInt("userId"))
+        logd(TAG, "from search user' id : "+arguments?.getInt("SearcheduserId"))
+
+        if(arguments?.getInt("userId")!=0){
+            userId = arguments?.getInt("userId")!!
+        }else{
+            userId = arguments?.getInt("SearcheduserId")!!
+            fromSearch = true
+        }
 
         return root
     }
@@ -49,102 +85,68 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener {
 
         init()
 
-        //---------------리사이클러뷰테스트 코드------------------------------
-        val layoutManager = GridLayoutManager(context!!, 3)
 
-        recycler_grid_mypage_f.layoutManager  = layoutManager
-        recycler_grid_mypage_f.adapter = UserAdapter(context!!, userInterListener)
-        //-----------------------------------------------------------------
-
-
-
-        ////////마이페이지 뷰 선택 --- 일단 나중에
-//        val topButtonsListner = View.OnClickListener {
-//            if(it.id == R.id.imgbtn_grid_mypage_f) {
-//                imgbtn_grid_mypage_f.isSelected= true
-//                imgbtn_map_mypage_f.isSelected = false
-//                const_grid_mypage_f.visibility = View.VISIBLE
-//                const_map_mypage_f.visibility = View.GONE
-//                Userselectgrid = true
-//            }else{
-//                imgbtn_grid_mypage_f.isSelected=false
-//                imgbtn_map_mypage_f.isSelected = true
-//                const_grid_mypage_f.visibility = View.GONE
-//                const_map_mypage_f.visibility = View.VISIBLE
-//                Userselectgrid = false
-//            }
-//        }
-//
-//        imgbtn_grid_mypage_f.setOnClickListener(topButtonsListner)
-//        imgbtn_map_mypage_f.setOnClickListener(topButtonsListner)
-//
-//        if(Userselectgrid){
-//            imgbtn_grid_mypage_f.performClick()
-//        }else{
-//            imgbtn_map_mypage_f.performClick()
-//        }
-
-        ////////////////////////////////////////////////////////
-
-        ////////////////////////////////////////////////////////
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_grid_on_white_24dp))
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_map_white_24dp))
-
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                when(tab!!.position){
-                    0 -> {
-                        const_grid_mypage_f.visibility = View.VISIBLE
-                        const_map_mypage_f.visibility = View.GONE
-                        Userselectgrid = true
-                    }
-                    1 -> {
-                        const_grid_mypage_f.visibility = View.GONE
-                        const_map_mypage_f.visibility = View.VISIBLE
-                        Userselectgrid = false
-                    }
-                }
-            }
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-            }
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-            }
-        })
-
-
-        if(Userselectgrid){
-            tabLayout.getTabAt(0)!!.select()
-            const_grid_mypage_f.visibility = View.VISIBLE
-            const_map_mypage_f.visibility = View.GONE
-        }else{
-            tabLayout.getTabAt(1)!!.select()
-            const_grid_mypage_f.visibility = View.GONE
-            const_map_mypage_f.visibility = View.VISIBLE
+        if(userNickname!=null){
+            setUserInfo(userNickname!!, userPhoto)
         }
-        ///////////////////////////
+
+        recycler_grid_user_f.layoutManager  = layoutManager
+        recycler_grid_user_f.adapter = userAdapter
+
+
+        swiperefresh_user_f.setOnRefreshListener {
+            Handler().postDelayed({
+                presenter.getUserphotos(getString(R.string.baseurl), userId)
+            }, 600) //로딩 주기
+        }
+
+        if(!checkInit) {
+            //처음 사진을 가져오는 코드 (처음 이후에는 리프레쉬 전까지 가져오지않는다.)
+            presenter.getUserphotos(getString(R.string.baseurl), userId)
+
+            checkInit = true
+        }
+
+        swiperefresh_user_f.setColorSchemeColors(ContextCompat.getColor(context!!, R.color.colorPrimary))
 
     }
 
     override fun onStart() {
         super.onStart()
-        //-----임시 데이터-----------------------------
-        Glide.with(this)
-            .load(R.mipmap.ic_launcher)
-            .into(MainActivity.mToolbar.img_profile_toolbar)
 
-        MainActivity.mToolbar.text_name_toolbar.text="MyNickName"
-        //--------------------------------------------
-        // 툴바 유저이미지, 유저닉네임, 알람, 메뉴 보이게
-        controlToobar(View.VISIBLE, View.VISIBLE, View.VISIBLE, View.GONE, View.VISIBLE, View.GONE, View.GONE)
+        // 툴바 유저이미지, 유저닉네임 보이게
+        controlToolbar(View.VISIBLE, View.VISIBLE, View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE)
         MainActivity.mToolbar.visibility = View.VISIBLE
+
+        if( wholeItems!=null &&  wholeItems!!.size == 0){ //서버에서 불러왔던 사진아이템 사이즈가 0이면 사진없음 문구 보이게
+            text_nophoto_user_f.visibility = View.VISIBLE
+        }
+
+
+
+    }
+
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        recycler_grid_user_f.layoutManager = null
+
     }
 
     fun init(){
         userPresenter = UserPresenter(this)
     }
 
-    override fun showPhotoUi() {
-        findNavController().navigate(R.id.action_userFragment_to_photoFragment)
+    override fun showPhotoUi(id:Int) {//PhotoFragment로 이동
+        val bundle = bundleOf("photoId" to id)
+        if(!fromSearch){
+            findNavController().navigate(R.id.action_userFragment_to_photoFragment, bundle)
+        }else{
+            findNavController().navigate(R.id.action_searchedUserFragment_to_photo, bundle)
+        }
+
     }
 
     override fun onClick(v: View?) {
@@ -153,11 +155,36 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener {
         }
     }
 
+    override fun clearAdapter(){
+        if(swiperefresh_user_f.isRefreshing){
+            userAdapter.clearItemsAdapter()
+            userAdapter.notifyDataSetChanged()
+            swiperefresh_user_f.isRefreshing = false
+        }
+    }
+
+
+    override fun addItems(userItems:ArrayList<MapCluster>){
+        logd(TAG, "addItems : " + userItems)
+        wholeItems = userItems
+
+        userAdapter.addItemsAdapter(userItems)
+        userAdapter.notifyDataSetChanged()
+    }
+
+
+    override fun noPhoto(){
+        text_nophoto_user_f.visibility = View.VISIBLE
+    }
+
+
     interface userInter{
-        fun itemClick()
+        fun itemClick(id:Int)
     }
 
     inner class UserAdapter(val context: Context, val userInterListener:userInter):RecyclerView.Adapter<UserAdapter.ViewHolder>(){
+
+        private var itemsList = ArrayList<MapCluster>()
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserAdapter.ViewHolder {
             val view =  LayoutInflater.from(context).inflate(R.layout.item_photo_square, parent, false)
@@ -165,55 +192,54 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener {
         }
 
         override fun getItemCount(): Int {
-            return 6
+            return itemsList.size
+        }
+
+        fun addItemsAdapter(mypageItems:ArrayList<MapCluster>){
+            itemsList.addAll(mypageItems)
+        }
+
+        fun clearItemsAdapter() {
+            itemsList.clear()
         }
 
         override fun onBindViewHolder(holder: UserAdapter.ViewHolder, position: Int) {
 
-            //------------임시 데이터들---------------------------------------------------------------
-            if(position==0 || position==5){
-                Glide.with(holder.itemView.context)
-                    .load("https://cdn.pixabay.com/photo/2017/08/06/12/06/people-2591874_1280.jpg")
-                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                    .error(android.R.drawable.stat_notify_error)
-                    .into(holder.photo)
-            }else if(position==1 || position==6){
-                Glide.with(holder.itemView.context)
-                    .load("https://cdn.pixabay.com/photo/2017/06/23/17/41/morocco-2435391_960_720.jpg")
-                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                    .error(android.R.drawable.stat_notify_error)
-                    .into(holder.photo)
+           itemsList[position].let{
+               Glide.with(holder.itemView.context)
+                   .load(it.posts_image)
+                   .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                   .error(android.R.drawable.stat_notify_error)
+                   .into(holder.photo)
 
-            }else if(position==2 || position==7){
-                Glide.with(holder.itemView.context)
-                    .load("https://cdn.pixabay.com/photo/2012/10/10/11/05/space-station-60615_960_720.jpg")
-                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                    .error(android.R.drawable.stat_notify_error)
-                    .into(holder.photo)
-            }else if(position==3 || position==8){
-                Glide.with(holder.itemView.context)
-                    .load("https://cdn.pixabay.com/photo/2017/08/02/00/16/people-2568954_1280.jpg")
-                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                    .error(android.R.drawable.stat_notify_error)
-                    .into(holder.photo)
-            }else if(position==4 || position==9){
-                Glide.with(holder.itemView.context)
-                    .load("https://cdn.pixabay.com/photo/2016/11/29/06/45/beach-1867881_1280.jpg")
-                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                    .error(android.R.drawable.stat_notify_error)
-                    .into(holder.photo)
-            }
-            //---------------------------------------------------------------------------------------------------
+               holder.itemView.setOnClickListener {
+                   userInterListener.itemClick(itemsList[position].id)
+               }
+           }
 
-            holder.itemView.setOnClickListener {
-                userInterListener.itemClick()
-            }
+
         }
 
         inner class ViewHolder(itemView:View):RecyclerView.ViewHolder(itemView){
             val photo = itemView.findViewById<ImageView>(R.id.img_photo_photo_square_i) as ImageView
         }
 
+    }
+
+
+    override fun setUserInfo(nickname:String, photo:String?){
+        userNickname = nickname
+        userPhoto = photo
+
+        if(photo==null){
+            mToolbar.img_profile_toolbar.setImageResource(R.drawable.img_person)
+        }else{
+            Glide.with(this)
+                .load(photo)
+                .into(mToolbar.img_profile_toolbar)
+        }
+
+        mToolbar.text_name_toolbar.text=nickname
     }
 
 

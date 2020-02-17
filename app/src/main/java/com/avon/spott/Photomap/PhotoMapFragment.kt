@@ -15,7 +15,7 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.avon.spott.R
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
-import com.avon.spott.Main.controlToobar
+import com.avon.spott.Main.controlToolbar
 import com.avon.spott.Utils.logd
 import com.avon.spott.getMarkerBitmapFromView
 import com.bumptech.glide.Glide
@@ -76,7 +76,7 @@ class PhotoMapFragment: Fragment(), PhotoMapContract.View, View.OnClickListener,
         locationInit()
 
         //툴바 뒤로가기, 타이틀 보이게
-        controlToobar(View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.GONE, View.GONE, View.GONE)
+        controlToolbar(View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE)
         mToolbar.text_title_toolbar.text = getString(R.string.map)
         mToolbar.visibility = View.VISIBLE
     }

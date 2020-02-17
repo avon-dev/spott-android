@@ -17,6 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".FindPlace.FindPlaceActivity"></activity>
+        <activity android:name=".EditCaption.EditCaptionActivity" />
         <activity android:name=".ChangePassword.ChangePasswordActivity"></activity>
         <activity android:name=".NewPassword.NewPasswordActivity" />
         <activity
@@ -87,6 +89,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_geo_key" />
+
     </application>
 
 </manifest>

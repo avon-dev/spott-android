@@ -188,7 +188,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
 
         //바텀시트가 현재 어떤 상태인지 확인하고 해당 상태에 맞게 ui 처리
-        if(mBottomSheetBehavior?.state == STATE_EXPANDED){
+        if(mBottomSheetBehavior.state == STATE_EXPANDED){
             bottomExpanded()
         }else{
             bottomCollapsed()
@@ -224,7 +224,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
         logd(TAG, "configureBackdrop()")
 
-        bottomconst?.let {
+        bottomconst.let {
 
             logd(TAG, "frag_list_map_f")
             // Get the BottomSheetBehavior from the fragment view
@@ -341,10 +341,10 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
             val position = itemsList.size -1
             val item = getItem(position)
 
-            if(item != null){
-                itemsList.remove(item)
-                notifyItemRemoved(position)
-            }
+
+            itemsList.remove(item)
+            notifyItemRemoved(position)
+
         }
 
         override fun getItemViewType(position: Int): Int {
@@ -365,16 +365,16 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             if(getItemViewType(position)==ITEM) {
-                val holder :ItemViewHolder = holder as ItemViewHolder
+                val mapholder :ItemViewHolder = holder as ItemViewHolder
                 itemsList[position].let {
-                    Glide.with(holder.itemView.context)
+                    Glide.with(mapholder.itemView.context)
                         .load(it.posts_image)
                         .placeholder(android.R.drawable.progress_indeterminate_horizontal)
                         .error(android.R.drawable.stat_notify_error)
-                        .into(holder.photo)
+                        .into(mapholder.photo)
                 }
 
-                holder.itemView.setOnClickListener {
+                mapholder.itemView.setOnClickListener {
                     mapInterListener.itemClick(itemsList[position].id)
                 }
             }
@@ -411,7 +411,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     }
 
     override fun onClusterItemClick(item: MapCluster?): Boolean { //클러스터아이템(사진 한 장) 눌렀을 때 일어나는 일
-        if(mBottomSheetBehavior?.state ==  BottomSheetBehavior.STATE_EXPANDED){
+        if(mBottomSheetBehavior.state ==  BottomSheetBehavior.STATE_EXPANDED){
             return true   //맵리스트플래그먼트(하단플래그먼트)가 올라온 상태라면 클러스터 클릭안되게
         }
         presenter.openPhoto(item!!.id) //사진 한 장 클릭시 PhotoFragment로 이동
@@ -420,7 +420,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
     override fun onClusterClick(cluster: Cluster<MapCluster>?): Boolean { //클러스터(사진 여러장) 눌렀을 때 일어나는 일
 
-        if(mBottomSheetBehavior?.state ==  BottomSheetBehavior.STATE_EXPANDED){
+        if(mBottomSheetBehavior.state ==  BottomSheetBehavior.STATE_EXPANDED){
             //맵리스트플래그먼트(하단플래그먼트)가 올라온 상태라면 클러스터 클릭안되게
             return true
         }
@@ -462,7 +462,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     private fun newCluster(cluster: Cluster<MapCluster>?){ //새로 선택한 클러스터 처리
         text_spotnumber_maplist_f.text = cluster!!.size.toString()
 
-        val sortItmes = cluster!!.items.sortedByDescending { mapCluster: MapCluster? -> mapCluster!!.id }
+        val sortItmes = cluster.items.sortedByDescending { mapCluster: MapCluster? -> mapCluster!!.id }
 
         val firstItem = sortItmes[0] //첫번째 아이템 선택
 
@@ -501,7 +501,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         getPagedItems()
 
         //클러스터 선택시 맵리스트플래그먼트(하단플래그먼트) 반만 올라오게
-        mBottomSheetBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        mBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
 
 
         val quarterLat = //지금 보여지는 맵 위쪽과 아래쪽의 위도 차이를 구해서 나눔.
@@ -541,7 +541,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
 
         //맵리스트플래그먼트(하단플래그먼트) 내려가게
-        mBottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+        mBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         bottomCollapsed()
     }
 
@@ -558,13 +558,13 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         clusterManager = ClusterManager<MapCluster>(context, mMap)
 
         mCustomClusterItemRenderer = PhotoRenderer(context!!, mMap, clusterManager, true)
-        clusterManager!!.renderer = mCustomClusterItemRenderer
-        clusterManager!!.renderer.setAnimation(false)
+        clusterManager.renderer = mCustomClusterItemRenderer
+        clusterManager.renderer.setAnimation(false)
 
         mMap.setOnMarkerClickListener(clusterManager)
         mMap.setOnInfoWindowClickListener(clusterManager)
-        clusterManager!!.setOnClusterClickListener(this)
-        clusterManager!!.setOnClusterItemClickListener(this)
+        clusterManager.setOnClusterClickListener(this)
+        clusterManager.setOnClusterItemClickListener(this)
 
 
         mMap.setOnCameraIdleListener(object:GoogleMap.OnCameraIdleListener{ //카메라 움직임이 끝나는 콜백

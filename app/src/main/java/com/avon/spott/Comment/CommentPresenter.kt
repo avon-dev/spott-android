@@ -2,10 +2,7 @@ package com.avon.spott.Comment
 
 import android.app.AlertDialog
 import com.avon.spott.Data.*
-import com.avon.spott.Utils.App
-import com.avon.spott.Utils.Parser
-import com.avon.spott.Utils.logd
-import com.avon.spott.Utils.Retrofit
+import com.avon.spott.Utils.*
 import retrofit2.HttpException
 
 class CommentPresenter (val commentView:CommentContract.View) : CommentContract.Presenter{
@@ -14,8 +11,13 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
 
     init{ commentView.presenter = this}
 
-    override fun openPhoto() {
-        commentView.showPhotoUi()
+    override fun openUser(userId:Int) {
+        commentView.showUserUi(userId)
+    }
+
+    override fun openHashtag(hashtag: String) {
+        var sending = hashtag.substring(1) // #제거
+        commentView.showHashtagUi(sending)
     }
 
     override fun getComments(baseurl: String, start: Int, photoId: Int) {
@@ -162,5 +164,24 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
 
                 commentView.showToast("댓글 삭제에 실패했습니다")
             })
+    }
+
+    override fun getHash(text:String){
+        val hashArrayList = ArrayList<Array<Int>>()
+
+        val matcher = Validator.validHashtag(text)
+        while (matcher.find()){
+            if(matcher.group(1) != "") {
+                val currentSapn =arrayOf(matcher.start(), matcher.end())
+                hashArrayList.add(currentSapn)
+            }
+        }
+
+        if(hashArrayList.size>0) {
+            commentView.setHashCaption(text, hashArrayList)
+        }else{
+            commentView.setCaption(text)
+        }
+
     }
 }

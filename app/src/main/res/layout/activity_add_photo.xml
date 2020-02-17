@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/const_main_addphoto_a"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AddPhoto.AddPhotoActivity">
@@ -42,21 +43,21 @@
         android:paddingRight="10dp"
         android:paddingBottom="10dp"
         android:textSize="13dp"
-        app:layout_constraintBottom_toTopOf="@+id/switch_private_addphoto_a"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Switch
-        android:id="@+id/switch_private_addphoto_a"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="10dp"
-        android:switchMinWidth="60dp"
-        android:thumb="@drawable/switch_thumb_selector"
-        android:track="@drawable/switch_track_selector"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+<!--    <Switch-->
+<!--        android:id="@+id/switch_private_addphoto_a"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        android:layout_marginBottom="10dp"-->
+<!--        android:switchMinWidth="60dp"-->
+<!--        android:thumb="@drawable/switch_thumb_selector"-->
+<!--        android:track="@drawable/switch_track_selector"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent" />-->
 
     <TextView
         android:id="@+id/text_guide_addphoto_a"
@@ -65,26 +66,25 @@
         android:background="@color/colorPrimary"
         android:focusable="true"
         android:focusableInTouchMode="true"
+        android:gravity="center"
         android:paddingHorizontal="10dp"
         android:paddingVertical="5dp"
         android:text="@string/text_longtab"
-        android:gravity="center"
         android:textColor="@color/default_background"
         android:textSize="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/include_toolbar_addphoto_a" />
 
-            <ImageView
-                android:id="@+id/img_preview_addphoto_a"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                app:layout_constraintBottom_toBottomOf="@+id/edit_caption_addphoto_a"
-                app:layout_constraintStart_toStartOf="@+id/edit_caption_addphoto_a"
-                app:layout_constraintTop_toTopOf="@+id/edit_caption_addphoto_a" />
-
+    <ImageView
+        android:id="@+id/img_preview_addphoto_a"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_caption_addphoto_a"
+        app:layout_constraintStart_toStartOf="@+id/edit_caption_addphoto_a"
+        app:layout_constraintTop_toTopOf="@+id/edit_caption_addphoto_a" />
 
 
     <TextView
@@ -112,33 +112,54 @@
         app:layout_constraintTop_toTopOf="@+id/frag_googlemap_addphoto_a"
         app:srcCompat="@drawable/ic_search_24px" />
 
-    <TextView
-        android:id="@+id/text_public_addphoto_a"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="13dp"
-        android:text="공개"
-        android:textColor="@color/text_white"
-        android:textSize="10dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/switch_private_addphoto_a"
-        app:layout_constraintStart_toStartOf="@+id/switch_private_addphoto_a"
-        app:layout_constraintTop_toTopOf="@+id/switch_private_addphoto_a"
-        tools:visibility="gone" />
+<!--    <TextView-->
+<!--        android:id="@+id/text_public_addphoto_a"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="13dp"-->
+<!--        android:text="공개"-->
+<!--        android:textColor="@color/text_white"-->
+<!--        android:textSize="10dp"-->
+<!--        android:visibility="gone"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/switch_private_addphoto_a"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/switch_private_addphoto_a"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/switch_private_addphoto_a"-->
+<!--        tools:visibility="gone" />-->
 
-    <TextView
-        android:id="@+id/text_private_addphoto_a"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="7dp"
-        android:text="비공개"
-        android:textColor="@color/text_white"
-        android:textSize="10dp"
+<!--    <TextView-->
+<!--        android:id="@+id/text_private_addphoto_a"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginEnd="7dp"-->
+<!--        android:text="비공개"-->
+<!--        android:textColor="@color/text_white"-->
+<!--        android:textSize="10dp"-->
+<!--        android:visibility="gone"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/switch_private_addphoto_a"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/switch_private_addphoto_a"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/switch_private_addphoto_a"-->
+<!--        tools:visibility="visible" />-->
+
+    <LinearLayout
+        android:id="@+id/linear_loading_addphoto_a"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/trans_white"
+        android:orientation="horizontal"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/switch_private_addphoto_a"
-        app:layout_constraintEnd_toEndOf="@+id/switch_private_addphoto_a"
-        app:layout_constraintTop_toTopOf="@+id/switch_private_addphoto_a"
-        tools:visibility="visible" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1" />
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,6 +18,7 @@ interface MypageContract {
         fun noPhoto()
         fun movePosition(latLng: LatLng, zoom: Float)
         fun setUserInfo(nickname:String, photo:String?)
+        fun clearAdapter()
     }
 
     interface Presenter{

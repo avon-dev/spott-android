@@ -14,8 +14,13 @@
         <action
             android:id="@+id/action_homeFragment_to_photo"
             app:destination="@id/photo" />
+        <action
+            android:id="@+id/action_homeFragment_to_search"
+            app:destination="@id/search" />
     </fragment>
 
     <include app:graph="@navigation/photo" />
+
+    <include app:graph="@navigation/search" />
 
 </navigation>

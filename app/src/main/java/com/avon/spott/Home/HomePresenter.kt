@@ -16,6 +16,8 @@ class HomePresenter(val homeView:HomeContract.View) : HomeContract.Presenter {
     init{ homeView.presenter = this}
     override fun openPhoto(id:Int) { homeView.showPhotoUi(id)}
 
+    override fun openSearch(){homeView.showSearchUi()}
+
 //    val adddummy = addDummy() //테스트 코드 추가
 
     override fun getToken(baseUrl: String, start:Int) {
@@ -48,7 +50,7 @@ class HomePresenter(val homeView:HomeContract.View) : HomeContract.Presenter {
     override fun getPhotos(baseUrl:String, start:Int){
 
          val homePaging = HomePaging(start, homeView.refreshTimeStamp)
-         Retrofit(baseUrl).get(App.prefs.temporary_token,"/spott/home/posts", Parser.toJson(homePaging))
+         Retrofit(baseUrl).get(App.prefs.temporary_token,"/spott/posts", Parser.toJson(homePaging))
 
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")

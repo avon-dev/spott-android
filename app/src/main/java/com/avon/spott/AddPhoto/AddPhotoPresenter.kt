@@ -1,7 +1,14 @@
 package com.avon.spott.AddPhoto
 
+import android.graphics.Color
 import android.net.Uri
+import android.os.Build
+import android.text.Editable
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import com.avon.spott.Data.NewPhoto
+import com.avon.spott.Data.NewPhotoHash
+import com.avon.spott.Mypage.MypageFragment.Companion.mypageChange
 import com.avon.spott.Utils.*
 import com.google.android.gms.maps.model.LatLng
 import okhttp3.MediaType
@@ -45,13 +52,15 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
         addPhotoView.addMarker(latLng)
     }
 
-    override fun sendPhoto(baseUrl:String, photo: String, caption: String, latLng: LatLng?, public:Boolean) {
+    override fun sendPhoto(baseUrl:String, photo: String, caption: String, latLng: LatLng?, hashArrayList: ArrayList<String>) {
         if(latLng==null){ //사진에 대한 위치정보가 없을 때
             addPhotoView.showToast("사진의 위치를 표시해주세요")
         }else if(caption.trim().length==0) { //사진에 대한 설명이 없을 때 (빈공간 제외)
             addPhotoView.showToast("사진에 대한 설명을 입력해주세요")
             addPhotoView.focusEdit() //editText 포커스
         }else{
+            addPhotoView.showLoading(true)
+            addPhotoView.enableTouching(false)
 
             var images = ArrayList<MultipartBody.Part>()
 
@@ -71,9 +80,23 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
             )
             /* -------------------------------------------------------------------------------------- */
 
-            val newPhoto = NewPhoto(latLng.latitude, latLng.longitude, caption, public)
+            var sending = ""
+            if(hashArrayList.size ==0) {
+                val newPhoto = NewPhoto(latLng.latitude, latLng.longitude, caption)
+                sending = Parser.toJson(newPhoto)
+            }else{
+                var hashString = ""
+                for(hash in hashArrayList){
+                    hashString+= hash
+                }
 
-            Retrofit(baseUrl).postPhoto(App.prefs.temporary_token, "/spott/posts", Parser.toJson(newPhoto), images)
+                val newPhotoHash =NewPhotoHash(latLng.latitude, latLng.longitude, caption, hashString)
+                sending = Parser.toJson(newPhotoHash)
+            }
+
+            logd(TAG, "sending : "+sending)
+
+            Retrofit(baseUrl).postPhoto(App.prefs.temporary_token, "/spott/posts", sending, images)
                 .subscribe({ response ->
                     logd(
                         TAG,
@@ -82,6 +105,7 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
                     val result = response.body()
                     if (result != null) {
                         addPhotoView.showToast("성공") /**  성공 메세지 수정해야함.  */
+                        mypageChange = true
                         addPhotoView.navigateUp()
                     }
                 }, { throwable ->
@@ -92,6 +116,9 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
                             TAG,
                             "http exception code: ${exception.code()}, http exception message: ${exception.message()}"
                         )
+                        addPhotoView.enableTouching(true)
+                        addPhotoView.showLoading(false)
+                        addPhotoView.showToast("서버 연결에 오류가 발생했습니다")
                     }
                 })
 
@@ -102,6 +129,29 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
 
     override fun navigateUp() {
         addPhotoView.navigateUp()
+    }
+
+    override fun checkEdit(editable: Editable?) {
+
+        addPhotoView.highlightHashtag(false, editable, 0, editable.toString().length)
+
+        val matcher = Validator.validHashtag( editable.toString())
+        while (matcher.find()){
+            if(matcher.group(1) != "") {
+                val hashtag = "#" + matcher.group(1)
+
+                addPhotoView.addHashtag(hashtag)
+
+                addPhotoView.highlightHashtag(true, editable, matcher.start(), matcher.end())
+
+            }
+        }
+
+
+    }
+
+    override fun openFindPlace() {
+        addPhotoView.showFindPlaceUi()
     }
 
 }
