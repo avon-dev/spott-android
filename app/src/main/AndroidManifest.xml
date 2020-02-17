@@ -19,6 +19,8 @@
         android:theme="@style/AppTheme">
         <activity android:name=".FindPlace.FindPlaceActivity"></activity>
         <activity android:name=".EditCaption.EditCaptionActivity" />
+        <activity android:name=".ChangePassword.ChangePasswordActivity"></activity>
+        <activity android:name=".NewPassword.NewPasswordActivity" />
         <activity
             android:name=".Camera.CameraXActivity"
             android:clearTaskOnLaunch="true"

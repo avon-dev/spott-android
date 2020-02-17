@@ -25,7 +25,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.avon.spott.Data.Comment
-import com.avon.spott.Data.UserInfo
+import com.avon.spott.Data.UserData
 import com.avon.spott.R
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.Main.controlToolbar
@@ -282,7 +282,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         //리싸이클러뷰 아래로 드래그시 페이징 로딩아이템 추가
         fun addPageLoadingItem() {
             isLoadingAdded = true
-            addPage(Comment(0, UserInfo("","",0),false,"",""))
+            addPage(Comment(0, UserData("","",0),false,"",""))
         }
 
         fun removePageLoadingItem(){

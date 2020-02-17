@@ -36,4 +36,9 @@ class MySharedPreferences (context: Context) {
         get() = prefs.getString(PRED_KEY_TEST_FOR_TOKEN, "")
         set(value) = prefs.edit().putString(PRED_KEY_TEST_FOR_TOKEN, value).apply()
 
+    fun deleteToken() {
+        val edit = prefs.edit()
+        edit.clear()
+        edit.commit()
+    }
 }

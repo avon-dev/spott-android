@@ -9,7 +9,7 @@ interface NicknameContract {
         fun navigateUp()
         fun signUp(result:Boolean)
         fun enableSignUp(enable:Boolean)
-        fun showMainUi(token:Token)
+        fun getToken(token:Token)
     }
 
     interface Presenter {

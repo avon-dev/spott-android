@@ -2,6 +2,7 @@ package com.avon.spott
 
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -207,6 +208,7 @@ class CameraFragment : Fragment(), View.OnClickListener,
         return inflater.inflate(R.layout.fragment_camera, container, false)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         textureView = view.findViewById(R.id.texture_camera_f)
         overlay = view.findViewById<ImageView>(R.id.img_overlay_camera_f)

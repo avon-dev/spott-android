@@ -1,23 +1,21 @@
 package com.avon.spott.Camera
 
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity.RESULT_OK
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.hardware.display.DisplayManager
+import android.media.MediaActionSound
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.DisplayMetrics
 import android.view.*
 import android.webkit.MimeTypeMap
@@ -36,11 +34,10 @@ import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.avon.spott.R
-import com.avon.spott.REQUEST_CAMERA_PERMISSION
-import com.avon.spott.REQUEST_STORAGE_PERMISSION
 import com.avon.spott.Utils.logd
 import com.avon.spott.Utils.loge
 import com.bumptech.glide.Glide
@@ -154,16 +151,11 @@ class CameraXFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        val cameraPermission =
-            ContextCompat.checkSelfPermission(activity!!, Manifest.permission.CAMERA)
-        val storagePermission = ContextCompat.checkSelfPermission(
-            activity!!,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-        if (cameraPermission != PackageManager.PERMISSION_GRANTED || storagePermission != PackageManager.PERMISSION_GRANTED) {
-            requestCameraPermission()
+        if (!PermissionsFragment.hasPermissions(requireContext())) {
+            Navigation.findNavController(requireActivity(), R.id.fragment_container_camerax).navigate(
+                CameraXFragmentDirections.actionCameraToPermissions()
+            )
         }
-
 
     }
 
@@ -314,22 +306,23 @@ class CameraXFragment : Fragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            try {
-
-                val inputStream = activity!!.getContentResolver().openInputStream(data?.getData())
-                val bitmap = BitmapFactory.decodeStream(inputStream)
-                inputStream.close()
-
-                overlayImage.setImageBitmap(bitmap)
-                showOverlayImage()
-            } catch (e: Exception) {
-                loge(TAG, "failed getImage in Gallery", e)
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
+//        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+//            try {
+//
+//                val inputStream = activity!!.getContentResolver().openInputStream(data?.getData())
+//                val bitmap = BitmapFactory.decodeStream(inputStream)
+//                inputStream.close()
+//
+//                overlayImage.setImageBitmap(bitmap)
+//                showOverlayImage()
+//            } catch (e: Exception) {
+//                loge(TAG, "failed getImage in Gallery", e)
+//            }
+//        } else {
+//            super.onActivityResult(requestCode, resultCode, data)
+//        }
     }
 
 
@@ -356,9 +349,10 @@ class CameraXFragment : Fragment() {
                 // 사진 찍은 후 동작하는 이미지 캡쳐 리스너 설정
                 imageCapture.takePicture(photoFile, metadata, mainExecutor, imageSavedListener)
 
+                // 임시
                 // 카메라 셔터소리
-//                val sound = MediaActionSound()
-//                sound.play(MediaActionSound.SHUTTER_CLICK)
+                val sound = MediaActionSound()
+                sound.play(MediaActionSound.SHUTTER_CLICK)
 
                 // API Level 23이상에서만 foreground drawable을 바꿀 수 있다.
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -415,11 +409,15 @@ class CameraXFragment : Fragment() {
 
         // 갤러리에서 사진 가져오기
         view!!.findViewById<ImageButton>(R.id.imgbtn_gallery_camerax_f).setOnClickListener {
-            val intent = Intent().apply {
-                setType("image/*")
-                setAction(Intent.ACTION_GET_CONTENT)
-            }
-            startActivityForResult(intent, REQUEST_CODE)
+
+            val pickPhoto = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            pickPhoto.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            startActivityForResult(pickPhoto, REQUEST_CODE)
+//            val intent = Intent().apply {
+//                setType("image/*")
+//                setAction(Intent.ACTION_GET_CONTENT)
+//            }
+//            startActivityForResult(intent, REQUEST_CODE)
         }
 
 //        view!!.findViewById<SeekBar>(R.id.seekbar_zoom_camerax_f).setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -494,20 +492,6 @@ class CameraXFragment : Fragment() {
 
         }, mainExecutor)
 
-    }
-
-    // 권한 얻기 (Permission)
-    private fun requestCameraPermission() {
-        if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-            requestPermissions(arrayOf(Manifest.permission.CAMERA), REQUEST_CAMERA_PERMISSION)
-        }
-
-        if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            requestPermissions(
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                REQUEST_STORAGE_PERMISSION
-            )
-        }
     }
 
     // 오버랩으로 보여주기

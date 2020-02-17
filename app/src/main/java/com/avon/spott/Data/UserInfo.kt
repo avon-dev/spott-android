@@ -1,4 +1,4 @@
 package com.avon.spott.Data
 
-data class UserInfo(val nickname : String, val profile_image :String?, val id:Int) {
-}
+
+data class UserInfo(var result:Boolean? = null, var email:String?= null, var nickname:String?= null, var profile_image:String?= null)

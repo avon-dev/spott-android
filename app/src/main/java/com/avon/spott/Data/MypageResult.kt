@@ -1,4 +1,4 @@
 package com.avon.spott.Data
 
-data class MypageResult(var user:UserInfo, var posts:ArrayList<MapCluster>) {
+data class MypageResult(var user:UserData, var posts:ArrayList<MapCluster>) {
 }

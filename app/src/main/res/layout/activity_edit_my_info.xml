@@ -11,9 +11,9 @@
     <include
         android:id="@+id/include_toolbar_editmyinfo_a"
         layout="@layout/toolbar"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
         android:id="@+id/frame_profile_editmyinfo_a"
@@ -24,15 +24,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/include_toolbar_editmyinfo_a">
 
-        <ImageButton
+<!--        <ImageButton-->
+<!--            android:id="@+id/img_profile_editmyinfo_a"-->
+<!--            android:layout_width="100dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:adjustViewBounds="true"-->
+<!--            android:background="@color/default_background"-->
+<!--            android:scaleType="fitCenter"-->
+<!--            app:srcCompat="@drawable/ic_account_circle_grey_36dp" />-->
+
+<!--        <de.hdodenhof.circleimageview.CircleImageView-->
+<!--            android:id="@+id/img_profile_editmyinfo_a"-->
+<!--            android:layout_width="100dp"-->
+<!--            android:layout_height="100dp"-->
+<!--            android:visibility="visible"-->
+<!--            app:srcCompat="@drawable/ic_account_circle_grey_36dp"-->
+<!--            tools:visibility="visible" />-->
+
+<!--        <de.hdodenhof.circleimageview.CircleImageView-->
+<!--            android:id="@+id/img_profile_editmyinfo_a"-->
+<!--            android:layout_width="100dp"-->
+<!--            android:layout_height="100dp"-->
+<!--            android:background="@color/default_background"-->
+<!--            app:srcCompat="@drawable/ic_account_circle_grey_36dp" />-->
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_profile_editmyinfo_a"
             android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:background="@color/default_background"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/baseline_face_24"/>
+            android:layout_height="100dp"
+            android:src="@drawable/ic_account_circle_grey_36dp" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/text_profile_editmyinfo_a"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
@@ -42,15 +65,19 @@
             android:paddingRight="5dp"
             android:text="@string/text_editing"
             android:textColor="#FFF"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
     </FrameLayout>
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/text_nickname_editmyinfo_a"
+    <EditText
+        android:id="@+id/edit_nickname_editmyinfo_a"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:hint="@string/hint_nickname"
+        android:background="@android:color/transparent"
+        android:clickable="false"
+        android:focusable="false"
+        android:gravity="center"
+        android:textSize="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/frame_profile_editmyinfo_a" />
@@ -62,10 +89,10 @@
         android:background="@color/default_background"
         android:paddingLeft="10dp"
         android:scaleType="fitCenter"
-        app:srcCompat="@drawable/baseline_edit_24"
-        app:layout_constraintBottom_toBottomOf="@id/text_nickname_editmyinfo_a"
-        app:layout_constraintStart_toEndOf="@id/text_nickname_editmyinfo_a"
-        app:layout_constraintTop_toTopOf="@id/text_nickname_editmyinfo_a" />
+        app:layout_constraintBottom_toBottomOf="@id/edit_nickname_editmyinfo_a"
+        app:layout_constraintStart_toEndOf="@id/edit_nickname_editmyinfo_a"
+        app:layout_constraintTop_toTopOf="@id/edit_nickname_editmyinfo_a"
+        app:srcCompat="@drawable/baseline_edit_24" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/text_blank1_editmyinfo_a"
@@ -74,23 +101,25 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_nickname_editmyinfo_a" />
+        app:layout_constraintTop_toBottomOf="@id/edit_nickname_editmyinfo_a" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_email_editmyinfo_a"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/default_background"
+        android:clickable="false"
         android:drawableLeft="@drawable/baseline_mail_24"
         android:drawablePadding="10dp"
         android:gravity="start|center_vertical"
-        android:hint="@string/hint_email"
+        android:hint="@string/email"
         android:paddingLeft="20dp"
+        android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_blank1_editmyinfo_a" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/btn_changepw_editmyinfo_a"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -104,14 +133,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_email_editmyinfo_a" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <TextView
         android:id="@+id/text_blank2_editmyinfo_a"
         style="@style/blank"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_changepw_editmyinfo_a" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_changepw_editmyinfo_a" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_withdrawal_editmyinfo_a"
