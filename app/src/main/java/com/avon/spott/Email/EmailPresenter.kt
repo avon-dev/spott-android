@@ -1,14 +1,15 @@
 package com.avon.spott.Email
 
 import android.annotation.SuppressLint
+import com.avon.spott.Data.EmailAuth
 import com.avon.spott.Data.Number
-import com.avon.spott.Data.User
 import com.avon.spott.Utils.*
 import retrofit2.HttpException
 
 class EmailPresenter(val emailView: EmailContract.View) : EmailContract.Presenter {
 
     private val TAG = "EMAILPRESENTER"
+    private val ACTION_EMAIL = 1001
 
     init {
         emailView.presenter = this
@@ -40,7 +41,7 @@ class EmailPresenter(val emailView: EmailContract.View) : EmailContract.Presente
 
     @SuppressLint("CheckResult")
     override fun sendEmail(baseUrl: String, email: String) {
-        Retrofit(baseUrl).getNonHeader("/spott/email-authen", Parser.toJson(User(email)))
+        Retrofit(baseUrl).getNonHeader("/spott/email-authen", Parser.toJson(EmailAuth(1001, email)))
             .subscribe({ response ->
                 logd(TAG, response.body())
                 val number = response.body()?.let { Parser.fromJson<Number>(it) }
