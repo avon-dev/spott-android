@@ -22,6 +22,7 @@ import android.webkit.MimeTypeMap
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.SeekBar
+import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.core.ImageCapture.Metadata
 import androidx.camera.core.ImageCapture.OnImageSavedCallback
@@ -37,11 +38,13 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.avon.spott.Data.ScrapItem
+import com.avon.spott.Data.ScrapResult
 import com.avon.spott.R
-import com.avon.spott.Utils.logd
-import com.avon.spott.Utils.loge
+import com.avon.spott.Utils.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import retrofit2.HttpException
 import java.io.File
 import java.lang.Math.*
 import java.text.SimpleDateFormat
@@ -100,7 +103,8 @@ class CameraXFragment : Fragment() {
     private lateinit var overlayImage: ImageView
     private lateinit var closeImage: ImageView
     private lateinit var opacitySeekbar: SeekBar
-//    private lateinit var zoomSeekbar:SeekBar
+
+    private lateinit var adapter:CameraXAdapter
 
     private lateinit var rightRotation:ImageView
 
@@ -260,7 +264,10 @@ class CameraXFragment : Fragment() {
         recyclerview = view.findViewById(R.id.recycler_camerax_f)
         recyclerview.layoutManager =
             LinearLayoutManager(view.context, LinearLayoutManager.HORIZONTAL, false)
-        recyclerview.adapter = CameraXAdapter(view.context, onItemClickListener)
+        adapter = CameraXAdapter(view.context, onItemClickListener)
+        recyclerview.adapter = adapter
+
+        getScrapData()
 
         overlayImage = view.findViewById(R.id.img_overlay_camerax_f)
         closeImage = view.findViewById(R.id.img_close_camerax_f)
@@ -382,10 +389,13 @@ class CameraXFragment : Fragment() {
 
         // 스크랩 사진 목록 보여주기
         view!!.findViewById<ImageButton>(R.id.imgbtn_scrap_camerax_f).setOnClickListener {
-            if (recyclerview.isVisible)
-                recyclerview.visibility = View.INVISIBLE
+            if(adapter.hasData())
+                if (recyclerview.isVisible)
+                    recyclerview.visibility = View.INVISIBLE
+                else
+                    recyclerview.visibility = View.VISIBLE
             else
-                recyclerview.visibility = View.VISIBLE
+                Toast.makeText(it.context, getString(R.string.toast_no_scrap_message), Toast.LENGTH_SHORT).show()
         }
 
         // Seekbar로 오버랩 이미지 투명도 설정하기
@@ -513,6 +523,27 @@ class CameraXFragment : Fragment() {
 //        rightRotation.visibility = View.GONE
     }
 
+    @SuppressLint("CheckResult")
+    private fun getScrapData() {
+        Retrofit(getString(R.string.baseurl)).get(App.prefs.token, "/spott/scrap/ids", "").subscribe({ response ->
+            logd(TAG, "response: ${response.body()}")
+            val result = response.body()?.let { Parser.fromJson<ArrayList<ScrapResult>>(it) }
+            if(result != null) {
+                var list = ArrayList<ScrapItem>()
+                for(i in 0..result.size-1) {
+                    list.add(ScrapItem(result[i].post.posts_image, result[i].post.back_image, result[i].post.id))
+                }
+                adapter.setData(list)
+            }
+        }, { throwable ->
+            loge(TAG, throwable.message)
+            if (throwable is HttpException) {
+                loge(TAG, "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}")
+            }
+        })
+    }
+
+
     companion object {
 
         private const val TAG = "CameraXFragment"
@@ -539,6 +570,12 @@ class CameraXFragment : Fragment() {
     inner class CameraXAdapter(val context: Context, val onItemClickListener: OnItemClickListener) :
         RecyclerView.Adapter<CameraXAdapter.ViewHolder>() {
 
+        private var list: ArrayList<ScrapItem>
+
+        init {
+            list = ArrayList<ScrapItem>()
+        }
+
         inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val photo = itemView.findViewById<ImageView>(R.id.img_photo_photo_square_i2)
         }
@@ -549,44 +586,24 @@ class CameraXFragment : Fragment() {
             return ViewHolder(view)
         }
 
-        override fun getItemCount(): Int = 10
+        override fun getItemCount(): Int = list.size
+
+        fun setData(scraps:ArrayList<ScrapItem>) {
+            list = scraps
+            notifyDataSetChanged()
+        }
+
+        fun hasData():Boolean = if(list.size > 0) true else false
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            if (position == 0 || position == 5) {
-                Glide.with(holder.itemView.context)
-                    .load("https://cdn.pixabay.com/photo/2017/08/06/12/06/people-2591874_1280.jpg")
-                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                    .error(android.R.drawable.stat_notify_error)
-                    .into(holder.photo)
-            } else if (position == 1 || position == 6) {
-                Glide.with(holder.itemView.context)
-                    .load("https://cdn.pixabay.com/photo/2017/06/23/17/41/morocco-2435391_960_720.jpg")
-                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                    .error(android.R.drawable.stat_notify_error)
-                    .into(holder.photo)
-
-            } else if (position == 2 || position == 7) {
-                Glide.with(holder.itemView.context)
-                    .load("https://cdn.pixabay.com/photo/2012/10/10/11/05/space-station-60615_960_720.jpg")
-                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                    .error(android.R.drawable.stat_notify_error)
-                    .into(holder.photo)
-            } else if (position == 3 || position == 8) {
-                Glide.with(holder.itemView.context)
-                    .load("https://cdn.pixabay.com/photo/2017/08/02/00/16/people-2568954_1280.jpg")
-                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                    .error(android.R.drawable.stat_notify_error)
-                    .into(holder.photo)
-            } else if (position == 4 || position == 9) {
-                Glide.with(holder.itemView.context)
-                    .load("https://cdn.pixabay.com/photo/2016/11/29/06/45/beach-1867881_1280.jpg")
-                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                    .error(android.R.drawable.stat_notify_error)
-                    .into(holder.photo)
-            }
+            Glide.with(holder.itemView.context)
+                .load(list[position].posts_image)
+                .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                .error(android.R.drawable.stat_notify_error)
+                .into(holder.photo)
 
             holder.itemView.setOnClickListener {
-                onItemClickListener.ItemClick("https://cdn.pixabay.com/photo/2016/11/29/06/45/beach-1867881_1280.jpg")
+                onItemClickListener.ItemClick(list[position].posts_image)
             }
 
         }

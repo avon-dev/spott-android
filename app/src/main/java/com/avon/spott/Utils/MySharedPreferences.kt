@@ -9,6 +9,7 @@ class MySharedPreferences (context: Context) {
     val PREF_KEY_POSITION_LAT = "mylastlat"
     val PREF_KEY_POSITION_LNG = "mylastlng"
     val PREF_KEY_POSITION_ZOOM = "mylastzoom"
+    val PREF_ACCESS_TOKEN = "access"
 
     /**  토큰 테스트용!!!!! 임시 토큰 2020-02-04   */
     val PRED_KEY_TEST_FOR_TOKEN = "temporary_token"
@@ -35,6 +36,9 @@ class MySharedPreferences (context: Context) {
     var temporary_token:String //임시 토큰
         get() = prefs.getString(PRED_KEY_TEST_FOR_TOKEN, "")
         set(value) = prefs.edit().putString(PRED_KEY_TEST_FOR_TOKEN, value).apply()
+
+    val token:String
+        get() = prefs.getString(PREF_ACCESS_TOKEN, "")
 
     fun deleteToken() {
         val edit = prefs.edit()
