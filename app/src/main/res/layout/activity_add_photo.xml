@@ -100,17 +100,17 @@
         app:layout_constraintEnd_toEndOf="@+id/include_toolbar_addphoto_a"
         app:layout_constraintTop_toTopOf="@+id/include_toolbar_addphoto_a" />
 
-    <ImageButton
-        android:id="@+id/imgbtn_search_addphoto_a"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginRight="12dp"
-        android:background="@drawable/btn_map_icon"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/frag_googlemap_addphoto_a"
-        app:srcCompat="@drawable/ic_search_24px" />
+<!--    <ImageButton-->
+<!--        android:id="@+id/imgbtn_search_addphoto_a"-->
+<!--        android:layout_width="45dp"-->
+<!--        android:layout_height="45dp"-->
+<!--        android:layout_marginTop="12dp"-->
+<!--        android:layout_marginEnd="12dp"-->
+<!--        android:layout_marginRight="12dp"-->
+<!--        android:background="@drawable/btn_map_icon"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/frag_googlemap_addphoto_a"-->
+<!--        app:srcCompat="@drawable/ic_search_24px" />-->
 
 <!--    <TextView-->
 <!--        android:id="@+id/text_public_addphoto_a"-->

@@ -107,7 +107,7 @@ class HashtagFragment: Fragment(), HashtagContract.View, View.OnClickListener{
                         recyclerView.smoothScrollToPosition(recyclerView.adapter!!.itemCount-1)
 
                         Handler().postDelayed({
-                            presenter.getPhotos(getString(R.string.baseurl), start, hashtag)
+                            presenter.getPhotos(getString(R.string.baseurl), start, hashtag, false)
                         }, 400) //로딩 주기
                     }
                 }
@@ -120,14 +120,14 @@ class HashtagFragment: Fragment(), HashtagContract.View, View.OnClickListener{
                 //페이징 시작위치와 시간 초기화
                 start = 0
                 refreshTimeStamp = ""
-                presenter.getPhotos(getString(R.string.baseurl), start, hashtag)
+                presenter.getPhotos(getString(R.string.baseurl), start, hashtag, false)
 
             }, 600) //로딩 주기
         }
 
         if(!checkInit){
             //처음 사진을 가져오는 코드 (처음 이후에는 리프레쉬 전까지 가져오지않는다.)
-            presenter.getPhotos(getString(R.string.baseurl), start, hashtag)
+            presenter.getPhotos(getString(R.string.baseurl), start, hashtag, fromSearch)
             checkInit = true
         }
 

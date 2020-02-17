@@ -66,7 +66,7 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         addPhotoPresenter = AddPhotoPresenter(this)
         text_upload_addphoto_a.setOnClickListener(this)
         include_toolbar_addphoto_a.img_back_toolbar.setOnClickListener(this)
-        imgbtn_search_addphoto_a.setOnClickListener(this)
+//        imgbtn_search_addphoto_a.setOnClickListener(this)
 
 
         edit_caption_addphoto_a.addTextChangedListener {
@@ -85,7 +85,7 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
                     edit_caption_addphoto_a.text.toString(), markerLatLng, hashArrayList)
             }
             R.id.img_back_toolbar ->{ presenter.navigateUp() }
-            R.id.imgbtn_search_addphoto_a ->{presenter.openFindPlace()}
+//            R.id.imgbtn_search_addphoto_a ->{presenter.openFindPlace()}
         }
     }
 
