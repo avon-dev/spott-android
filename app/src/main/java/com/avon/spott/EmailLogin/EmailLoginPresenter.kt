@@ -1,6 +1,8 @@
 package com.avon.spott.EmailLogin
 
 import android.annotation.SuppressLint
+import com.avon.spott.Camera.HTTP_BAD_REQUEST
+import com.avon.spott.Camera.HTTP_UNAUTHORIZED
 import com.avon.spott.Data.Token
 import com.avon.spott.Utils.Retrofit
 import com.avon.spott.Utils.logd
@@ -39,10 +41,12 @@ class EmailLoginPresenter(val emailLoginView: EmailLoginContract.View) :
             loge(TAG, throwable.message)
             if (throwable is HttpException) {
                 val exception = throwable
-                loge(
-                    TAG,
-                    "http exception code: ${exception.code()}, http exception message: ${exception.message()}"
-                )
+                loge(TAG, "http exception code: ${exception.code()}, http exception message: ${exception.message()}")
+                if(exception.code() == HTTP_BAD_REQUEST) {
+                    emailLoginView.showError("이메일, 비밀번호를 확인해주세요")
+                } else if (exception.code() == HTTP_UNAUTHORIZED) {
+                    emailLoginView.showError("이메일, 비밀번호를 확인해주세요")
+                }
             }
         })
     }

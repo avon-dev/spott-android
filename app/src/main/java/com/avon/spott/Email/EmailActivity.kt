@@ -151,8 +151,8 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
     }
 
     private fun hideLoading() {
-        text_block_email_a.visibility = View.INVISIBLE
-        progressbar_wait_email_a.visibility = View.INVISIBLE
+        text_block_email_a.visibility = View.GONE
+        progressbar_wait_email_a.visibility = View.GONE
     }
 
     override fun onClick(v: View?) {

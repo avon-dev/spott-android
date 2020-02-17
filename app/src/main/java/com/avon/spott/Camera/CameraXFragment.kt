@@ -10,6 +10,7 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.hardware.display.DisplayManager
+import android.media.MediaActionSound
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
@@ -348,9 +349,10 @@ class CameraXFragment : Fragment() {
                 // 사진 찍은 후 동작하는 이미지 캡쳐 리스너 설정
                 imageCapture.takePicture(photoFile, metadata, mainExecutor, imageSavedListener)
 
+                // 임시
                 // 카메라 셔터소리
-//                val sound = MediaActionSound()
-//                sound.play(MediaActionSound.SHUTTER_CLICK)
+                val sound = MediaActionSound()
+                sound.play(MediaActionSound.SHUTTER_CLICK)
 
                 // API Level 23이상에서만 foreground drawable을 바꿀 수 있다.
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
