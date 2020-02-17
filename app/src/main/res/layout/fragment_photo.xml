@@ -55,19 +55,6 @@
                 app:srcCompat="@drawable/ic_camera_alt_white_32dp"
                 tools:ignore="VectorDrawableCompat" />
 
-            <ImageView
-                android:id="@+id/img_lock_photo_f"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="@+id/img_photo_photo_f"
-                app:layout_constraintTop_toTopOf="@+id/img_photo_photo_f"
-                app:srcCompat="@drawable/ic_lock_black_24dp"
-                tools:ignore="VectorDrawableCompat"
-                tools:visibility="visible" />
-
 
             <CheckBox
                 android:id="@+id/checkbox_scrap_photo_f"

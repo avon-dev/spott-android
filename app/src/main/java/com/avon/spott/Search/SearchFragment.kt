@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.avon.spott.Data.SearchItem
 import com.avon.spott.Data.SearchRecent
-import com.avon.spott.Data.SearchResult
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
 import com.avon.spott.Main.controlToolbar
@@ -27,7 +26,6 @@ import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.toolbar.view.*
-import org.w3c.dom.Text
 
 class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
 
@@ -45,6 +43,8 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
     private lateinit var recentLayoutManager: LinearLayoutManager
 
     lateinit var watcher : TextWatcher
+
+    private var showSearching = false
 
     val searchInterListener = object : searchInter{
         override fun hashItemClick(hash: String) {
@@ -81,6 +81,8 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        const_result_search_f.visibility =if(showSearching) View.VISIBLE else View.GONE
+        scroll_recent_search_f.visibility = if(showSearching) View.GONE else View.VISIBLE
 
         init()
 
@@ -106,15 +108,6 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
             }
         })
 
-
-        ///=================네비게이션 실험==============================
-        text_deleteall_search_f.setOnClickListener {
-            presenter.openUser(8)
-        }
-        text_recent_search_f.setOnClickListener {
-            presenter.openHashtag("#배가고프다")
-        }
-        //==========================================================
     }
 
     override fun onStart() {
@@ -128,9 +121,10 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
             mToolbar.edit_search_toolbar.addTextChangedListener {
                 if(it!!.trim().length>0){
                     mToolbar.edit_search_toolbar.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                        R.drawable.ic_search_black_24dp, 0, R.drawable.ic_close_black_24dp,0)
+                        R.drawable.ic_search_black_24dp, 0, R.drawable.ic_close_grey_20dp,0)
                     scroll_recent_search_f.visibility = View. GONE
                     const_result_search_f.visibility = View.VISIBLE
+                    showSearching = true
 
                     presenter.getSearching(getString(R.string.baseurl), it.toString())
 
@@ -140,6 +134,7 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
 
                     scroll_recent_search_f.visibility = View.VISIBLE
                     const_result_search_f.visibility = View.GONE
+                    showSearching = false
                 }
             }
 
@@ -179,7 +174,10 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
                 when(event?.action){
                     MotionEvent.ACTION_UP ->{
                         if(mToolbar.edit_search_toolbar.compoundDrawables[DRAWABLE_RIGHT]!=null){
-                            if(event.rawX >= (mToolbar.edit_search_toolbar.right - mToolbar.edit_search_toolbar.compoundDrawables[DRAWABLE_RIGHT].bounds.width())){
+                            logd(TAG, "event.rawX :"+ event.rawX)
+                            logd(TAG, "right : "+ mToolbar.edit_search_toolbar.right)
+                            logd(TAG, "width : "+mToolbar.edit_search_toolbar.compoundDrawables[DRAWABLE_RIGHT].bounds.width())
+                            if(event.rawX >= (mToolbar.edit_search_toolbar.right - mToolbar.edit_search_toolbar.compoundDrawables[DRAWABLE_RIGHT].bounds.width()-30)){
                                 mToolbar.edit_search_toolbar.setText("")
                                 return v?.onTouchEvent(event) ?: true
                             }
@@ -212,22 +210,15 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
     }
 
     override fun addResultItems(resultItems:ArrayList<SearchItem>){
+        resultAdapter.clearItemsAdapter()
         resultAdapter.addItemsAdapter(resultItems)
         resultAdapter.notifyDataSetChanged()
     }
 
-    override fun clearResultItems(){
-        resultAdapter.clearItemsAdapter()
-        resultAdapter.notifyDataSetChanged()
-    }
 
     override fun addRecentItems(recentItems:ArrayList<SearchRecent>){
-        recentAdapter.addItemsAdapter(recentItems)
-        recentAdapter.notifyDataSetChanged()
-    }
-
-    override fun clearRecentItems(){
         recentAdapter.clearItemsAdapter()
+        recentAdapter.addItemsAdapter(recentItems)
         recentAdapter.notifyDataSetChanged()
     }
 
@@ -275,7 +266,7 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
                     holder.resultText.text = it.nickname
 
                     if(it.profile_image  ==null){
-                        holder.userPhoto.setImageResource(R.drawable.ic_account_circle_grey_36dp)
+                        holder.userPhoto.setImageResource(R.drawable.img_person)
                     }else{
                         Glide.with(holder.itemView.context)
                             .load(it.profile_image)
@@ -310,7 +301,7 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
             parent: ViewGroup,
             viewType: Int
         ): RecentAdapter.ViewHolder {
-            val view =  LayoutInflater.from(context).inflate(R.layout.item_search_recent, parent, false)
+            val view =  LayoutInflater.from(context).inflate(R.layout.item_search_result, parent, false)
             return ViewHolder(view)
         }
 
@@ -327,8 +318,10 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
         }
 
         override fun onBindViewHolder(holder: RecentAdapter.ViewHolder, position: Int){
+            holder.close.visibility = View.VISIBLE
+
             itemsList[position].let{
-                holder.recentText.text = it.recentString
+//                holder.recentText.text = it.recentString
 
                 holder.close.setOnClickListener {
                     // 최근 검색어 삭제 눌렀을 때
@@ -341,9 +334,14 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
         }
 
         inner class ViewHolder(itemView:View):RecyclerView.ViewHolder(itemView){
-            val recentText = itemView.findViewById<TextView>(R.id.text_recent_search_i)
+            val userPhoto =  itemView.findViewById<ImageView>(R.id.img_result_search_i)
+            val resultText = itemView.findViewById<TextView>(R.id.text_result_search_i)
+            val bigHash = itemView.findViewById<TextView>(R.id.text_hash_result_search_i)
             val close = itemView.findViewById<ImageButton>(R.id.imgbtn_delete_recent_search_i)
         }
+    }
 
+    override fun showDeleteAll(show:Boolean){
+        text_deleteall_search_f.visibility = if(show) View.VISIBLE else View.GONE
     }
 }

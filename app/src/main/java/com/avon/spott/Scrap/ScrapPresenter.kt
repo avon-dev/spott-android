@@ -17,6 +17,10 @@ class ScrapPresenter(val scrapView:ScrapContract.View) : ScrapContract.Presenter
 
     override fun openPhoto(id: Int) { scrapView.showPhotoUi(id) }
 
+    override fun openCamera(photoUrl: String) {
+        scrapView.showCameraUi(photoUrl)
+    }
+
     override fun getScraps(baseUrl: String) {
         Retrofit(baseUrl).get(App.prefs.temporary_token,"/spott/scrap/ids", "")
 

@@ -3,16 +3,12 @@ package com.avon.spott.Photo
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
-import android.text.Spanned
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
-import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +22,6 @@ import com.avon.spott.R
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
 import com.avon.spott.Main.controlToolbar
-import com.avon.spott.Mypage.MypageFragment.Companion.mypageChange
 import com.avon.spott.PhotoEnlargementActivity
 import com.avon.spott.Scrap.ScrapFragment.Companion.scrapChange
 import com.avon.spott.Utils.logd
@@ -195,7 +190,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
             }
             R.id.imgbtn_camera_photo_f->{
                 if(backPhotoUrl!=null){
-                    showToast(backPhotoUrl!!)   //임시데이터, 나중에 카메라액티비티로 연결되게 바꿔야함
+                    presenter.openCamera(backPhotoUrl!!)
                 }
             }
             R.id.const_comment_photo_f -> {presenter.openComment()}
@@ -275,7 +270,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
         if(userPhoto==null){
             logd(TAG,"null")
-            img_userphoto_photo_f.setImageResource(R.drawable.ic_account_circle_grey_36dp)
+            img_userphoto_photo_f.setImageResource(R.drawable.img_person)
         }else{
             Glide.with(context!!)
                 .load(userPhoto)
@@ -401,6 +396,13 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
     }
 
+    override fun showCameraUi(photoUrl: String) {
+        showToast(photoUrl)
+        /**
+         * 여기에 카메라 연결하는 코드 넣으면 됨!!!!!
+         *                                    */
+    }
+
     override fun navigateUp(){
         mToolbar.img_back_toolbar.performClick()
     }
@@ -424,10 +426,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
         var spannableString = SpannableString(text)
 
-//           val startList = ArrayList<Int>()
             for (hash in hashList) {
-//                if(!startList.contains(hash[0])){
-//                    startList.add(hash[0])
 
                     val start = hash[0]
                     val end = hash[1]
@@ -440,12 +439,9 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
                         }
                         override fun onClick(widget: View) {
-//                            showToast(text.substring(start,end))
                             presenter.openHashtag(text.substring(start,end))
                         }
                     }, start, end,  Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-//                }
 
             }
 

@@ -35,6 +35,10 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
         photoView.showHashtagUi(sending)
     }
 
+    override fun openCamera(photoUrl: String) {
+        photoView.showCameraUi(photoUrl)
+    }
+
     override fun openEditCaption() {
         photoView.showEditCaptionUi()
     }

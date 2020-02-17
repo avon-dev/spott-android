@@ -23,7 +23,7 @@ class SearchPresenter(val searchView:SearchContract.View):SearchContract.Present
     }
 
     override fun getSearching(baseUrl:String, text: String) {
-        searchView.clearResultItems()
+//        searchView.clearResultItems()
 
         var search_word = text
         var tag = false

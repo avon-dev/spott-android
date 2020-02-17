@@ -1,9 +1,6 @@
 package com.avon.spott.User
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -15,7 +12,6 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.avon.spott.Data.MapCluster
 import com.avon.spott.R
@@ -23,20 +19,7 @@ import com.avon.spott.Main.MainActivity
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
 import com.avon.spott.Main.controlToolbar
 import com.avon.spott.Utils.logd
-import com.avon.spott.animSlide
-import com.avon.spott.getMarkerBitmapFromView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
-import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.*
-import com.google.android.material.tabs.TabLayout
-import com.google.maps.android.clustering.Cluster
-import com.google.maps.android.clustering.ClusterManager
-import com.google.maps.android.clustering.view.DefaultClusterRenderer
-import com.google.maps.android.ui.IconGenerator
-import kotlinx.android.synthetic.main.fragment_mypage.*
-import kotlinx.android.synthetic.main.fragment_mypage.view.*
 import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
@@ -249,7 +232,7 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
         userPhoto = photo
 
         if(photo==null){
-            mToolbar.img_profile_toolbar.setImageResource(R.drawable.ic_account_circle_grey_36dp)
+            mToolbar.img_profile_toolbar.setImageResource(R.drawable.img_person)
         }else{
             Glide.with(this)
                 .load(photo)

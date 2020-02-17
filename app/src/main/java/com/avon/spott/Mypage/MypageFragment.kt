@@ -14,9 +14,7 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.ImageView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -49,8 +47,6 @@ import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropActivity
 import com.yalantis.ucrop.model.AspectRatio
 import kotlinx.android.synthetic.main.fragment_mypage.*
-import kotlinx.android.synthetic.main.fragment_mypage.view.*
-import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import java.io.File
 import java.text.SimpleDateFormat
@@ -647,7 +643,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         userPhoto = photo
 
         if(photo==null){
-            mToolbar.img_profile_toolbar.setImageResource(R.drawable.ic_account_circle_grey_36dp)
+            mToolbar.img_profile_toolbar.setImageResource(R.drawable.img_person)
         }else{
             Glide.with(this)
                 .load(photo)

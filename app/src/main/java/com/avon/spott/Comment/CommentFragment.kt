@@ -35,7 +35,6 @@ import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.dialog_comment.view.*
 import kotlinx.android.synthetic.main.fragment_comment.*
-import kotlinx.android.synthetic.main.fragment_photo.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
 
@@ -181,7 +180,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                 .error(android.R.drawable.stat_notify_error)
                 .into(img_profile_comment_f)
         }else{
-            img_profile_comment_f.setImageResource(R.drawable.ic_account_circle_grey_36dp)
+            img_profile_comment_f.setImageResource(R.drawable.img_person)
         }
 
         text_nickname_comment_f.text = arguments?.getString("userNickname").toString()

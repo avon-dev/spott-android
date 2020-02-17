@@ -8,14 +8,15 @@ class PhotoContract {
         fun showCommentUi()
         fun showUserUi()
         fun showEditCaptionUi()
+        fun showPhotoEnlagementUi(photoUrl: String)
+        fun showHashtagUi(hashtag:String)
+        fun showCameraUi(photoUrl: String)
         fun showToast(string: String)
         fun setPhotoDetail(userPhoto:String?, userNickName:String, postPhotoUrl: String,
                            backPhotoUrl:String, photoLat:Double, photoLng:Double,
                            caption:String, comments:Int, dateTime:String, likeCount:Int,
                            likeChecked:Boolean, scrapChecked:Boolean, myself:Boolean, userId:Int
                             ,hasHash:Boolean)
-        fun showPhotoEnlagementUi(photoUrl: String)
-        fun showHashtagUi(hashtag:String)
         fun likeResultDone(count:Int)
         fun likeResultError()
         fun scrapResultDone()
@@ -33,6 +34,7 @@ class PhotoContract {
         fun openEditCaption()
         fun openPhotoEnlargement(photoUrl: String)
         fun openHashtag(hashtag: String)
+        fun openCamera(photoUrl:String)
         fun getPhotoDetail(baseUrl:String, photoId:Int)
         fun postLike(baseUrl: String, photoId: Int)
         fun deleteLike(baseUrl: String, photoId: Int)
