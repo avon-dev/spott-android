@@ -267,7 +267,7 @@ class CameraXFragment : Fragment() {
         adapter = CameraXAdapter(view.context, onItemClickListener)
         recyclerview.adapter = adapter
 
-        getScrapData()
+//        getScrapData()
 
         overlayImage = view.findViewById(R.id.img_overlay_camerax_f)
         closeImage = view.findViewById(R.id.img_close_camerax_f)
@@ -389,13 +389,15 @@ class CameraXFragment : Fragment() {
 
         // 스크랩 사진 목록 보여주기
         view!!.findViewById<ImageButton>(R.id.imgbtn_scrap_camerax_f).setOnClickListener {
-            if(adapter.hasData())
-                if (recyclerview.isVisible)
-                    recyclerview.visibility = View.INVISIBLE
-                else
-                    recyclerview.visibility = View.VISIBLE
-            else
-                Toast.makeText(it.context, getString(R.string.toast_no_scrap_message), Toast.LENGTH_SHORT).show()
+            getScrapData()
+//            showScrapData()
+//            if(adapter.hasData())
+//                if (recyclerview.isVisible)
+//                    recyclerview.visibility = View.INVISIBLE
+//                else
+//                    recyclerview.visibility = View.VISIBLE
+//            else
+//                Toast.makeText(it.context, getString(R.string.toast_no_scrap_message), Toast.LENGTH_SHORT).show()
         }
 
         // Seekbar로 오버랩 이미지 투명도 설정하기
@@ -504,6 +506,16 @@ class CameraXFragment : Fragment() {
 
     }
 
+    private fun showScrapData() {
+        if(adapter.hasData())
+            if (recyclerview.isVisible)
+                recyclerview.visibility = View.INVISIBLE
+            else
+                recyclerview.visibility = View.VISIBLE
+        else
+            Toast.makeText(view!!.context, getString(R.string.toast_no_scrap_message), Toast.LENGTH_SHORT).show()
+    }
+
     // 오버랩으로 보여주기
     private fun showOverlayImage() {
         overlayImage.alpha = opacitySeekbar.progress.toFloat() * 0.01f
@@ -540,6 +552,8 @@ class CameraXFragment : Fragment() {
             if (throwable is HttpException) {
                 loge(TAG, "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}")
             }
+        }, {
+            showScrapData()
         })
     }
 

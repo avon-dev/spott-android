@@ -119,4 +119,9 @@
 
     <string name="title_editmyinfo">내 정보 수정</string>
 
+    <string name="dialog_withdrawl_message">회원 탈퇴시 계정을 복구 할  수 없습니다. 그래도 탈퇴하시겠습니까?</string>
+    <string name="dialog_withdrawl_title">회원 탈퇴</string>
+
+    <string name="ok">확인</string>
+
 </resources>

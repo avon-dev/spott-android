@@ -2,7 +2,9 @@ package com.avon.spott.EditMyinfo
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -261,10 +263,26 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
                 }
             }
 
-            R.id.btn_withdrawal_editmyinfo_a -> { // 회원 탙퇴
-                // 서버와 통신해서 데이터 없애고 로그아웃 로직
-                val token = MySharedPreferences(applicationContext).prefs.getString("access", "")
-                presenter.withDrawl(getString(R.string.baseurl), token)
+            R.id.btn_withdrawal_editmyinfo_a -> { // 회원 탈퇴
+
+                val builder: AlertDialog.Builder = AlertDialog.Builder(this@EditMyInfoActivity)
+                builder.setMessage(R.string.dialog_withdrawl_message)
+                    .setTitle(R.string.dialog_withdrawl_title)
+                    .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener{ dialog, id ->
+                        dialog.cancel()
+                    })
+                    .setPositiveButton(R.string.ok, DialogInterface.OnClickListener{ dialog, id ->
+                        // 서버와 통신해서 데이터 없애고 로그아웃 로직
+                        val token = MySharedPreferences(applicationContext).prefs.getString("access", "")
+                        presenter.withDrawl(getString(R.string.baseurl), token)
+                    })
+
+                val dialog:AlertDialog = builder.create()
+                dialog.show()
+
+//                // 서버와 통신해서 데이터 없애고 로그아웃 로직
+//                val token = MySharedPreferences(applicationContext).prefs.getString("access", "")
+//                presenter.withDrawl(getString(R.string.baseurl), token)
             }
 
             R.id.btn_signout_editmyinfo_a -> { // 로그아웃
