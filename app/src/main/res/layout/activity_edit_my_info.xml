@@ -52,7 +52,7 @@
             android:id="@+id/img_profile_editmyinfo_a"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/ic_account_circle_grey_36dp" />
+            android:src="@drawable/img_person" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/text_profile_editmyinfo_a"
