@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import com.avon.spott.FindPW.FIND_PW
 import com.avon.spott.R
 import kotlinx.android.synthetic.main.activity_new_password.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -13,6 +14,8 @@ class NewPasswordActivity : AppCompatActivity(), NewPasswordContract.View, View.
     override lateinit var presenter: NewPasswordContract.Presenter
     private lateinit var newPasswordPresenter:NewPasswordPresenter
 
+    private val email:String by lazy { intent.getStringExtra(FIND_PW) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_password)
@@ -21,6 +24,8 @@ class NewPasswordActivity : AppCompatActivity(), NewPasswordContract.View, View.
     }
 
     private fun init() {
+        newPasswordPresenter = NewPasswordPresenter(this)
+
         img_back_toolbar.setOnClickListener(this)
         btn_confirm_newpassword_a.setOnClickListener(this)
 
@@ -33,9 +38,6 @@ class NewPasswordActivity : AppCompatActivity(), NewPasswordContract.View, View.
         edit_check_newpassword_a.addTextChangedListener { // email double check
             presenter.isCheck(edit_newpassword_a.text.toString(), edit_check_newpassword_a.text.toString())
         }
-
-
-
 
     }
 

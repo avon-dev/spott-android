@@ -8,6 +8,9 @@ interface FindPWContract {
         fun navigateUp()
         fun isEmail(valid: Boolean)
         fun getNumber(number:Number)
+        fun showLoading()
+        fun hideLoading()
+        fun showError(msg:String)
     }
 
     interface Presenter {
