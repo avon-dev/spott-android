@@ -1,8 +1,10 @@
 package com.avon.spott.Photo
 
+import android.app.AlertDialog
 import com.avon.spott.Data.BooleanResult
 import com.avon.spott.Data.LikeScrapResult
 import com.avon.spott.Data.PhotoResult
+import com.avon.spott.Data.ReportPhoto
 import com.avon.spott.Mypage.MypageFragment
 import com.avon.spott.Utils.*
 import com.avon.spott.Utils.DateTimeFormatter.Companion.formatCreated
@@ -223,6 +225,47 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
                 photoView.showToast("사진이 삭제되지 않았습니다\n다시 시도하세요")
 
             })
+    }
+
+    override fun report(
+        baseUrl: String,
+        reason: Int,
+        detail: String,
+        postId: Int,
+        postUrl: String,
+        postCaption: String,
+        alertDialog: AlertDialog
+    ) {
+        val reportPhoto = ReportPhoto(postUrl, postCaption, postId, detail, reason)
+
+        val sending = Parser.toJson(reportPhoto)
+        logd(TAG, "sending : $sending")
+
+        Retrofit(baseUrl).post(App.prefs.temporary_token, "spott/report",  sending)
+            .subscribe({ response ->
+                logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
+
+                val string  = response.body()
+                val result = Parser.fromJson<BooleanResult>(string!!)
+                if(result.result){
+                  photoView.reportDone(alertDialog)
+                }else{
+                   photoView.serverError()
+                }
+
+
+            }, { throwable ->
+                logd(TAG, throwable.message)
+                if (throwable is HttpException) {
+                    logd(
+                        TAG,
+                        "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
+                    )
+                }
+
+                photoView.serverError()
+            })
+
     }
 
 

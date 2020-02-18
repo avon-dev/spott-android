@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.fragment_mypage.*
 import kotlinx.android.synthetic.main.fragment_scrap.*
 
 fun BottomNavigationView.setupWithNavController(navGraphIds: List<Int>, fragmentManager: FragmentManager,
-                                                containerId: Int, intent: Intent) {
+                                                containerId: Int) {
 
     val TAG = "NavigationExtensions"
 

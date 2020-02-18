@@ -184,4 +184,36 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
         }
 
     }
+
+    override fun  report(baseurl: String, reason:Int, detail:String, postId:Int, contents:String,
+                              commentId:Int, alertDialog: AlertDialog){
+        val reportComment = ReportComment(contents, commentId, postId, detail, reason)
+        val sending = Parser.toJson(reportComment)
+        logd(TAG, "sending : $sending")
+
+        Retrofit(baseurl).post(App.prefs.temporary_token, "spott/report",  sending)
+            .subscribe({ response ->
+                logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
+
+                val string  = response.body()
+                val result = Parser.fromJson<BooleanResult>(string!!)
+                if(result.result){
+                    commentView.reportDone(alertDialog)
+                }else{
+                    commentView.serverError()
+                }
+
+
+            }, { throwable ->
+                logd(TAG, throwable.message)
+                if (throwable is HttpException) {
+                    logd(
+                        TAG,
+                        "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
+                    )
+                }
+
+                commentView.serverError()
+            })
+    }
 }

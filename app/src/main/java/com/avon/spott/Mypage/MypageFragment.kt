@@ -2,7 +2,9 @@ package com.avon.spott.Mypage
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -14,7 +16,9 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -103,6 +107,9 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
     private var userNickname:String? = null
     private var userPhoto:String? = null
 
+    //공개 비공개 여부
+    private var isPublic = true
+
     val mypageInterListener = object : mypageInter{
         override fun itemClick(id:Int){
             presenter.openPhoto(id)
@@ -148,7 +155,6 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         mapRecyclerView.layoutManager = maplayoutManager
         mapRecyclerView.adapter = mypageMapAdapter
 
-        ////////////////////////////////////////////////////////
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_grid_on_white_24dp))
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_map_white_24dp))
 
@@ -183,9 +189,6 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
             const_grid_mypage_f.visibility = View.GONE
             const_map_mypage_f.visibility = View.VISIBLE
         }
-        ///////////////////////////
-
-
 
         if(mapRecyclerViewShow){
             mapRecyclerView.visibility = View.VISIBLE
@@ -193,10 +196,8 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
             mapRecyclerView.visibility = View.GONE
         }
 
-
-
         if(userNickname!=null){
-            setUserInfo(userNickname!!, userPhoto)
+            setUserInfo(userNickname!!, userPhoto, isPublic)
         }
 
         swiperefresh_mypager_f.setOnRefreshListener {
@@ -225,17 +226,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         if(mypageChange){ //마이페이지에 변화가 있으면 새로 불러온다.
             mypageChange = false
 
-            mypageAdapter.clearItemsAdapter()
-            mypageAdapter.notifyDataSetChanged()
-
-            mypageMapAdapter.clearItemsAdapter()
-            mypageMapAdapter.notifyDataSetChanged()
-
-            clusterManager.clearItems()
-            clusterManager.cluster()
-
-            mapRecyclerView.visibility = View.GONE
-            selectedMarkerMypage = null
+            clearMypage()
 
             presenter.getMyphotos(getString(R.string.baseurl))
         }
@@ -261,6 +252,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         mypagePresenter = MypagePresenter(this)
 
         mToolbar.img_noti_toolbar.setOnClickListener(this)
+        mToolbar.img_menu_toolbar.setOnClickListener(this)
         floatimgbtn_addphoto_mypage.setOnClickListener(this)
 
     }
@@ -383,42 +375,22 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         clusterManager = ClusterManager<MapCluster>(context, mMap)
 
         mCustomClusterItemRenderer = PhotoRenderer(context!!, mMap, clusterManager, false)
-        clusterManager!!.renderer = mCustomClusterItemRenderer
-        clusterManager!!.renderer.setAnimation(false)
+        clusterManager.renderer = mCustomClusterItemRenderer
+        clusterManager.renderer.setAnimation(false)
 
         mMap.setOnMarkerClickListener(clusterManager)
         mMap.setOnInfoWindowClickListener(clusterManager)
         mMap.setOnCameraIdleListener(clusterManager)
-        clusterManager!!.setOnClusterClickListener(this)
-        clusterManager!!.setOnClusterItemClickListener(this)
+        clusterManager.setOnClusterClickListener(this)
+        clusterManager.setOnClusterItemClickListener(this)
 
         presenter.getMyphotos(getString(R.string.baseurl))
-
-//        swiperefresh_mypager_f.setOnRefreshListener {
-//            Handler().postDelayed({
-//                presenter.getMyphotos(getString(R.string.baseurl))
-//            }, 600) //로딩 주기
-//        }
-//
-//        swiperefresh_mypager_f.setColorSchemeColors(ContextCompat.getColor(context!!, R.color.colorPrimary))
 
     }
 
     override fun clearAdapter(){
         if(swiperefresh_mypager_f.isRefreshing){
-            mypageAdapter.clearItemsAdapter()
-            mypageAdapter.notifyDataSetChanged()
-
-            clusterManager.clearItems()
-            clusterManager.cluster()
-
-            mypageMapAdapter.clearItemsAdapter()
-            mypageMapAdapter.notifyDataSetChanged()
-            selectedMarkerMypage  = null
-
-            mapRecyclerView.visibility = View.GONE
-
-
+            clearMypage()
             swiperefresh_mypager_f.isRefreshing = false
 
         }
@@ -430,7 +402,6 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
 
         clusterManager.addItems(mypageItems)
         clusterManager.cluster()
-
 
         mypageAdapter.addItemsAdapter(mypageItems)
         mypageAdapter.notifyDataSetChanged()
@@ -470,6 +441,9 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
             R.id.img_noti_toolbar -> {presenter.openAlarm()}
             R.id.floatimgbtn_addphoto_mypage -> {
                 presenter.clickAddPhoto()
+            }
+            R.id.img_menu_toolbar -> {
+                showMenuDialog()
             }
         }
     }
@@ -600,7 +574,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
          if (resultCode == Activity.RESULT_OK && null != data) {
                 if(requestCode == 102) {
                 if (data.getData() != null) {
-                    var mPhotoPath: Uri = data.getData()
+                    var mPhotoPath: Uri = data.getData()!!
                     logd(TAG, "photopath : " + mPhotoPath)
 
                     val options = UCrop.Options()
@@ -638,7 +612,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         }
     }
 
-    override fun setUserInfo(nickname:String, photo:String?){
+    override fun setUserInfo(nickname:String, photo:String?, isPublic:Boolean){
         userNickname = nickname
         userPhoto = photo
 
@@ -651,7 +625,79 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         }
 
         mToolbar.text_name_toolbar.text=nickname
+        showPublic(isPublic)
     }
+
+    private fun clearMypage(){
+        // 그리드 리사이클러뷰 클리어
+        mypageAdapter.clearItemsAdapter()
+        mypageAdapter.notifyDataSetChanged()
+
+        //클러스터 클리어
+        clusterManager.clearItems()
+        clusterManager.cluster()
+
+        //맵 리사이클러뷰 클리어 및 사라지게 처리
+        mypageMapAdapter.clearItemsAdapter()
+        mypageMapAdapter.notifyDataSetChanged()
+        mapRecyclerView.visibility = View.GONE
+
+        //선택했던 마커 없애기
+        selectedMarkerMypage  = null
+    }
+
+    private fun showMenuDialog(){
+        val builder = AlertDialog.Builder(context)
+
+        val arrayList = ArrayList<String>()
+        arrayList.add(getString(R.string.text_title_editmyinfo_a))
+        arrayList.add(if(isPublic) getString(R.string.keep_private) else getString(R.string.keep_public))
+        arrayList.add(getString(R.string.inquiry))
+        arrayList.add(getString(R.string.text_terms_of_service))
+        arrayList.add(getString(R.string.text_open_source_library))
+
+        val adapter = ArrayAdapter<String>(context!!, android.R.layout.simple_list_item_1, arrayList)
+        val listener = object : DialogInterface.OnClickListener{
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+                when(which){
+                    0 -> { // 내 정보 수정 눌렀을 때
+                        presenter.openEditMyInfo()
+                    }
+                    1 -> { // 공개, 비공개 전환
+                       presenter.changePublic(getString(R.string.baseurl), isPublic)
+                    }
+                    2 ->{ //문의하기 눌렀을 때
+                        /** 메일 앱으로 연동하거나
+                         *  어드민사이트로 보낼 예정*/
+                    }
+                    3->{ //이용약관 눌렀을 때
+
+                    }
+                    4->{ //오픈소스 라이브러리 눌렀을 때
+
+                    }
+                }
+            }
+        }
+
+        builder.setAdapter(adapter, listener)
+        builder.show()
+
+    }
+
+    override fun showPublic(isPublic: Boolean){
+        this.isPublic = isPublic
+        const_private_mypage_f.visibility = if(isPublic) View.GONE else View.VISIBLE
+    }
+
+    override fun showErrorToast() {
+        showToast(getString(R.string.server_connection_error))
+    }
+
+    override fun showToast(string: String) {
+        Toast.makeText(this.context, string, Toast.LENGTH_SHORT).show()
+    }
+
 
 }
 

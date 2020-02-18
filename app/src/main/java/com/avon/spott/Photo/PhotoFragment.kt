@@ -14,7 +14,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ArrayAdapter
+import android.widget.RadioGroup
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.avon.spott.EditCaption.EditCaptionActivity
@@ -26,6 +28,10 @@ import com.avon.spott.PhotoEnlargementActivity
 import com.avon.spott.Scrap.ScrapFragment.Companion.scrapChange
 import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.dialog_report.*
+import kotlinx.android.synthetic.main.dialog_report.view.*
+import kotlinx.android.synthetic.main.dialog_report_etc.*
+import kotlinx.android.synthetic.main.dialog_report_etc.view.*
 import kotlinx.android.synthetic.main.fragment_photo.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
@@ -160,6 +166,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         bundle.putString("photoCaption", caption)
         bundle.putString("photoDateTime", dateTime)
         bundle.putInt("userId", userId)
+        bundle.putInt("photoId", arguments?.getInt("photoId")!!)
         findNavController().navigate(R.id.action_photoFragment_to_commentFragment, bundle)
     }
 
@@ -241,7 +248,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
                             override fun onClick(dialog: DialogInterface?, which: Int) {
                                 when(which){
                                     0 -> { // 신고 눌렀을 때
-                                        /** 사진(게시글) 신고 처리하는 코드 넣어야함.*/
+                                       report()
                                     }
                                 }
                             }
@@ -255,6 +262,88 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
             }
 
         }
+    }
+
+    private fun report(){
+        val mDialogView = LayoutInflater.from(context!!).inflate(R.layout.dialog_report, null)
+        //AlertDialogBuilder
+
+        val mBuilder = AlertDialog.Builder(context!!)
+            .setView(mDialogView)
+
+        mDialogView.text_header_report_d.text = getString(R.string.report_photo)
+
+        val  mAlertDialog = mBuilder.show()
+        mAlertDialog.setCanceledOnTouchOutside(false)
+
+        mDialogView.radiogroup_report_d.setOnCheckedChangeListener(
+            RadioGroup.OnCheckedChangeListener { group, checkedId ->
+                mDialogView.btn_report_d.isClickable = true
+                mDialogView.btn_report_d.setBackgroundResource(R.drawable.corner_round_primary)
+            }
+        )
+
+        mDialogView.btn_report_d.setOnClickListener {
+            val radioId = mDialogView.radiogroup_report_d.checkedRadioButtonId
+            val checkedRadio = mDialogView.radiogroup_report_d.findViewById<View>(radioId)
+            val index = mDialogView.radiogroup_report_d.indexOfChild(checkedRadio)
+
+            val detail:String
+           when(index){
+               0 ->{ detail = getString(R.string.spam) }
+               1 ->{ detail = getString(R.string.abuse_and_slander)}
+               2 -> {detail = getString(R.string.pornography)}
+               3 -> {detail = getString(R.string.unauthorized_use)}
+               else -> {detail = ""}
+           }
+
+
+
+            presenter.report(getString(R.string.baseurl), index+1, detail,
+                arguments?.getInt("photoId")!!, postPhotoUrl!!, caption!!, mAlertDialog )
+            mAlertDialog.dismiss()
+        }
+
+        mDialogView.text_etc_report_d.setOnClickListener {
+            mAlertDialog.dismiss()
+            reportEtc()
+        }
+    }
+
+    private fun reportEtc(){
+        val mDialogView = LayoutInflater.from(context!!).inflate(R.layout.dialog_report_etc, null)
+        //AlertDialogBuilder
+
+        val mBuilder = AlertDialog.Builder(context!!)
+            .setView(mDialogView)
+
+        mDialogView.text_header_reportetc_d.text = getString(R.string.report_photo)
+
+        val  mAlertDialog = mBuilder.show()
+        mAlertDialog.setCanceledOnTouchOutside(false)
+
+        mDialogView.edit_reportetc_d.addTextChangedListener {
+            if(it!!.trim().length>0){
+                mDialogView.btn_reportetc_d.isClickable = true
+                mDialogView.btn_reportetc_d.setBackgroundResource(R.drawable.corner_round_primary)
+            }
+        }
+
+        mDialogView.btn_reportetc_d.setOnClickListener {
+            presenter.report(getString(R.string.baseurl), 0, mDialogView.edit_reportetc_d.text.toString(),
+                arguments?.getInt("photoId")!!, postPhotoUrl!!, caption!!, mAlertDialog)
+
+        }
+
+    }
+
+    override fun serverError(){
+        showToast(getString(R.string.server_connection_error))
+    }
+
+    override fun reportDone(alertDialog: AlertDialog){
+        showToast(getString(R.string.report_done))
+        alertDialog.dismiss()
     }
 
     override fun showToast(string: String) {

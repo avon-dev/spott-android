@@ -49,8 +49,6 @@ class MainActivity : AppCompatActivity(), MainContract.View, View.OnClickListene
         mToolbar.img_back_toolbar.setOnClickListener(this)
         const_camera_main_a.setOnClickListener(this)
 
-        mToolbar.img_menu_toolbar.setOnClickListener(this)
-
     }
 
     override fun showCameraUi(){
@@ -78,8 +76,7 @@ class MainActivity : AppCompatActivity(), MainContract.View, View.OnClickListene
         bottomNavigationView.setupWithNavController(
             navGraphIds = navGraphIds,
             fragmentManager = supportFragmentManager,
-            containerId = R.id.frag_navhost_main_a,
-            intent = intent
+            containerId = R.id.frag_navhost_main_a
         )
 
     }
@@ -88,12 +85,6 @@ class MainActivity : AppCompatActivity(), MainContract.View, View.OnClickListene
         when(v?.id){
             R.id.const_camera_main_a -> {presenter.openCamera()}
             R.id.img_back_toolbar -> {presenter.navigateUp()}
-            R.id.img_menu_toolbar -> {
-                // 임시
-                Intent(applicationContext, EditMyInfoActivity::class.java).let {
-                    startActivity(it)
-                }
-            }
         }
     }
 

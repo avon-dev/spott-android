@@ -29,7 +29,7 @@
         android:id="@+id/text_nophoto_user_f"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/upload_first_photo"
+        android:text="@string/user_no_photo"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -48,6 +48,45 @@
 <!--        app:layout_constraintEnd_toEndOf="parent"-->
 <!--        app:layout_constraintStart_toStartOf="parent"-->
 <!--        app:layout_constraintTop_toBottomOf="@+id/view_topborder_user_f" />-->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/const_private_user_f"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/img_private_user_f"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:tint="@color/text_grey"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/text_private_user_f"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_lock_black_24dp" />
+
+        <TextView
+            android:id="@+id/text_private_user_f"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/private_account"
+            android:textColor="@color/text_grey"
+            android:textSize="17dp"
+            app:layout_constraintBottom_toBottomOf="@+id/img_private_user_f"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/img_private_user_f"
+            app:layout_constraintTop_toTopOf="@+id/img_private_user_f"
+            app:layout_constraintVertical_bias="0.536" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swiperefresh_user_f"

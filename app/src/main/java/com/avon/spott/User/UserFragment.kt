@@ -25,7 +25,6 @@ import kotlinx.android.synthetic.main.toolbar.view.*
 
 class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
 
-
     private val TAG = "forUserFragment"
 
     lateinit var mapRecyclerViewUser : RecyclerView  //Map recyclerview
@@ -54,6 +53,9 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
 
     private var fromSearch = false
     private var userId = 0
+
+    private var isPublic = true
+    private var myself = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,7 +89,7 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
 
 
         if(userNickname!=null){
-            setUserInfo(userNickname!!, userPhoto)
+            setUserInfo(userNickname!!, userPhoto, isPublic, myself)
         }
 
         recycler_grid_user_f.layoutManager  = layoutManager
@@ -227,9 +229,10 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
     }
 
 
-    override fun setUserInfo(nickname:String, photo:String?){
+    override fun setUserInfo(nickname:String, photo:String?, isPublic: Boolean, myself:Boolean){
         userNickname = nickname
         userPhoto = photo
+        this.myself = myself
 
         if(photo==null){
             mToolbar.img_profile_toolbar.setImageResource(R.drawable.img_person)
@@ -240,6 +243,16 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
         }
 
         mToolbar.text_name_toolbar.text=nickname
+
+        showPublic(isPublic)
+    }
+
+    private fun showPublic(isPublic: Boolean) {
+        this.isPublic = isPublic
+        if(!myself){
+            const_private_user_f.visibility = if(isPublic) View.GONE else View.VISIBLE
+        }else const_private_user_f.visibility = View.GONE
+
     }
 
 

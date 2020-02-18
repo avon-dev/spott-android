@@ -1,5 +1,6 @@
 package com.avon.spott.Search
 
+import com.avon.spott.Data.BooleanResult
 import com.avon.spott.Data.Search
 import com.avon.spott.Data.SearchResult
 import com.avon.spott.Utils.App
@@ -22,17 +23,20 @@ class SearchPresenter(val searchView:SearchContract.View):SearchContract.Present
         searchView.showHashtag(hashtag)
     }
 
-    override fun deleteRecent(baseUrl: String, recentId: Int, position:Int) {
+    override fun deleteRecent(baseUrl: String, position:Int) {
 
-        Retrofit(baseUrl).patch(App.prefs.temporary_token,"/spott/search", "")
+        Retrofit(baseUrl).delete(App.prefs.temporary_token,"/spott/recent/"+position.toString(), "")
 
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 
                 val string  = response.body()
-//                val result = Parser.fromJson<SearchResult>(string!!)
+                val result = Parser.fromJson<BooleanResult>(string!!)
 
-                searchView.deleteRecentItem(position)
+                if(result.result){
+                    searchView.deleteRecentItem(position)
+                }
+
 
 
             }, { throwable ->
@@ -47,15 +51,17 @@ class SearchPresenter(val searchView:SearchContract.View):SearchContract.Present
     }
 
     override fun deleteAll(baseUrl: String) {
-        Retrofit(baseUrl).delete(App.prefs.temporary_token,"/spott/search", "")
+        Retrofit(baseUrl).delete(App.prefs.temporary_token,"/spott/recent/-1", "")
 
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 
                 val string  = response.body()
-//                val result = Parser.fromJson<SearchResult>(string!!)
+                val result = Parser.fromJson<BooleanResult>(string!!)
 
-                searchView.clearRecentItems()
+                if(result.result){
+                    searchView.clearRecentItems()
+                }
 
             }, { throwable ->
                 logd(TAG, throwable.message)

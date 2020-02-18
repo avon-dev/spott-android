@@ -1,7 +1,9 @@
 package com.avon.spott.Mypage
 
+import com.avon.spott.Data.BooleanResult
 import com.avon.spott.Data.MapCluster
 import com.avon.spott.Data.MypageResult
+import com.avon.spott.Data.Public
 import com.avon.spott.Utils.App
 import com.avon.spott.Utils.Parser
 import com.avon.spott.Utils.Retrofit
@@ -51,7 +53,7 @@ class MypagePresenter(val mypageView:MypageContract.View):MypageContract.Present
 
                 mypageView.clearAdapter()
 
-                mypageView.setUserInfo(result.user.nickname, result.user.profile_image)
+                mypageView.setUserInfo(result.user.nickname, result.user.profile_image, result.user.is_public)
 
                 if(result.posts.size==0){
                     mypageView.noPhoto()
@@ -73,17 +75,32 @@ class MypagePresenter(val mypageView:MypageContract.View):MypageContract.Present
                 }
             })
 
+    }
 
-//        val photos = adddummy
-//        if(photos.size==0){
-//            mypageView.noPhoto()
-//            mypageView.movePosition(LatLng(37.56668, 126.97843), 14f) //등록한 사진이 없으면 구글맵 카메라 서울시청으로 이동
-//        }else{
-//            mypageView.movePosition(LatLng(photos[0].latitude, photos[0].longitude), 11f)
-//            //등록한 사진이 있으면 가장 최신 등록된 사진의 위치로 이동
-//        }
-//        mypageView.addItems(photos)
+    override fun changePublic(baseUrl: String, isPublic: Boolean) {
 
+        val public = Public(!isPublic)
+        logd(TAG, "public sending : "+Parser.toJson(public))
+
+        Retrofit(baseUrl).patch(App.prefs.temporary_token, "/spott/mypage",  Parser.toJson(public))
+            .subscribe({ response ->
+                logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
+
+                val string  = response.body()
+                val result = Parser.fromJson<Public>(string!!)
+
+                mypageView.showPublic(result.is_public)
+
+            }, { throwable ->
+                logd(TAG, throwable.message)
+                if (throwable is HttpException) {
+                    logd(
+                        TAG,
+                        "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
+                    )
+                }
+                mypageView.showErrorToast()
+            })
     }
 
 

@@ -6,7 +6,7 @@ interface BaseView<T> {
 
 /* Java로 Decompile하면 아래와 같음
 
-public interface BaseView {
+Public interface BaseView {
    Object getPresenter();
 
    void setPresenter(Object var1);

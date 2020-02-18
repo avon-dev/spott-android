@@ -2,6 +2,7 @@ package com.avon.spott.User
 
 import com.avon.spott.Data.FromSearch
 import com.avon.spott.Data.MypageResult
+import com.avon.spott.Search.SearchFragment.Companion.recentChange
 import com.avon.spott.Utils.App
 import com.avon.spott.Utils.Parser
 import com.avon.spott.Utils.Retrofit
@@ -23,7 +24,10 @@ class UserPresenter (val userView:UserContract.View):UserContract.Presenter {
         logd(TAG, "userId : " +userId.toString())
 
         var action = 1202
-        if(fromSearch){action= 1201}
+        if(fromSearch){
+            action= 1201
+            recentChange = true
+        }
 
         val fromSearch = FromSearch(action)
 
@@ -38,11 +42,18 @@ class UserPresenter (val userView:UserContract.View):UserContract.Presenter {
 
                 userView.clearAdapter()
 
-                userView.setUserInfo(result.user.nickname, result.user.profile_image)
+                userView.setUserInfo(result.user.nickname, result.user.profile_image, result.user.is_public, result.myself)
 
-                if(result.posts.size==0){
-                    userView.noPhoto()
+                if(result.myself){
+                    if(result.posts.size==0){
+                        userView.noPhoto()
+                    }
+                }else{
+                    if(result.posts.size==0 && result.user.is_public){
+                        userView.noPhoto()
+                    }
                 }
+
 
 
                 userView.addItems(result.posts)

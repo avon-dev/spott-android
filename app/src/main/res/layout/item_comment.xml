@@ -28,47 +28,15 @@
         tools:text="userNickName" />
 
     <ImageButton
-        android:id="@+id/imgbtn_edit_comment_i"
+        android:id="@+id/imgbtn_more_comment_i"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginStart="24dp"
         android:adjustViewBounds="true"
         android:background="@color/default_background"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/text_nickname_comment_i"
-        app:layout_constraintStart_toEndOf="@id/text_nickname_comment_i"
-        app:layout_constraintTop_toTopOf="@id/img_profile_comment_i"
-        app:srcCompat="@drawable/baseline_edit_24"
-        tools:visibility="visible" />
-
-    <ImageButton
-        android:id="@+id/imgbtn_remove_comment_i"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="10dp"
-        android:adjustViewBounds="true"
-        android:background="@color/default_background"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/imgbtn_edit_comment_i"
-        app:layout_constraintStart_toEndOf="@id/imgbtn_edit_comment_i"
-        app:layout_constraintTop_toTopOf="@id/imgbtn_edit_comment_i"
-        app:srcCompat="@drawable/baseline_delete_24"
-        tools:visibility="visible" />
-
-
-    <ImageButton
-        android:id="@+id/imgbtn_report_comment_i"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="24dp"
-        android:adjustViewBounds="true"
-        android:background="@color/default_background"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/text_nickname_comment_i"
-        app:layout_constraintStart_toEndOf="@+id/text_nickname_comment_i"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/text_nickname_comment_i"
-        app:srcCompat="@drawable/ic_report_black_24dp"
-        tools:visibility="visible" />
+        app:srcCompat="@drawable/ic_more_vert_black_24dp" />
 
     <TextView
         android:id="@+id/text_content_comment_i"

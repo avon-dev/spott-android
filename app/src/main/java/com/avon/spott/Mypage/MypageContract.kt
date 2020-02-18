@@ -17,8 +17,11 @@ interface MypageContract {
         fun openGallery()
         fun noPhoto()
         fun movePosition(latLng: LatLng, zoom: Float)
-        fun setUserInfo(nickname:String, photo:String?)
+        fun setUserInfo(nickname:String, photo:String?, isPublic:Boolean)
         fun clearAdapter()
+        fun showPublic(isPublic: Boolean)
+        fun showErrorToast()
+        fun showToast(string: String)
     }
 
     interface Presenter{
@@ -28,6 +31,7 @@ interface MypageContract {
         fun openEditMyInfo()
         fun openAddPhoto(mFilePath : String)
         fun clickAddPhoto()
+        fun changePublic(baseUrl:String, isPublic: Boolean)
     }
 
 }

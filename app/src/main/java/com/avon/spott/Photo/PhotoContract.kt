@@ -1,5 +1,6 @@
 package com.avon.spott.Photo
 
+import android.app.AlertDialog
 import com.avon.spott.BaseView
 
 class PhotoContract {
@@ -24,6 +25,8 @@ class PhotoContract {
         fun navigateUp()
         fun showNoPhotoDialog()
         fun setCaption(text:String, hashList:ArrayList<Array<Int>>)
+        fun reportDone(alertDialog: AlertDialog)
+        fun serverError()
 
     }
 
@@ -41,6 +44,8 @@ class PhotoContract {
         fun postScrap(baseUrl: String, photoId: Int)
         fun deleteScrap(baseUrl: String, photoId: Int)
         fun deletePhoto(baseUrl: String, photoId: Int)
+        fun report(baseUrl: String, reason:Int, detail:String, postId:Int, postUrl:String,
+        postCaption:String,  alertDialog: AlertDialog)
 
     }
 }
