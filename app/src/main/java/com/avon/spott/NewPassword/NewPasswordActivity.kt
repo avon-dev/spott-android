@@ -87,6 +87,7 @@ class NewPasswordActivity : AppCompatActivity(), NewPasswordContract.View, View.
                 it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(it)
             }
+            showError("비밀번호가 변경되었습니다")
         } else {
             showError("다시 시도해주세요")
         }

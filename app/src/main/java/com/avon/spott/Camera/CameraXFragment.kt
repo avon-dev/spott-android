@@ -2,15 +2,13 @@ package com.avon.spott.Camera
 
 
 import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.app.Activity.RESULT_OK
+import android.content.*
 import android.content.res.Configuration
+import android.database.Cursor
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.hardware.display.DisplayManager
-import android.media.MediaActionSound
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
@@ -44,6 +42,7 @@ import com.avon.spott.R
 import com.avon.spott.Utils.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import kotlinx.android.synthetic.main.fragment_camera_x.*
 import retrofit2.HttpException
 import java.io.File
 import java.lang.Math.*
@@ -207,7 +206,7 @@ class CameraXFragment : Fragment() {
 
             // API Level 23이상에서만 foreground Drawable을 변경할 수 있다.
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                setGalleryThumbnail(photoFile)
+                setGalleryThumbnail(photoFile)
             }
 
             // API Level 24이상에서 실행하는 장치에 대해 암시적 브로드캐스트가 무시되므로 API Level24만 대상으로 지정하면 이 상태를 제거할 수 있다
@@ -225,6 +224,8 @@ class CameraXFragment : Fragment() {
                 arrayOf(mimeType),
                 null
             )
+
+
         }
     }
 
@@ -294,6 +295,47 @@ class CameraXFragment : Fragment() {
             return@setOnTouchListener true
         }
 
+
+        try {
+            val cursor = getImage()
+
+            if(cursor.moveToFirst()) {
+                // 1. 각 칼럼의 열 인덱스 얻기
+                val idColNum = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns._ID)
+
+                // 2. 인덱스를 바탕으로 데이터를 Cursor로부터 얻기
+                val id = cursor.getLong(idColNum)
+                val imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+
+                // 3. 데이터를 View로 설정
+//                val inputStream = activity!!.contentResolver.openInputStream(imageUri)
+//                val bitmap = BitmapFactory.decodeStream(inputStream)
+//                if(inputStream != null)
+//                    inputStream.close()
+                imgbtn_gallery_camerax_f.setImageURI(imageUri)
+//                imgbtn_gallery_camerax_f.setImageBitmap(bitmap)
+            }
+            cursor.close()
+        } catch (e: SecurityException) {
+            Toast.makeText(view!!.context, getString(R.string.toast_get_image_error_message), Toast.LENGTH_SHORT).show()
+                imgbtn_gallery_camerax_f.setImageResource(R.drawable.ic_photo_library_black_24dp)
+        }
+    }
+
+    private fun getImage(): Cursor {
+        val contentResolver = activity!!.contentResolver
+        var queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        // 가져올 칼럼명
+        val projection = arrayOf(
+            MediaStore.Images.ImageColumns._ID,
+            MediaStore.Images.ImageColumns.TITLE,
+            MediaStore.Images.ImageColumns.DATE_TAKEN)
+
+        // 정렬
+        val sortOrder = MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC"
+        queryUri = queryUri.buildUpon().appendQueryParameter("limit", "1").build()
+
+        return contentResolver.query(queryUri, projection, null, null, sortOrder)
     }
 
     val listener = object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
@@ -315,21 +357,13 @@ class CameraXFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-//        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-//            try {
-//
-//                val inputStream = activity!!.getContentResolver().openInputStream(data?.getData())
-//                val bitmap = BitmapFactory.decodeStream(inputStream)
-//                inputStream.close()
-//
-//                overlayImage.setImageBitmap(bitmap)
-//                showOverlayImage()
-//            } catch (e: Exception) {
-//                loge(TAG, "failed getImage in Gallery", e)
-//            }
-//        } else {
-//            super.onActivityResult(requestCode, resultCode, data)
-//        }
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+//            Navigation.findNavController(requireActivity(), R.id.fragment_container_camerax).navigate(
+//                CameraXFragmentDirections.actionCameraToPermissions()
+//            )
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
 
@@ -358,8 +392,8 @@ class CameraXFragment : Fragment() {
 
                 // 임시
                 // 카메라 셔터소리
-                val sound = MediaActionSound()
-                sound.play(MediaActionSound.SHUTTER_CLICK)
+//                val sound = MediaActionSound()
+//                sound.play(MediaActionSound.SHUTTER_CLICK)
 
                 // API Level 23이상에서만 foreground drawable을 바꿀 수 있다.
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -420,16 +454,23 @@ class CameraXFragment : Fragment() {
         }
 
         // 갤러리에서 사진 가져오기
-        view!!.findViewById<ImageButton>(R.id.imgbtn_gallery_camerax_f).setOnClickListener {
+//        view!!.findViewById<ImageButton>(R.id.imgbtn_gallery_camerax_f).setOnClickListener {
+//
+//            val pickPhoto = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+//            pickPhoto.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+//            startActivityForResult(pickPhoto, REQUEST_CODE)
+////            val intent = Intent().apply {
+////                setType("image/*")
+////                setAction(Intent.ACTION_GET_CONTENT)
+////            }
+////            startActivityForResult(intent, REQUEST_CODE)
+//        }
+
+            imgbtn_gallery_camerax_f.setOnClickListener {
 
             val pickPhoto = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             pickPhoto.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             startActivityForResult(pickPhoto, REQUEST_CODE)
-//            val intent = Intent().apply {
-//                setType("image/*")
-//                setAction(Intent.ACTION_GET_CONTENT)
-//            }
-//            startActivityForResult(intent, REQUEST_CODE)
         }
 
 //        view!!.findViewById<SeekBar>(R.id.seekbar_zoom_camerax_f).setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -556,6 +597,8 @@ class CameraXFragment : Fragment() {
             showScrapData()
         })
     }
+
+
 
 
     companion object {

@@ -87,7 +87,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-<!--    <TextView-->
+    <ImageView
+        android:id="@+id/test_img"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_signup_login_a"
+        app:srcCompat="@drawable/amu_bubble_mask" />
+
+    <!--    <TextView-->
 <!--        android:id="@+id/text_termsandconditions_login_a"-->
 <!--        android:layout_width="wrap_content"-->
 <!--        android:layout_height="wrap_content"-->

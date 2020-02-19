@@ -54,8 +54,9 @@ interface RetrofitService {
     @GET
     fun getNonToken(@Url url: String, @Query("sending") sending: String): Observable<Response<String>>
 
+    @FormUrlEncoded
     @PATCH
-    fun patchNonHeader(@Url url: String, @Query("sending") sending: String): Observable<Response<String>>
+    fun patchNonHeader(@Url url: String, @Field("sending") sending: String): Observable<Response<String>>
 
 
     @FormUrlEncoded
