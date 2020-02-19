@@ -53,28 +53,34 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
                 val string  = response.body()
                 val result = Parser.fromJson<PhotoResult>(string!!)
 
-                val hashArrayList = ArrayList<Array<Int>>()
+                if(result.result == 12001){
+                    photoView.showReportedDialog()
+                }else if(result.result == 12000){
+                    val hashArrayList = ArrayList<Array<Int>>()
 
-                val matcher = Validator.validHashtag(result.contents)
-                while (matcher.find()){
-                    if(matcher.group(1) != "") {
+                    val matcher = Validator.validHashtag(result.contents)
+                    while (matcher.find()){
+                        if(matcher.group(1) != "") {
 
-                      val currentSapn =arrayOf(matcher.start(), matcher.end())
-                        hashArrayList.add(currentSapn)
+                            val currentSapn =arrayOf(matcher.start(), matcher.end())
+                            hashArrayList.add(currentSapn)
+                        }
                     }
+
+                    var hasHash = false
+                    if(hashArrayList.size>0){
+                        photoView.setCaption(result.contents, hashArrayList)
+                        hasHash = true
+                    }
+
+
+                    photoView.setPhotoDetail(result.user.profile_image, result.user.nickname,
+                        result.posts_image, result.back_image, result.latitude, result.longitude,
+                        result.contents, result.comment, formatCreated(result.created), result.count,
+                        result.like_checked, result.scrap_checked, result.myself, result.user.id, hasHash)
                 }
 
-                var hasHash = false
-                if(hashArrayList.size>0){
-                    photoView.setCaption(result.contents, hashArrayList)
-                    hasHash = true
-                }
 
-
-                photoView.setPhotoDetail(result.user.profile_image, result.user.nickname,
-                    result.posts_image, result.back_image, result.latitude, result.longitude,
-                    result.contents, result.comment, formatCreated(result.created), result.count,
-                    result.like_checked, result.scrap_checked, result.myself, result.user.id, hasHash)
 
             }, { throwable ->
                 logd(TAG, throwable.message)
@@ -145,7 +151,7 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
 
     override fun postScrap(baseUrl: String, photoId: Int){
         /* 임시 수정 : temporary_token -> token*/
-        Retrofit(baseUrl).post(App.prefs.token, "/spott/scrap/"+photoId,  "")
+        Retrofit(baseUrl).post(App.prefs.temporary_token, "/spott/scrap/"+photoId,  "")
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 
@@ -248,7 +254,8 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
                 val string  = response.body()
                 val result = Parser.fromJson<BooleanResult>(string!!)
                 if(result.result){
-                  photoView.reportDone(alertDialog)
+                    photoView.reportDone(alertDialog)
+                    photoView.navigateUp()
                 }else{
                    photoView.serverError()
                 }

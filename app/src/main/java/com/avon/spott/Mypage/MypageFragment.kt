@@ -155,8 +155,8 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         mapRecyclerView.layoutManager = maplayoutManager
         mapRecyclerView.adapter = mypageMapAdapter
 
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_grid_on_white_24dp))
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_map_white_24dp))
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_photo_white_24dp))
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_location_on_white_24dp))
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -224,8 +224,8 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         }
 
         if(mypageChange){ //마이페이지에 변화가 있으면 새로 불러온다.
+            text_nophoto_mypage_f.visibility = View.GONE
             mypageChange = false
-
             clearMypage()
 
             presenter.getMyphotos(getString(R.string.baseurl))

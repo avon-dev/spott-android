@@ -41,21 +41,6 @@ class AlarmFragment : Fragment(), AlarmContract.View, View.OnClickListener {
         // Inflate the layout for this fragment
        val root = inflater.inflate(R.layout.fragment_alarm, container, false)
 
-//        root.btn_photo_alarm_f.setOnClickListener {
-//            findNavController().navigate(R.id.action_alarmFragment_to_photo)
-//        }
-//
-//        root.btn_comment_alarm_f.setOnClickListener {
-//
-//            //photoFragment를 스택에서 날려버림
-//            val navOptions = NavOptions.Builder()
-//                .setPopUpTo(R.id.photoFragment, true)
-//                .build()
-//
-//                findNavController().navigate(R.id.action_alarmFragment_to_photo)
-//                findNavController().navigate(R.id.action_photoFragment_to_commentFragment,null, navOptions)
-//        }
-
         return root
     }
 
@@ -91,6 +76,7 @@ class AlarmFragment : Fragment(), AlarmContract.View, View.OnClickListener {
 
     override fun showCommentUi() {
        //photoFragment를 스택에서 날려버림
+
          val navOptions = NavOptions.Builder()
                  .setPopUpTo(R.id.photoFragment, true)
                 .build()

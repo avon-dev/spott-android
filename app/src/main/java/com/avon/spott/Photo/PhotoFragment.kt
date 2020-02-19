@@ -71,6 +71,8 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
     private var myself = false
 
+    private var showdetail = false
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_photo, container, false)
 
@@ -132,6 +134,8 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
             captionChange = false
             presenter.getPhotoDetail(getString(R.string.baseurl), arguments?.getInt("photoId")!!)
         }
+
+        scroll_photo_f.visibility = if(showdetail) View.VISIBLE else View.GONE
     }
 
     fun init(){
@@ -355,6 +359,8 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
                                 caption:String, comments:Int, dateTime:String, likeCount:Int,
                                 likeChecked:Boolean, scrapChecked:Boolean, myself:Boolean,
                                 userId:Int,hasHash:Boolean){
+        showdetail = true
+
         this.myself = myself
 
         if(userPhoto==null){
@@ -412,6 +418,8 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
         likeProgressing = false
         scrapProgressing = false
+
+        scroll_photo_f.visibility = View.VISIBLE
 
     }
 
@@ -499,7 +507,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
     override fun showNoPhotoDialog(){  /// 다이얼로그 아래 마진 없애야함.
         val builder = AlertDialog.Builder(context!!)
         builder.setMessage(getString(R.string.text_no_photo))
-        builder.setCancelable(false)
+        builder.setCancelable(false) //뒤로가기로 다이얼로그 종료 방지
 
         builder.setPositiveButton(android.R.string.yes){_, _ ->
             navigateUp()
@@ -537,6 +545,19 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         text_caption_photo_f.text = spannableString
         text_caption_photo_f.movementMethod = LinkMovementMethod.getInstance()
 
+    }
+
+    override fun showReportedDialog() {
+        val builder = AlertDialog.Builder(context!!)
+        builder.setMessage(getString(R.string.text_reported_photo))
+        builder.setCancelable(false) //뒤로가기로 다이얼로그 종료 방지
+
+        builder.setPositiveButton(android.R.string.yes){_, _ ->
+            navigateUp()
+        }
+
+        val  mAlertDialog =  builder.show()
+        mAlertDialog.setCanceledOnTouchOutside(false)
     }
 
 

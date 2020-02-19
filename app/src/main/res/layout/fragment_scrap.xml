@@ -190,17 +190,44 @@
 <!--        </androidx.core.widget.NestedScrollView>-->
 
 
-
-    <TextView
-        android:id="@+id/text_noscrap_scrap_f"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/const_noscrap_scrap_f"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="스크랩한 사진이 없습니다."
+        android:layout_marginTop="32dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view_top_scarp_f"
-        tools:visibility="visible" />
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_bookmark_border_grey_24dp"
+            android:tint="@color/nophoto_grey"
+            app:layout_constraintBottom_toTopOf="@+id/text_noscrap_scrap_f"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/text_noscrap_scrap_f"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_scrap"
+            android:textColor="@color/text_grey"
+            android:textSize="17dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/imageView3"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/imageView3"
+            app:layout_constraintTop_toBottomOf="@+id/imageView3"
+            tools:visibility="visible" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

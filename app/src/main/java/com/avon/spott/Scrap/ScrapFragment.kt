@@ -101,9 +101,8 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
         }else{
 
             text_scraps_scrap_f.text = scrapCount.toString()
-            if(scrapCount==0){
-                text_noscrap_scrap_f.visibility = View.VISIBLE
-            }
+
+            const_noscrap_scrap_f.visibility =   if(scrapCount==0) View.VISIBLE else View.GONE
 
             if(scrapChange){
                 scrapAdapter.clearItemsAdapter()
@@ -319,9 +318,9 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
         scrapCount = scrapItems.size
         text_scraps_scrap_f.text = scrapCount.toString()
         if(scrapCount ==0){
-            text_noscrap_scrap_f.visibility = View.VISIBLE
+            const_noscrap_scrap_f.visibility = View.VISIBLE
         }else{
-            text_noscrap_scrap_f.visibility = View.GONE
+            const_noscrap_scrap_f.visibility = View.GONE
         }
     }
 
@@ -348,7 +347,7 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
         scrapCount = count
 
         if(count==0){
-            text_noscrap_scrap_f.visibility = View.VISIBLE
+            const_noscrap_scrap_f.visibility = View.VISIBLE
         }
 
     }

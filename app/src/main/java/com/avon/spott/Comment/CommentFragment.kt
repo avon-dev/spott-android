@@ -392,7 +392,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
                         mDialogView.btn_reportetc_d.setOnClickListener {
                             presenter.report(getString(R.string.baseurl), 0, mDialogView.edit_reportetc_d.text.toString(),
-                                arguments?.getInt("photoId")!!, itemsList[position].contents, itemsList[position].id, mAlertDialog )
+                                arguments?.getInt("photoId")!!, itemsList[position].contents, itemsList[position].id, mAlertDialog, position)
 
                         }
 
@@ -434,7 +434,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
 
                             presenter.report(getString(R.string.baseurl), index+1, detail,
-                                arguments?.getInt("photoId")!!, itemsList[position].contents, itemsList[position].id, mAlertDialog )
+                                arguments?.getInt("photoId")!!, itemsList[position].contents, itemsList[position].id, mAlertDialog, position )
 
                         }
 
@@ -589,9 +589,10 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         showToast(getString(R.string.server_connection_error))
     }
 
-    override fun reportDone(alertDialog: AlertDialog){
+    override fun reportDone(alertDialog: AlertDialog, position:Int){
         showToast(getString(R.string.report_done))
         alertDialog.dismiss()
+        commentAdapter.commentDeleted(position)
     }
 
 

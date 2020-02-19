@@ -186,7 +186,7 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
     }
 
     override fun  report(baseurl: String, reason:Int, detail:String, postId:Int, contents:String,
-                              commentId:Int, alertDialog: AlertDialog){
+                              commentId:Int, alertDialog: AlertDialog,position:Int){
         val reportComment = ReportComment(contents, commentId, postId, detail, reason)
         val sending = Parser.toJson(reportComment)
         logd(TAG, "sending : $sending")
@@ -198,7 +198,7 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
                 val string  = response.body()
                 val result = Parser.fromJson<BooleanResult>(string!!)
                 if(result.result){
-                    commentView.reportDone(alertDialog)
+                    commentView.reportDone(alertDialog,position)
                 }else{
                     commentView.serverError()
                 }

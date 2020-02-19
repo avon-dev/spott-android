@@ -19,7 +19,7 @@ interface CommentContract {
         fun deleteDone(alertDialog: AlertDialog, position: Int)
         fun setHashCaption(text:String, hashList:ArrayList<Array<Int>>)
         fun setCaption(text: String)
-        fun reportDone(alertDialog: AlertDialog)
+        fun reportDone(alertDialog: AlertDialog, position:Int)
         fun serverError()
 
 
@@ -39,7 +39,7 @@ interface CommentContract {
                           alertDialog: AlertDialog, position: Int)
         fun getHash(text:String)
         fun report(baseurl: String, reason:Int, detail:String, postId:Int, contents:String,
-                   commentId:Int, alertDialog: AlertDialog)
+                   commentId:Int, alertDialog: AlertDialog, position:Int)
     }
 
 }

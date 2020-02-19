@@ -120,8 +120,13 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
         controlToolbar(View.VISIBLE, View.VISIBLE, View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE)
         MainActivity.mToolbar.visibility = View.VISIBLE
 
-        if( wholeItems!=null &&  wholeItems!!.size == 0){ //서버에서 불러왔던 사진아이템 사이즈가 0이면 사진없음 문구 보이게
-            text_nophoto_user_f.visibility = View.VISIBLE
+        if( wholeItems!=null &&  wholeItems!!.size == 0 ){ //서버에서 불러왔던 사진아이템 사이즈가 0이면 사진없음 문구 보이게
+            if(myself){
+                const_nophoto_user_f.visibility = View.VISIBLE
+            }else if(isPublic){
+                const_nophoto_user_f.visibility = View.VISIBLE
+            }
+
         }
 
 
@@ -176,7 +181,7 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
 
 
     override fun noPhoto(){
-        text_nophoto_user_f.visibility = View.VISIBLE
+        const_nophoto_user_f.visibility = View.VISIBLE
     }
 
 

@@ -89,7 +89,7 @@
     <string name="adding_photo">사진 등록</string>
 
     <string name="toast_nophoto_map_f">등록된 사진이 없습니다. 화면을 이동하거나 지도를 확대/축소해보세요.</string>
-    <string name="map_no_photo">해당 위치에 등록된 사진이 없습니다</string>
+    <string name="map_no_photo">해당 위치에\n등록된 사진이 없습니다</string>
     <string name="upload_first_photo">첫 번째 사진을 업로드해보세요</string>
 
     <string name="cancel">취소</string>
@@ -150,6 +150,10 @@
     <string name="hint_report_etc">신고 사유를 작성해주세요</string>
 
     <string name="report_done">신고가 접수되었습니댜</string>
+
+    <string name="no_scrap">스크랩한 사진이 없습니다</string>
+
+    <string name="text_reported_photo">신고 처리 중인 사진입니다.</string>
   
 
 </resources>
