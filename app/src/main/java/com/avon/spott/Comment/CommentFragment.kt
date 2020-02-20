@@ -53,6 +53,9 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
     //게시글의 id
     private var photoId = 0
 
+    //게시글 글쓴이 id
+    private var userId = 0
+
     //페이징
     private var start: Int = 0//페이징 시작 위치
     private val pageItems = 20  // 한번에 보여지는 리사이클러뷰 아이템 수
@@ -62,7 +65,18 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
     private var checkInit = false
 
+    private val PHOTO = 9998
+    private val NOTI = 9999
+
+    private var fromNoti = false
+    private var comeFrom = 0
+
     private var baseurl = ""
+
+    private lateinit var photoCaption: String
+    private var userPhoto: String? = null
+    private lateinit var userNickname: String
+    private lateinit var photoDateTime: String
 
     val commentInterListener = object :commentInter{
         override fun userClick(userId:Int){
@@ -97,7 +111,16 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
         baseurl = getString(R.string.baseurl)
 
-        photoId = arguments?.getInt("photoId")!!
+        if(arguments?.getInt("photoId")!=0) {
+            photoId = arguments?.getInt("photoId")!!
+            userId = arguments?.getInt("userId")!!
+            comeFrom = PHOTO
+        }else{
+            photoId = arguments?.getInt("notiPhotoId")!!
+            comeFrom = NOTI
+            fromNoti = true
+        }
+
 
         return root
     }
@@ -122,7 +145,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                         recyclerView.smoothScrollToPosition(recyclerView.adapter!!.itemCount-1)
 
                         Handler().postDelayed({
-                            presenter.getComments(baseurl, start, photoId)
+                            presenter.getComments(baseurl, start, photoId, PHOTO)
                         }, 400) //로딩 주기
                     }
                 }
@@ -137,16 +160,20 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                 start = 0
                 refreshTimeStamp = ""
 
-                presenter.getComments(baseurl, start, photoId)
+                presenter.getComments(baseurl, start, photoId, PHOTO)
             }, 600) //로딩 주기
         }
 
         if(!checkInit) {
             //처음 사진을 가져오는 코드 (처음 이후에는 리프레쉬 전까지 가져오지않는다.)
-            presenter.getComments(baseurl, start, photoId)
+            presenter.getComments(baseurl, start, photoId, comeFrom)
 
             checkInit = true
+        }else{
+            setPhotoData(photoCaption, userPhoto, userNickname, photoDateTime, userId)
         }
+
+
 
     }
 
@@ -173,20 +200,11 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
 
         //PhotoFragment에서 넘어온 게시글 데이터
-        presenter.getHash(arguments?.getString("photoCaption").toString())
-
-        if(arguments?.getString("userPhoto")!=""){
-            Glide.with(context!!)
-                .load(arguments?.getString("userPhoto"))
-                .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                .error(android.R.drawable.stat_notify_error)
-                .into(img_profile_comment_f)
-        }else{
-            img_profile_comment_f.setImageResource(R.drawable.img_person)
+        if(comeFrom ==PHOTO){
+           setPhotoData(arguments?.getString("photoCaption").toString(),
+               arguments?.getString("userPhoto"), arguments?.getString("userNickname").toString(),
+               arguments?.getString("photoDateTime").toString(), userId)
         }
-
-        text_nickname_comment_f.text = arguments?.getString("userNickname").toString()
-        text_date_comment_f.text = arguments?.getString("photoDateTime").toString()
 
         edit_comment_comment_f.addTextChangedListener {
             presenter.checkEditString(it.toString())
@@ -199,19 +217,57 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
     override fun showUserUi(userId:Int) {
         val bundle = Bundle()
-        bundle.putInt("userId", userId)
-        findNavController().navigate(R.id.action_commentFragment_to_userFragment, bundle)
+        if(comeFrom ==PHOTO){
+            bundle.putInt("userId", userId)
+            findNavController().navigate(R.id.action_commentFragment_to_userFragment, bundle)
+        }else if(comeFrom == NOTI){
+            bundle.putInt("notiUserId", userId)
+            findNavController().navigate(R.id.action_notiCommentFragment_to_notiUserFragment, bundle)
+        }
+
     }
 
     override fun showHashtagUi(hashtag:String){
         val bundle = Bundle()
-        bundle.putString("hashtag", hashtag)
-        findNavController().navigate(R.id.action_commentFragment_to_hashtagFragment, bundle)
+        if(comeFrom == PHOTO){
+            bundle.putString("hashtag", hashtag)
+            findNavController().navigate(R.id.action_commentFragment_to_hashtagFragment, bundle)
+        }else if(comeFrom ==NOTI){
+            bundle.putString("notiHashtag", hashtag)
+            findNavController().navigate(R.id.action_notiCommentFragment_to_notiHashtagFragment, bundle)
+        }
+
+    }
+
+    override fun setPhotoData(photoCaption:String, userPhoto:String?, userNickname:String, photoDateTime:String, userId: Int){
+
+        this.photoCaption = photoCaption
+        this.userPhoto = userPhoto
+        this.userNickname =userNickname
+        this.photoDateTime = photoDateTime
+
+        if(this.userId ==0 ) {
+            this.userId = userId
+        }
+        presenter.getHash(photoCaption)
+        if(userPhoto!="" && userPhoto!= null){
+            Glide.with(context!!)
+                .load(userPhoto)
+                .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                .error(android.R.drawable.stat_notify_error)
+                .into(img_profile_comment_f)
+        }else{
+            img_profile_comment_f.setImageResource(R.drawable.img_person)
+        }
+
+        text_nickname_comment_f.text = userNickname
+        text_date_comment_f.text = photoDateTime
     }
 
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.text_nickname_comment_f -> {presenter.openUser(arguments?.getInt("userId")!!)}
+            R.id.img_profile_comment_f -> {presenter.openUser(userId)}
+            R.id.text_nickname_comment_f -> {presenter.openUser(userId)}
             R.id.imgbtn_write_comment_f -> {presenter.postCommnet(baseurl,
                 photoId, edit_comment_comment_f.text.toString())}
         }
@@ -524,7 +580,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
             if(boolean) R.color.colorPrimary else R.color.background_grey)))
     }
 
-    override fun showToast(string: String) {
+    fun showToast(string: String) {
         Toast.makeText(this.context, string, Toast.LENGTH_SHORT).show()
     }
 
@@ -538,7 +594,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         Handler().postDelayed({
             start = 0
             refreshTimeStamp = ""
-            presenter.getComments(baseurl, start, photoId)
+            presenter.getComments(baseurl, start, photoId, PHOTO)
         }, 600) //로딩 주기
 
     }
@@ -593,6 +649,20 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         showToast(getString(R.string.report_done))
         alertDialog.dismiss()
         commentAdapter.commentDeleted(position)
+    }
+
+    override fun showFailsComment(state: Int) {
+        when(state){
+            1->{
+                showToast(getString(R.string.failed_to_upload_comment))
+            }
+            2->{
+                showToast(getString(R.string.failed_to_edit_comment))
+            }
+            3->{
+                showToast(getString(R.string.failed_to_delete_comment))
+            }
+        }
     }
 
 

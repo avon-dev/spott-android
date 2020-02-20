@@ -38,10 +38,14 @@
 
 
     <!-- item_alarm.xml [Start] -->
-    <string name="alarm">알람</string>
-    <string name="alarm_failure">사진이 반려되었습니다</string>
-    <string name="alarm_sharing">사진이 공유되었습니다</string>
+    <string name="notification">알림</string>
+    <string name="notification_failure">사진이 반려되었습니다.</string>
+    <string name="notification_sharing">사진이 공유되었습니다.</string>
     <string name="guideline">가이드라인</string>
+    <string name="notification_reason">(사유 : %1$s)</string>
+    <string name="text_new_comment">%1$s님이 회원님의 사진에 댓글을 남겼습니다.</string>
+    <string name="was_removed_for_reason">%1$s이 가이드라인에 위반되어 삭제되었습니다.</string>
+    <string name="photo">사진</string>
     <!-- item_alarm.xml [End] -->
 
     <string name="signup_">회원가입</string>
@@ -154,6 +158,15 @@
     <string name="no_scrap">스크랩한 사진이 없습니다</string>
 
     <string name="text_reported_photo">신고 처리 중인 사진입니다.</string>
-  
+
+    <string name="photo_i_uploaded">내가 업로드한 사진</string>
+    <string name="comment_i_wrote">내가 쓴 댓글</string>
+    <string name="text_footer_reason_f">스팟은 건강한 커뮤니티 운영을 위해 가이드라인에 위배되는 사진 혹은 댓글을 삭제하고 있습니다.\n잘못된 조치라고 생각되면 문의하기를 해주세요.</string>
+    <string name="reason">사유</string>
+
+    <string name="failed_to_upload_comment">댓글 등록에 실패했습니다</string>
+    <string name="failed_to_edit_comment">댓글 수정에 실패했습니다</string>
+    <string name="failed_to_delete_comment">댓글 삭제에 실패했습니다</string>
+    <string name="failed_to_delete_noti">알림 삭제에 실패했습니다</string>
 
 </resources>

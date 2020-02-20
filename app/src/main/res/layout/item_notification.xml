@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/img_left_noti_i"
+        android:scaleType="centerCrop"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/img_user_noti_i"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/text_main_noti_f"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="82dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:textColor="@color/text_black"
+        android:textSize="13dp"
+        app:layout_constraintEnd_toStartOf="@+id/img_right_noti_i"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="TextViefdggfdgfdgdfgdgfdgdfgfdgdgfdgfdgdfgdfgfdgfdgfdgfdgfdw" />
+
+    <ImageView
+        android:id="@+id/img_right_noti_i"
+        android:scaleType="centerCrop"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/text_reason_noti_i"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_grey"
+        android:textSize="13dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/text_date_noti_i"
+        app:layout_constraintEnd_toEndOf="@+id/text_main_noti_f"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/text_main_noti_f"
+        app:layout_constraintTop_toBottomOf="@+id/text_main_noti_f"
+        tools:text="사유사유사유" />
+
+    <TextView
+        android:id="@+id/text_date_noti_i"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:paddingTop="8dp"
+        android:textSize="11dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/text_main_noti_f"
+        app:layout_constraintStart_toStartOf="@+id/text_main_noti_f"
+        tools:text="2020년 2월 20일" />
+
+    <ImageView
+        android:id="@+id/img_result_noti_i"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="@+id/img_left_noti_i"
+        app:layout_constraintTop_toTopOf="@+id/img_left_noti_i" />
+</androidx.constraintlayout.widget.ConstraintLayout>

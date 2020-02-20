@@ -63,14 +63,12 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
-        logd(TAG, "onCreateView")
 
         return root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        logd(TAG, "onActivityCreated")
 
         init()
 
@@ -152,10 +150,6 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         }
     }
 
-    override fun getPagedItems() { //페이징으로 나눠서 아이템 추가
-        homeAdapter.removePageLoadingItem()
-        pageLoading = false
-    }
 
     //리사이클러뷰 아이템 클릭을 위한 인터페이스
     interface homeInter{

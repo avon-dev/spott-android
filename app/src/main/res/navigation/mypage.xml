@@ -16,20 +16,72 @@
             app:destination="@id/photo" />
         <action
             android:id="@+id/action_mypageFragment_to_alarmFragment"
-            app:destination="@id/alarmFragment" />
+            app:destination="@id/notiFragment" />
     </fragment>
 
     <include app:graph="@navigation/photo" />
 
     <fragment
-        android:id="@+id/alarmFragment"
-        android:name="com.avon.spott.Alarm.AlarmFragment"
-        android:label="fragment_alarm"
-        tools:layout="@layout/fragment_alarm" >
+        android:id="@+id/notiFragment"
+        android:name="com.avon.spott.Notification.NotificationFragment"
+        android:label="fragment_noti"
+        tools:layout="@layout/fragment_notification" >
         <action
-            android:id="@+id/action_alarmFragment_to_photo"
+            android:id="@+id/action_notiFragment_to_photo"
             app:destination="@id/photo"/>
+        <action
+            android:id="@+id/action_notiFragment_to_reasonFragment"
+            app:destination="@id/reasonFragment" />
+        <action
+            android:id="@+id/action_notiFragment_to_notiUserFragment"
+            app:destination="@id/notiUserFragment" />
+        <action
+            android:id="@+id/action_notiFragment_to_notiCommentFragment"
+            app:destination="@id/notiCommentFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/notiHashtagFragment"
+        android:name="com.avon.spott.Hashtag.HashtagFragment"
+        android:label ="fragment_notiHashtag"
+        tools:layout="@layout/fragment_user">
+        <action
+            android:id="@+id/action_notiHashtagFragment_to_photo"
+            app:destination="@id/photo" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/notiUserFragment"
+        android:name="com.avon.spott.User.UserFragment"
+        android:label="fragment_notiUser"
+        tools:layout="@layout/fragment_user">
+        <action
+            android:id="@+id/action_notiUserFragment_to_photo"
+            app:destination="@id/photo" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/reasonFragment"
+        android:name="com.avon.spott.Reason.ReasonFragment"
+        android:label="fragment_reason"
+        tools:layout="@layout/fragment_reason">
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/notiCommentFragment"
+        android:name="com.avon.spott.Comment.CommentFragment"
+        android:label="fragment_notiComment"
+        tools:layout="@layout/fragment_comment">
+        <action
+            android:id="@+id/action_notiCommentFragment_to_notiUserFragment"
+            app:destination="@id/notiUserFragment" />
+        <action
+            android:id="@+id/action_notiCommentFragment_to_notiHashtagFragment"
+            app:destination="@id/notiHashtagFragment" />
+    </fragment>
+
 
 
 </navigation>

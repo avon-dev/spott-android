@@ -170,7 +170,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         bundle.putString("photoCaption", caption)
         bundle.putString("photoDateTime", dateTime)
         bundle.putInt("userId", userId)
-        bundle.putInt("photoId", arguments?.getInt("photoId")!!)
+//        bundle.putInt("photoId", arguments?.getInt("photoId")!!)
         findNavController().navigate(R.id.action_photoFragment_to_commentFragment, bundle)
     }
 

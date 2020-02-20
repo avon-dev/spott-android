@@ -51,7 +51,13 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
         }
     }
 
+    private val PHOTO = 1101
+    private val SEARCH = 1102
+    private val NOTI = 1103
+
     private var fromSearch = false
+    private var comeFrom = 0
+
     private var userId = 0
 
     private var isPublic = true
@@ -72,10 +78,15 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
         logd(TAG, "user's id : "+arguments?.getInt("userId"))
         logd(TAG, "from search user' id : "+arguments?.getInt("SearcheduserId"))
 
-        if(arguments?.getInt("userId")!=0){
+        if(arguments?.getInt("userId")!=0) {
             userId = arguments?.getInt("userId")!!
+            comeFrom = PHOTO
+        }else if(arguments?.getInt("notiUserId")!=0){
+            userId = arguments?.getInt("notiUserId")!!
+            comeFrom = NOTI
         }else{
             userId = arguments?.getInt("SearcheduserId")!!
+            comeFrom = SEARCH
             fromSearch = true
         }
 
@@ -98,7 +109,7 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
 
         swiperefresh_user_f.setOnRefreshListener {
             Handler().postDelayed({
-                presenter.getUserphotos(getString(R.string.baseurl), userId, false)
+                presenter.getUserphotos(getString(R.string.baseurl), userId, fromSearch)
             }, 600) //로딩 주기
         }
 
@@ -148,8 +159,10 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
 
     override fun showPhotoUi(id:Int) {//PhotoFragment로 이동
         val bundle = bundleOf("photoId" to id)
-        if(!fromSearch){
+        if(comeFrom == PHOTO) {
             findNavController().navigate(R.id.action_userFragment_to_photoFragment, bundle)
+        }else if(comeFrom == NOTI){
+            findNavController().navigate(R.id.action_notiUserFragment_to_photo, bundle)
         }else{
             findNavController().navigate(R.id.action_searchedUserFragment_to_photo, bundle)
         }

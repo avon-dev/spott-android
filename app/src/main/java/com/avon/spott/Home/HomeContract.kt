@@ -11,7 +11,6 @@ interface HomeContract {
         fun addItems(homeItemItems: ArrayList<HomeItem>)
         fun removePageLoading()
         fun clearAdapter()
-        fun getPagedItems()
         fun showSearchUi()
 
         var hasNext : Boolean

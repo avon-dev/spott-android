@@ -14,13 +14,15 @@ interface CommentContract {
         fun addItems(commentItems:ArrayList<Comment>)
         fun enableSending(boolean: Boolean)
         fun postDone()
-        fun showToast(string: String)
         fun updateDone(alertDialog: AlertDialog, position: Int, content: String)
         fun deleteDone(alertDialog: AlertDialog, position: Int)
         fun setHashCaption(text:String, hashList:ArrayList<Array<Int>>)
         fun setCaption(text: String)
         fun reportDone(alertDialog: AlertDialog, position:Int)
         fun serverError()
+        fun showFailsComment(state:Int)
+        fun setPhotoData(photoCaption:String, userPhoto:String?, userNickname:String,
+                         photoDateTime:String,userId: Int)
 
 
         var hasNext : Boolean
@@ -30,7 +32,7 @@ interface CommentContract {
     interface Presenter{
         fun openUser(userId:Int)
         fun openHashtag(hashtag: String)
-        fun getComments(baseurl:String, start:Int, photoId:Int)
+        fun getComments(baseurl:String, start:Int, photoId:Int, comeFrom:Int)
         fun checkEditString(string:String)
         fun postCommnet(baseurl: String, photoId: Int, caption:String)
         fun updateComment(baseurl: String, photoId: Int, commentId:Int,

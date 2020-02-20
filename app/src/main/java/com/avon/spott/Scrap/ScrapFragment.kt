@@ -271,7 +271,6 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
                     }
                     return true
                 }
-
             })
 
 
