@@ -38,7 +38,7 @@ class PermissionsFragment : Fragment() {
                     PermissionsFragmentDirections.actionPermissionsToCamera()
                 )
             } else {
-                
+                activity!!.finish()
             }
         }
     }
