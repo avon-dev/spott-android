@@ -117,7 +117,6 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
             //처음 사진을 가져오는 코드 (처음 이후에는 리프레쉬 전까지 가져오지않는다.)
             presenter.getUserphotos(getString(R.string.baseurl), userId, fromSearch)
 
-            checkInit = true
         }
 
         swiperefresh_user_f.setColorSchemeColors(ContextCompat.getColor(context!!, R.color.colorPrimary))
@@ -127,9 +126,17 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
     override fun onStart() {
         super.onStart()
 
-        // 툴바 유저이미지, 유저닉네임 보이게
-        controlToolbar(View.VISIBLE, View.VISIBLE, View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE)
-        MainActivity.mToolbar.visibility = View.VISIBLE
+        if(!checkInit){
+            // 뒤로가기만 보이게
+            controlToolbar(View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE)
+            MainActivity.mToolbar.visibility = View.VISIBLE
+
+        }else{
+            // 툴바 유저이미지, 유저닉네임 보이게
+            controlToolbar(View.VISIBLE, View.VISIBLE, View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE)
+            MainActivity.mToolbar.visibility = View.VISIBLE
+        }
+
 
         if( wholeItems!=null &&  wholeItems!!.size == 0 ){ //서버에서 불러왔던 사진아이템 사이즈가 0이면 사진없음 문구 보이게
             if(myself){
@@ -263,6 +270,14 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
         mToolbar.text_name_toolbar.text=nickname
 
         showPublic(isPublic)
+
+        if(!checkInit){
+            // 툴바 유저이미지, 유저닉네임 보이게
+            controlToolbar(View.VISIBLE, View.VISIBLE, View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE)
+            MainActivity.mToolbar.visibility = View.VISIBLE
+            checkInit = true
+        }
+
     }
 
     private fun showPublic(isPublic: Boolean) {

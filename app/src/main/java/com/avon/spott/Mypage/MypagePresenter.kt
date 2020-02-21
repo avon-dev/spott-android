@@ -55,6 +55,8 @@ class MypagePresenter(val mypageView:MypageContract.View):MypageContract.Present
 
                 mypageView.setUserInfo(result.user.nickname, result.user.profile_image, result.user.is_public)
 
+                mypageView.setNotiCount(result.is_confirmation)
+
                 if(result.posts.size==0){
                     mypageView.noPhoto()
                     mypageView.movePosition(LatLng(37.56668, 126.97843), 14f) //등록한 사진이 없으면 구글맵 카메라 서울시청으로 이동
@@ -75,6 +77,27 @@ class MypagePresenter(val mypageView:MypageContract.View):MypageContract.Present
                 }
             })
 
+    }
+
+    override fun getNotiCount(baseUrl: String) {
+        Retrofit(baseUrl).get(App.prefs.temporary_token, "/spott/mypage",  "")
+            .subscribe({ response ->
+                logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
+
+                val string  = response.body()
+                val result = Parser.fromJson<MypageResult>(string!!)
+
+                mypageView.setNotiCount(result.is_confirmation)
+
+            }, { throwable ->
+                logd(TAG, throwable.message)
+                if (throwable is HttpException) {
+                    logd(
+                        TAG,
+                        "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
+                    )
+                }
+            })
     }
 
     override fun changePublic(baseUrl: String, isPublic: Boolean) {

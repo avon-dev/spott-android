@@ -9,4 +9,9 @@
 
 
     <dimen name="stroke_small">4dp</dimen>
+    
+    <dimen name="noti_count_1">4dp</dimen>
+    <dimen name="noti_count_2">2dp</dimen>
+    <dimen name="noti_count_3">1dp</dimen>
+
 </resources>

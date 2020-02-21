@@ -26,6 +26,7 @@ import com.avon.spott.R
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.Main.controlToolbar
 import com.avon.spott.Utils.DateTimeFormatter
+import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.fragment_notification.*
@@ -142,6 +143,7 @@ class NotificationFragment : Fragment(), NotificationContract.View, View.OnClick
         }
 
         if(!checkInit) {
+            logd(TAG, "getnoti")
             //처음 사진을 가져오는 코드 (처음 이후에는 리프레쉬 전까지 가져오지않는다.)
                  presenter.getNoti(getString(R.string.baseurl), start)
 

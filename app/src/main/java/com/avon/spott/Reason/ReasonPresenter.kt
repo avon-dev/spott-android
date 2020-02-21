@@ -20,10 +20,6 @@ class ReasonPresenter(val reasonView:ReasonContract.View):ReasonContract.Present
         reasonView.showGuidelineUi()
     }
 
-    override fun openInquiry() {
-        reasonView.showInquiryUi()
-    }
-
     override fun getReason(baseUrl: String, notiId: Int) {
         Retrofit(baseUrl).get(App.prefs.temporary_token,"/spott/notice/"+notiId.toString(), "")
 

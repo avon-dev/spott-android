@@ -27,16 +27,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.avon.spott.*
 import com.avon.spott.AddPhoto.AddPhotoActivity
 import com.avon.spott.Data.MapCluster
 import com.avon.spott.EditMyinfo.EditMyInfoActivity
-import com.avon.spott.R
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
 import com.avon.spott.Main.controlToolbar
-import com.avon.spott.PhotoRenderer
+import com.avon.spott.R
 import com.avon.spott.Utils.logd
-import com.avon.spott.animSlide
-import com.avon.spott.getMarkerBitmapFromView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -109,6 +107,11 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
 
     //공개 비공개 여부
     private var isPublic = true
+
+    //확인 안 한 알림 카운트
+    private var noticount = 0
+
+    private var checkInit = false
 
     val mypageInterListener = object : mypageInter{
         override fun itemClick(id:Int){
@@ -214,10 +217,18 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
     override fun onStart() {
         super.onStart()
 
-        // 툴바 유저이미지, 유저닉네임, 알람, 메뉴 보이게
-        controlToolbar(View.GONE, View.VISIBLE, View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.VISIBLE, View.GONE)
-        mToolbar.visibility = View.VISIBLE
+        if(!checkInit){
+            // 뒤로가기만 보이게
+            controlToolbar(View.GONE, View.GONE, View.GONE, View.GONE, View.GONE, View.VISIBLE, View.VISIBLE, View.GONE)
+            mToolbar.visibility = View.VISIBLE
+        }else{
+            // 툴바 유저이미지, 유저닉네임, 알람, 메뉴 보이게
+            controlToolbar(View.GONE, View.VISIBLE, View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.VISIBLE, View.GONE)
+            mToolbar.visibility = View.VISIBLE
+        }
 
+
+        setNotiCount(noticount)
 
         if( wholeItems!=null &&  wholeItems!!.size == 0){ //서버에서 불러왔던 사진아이템 사이즈가 0이면 사진없음 문구 보이게
             text_nophoto_mypage_f.visibility = View.VISIBLE
@@ -229,6 +240,8 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
             clearMypage()
 
             presenter.getMyphotos(getString(R.string.baseurl))
+        }else if(checkInit){
+            presenter.getNotiCount(getString(R.string.baseurl)) // 새로운 알림을 가져옴
         }
 
     }
@@ -251,7 +264,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
     fun init(){
         mypagePresenter = MypagePresenter(this)
 
-        mToolbar.img_noti_toolbar.setOnClickListener(this)
+        mToolbar.frame_noti_toolbar.setOnClickListener(this)
         mToolbar.img_menu_toolbar.setOnClickListener(this)
         floatimgbtn_addphoto_mypage.setOnClickListener(this)
 
@@ -406,6 +419,13 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         mypageAdapter.addItemsAdapter(mypageItems)
         mypageAdapter.notifyDataSetChanged()
 
+        if(!checkInit){
+            // 툴바 유저이미지, 유저닉네임, 알람, 메뉴 보이게
+            controlToolbar(View.GONE, View.VISIBLE, View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.VISIBLE, View.GONE)
+            mToolbar.visibility = View.VISIBLE
+        }
+
+        checkInit = true
     }
 
     override fun noPhoto(){
@@ -438,7 +458,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
 
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.img_noti_toolbar -> {presenter.openAlarm()}
+            R.id.frame_noti_toolbar -> {presenter.openAlarm()}
             R.id.floatimgbtn_addphoto_mypage -> {
                 presenter.clickAddPhoto()
             }
@@ -669,6 +689,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
                     2 ->{ //문의하기 눌렀을 때
                         /** 메일 앱으로 연동하거나
                          *  어드민사이트로 보낼 예정*/
+                        inquire(context!!)
                     }
                     3->{ //이용약관 눌렀을 때
 
@@ -697,6 +718,30 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
     override fun showToast(string: String) {
         Toast.makeText(this.context, string, Toast.LENGTH_SHORT).show()
     }
+
+    override fun setNotiCount(count: Int) {
+//        val count = 0
+//        showToast(count.toString())
+
+        noticount = count
+
+        mToolbar.text_noticount_toolbar.text = count.toString()
+
+        var padding :Int
+        if(count<10){
+            padding = resources.getDimension(R.dimen.noti_count_1).toInt()
+        }else if(count<100){
+            padding = resources.getDimension(R.dimen.noti_count_2).toInt()
+        }else{
+            mToolbar.text_noticount_toolbar.text = "99+"
+            padding = resources.getDimension(R.dimen.noti_count_3).toInt()
+        }
+        mToolbar.text_noticount_toolbar.setPadding(padding,0,padding,0)
+
+        mToolbar.text_noticount_toolbar.visibility = if(count == 0) View.GONE else View.VISIBLE
+
+    }
+
 
 
 }

@@ -22,10 +22,12 @@ interface MypageContract {
         fun showPublic(isPublic: Boolean)
         fun showErrorToast()
         fun showToast(string: String)
+        fun setNotiCount(count:Int)
     }
 
     interface Presenter{
         fun getMyphotos(baseUrl:String)
+        fun getNotiCount(baseUrl: String)
         fun openPhoto(id:Int)
         fun openAlarm()
         fun openEditMyInfo()
