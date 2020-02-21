@@ -106,5 +106,6 @@ dependencies {
 
     //google place api
     implementation 'com.google.android.gms:play-services-places:17.0.0'
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
 
 }
