@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.Navigation
@@ -132,6 +133,10 @@ class ImageFragment : Fragment() {
                 .placeholder(android.R.drawable.progress_indeterminate_horizontal)
                 .error(android.R.drawable.stat_notify_error)
                 .into(holder.imgView)
+
+            holder.itemView.setOnClickListener {
+                Toast.makeText(context, imgList[position].data, Toast.LENGTH_SHORT).show()
+            }
         }
 
         inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

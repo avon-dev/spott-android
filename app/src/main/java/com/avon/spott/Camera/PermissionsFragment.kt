@@ -5,6 +5,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
@@ -38,6 +39,7 @@ class PermissionsFragment : Fragment() {
                     PermissionsFragmentDirections.actionPermissionsToCamera()
                 )
             } else {
+                Toast.makeText(requireContext(), "권한이 필요합니다", Toast.LENGTH_SHORT).show()
                 activity!!.finish()
             }
         }

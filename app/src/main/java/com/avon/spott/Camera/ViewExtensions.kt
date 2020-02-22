@@ -2,6 +2,7 @@ package com.avon.spott.Camera
 
 import android.view.View
 import android.widget.ImageButton
+import com.facebook.login.widget.LoginButton
 
 const val FLAGS_FULLSCREEN =
     View.SYSTEM_UI_FLAG_LOW_PROFILE or
@@ -24,6 +25,15 @@ const val HTTP_UNAUTHORIZED = 401
 
 // 애니메이션을 트리거하기 위해 버튼을 누르는 동안 약간의 지연을 포함하여 버튼 클릭을 시뮬레이션한다.
 fun ImageButton.simulateClick(delay: Long = ANIMATION_FAST_MILLIS) {
+    performClick() // 뷰를 클릭한 것과 같은 효과
+    isPressed = true
+    postDelayed({
+        invalidate() // 애니메이션이후 뷰를 무효화시켜 화면을 다시 그리기 위해 onDraw를 호출하도록 한다.
+        isPressed = false
+    }, delay)
+}
+
+fun LoginButton.simulateClick(delay:Long = ANIMATION_FAST_MILLIS) {
     performClick() // 뷰를 클릭한 것과 같은 효과
     isPressed = true
     postDelayed({

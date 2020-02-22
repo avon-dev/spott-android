@@ -1,6 +1,7 @@
 package com.avon.spott.Scrap
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -15,13 +16,13 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.avon.spott.Camera.CameraXActivity
 import com.avon.spott.Data.ScrapItem
-import com.avon.spott.R
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
+import com.avon.spott.R
 import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_scrap.*
-import kotlinx.android.synthetic.main.fragment_scrap.view.*
 
 class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
 
@@ -141,10 +142,15 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
     }
 
     override fun showCameraUi(photoUrl: String) {
-        showToast(photoUrl)
+//        showToast(photoUrl)
         /**
          * 여기에 카메라 연결하는 코드 넣으면 됨!!!!!
          *                                    */
+
+        Intent(context, CameraXActivity::class.java).let {
+            it.putExtra("photoUrl", photoUrl)
+            startActivity(it)
+        }
     }
 
     override fun onClick(v: View?) {

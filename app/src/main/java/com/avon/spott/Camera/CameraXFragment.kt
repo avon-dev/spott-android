@@ -42,6 +42,7 @@ import com.avon.spott.R
 import com.avon.spott.Utils.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.fragment_camera_x.*
 import retrofit2.HttpException
 import java.io.File
@@ -136,6 +137,7 @@ class CameraXFragment : Fragment() {
             else {
                 Glide.with(overlayImage)
                     .load(uri)
+                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
                     .error(android.R.drawable.stat_notify_error)
                     .into(overlayImage)
 
@@ -179,7 +181,7 @@ class CameraXFragment : Fragment() {
 
     private fun setGalleryThumbnail(file: File) {
         // 갤러리 미리보기를 고정하는 뷰
-        val thumbnail = container.findViewById<ImageButton>(R.id.imgbtn_gallery_camerax_f)
+        val thumbnail = container.findViewById<CircleImageView>(R.id.imgbtn_gallery_camerax_f)
 
         // view스레드 작업을 실행
         thumbnail.post {
@@ -319,6 +321,17 @@ class CameraXFragment : Fragment() {
         } catch (e: SecurityException) {
             Toast.makeText(view!!.context, getString(R.string.toast_get_image_error_message), Toast.LENGTH_SHORT).show()
                 imgbtn_gallery_camerax_f.setImageResource(R.drawable.ic_photo_library_black_24dp)
+        }
+
+        val photoUrl = CameraXActivity.getPhotoURI()
+        if(photoUrl != null) {
+            Glide.with(overlayImage)
+                .load(photoUrl)
+                .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                .error(android.R.drawable.stat_notify_error)
+                .into(overlayImage)
+
+            showOverlayImage()
         }
     }
 
