@@ -1,5 +1,6 @@
 package com.avon.spott.Mypage
 
+import android.graphics.Bitmap
 import com.avon.spott.Data.BooleanResult
 import com.avon.spott.Data.MapCluster
 import com.avon.spott.Data.MypageResult
@@ -17,8 +18,8 @@ class MypagePresenter(val mypageView:MypageContract.View):MypageContract.Present
 
     init{mypageView.presenter = this}
 
-    override fun openAddPhoto(mFilePath : String) {
-        mypageView.showAddPhotoUi(mFilePath)
+    override fun openAddPhoto(mFilePath : String, mCropPath: String) {
+        mypageView.showAddPhotoUi(mFilePath, mCropPath)
     }
 
     override fun openAlarm() {

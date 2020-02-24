@@ -113,6 +113,8 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
 
     private var checkInit = false
 
+    var mPhotoPath: Uri? = null
+
     val mypageInterListener = object : mypageInter{
         override fun itemClick(id:Int){
             presenter.openPhoto(id)
@@ -441,11 +443,11 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         findNavController().navigate(R.id.action_mypageFragment_to_photo, bundle)
     }
 
-    override fun showAddPhotoUi(mFilePath : String) {
+    override fun showAddPhotoUi(mFilePath : String, mCropPath: String) {
         val nextIntent = Intent(context, AddPhotoActivity::class.java)
+        nextIntent.putExtra("cropPhoto",  mCropPath)
         nextIntent.putExtra("photo", mFilePath)
         startActivity(nextIntent)
-        logd("photoTEST", "Mypagefragment에서 넘겨줌 " + mFilePath)
     }
 
     override fun showAlarmUi() {
@@ -591,10 +593,11 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
          if (resultCode == Activity.RESULT_OK && null != data) {
                 if(requestCode == 102) {
                 if (data.getData() != null) {
-                    var mPhotoPath: Uri = data.getData()!!
+                   mPhotoPath = data.getData()!!
                     logd(TAG, "photopath : " + mPhotoPath)
 
                     val options = UCrop.Options()
@@ -603,6 +606,8 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
                     options.setToolbarCropDrawable(R.drawable.ic_arrow_forward_black_24dp)
                     options.setActiveControlsWidgetColor(ContextCompat.getColor(context!!, R.color.colorPrimary))
                     options.setStatusBarColor(ContextCompat.getColor(context!!, R.color.bg_black))
+                    options.setCompressionQuality(100)
+                    options.setMaxBitmapSize(10000)
                     options.setAspectRatioOptions(1,
 //                        AspectRatio("16 : 9", 16f, 9f),
                         AspectRatio("4 : 3", 4f, 3f),
@@ -614,7 +619,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
                     /* 현재시간을 임시 파일 이름에 넣는 이유 : 중복방지
                     / (안넣으면 AddPhotoActivity의 이미지뷰에 다른 사진 보여진다.) */
                     val timeStamp = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
-                    UCrop.of(mPhotoPath, Uri.fromFile(File(context!!.cacheDir, timeStamp+SAMPLE_CROPPED_IMAGE_NAME)))
+                    UCrop.of(mPhotoPath!!, Uri.fromFile(File(context!!.cacheDir, timeStamp+SAMPLE_CROPPED_IMAGE_NAME)))
                         .withMaxResultSize(resources.getDimension(R.dimen.upload_width).toInt(),
                             resources.getDimension(R.dimen.upload_heigth).toInt())
                         .withOptions(options)
@@ -624,7 +629,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
             }else if(requestCode == UCrop.REQUEST_CROP){
                     var mCropPath: Uri? = UCrop.getOutput(data)
                     logd(TAG, "croppath : " + mCropPath)
-                    presenter.openAddPhoto(mCropPath.toString())
+                    presenter.openAddPhoto(mPhotoPath.toString(), mCropPath.toString())
                 }
         }
         if(resultCode == UCrop.RESULT_ERROR){

@@ -4,6 +4,8 @@ package com.avon.spott.AddPhoto
 import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -31,10 +33,27 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_add_photo.*
 import kotlinx.android.synthetic.main.toolbar.view.*
+import org.opencv.android.OpenCVLoader
+import org.opencv.android.Utils
+import org.opencv.core.Mat
+import java.io.File
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.regex.Pattern
+import kotlin.collections.ArrayList
 
 class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClickListener,
     OnMapReadyCallback {
+
+
+    companion object {
+        init {
+            System.loadLibrary("opencv_java4")
+            System.loadLibrary("native-lib")
+        }
+    }
+
     private val TAG = "forAddPhotoActivity"
 
     private lateinit var addPhotoPresenter: AddPhotoPresenter
@@ -45,6 +64,8 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
     private lateinit var mMap : GoogleMap
 
     private val hashArrayList = ArrayList<String>() //해시태그리스트
+
+    private var mIsOpenCVReady = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,8 +81,50 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         text_guide_addphoto_a.requestFocus()
 
         //깃 테스트
+//        text_guide_addphoto_a.setOnClickListener {
+//            val path = getPath(Uri.parse(intent.getStringExtra("photo")))
+//            val options = BitmapFactory.Options()
+//            options.inSampleSize = 4
+//            mInputImage = BitmapFactory.decodeFile(path, options)
+//
+//            if (mInputImage != null) {
+//                detectEdgeUsingJNI()
+//            }
+//        }
 
         init()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (OpenCVLoader.initDebug()) {
+            mIsOpenCVReady = true
+        }
+    }
+
+    external fun detectEdgeJNI(inputImage: Long, outputImage: Long, th1: Int, th2: Int)
+
+    override fun detectEdgeUsingJNI(mInputImage:Bitmap) : File {
+
+        mInputImage!!.setHasAlpha(true)
+        val src = Mat()
+        Utils.bitmapToMat(mInputImage, src)
+        val edge = Mat()
+        detectEdgeJNI(src.nativeObjAddr, edge.nativeObjAddr, 50, 150)
+        Utils.matToBitmap(edge, mInputImage)
+
+        //파일로 저장 및 크기 확인
+        val timeStamp = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
+        val file = File(applicationContext.cacheDir, timeStamp+"canny.jpg")
+        file.createNewFile()
+        val out = FileOutputStream(file)
+        mInputImage!!.compress(Bitmap.CompressFormat.JPEG, 100 , out)
+        out.close()
+
+        return file
+//
+//        val size = (file.length()/1024).toString() //사이즈 크기 kB
+//        Log.d(TAG,"size2 : $size")
     }
 
     private fun init(){
@@ -83,7 +146,11 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
     override fun onClick(v: View?) {
         when(v?.id) {
             R.id.text_upload_addphoto_a->{
-                presenter.sendPhoto(getString(R.string.baseurl),intent.getStringExtra("photo"),
+                if (!mIsOpenCVReady) {
+                    return
+                }
+                presenter.sendPhoto(getString(R.string.baseurl),intent.getStringExtra("cropPhoto"),
+                    intent.getStringExtra("photo"),
                     edit_caption_addphoto_a.text.toString(), markerLatLng, hashArrayList)
             }
             R.id.img_back_toolbar ->{ presenter.navigateUp() }
@@ -95,7 +162,7 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
              mMap = map
 
         //인텐트로 받아온 사진 이미지 처리(이미지뷰에 넣기 + 위치 정보 있으면 가져오기)
-        presenter.usePhoto(intent.getStringExtra("photo"))
+        presenter.usePhoto(intent.getStringExtra("cropPhoto"))
 
         //맵 롱클릭 리스너
         mMap.setOnMapLongClickListener(object : GoogleMap.OnMapLongClickListener{
