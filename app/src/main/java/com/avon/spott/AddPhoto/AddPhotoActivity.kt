@@ -59,6 +59,8 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         //처음 키보드 올라오기 방지용
         text_guide_addphoto_a.requestFocus()
 
+        //깃 테스트
+
         init()
     }
 
