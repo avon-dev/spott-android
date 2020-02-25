@@ -52,25 +52,12 @@ class MapPresenter (val mapView:MapContract.View) : MapContract.Presenter {
         }
     }
 
-//    val adddummy = addDummy() //테스트 코드 추가
 
-    override fun getPhotos(baseUrl:String, latLngBounds: LatLngBounds) {
+    override fun getPhotos(baseUrl:String, latLngBounds: LatLngBounds, action:Int) {
 
         val cameraRange = CameraRange(latLngBounds.northeast.latitude, latLngBounds.northeast.longitude,
-            latLngBounds.southwest.latitude, latLngBounds.southwest.longitude)
+            latLngBounds.southwest.latitude, latLngBounds.southwest.longitude, action)
 
-       //------------------------<서버없이 안드로이드에서 스스로하는 테스트 코드>-----------------------
-//        val newArryList = ArrayList<MapCluster>()
-//        for(i in 0..adddummy.size-1){
-//            if(adddummy[i].latitude < latLngBounds.northeast.latitude &&
-//                adddummy[i].latitude >  latLngBounds.southwest.latitude &&
-//                adddummy[i].longitude < latLngBounds.northeast.longitude &&
-//                adddummy[i].longitude > latLngBounds.southwest.longitude  ){
-//                newArryList.add(adddummy[i])
-//            }
-//        }
-//        mapView.addItems(newArryList)
-        //-----------------------------------------------------------------------------------
 
         logd(TAG, "맵은"+ Parser.toJson(cameraRange))
 
@@ -98,46 +85,4 @@ class MapPresenter (val mapView:MapContract.View) : MapContract.Presenter {
 
     }
 
-
-    /*============================= 더미 데이터 넣는 코드=========================================== */
-//    private fun addDummy() : ArrayList<MapCluster>{
-//
-//        var mapItems = ArrayList<MapCluster>()
-//        mapItems.add(MapCluster(37.565597, 126.978009,"https://cdn.pixabay.com/photo/2017/08/06/12/06/people-2591874_1280.jpg",0))
-//        mapItems.add(MapCluster(37.564920, 126.925100,"https://cdn.pixabay.com/photo/2012/10/10/11/05/space-station-60615_960_720.jpg",0))
-//        mapItems.add(MapCluster(37.547759, 126.922873,"https://cdn.pixabay.com/photo/2016/11/29/06/45/beach-1867881_1280.jpg",0))
-//        mapItems.add(MapCluster(37.504458, 126.986861,"https://cdn.pixabay.com/photo/2017/08/02/00/16/people-2568954_1280.jpg",0))
-//
-//        for(i in 0..1050){
-//            val position = position()
-//            mapItems.add(MapCluster(position.latitude, position.longitude, "https://cdn.pixabay.com/photo/2020/01/20/12/41/namibia-4780251_1280.jpg",1))
-//        }
-//
-//        for(i in 0..1040){
-//            val position = position()
-//            mapItems.add(MapCluster(position.latitude, position.longitude, "https://cdn.pixabay.com/photo/2020/01/14/11/00/nubian-ibex-4764738_1280.jpg",1))
-//        }
-//
-//        for(i in 0..1505){
-//            val position = position()
-//            mapItems.add(MapCluster(position.latitude, position.longitude, "https://i0.wp.com/www.agoda.com/wp-content/uploads/2019/05/Gyeongbokgung-palace-Seoul-Gyeongbokgung-Palace-outside-grounds.jpg",1))
-//        }
-//
-//        //부산
-//        mapItems.add(MapCluster(35.278236, 129.165350,"https://cdn.pixabay.com/photo/2017/08/02/00/16/people-2568954_1280.jpg",0))
-//        mapItems.add(MapCluster(35.275570, 129.164823,"https://cdn.pixabay.com/photo/2017/08/02/00/16/people-2568954_1280.jpg",0))
-//
-//        return mapItems
-//    }
-//    /*============================= 더미 데이터 넣는 코드 끝======================================= */
-//
-//    /*==========================구글맵 더미 데이터용 랜덤위치 생성 함수들==================================*/
-//    private fun position():LatLng{
-//        return LatLng(random(37.489324, 37.626495), random(126.903712, 127.096659))
-//    }
-//
-//    private fun random(min:Double, max:Double):Double{
-//        return min+(max-min)* Random().nextDouble()
-//    }
-    /*=========================구글맵 더미 데이터용 랜덤위치 생성 함수들 끝=================================*/
 }

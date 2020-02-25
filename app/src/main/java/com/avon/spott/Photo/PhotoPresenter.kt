@@ -95,7 +95,8 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
     }
 
     override fun postLike(baseUrl: String, photoId: Int){
-        Retrofit(baseUrl).post(App.prefs.temporary_token, "/spott/like/"+photoId,  "")
+        Retrofit(baseUrl).post(App.prefs.temporary_token, "/spott/posts/"+photoId.toString()+"/likes",  "")
+
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 
@@ -122,7 +123,7 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
     }
 
     override fun deleteLike(baseUrl: String, photoId: Int){
-        Retrofit(baseUrl).delete(App.prefs.temporary_token, "/spott/like/"+photoId,  "")
+        Retrofit(baseUrl).delete(App.prefs.temporary_token, "/spott/posts/"+photoId.toString()+"/likes",  "")
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 
@@ -151,7 +152,7 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
 
     override fun postScrap(baseUrl: String, photoId: Int){
         /* 임시 수정 : temporary_token -> token*/
-        Retrofit(baseUrl).post(App.prefs.temporary_token, "/spott/scrap/"+photoId,  "")
+        Retrofit(baseUrl).post(App.prefs.temporary_token, "/spott/posts/"+photoId.toString()+"/scrap",  "")
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 
@@ -178,7 +179,7 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
     }
 
     override fun deleteScrap(baseUrl: String, photoId: Int) {
-        Retrofit(baseUrl).delete(App.prefs.temporary_token, "/spott/scrap/"+photoId,  "")
+        Retrofit(baseUrl).delete(App.prefs.temporary_token, "/spott/posts/"+photoId.toString()+"/scrap",  "")
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 

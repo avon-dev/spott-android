@@ -606,8 +606,8 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
                     options.setToolbarCropDrawable(R.drawable.ic_arrow_forward_black_24dp)
                     options.setActiveControlsWidgetColor(ContextCompat.getColor(context!!, R.color.colorPrimary))
                     options.setStatusBarColor(ContextCompat.getColor(context!!, R.color.bg_black))
-                    options.setCompressionQuality(100)
-                    options.setMaxBitmapSize(10000)
+//                    options.setCompressionQuality(100)
+//                    options.setMaxBitmapSize(10000)
                     options.setAspectRatioOptions(1,
 //                        AspectRatio("16 : 9", 16f, 9f),
                         AspectRatio("4 : 3", 4f, 3f),

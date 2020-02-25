@@ -72,7 +72,7 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
             var images = ArrayList<MultipartBody.Part>()
             val file = File(addPhotoView.getPath(Uri.parse(cropPhoto)))
 
-            val path = addPhotoView.getPath(Uri.parse(cropPhoto))
+            val path = addPhotoView.getPath(Uri.parse(photo))
 
             //////////////////////
 

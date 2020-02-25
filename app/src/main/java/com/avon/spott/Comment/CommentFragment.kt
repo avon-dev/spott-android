@@ -65,8 +65,8 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
     private var checkInit = false
 
-    private val PHOTO = 9998
-    private val NOTI = 9999
+    private val PHOTO = 1000
+    private val NOTI = 2000
 
     private var fromNoti = false
     private var comeFrom = 0

@@ -94,6 +94,8 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
     private var noPhoto = false
 
+    private val ACTION = 1004
+
     // 어댑터와 뷰 연결
     val mapInterListener = object : mapInter{
         override fun itemClick(id: Int){ //  맵리스트플래그먼트(하단플래그먼트) 리사이클러뷰 아이템 클릭시
@@ -557,7 +559,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     }
 
     override fun sendCameraRange(){ //새로운 데이터를 가져오기 위해 현재 화면에 보여지는 위치를 서버에 보냄.
-       presenter.getPhotos(getString(R.string.baseurl), mMap.projection.visibleRegion.latLngBounds)
+       presenter.getPhotos(getString(R.string.baseurl), mMap.projection.visibleRegion.latLngBounds, ACTION)
     }
 
     private fun setClusterManager(){

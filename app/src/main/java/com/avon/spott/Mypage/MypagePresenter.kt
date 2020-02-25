@@ -45,7 +45,7 @@ class MypagePresenter(val mypageView:MypageContract.View):MypageContract.Present
 
     override fun getMyphotos(baseUrl: String) {
 
-        Retrofit(baseUrl).get(App.prefs.temporary_token, "/spott/mypage",  "")
+        Retrofit(baseUrl).get(App.prefs.temporary_token, "/spott/users/my-posts",  "")
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 
@@ -81,7 +81,7 @@ class MypagePresenter(val mypageView:MypageContract.View):MypageContract.Present
     }
 
     override fun getNotiCount(baseUrl: String) {
-        Retrofit(baseUrl).get(App.prefs.temporary_token, "/spott/mypage",  "")
+        Retrofit(baseUrl).get(App.prefs.temporary_token, "/spott/users/my-posts",  "")
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 

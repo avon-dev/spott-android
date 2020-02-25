@@ -18,10 +18,10 @@ class HomePresenter(val homeView:HomeContract.View) : HomeContract.Presenter {
 
     override fun openSearch(){homeView.showSearchUi()}
 
-    override fun getToken(baseUrl: String, start:Int) {
+    override fun getToken(baseUrl: String, start:Int, action:Int) {
         if(App.prefs.temporary_token!=""){
             logd(TAG, "토큰 있음")
-            getPhotos(baseUrl, start)
+            getPhotos(baseUrl, start, action)
         }else{
             logd(TAG, "토큰 없음")
             Retrofit(baseUrl).postNonHeader( "/spott/home/token","")
@@ -31,7 +31,7 @@ class HomePresenter(val homeView:HomeContract.View) : HomeContract.Presenter {
 
                     App.prefs.temporary_token = newToken!!
 
-                    getPhotos(baseUrl, start)
+                    getPhotos(baseUrl, start, action)
 
                 }, { throwable ->
                     logd(TAG, throwable.message)
@@ -45,9 +45,10 @@ class HomePresenter(val homeView:HomeContract.View) : HomeContract.Presenter {
         }
     }
 
-    override fun getPhotos(baseUrl:String, start:Int){
+    override fun getPhotos(baseUrl:String, start:Int, action:Int){
 
-         val homePaging = HomePaging(start, homeView.refreshTimeStamp)
+         val homePaging = HomePaging(start, homeView.refreshTimeStamp, action)
+        logd(TAG, "home sending : "+ Parser.toJson(homePaging))
          Retrofit(baseUrl).get(App.prefs.temporary_token,"/spott/posts", Parser.toJson(homePaging))
 
             .subscribe({ response ->

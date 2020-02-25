@@ -334,7 +334,7 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
 
     override fun deleteError(){
         scrapAdapter.deleteItemsError()
-        showToast("서버 연결에 오류가 발생했습니다.")
+        showToast(getString(R.string.server_connection_error))
     }
 
     override fun showToast(string: String) {

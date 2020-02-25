@@ -3,6 +3,7 @@ package com.avon.spott.Notification
 import android.app.AlertDialog
 import com.avon.spott.Data.BooleanResult
 import com.avon.spott.Data.HomePaging
+import com.avon.spott.Data.NotiPaging
 import com.avon.spott.Data.NotiResult
 import com.avon.spott.Utils.App
 import com.avon.spott.Utils.Parser
@@ -30,7 +31,7 @@ class NotificationPresenter (val notiView: NotificationContract.View) : Notifica
 
     override fun getNoti(baseUrl: String, start: Int) {
 
-        val paging = HomePaging(start, notiView.refreshTimeStamp)
+        val paging = NotiPaging(start, notiView.refreshTimeStamp)
 
         Retrofit(baseUrl).get(App.prefs.temporary_token,"/spott/notice", Parser.toJson(paging))
 

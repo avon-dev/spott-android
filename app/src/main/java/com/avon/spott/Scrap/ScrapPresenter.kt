@@ -22,7 +22,7 @@ class ScrapPresenter(val scrapView:ScrapContract.View) : ScrapContract.Presenter
     }
 
     override fun getScraps(baseUrl: String) {
-        Retrofit(baseUrl).get(App.prefs.temporary_token,"/spott/scrap/ids", "")
+        Retrofit(baseUrl).get(App.prefs.temporary_token,"/spott/users/my-scrap", "")
 
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
