@@ -1,5 +1,7 @@
 package com.avon.spott.AddPhoto
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
@@ -11,11 +13,15 @@ import com.avon.spott.Data.NewPhotoHash
 import com.avon.spott.Mypage.MypageFragment.Companion.mypageChange
 import com.avon.spott.Utils.*
 import com.google.android.gms.maps.model.LatLng
+import kotlinx.android.synthetic.main.activity_add_photo.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.opencv.android.Utils
+import org.opencv.core.Mat
 import retrofit2.HttpException
 import java.io.File
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -52,7 +58,8 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
         addPhotoView.addMarker(latLng)
     }
 
-    override fun sendPhoto(baseUrl:String, photo: String, caption: String, latLng: LatLng?, hashArrayList: ArrayList<String>) {
+    override fun sendPhoto(baseUrl:String,  cropPhoto:String,photo: String,
+                           caption: String, latLng: LatLng?, hashArrayList: ArrayList<String>) {
         if(latLng==null){ //사진에 대한 위치정보가 없을 때
             addPhotoView.showToast("사진의 위치를 표시해주세요")
         }else if(caption.trim().length==0) { //사진에 대한 설명이 없을 때 (빈공간 제외)
@@ -63,20 +70,39 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
             addPhotoView.enableTouching(false)
 
             var images = ArrayList<MultipartBody.Part>()
+            val file = File(addPhotoView.getPath(Uri.parse(cropPhoto)))
 
-            val file = File(addPhotoView.getPath(Uri.parse(photo)))
+            val path = addPhotoView.getPath(Uri.parse(photo))
+
+            //////////////////////
+
+            val options = BitmapFactory.Options()
+            options.inSampleSize = 4
+             val mInputImage = BitmapFactory.decodeFile(path, options)
+
+            val con_file  = addPhotoView.detectEdgeUsingJNI(mInputImage)
+
+
+            //////////
+
+
+
+
             val size = (file.length()/1024).toString() //사이즈 크기 kB
-            logd(TAG, "File size : " + size)
+            val size_back = (con_file.length()/1024).toString() //사이즈 크기 kB
+            logd(TAG, "File post photo size : " + size)
+            logd(TAG, "File back photo size : " +size_back)
 
             /*----------------서버에 이미지 업로드 테스트용 이미지 2개 생성 ---------------------------------
             * 변경예정사항 : 1. 윤곽선이미지 추가해야함. 2. 이미지 이름 바꿔야함.*/
             val timeStamp = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
             var requestBody: RequestBody = RequestBody.create(MediaType.parse("image/jpeg"), file)
+            var con_requestBody: RequestBody = RequestBody.create(MediaType.parse("image/jpeg"), con_file)
             images.add(
                 MultipartBody.Part.createFormData( "posts_image","p" + timeStamp + ".jpg", requestBody)
             )
             images.add(
-                MultipartBody.Part.createFormData("back_image","b" + timeStamp + ".jpg",requestBody)
+                MultipartBody.Part.createFormData("back_image","b" + timeStamp + ".jpg",con_requestBody)
             )
             /* -------------------------------------------------------------------------------------- */
 
@@ -96,31 +122,31 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
 
             logd(TAG, "sending : "+sending)
 
-            Retrofit(baseUrl).postPhoto(App.prefs.temporary_token, "/spott/posts", sending, images)
-                .subscribe({ response ->
-                    logd(
-                        TAG,
-                        "response code: ${response.code()}, response body : ${response.body()}"
-                    )
-                    val result = response.body()
-                    if (result != null) {
-                        addPhotoView.showToast("성공") /**  성공 메세지 수정해야함.  */
-                        mypageChange = true
-                        addPhotoView.navigateUp()
-                    }
-                }, { throwable ->
-                    logd(TAG, throwable.message)
-                    if (throwable is HttpException) {
-                        val exception = throwable
-                        logd(
-                            TAG,
-                            "http exception code: ${exception.code()}, http exception message: ${exception.message()}"
-                        )
-                        addPhotoView.enableTouching(true)
-                        addPhotoView.showLoading(false)
-                        addPhotoView.showToast("서버 연결에 오류가 발생했습니다")
-                    }
-                })
+//            Retrofit(baseUrl).postPhoto(App.prefs.temporary_token, "/spott/posts", sending, images)
+//                .subscribe({ response ->
+//                    logd(
+//                        TAG,
+//                        "response code: ${response.code()}, response body : ${response.body()}"
+//                    )
+//                    val result = response.body()
+//                    if (result != null) {
+//                        addPhotoView.showToast("성공") /**  성공 메세지 수정해야함.  */
+//                        mypageChange = true
+//                        addPhotoView.navigateUp()
+//                    }
+//                }, { throwable ->
+//                    logd(TAG, throwable.message)
+//                    if (throwable is HttpException) {
+//                        val exception = throwable
+//                        logd(
+//                            TAG,
+//                            "http exception code: ${exception.code()}, http exception message: ${exception.message()}"
+//                        )
+//                        addPhotoView.enableTouching(true)
+//                        addPhotoView.showLoading(false)
+//                        addPhotoView.showToast("서버 연결에 오류가 발생했습니다")
+//                    }
+//                })
 
 
         }
@@ -153,5 +179,6 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
     override fun openFindPlace() {
         addPhotoView.showFindPlaceUi()
     }
+
 
 }

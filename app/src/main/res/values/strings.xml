@@ -38,10 +38,14 @@
 
 
     <!-- item_alarm.xml [Start] -->
-    <string name="alarm">알람</string>
-    <string name="alarm_failure">사진이 반려되었습니다</string>
-    <string name="alarm_sharing">사진이 공유되었습니다</string>
+    <string name="notification">알림</string>
+    <string name="notification_failure">사진이 반려되었습니다.</string>
+    <string name="notification_sharing">사진이 공유되었습니다.</string>
     <string name="guideline">가이드라인</string>
+    <string name="notification_reason">(사유 : %1$s)</string>
+    <string name="text_new_comment">%1$s님이 회원님의 사진에 댓글을 남겼습니다.</string>
+    <string name="was_removed_for_reason">%1$s이 가이드라인에 위반되어 삭제되었습니다.</string>
+    <string name="photo">사진</string>
     <!-- item_alarm.xml [End] -->
 
     <string name="signup_">회원가입</string>
@@ -89,7 +93,7 @@
     <string name="adding_photo">사진 등록</string>
 
     <string name="toast_nophoto_map_f">등록된 사진이 없습니다. 화면을 이동하거나 지도를 확대/축소해보세요.</string>
-    <string name="no_photo">등록된 사진 없음</string>
+    <string name="map_no_photo">해당 위치에\n등록된 사진이 없습니다</string>
     <string name="upload_first_photo">첫 번째 사진을 업로드해보세요</string>
 
     <string name="cancel">취소</string>
@@ -97,11 +101,13 @@
     <string name="delete">삭제</string>
     <string name="edit">편집</string>
     <string name="report">신고</string>
+    <string name="modify">수정</string>
 
     <string name="editing_caption">설명 편집</string>
 
     <string name="edit_comment">댓글 수정</string>
     <string name="delete_comment">댓글 삭제</string>
+    <string name="report_comment">댓글 신고</string>
     <string name="text_warning_comment_d">삭제된 댓글은 복구할 수 없습니다.\n댓글을 삭제하시겠습니까?</string>
     <string name="text_warning_deleting_photo">삭제된 사진은 복구할 수 없습니다.\n\n사진을 삭제하시겠습니까?\n</string>
 
@@ -124,5 +130,45 @@
     <string name="dialog_withdrawl_title">회원 탈퇴</string>
 
     <string name="ok">확인</string>
+
+    <string name="private_status">비공개 상태입니다</string>
+    <string name="private_account">비공개 계정입니다</string>
+    
+    <string name="text_terms_of_service">이용 약관</string>
+    <string name="text_open_source_library">오픈 소스 라이브러리</string>
+    <string name="inquiry">문의하기</string>
+    <string name="keep_private">비공개로 전환</string>
+    <string name="keep_public">공개로 전환</string>
+
+    <string name="server_connection_error">서버 연결에 오류가 발생했습니다</string>
+
+    <string name="user_no_photo">업로드한 사진이 없습니다</string>
+
+    <string name="spam">스팸</string>
+    <string name="abuse_and_slander">욕설 및 비방</string>
+    <string name="pornography">음란물</string>
+    <string name="unauthorized_use">무단 도용</string>
+    <string name="etc">기타</string>
+
+    <string name="report_photo">사진 신고</string>
+    <string name="hint_report_etc">신고 사유를 작성해주세요</string>
+
+    <string name="report_done">신고가 접수되었습니댜</string>
+
+    <string name="no_scrap">스크랩한 사진이 없습니다</string>
+
+    <string name="text_reported_photo">신고 처리 중인 사진입니다.</string>
+
+    <string name="photo_i_uploaded">내가 업로드한 사진</string>
+    <string name="comment_i_wrote">내가 쓴 댓글</string>
+    <string name="text_footer_reason_f">스팟은 건강한 커뮤니티 운영을 위해 가이드라인에 위배되는 사진 혹은 댓글을 삭제하고 있습니다.\n잘못된 조치라고 생각되면 문의하기를 해주세요.</string>
+    <string name="reason">사유</string>
+
+    <string name="failed_to_upload_comment">댓글 등록에 실패했습니다</string>
+    <string name="failed_to_edit_comment">댓글 수정에 실패했습니다</string>
+    <string name="failed_to_delete_comment">댓글 삭제에 실패했습니다</string>
+    <string name="failed_to_delete_noti">알림 삭제에 실패했습니다</string>
+
+    <string name="inquiry_subject">[문의] 스팟에 문의합니다.</string>
 
 </resources>

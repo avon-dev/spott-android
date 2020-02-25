@@ -53,12 +53,14 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
 
     private lateinit var  baseUrl :String
 
+    private var noRecent = false
+
     val searchInterListener = object : searchInter{
         override fun hashItemClick(hash: String) {
             presenter.openHashtag(hash)
         }
-        override fun recentDeleteClick(recentId:Int, position: Int) {
-            presenter.deleteRecent(baseUrl, recentId, position)
+        override fun recentDeleteClick(position: Int) {
+            presenter.deleteRecent(baseUrl, position)
         }
         override fun userItemClick(userId: Int) {
             presenter.openUser(userId)
@@ -147,10 +149,15 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
                 }
             }
 
-//        if(recentChange){
-//            recentChange = false
-//            여기서부터 다시해야함~!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//        }
+        if(recentChange){
+            recentChange = false
+            presenter.getRecent(baseUrl)
+        }
+
+        if(checkInit){
+            haveNoRecent(noRecent)
+        }
+
 
     }
 
@@ -204,7 +211,7 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
 
         if(!checkInit){
            presenter.getRecent(baseUrl)
-            checkInit = true
+
         }
 
         text_deleteall_search_f.setOnClickListener(this)
@@ -238,33 +245,39 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
     }
 
     override fun addRecentItems(recentItems:ArrayList<SearchItem>){
+
         recentAdapter.clearItemsAdapter()
         recentAdapter.addItemsAdapter(recentItems)
         recentAdapter.notifyDataSetChanged()
 
         //최근 검색어 없을시
-        if(recentItems.size>0) text_norecent_search_f.visibility = View.GONE
-        else text_norecent_search_f.visibility = View.VISIBLE
+        if(recentItems.size>0)   haveNoRecent(false)
+        else   haveNoRecent(true)
+
+        checkInit = true
+
     }
 
     override fun clearRecentItems(){
         recentAdapter.clearItemsAdapter()
         recentAdapter.notifyDataSetChanged()
-        text_norecent_search_f.visibility = View.VISIBLE
+        haveNoRecent(true)
+//        text_norecent_search_f.visibility = View.VISIBLE
     }
 
     override fun deleteRecentItem(position: Int){
         recentAdapter.deleteItemsAdapter(position)
         recentAdapter.notifyDataSetChanged()
         if(recentAdapter.itemsList.size == 0){
-            text_norecent_search_f.visibility = View.VISIBLE
+            haveNoRecent(true)
+//            text_norecent_search_f.visibility = View.VISIBLE
         }
     }
 
     interface searchInter{
         fun hashItemClick(hash:String)
         fun userItemClick(userId:Int)
-        fun recentDeleteClick(recentId:Int, position: Int)
+        fun recentDeleteClick(position: Int)
     }
 
     inner class ResultAdapter(val context: Context, val searchInterListnener:searchInter):RecyclerView.Adapter<ResultAdapter.ViewHolder>(){
@@ -396,7 +409,7 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
 
                 holder.close.setOnClickListener {
                     // 최근 검색어 삭제 눌렀을 때
-                    searchInterListnener.recentDeleteClick(itemsList[position].recentId!!, position)
+                    searchInterListnener.recentDeleteClick(position)
                 }
 
 
@@ -414,5 +427,11 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
 
     override fun showDeleteAll(show:Boolean){
         text_deleteall_search_f.visibility = if(show) View.VISIBLE else View.GONE
+    }
+
+    private fun haveNoRecent(boolean: Boolean){
+        noRecent = boolean
+        text_norecent_search_f.visibility = if(boolean) View.VISIBLE else View.GONE
+        text_deleteall_search_f.visibility = if (boolean) View.GONE else View.VISIBLE
     }
 }

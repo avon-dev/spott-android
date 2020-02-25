@@ -27,7 +27,7 @@ interface MapContract {
         fun openPhoto(id:Int)
         fun getLastPosition()
         fun setLastPosition(cameraPosition: CameraPosition)
-        fun getPhotos(baseUrl:String, latLngBounds: LatLngBounds)
+        fun getPhotos(baseUrl:String, latLngBounds: LatLngBounds, action:Int)
         fun getMylocation()
 
     }

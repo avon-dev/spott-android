@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.fragment_mypage.*
 import kotlinx.android.synthetic.main.fragment_scrap.*
 
 fun BottomNavigationView.setupWithNavController(navGraphIds: List<Int>, fragmentManager: FragmentManager,
-                                                containerId: Int, intent: Intent) {
+                                                containerId: Int) {
 
     val TAG = "NavigationExtensions"
 
@@ -161,22 +161,26 @@ private fun BottomNavigationView.setupItemReselected(graphIdToTagMap: SparseArra
 
             //리사이클러뷰있는 스크랩 플래그먼트면 리사이클러뷰 스크롤 UP, (아이템 없어도 터지지 않음.)
             if(selectedFragment.tag== "bottomNavigation#0"){
-//                selectedFragment.recycler_home_f.smoothScrollToPosition(0)
-
-                selectedFragment.recycler_home_f.betterSmoothScrollToPosition(0)
-
+                if(selectedFragment.recycler_home_f!=null) {
+                    selectedFragment.recycler_home_f.betterSmoothScrollToPosition(0)
+                }
 
             }else if(selectedFragment.tag== "bottomNavigation#1"){
-//                selectedFragment.recycler_maplist_f.smoothScrollToPosition(0)
-                selectedFragment.recycler_maplist_f.betterSmoothScrollToPosition(0)
+                if( selectedFragment.recycler_maplist_f !=null){
+                    selectedFragment.recycler_maplist_f.betterSmoothScrollToPosition(0)
+                }
+
 
             }else if(selectedFragment.tag == "bottomNavigation#2"){
-//                selectedFragment.recycler_scrap_f.smoothScrollToPosition(0)
-
-                selectedFragment.scroll_scrap_f.smoothScrollTo(0,0)
+                if( selectedFragment.scroll_scrap_f !=null){
+                    selectedFragment.scroll_scrap_f.smoothScrollTo(0,0)
+                }
 
             }else if(selectedFragment.tag == "bottomNavigation#3"){
-                selectedFragment.recycler_grid_mypage_f.smoothScrollToPosition(0)
+                if(selectedFragment.recycler_grid_mypage_f !=null){
+                    selectedFragment.recycler_grid_mypage_f.smoothScrollToPosition(0)
+                }
+
             }
 
         }

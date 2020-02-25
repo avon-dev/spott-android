@@ -44,6 +44,8 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
     private var checkInit = false
 
+    private var ACTION = 1003
+
     val homeInterListener = object :homeInter{
         override fun itemClick(id: Int) {
             presenter.openPhoto(id)
@@ -63,14 +65,12 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
-        logd(TAG, "onCreateView")
 
         return root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        logd(TAG, "onActivityCreated")
 
         init()
 
@@ -88,7 +88,7 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
                         recyclerView.smoothScrollToPosition(recyclerView.adapter!!.itemCount-1)
 
                         Handler().postDelayed({
-                            presenter.getPhotos(getString(R.string.baseurl), start)
+                            presenter.getPhotos(getString(R.string.baseurl), start, ACTION)
                         }, 400) //로딩 주기
                     }
                 }
@@ -103,14 +103,14 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
                 start = 0
                 refreshTimeStamp = ""
 
-                presenter.getPhotos(getString(R.string.baseurl), start)
+                presenter.getPhotos(getString(R.string.baseurl), start, ACTION)
             }, 600) //로딩 주기
 
         }
 
         if(!checkInit) {
             //처음 사진을 가져오는 코드 (처음 이후에는 리프레쉬 전까지 가져오지않는다.)
-            presenter.getToken(getString(R.string.baseurl), start)
+            presenter.getToken(getString(R.string.baseurl), start, ACTION)
 
             checkInit = true
         }
@@ -152,10 +152,6 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         }
     }
 
-    override fun getPagedItems() { //페이징으로 나눠서 아이템 추가
-        homeAdapter.removePageLoadingItem()
-        pageLoading = false
-    }
 
     //리사이클러뷰 아이템 클릭을 위한 인터페이스
     interface homeInter{

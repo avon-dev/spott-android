@@ -15,7 +15,7 @@ interface SearchContract {
     }
 
     interface Presenter{
-        fun deleteRecent(baseUrl: String, recentId:Int, postion:Int)
+        fun deleteRecent(baseUrl: String, postion:Int)
         fun deleteAll(baseUrl: String)
         fun getRecent(baseUrl: String)
         fun getSearching(baseUrl:String, text:String)

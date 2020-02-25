@@ -92,6 +92,10 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     private val pageItems = 20  // 한번에 보여지는 리사이클러뷰 아이템 수
     private var pageLoading = false // 페이징이 중복 되지 않게하기위함
 
+    private var noPhoto = false
+
+    private val ACTION = 1004
+
     // 어댑터와 뷰 연결
     val mapInterListener = object : mapInter{
         override fun itemClick(id: Int){ //  맵리스트플래그먼트(하단플래그먼트) 리사이클러뷰 아이템 클릭시
@@ -196,8 +200,12 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
          //선택했던 아이템 있을 경우 맵리스트플래그먼트(하단플래그먼트)의 리사이클러뷰와 전체 개수 텍스트 처리
          if (selectedItems != null) {
-           text_spotnumber_maplist_f.text = selectedItems!!.size.toString()
+           text_spotnumber_map_f.text = selectedItems!!.size.toString()
          }
+
+
+        const_nophoto_map_f.visibility = if(noPhoto) View.VISIBLE else View.GONE
+
 
     }
 
@@ -233,7 +241,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
                 // Set the initial state of the BottomSheetBehavior to HIDDEN
                 bsb.state = BottomSheetBehavior.STATE_HIDDEN
 
-                bottomconst.img_updown_maplist_f.setOnClickListener {
+                bottomconst.img_updown_map_f.setOnClickListener {
                     if( bsb.state == BottomSheetBehavior.STATE_COLLAPSED || bsb.state == BottomSheetBehavior.STATE_HALF_EXPANDED){
                         bsb.state = BottomSheetBehavior.STATE_EXPANDED
                     }else{
@@ -267,7 +275,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     }
 
     fun bottomExpanded(){ //맵리스트플래그먼트(하단플래그먼트)가 올라와있을 때 일어나는 일
-        img_updown_maplist_f.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp)
+        img_updown_map_f.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp)
         imgbtn_mylocation_map_f.isEnabled =false
         if(::mMap.isInitialized) {
             mMap.uiSettings.setAllGesturesEnabled(false)
@@ -275,7 +283,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     }
 
     fun bottomCollapsed(){ //맵리스트플래그먼트(하단플래그먼트)가 내려가있을 때 일어나는 일
-        img_updown_maplist_f.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp)
+        img_updown_map_f.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp)
         imgbtn_mylocation_map_f.isEnabled=true
         if(::mMap.isInitialized){
             mMap.uiSettings.setAllGesturesEnabled(true)
@@ -460,7 +468,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     }
 
     private fun newCluster(cluster: Cluster<MapCluster>?){ //새로 선택한 클러스터 처리
-        text_spotnumber_maplist_f.text = cluster!!.size.toString()
+        text_spotnumber_map_f.text = cluster!!.size.toString()
 
         val sortItmes = cluster.items.sortedByDescending { mapCluster: MapCluster? -> mapCluster!!.id }
 
@@ -532,7 +540,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         clusterManager.addItems(selectedItems)
         clusterManager.cluster()
 
-        text_spotnumber_maplist_f.text = clusterManager.algorithm.items.size.toString()
+        text_spotnumber_map_f.text = clusterManager.algorithm.items.size.toString()
 
         //위치를 새롭게 했을 때, 리사이클러뷰에도 아이템을 새로 불러온다. 페이징 시작 다시 0부터
         mapAdapter.clearItemsAdapter()
@@ -551,7 +559,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     }
 
     override fun sendCameraRange(){ //새로운 데이터를 가져오기 위해 현재 화면에 보여지는 위치를 서버에 보냄.
-       presenter.getPhotos(getString(R.string.baseurl), mMap.projection.visibleRegion.latLngBounds)
+       presenter.getPhotos(getString(R.string.baseurl), mMap.projection.visibleRegion.latLngBounds, ACTION)
     }
 
     private fun setClusterManager(){
@@ -572,7 +580,8 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
                 logd(TAG, "onCameraIdle(), animMove : "+ clusterSelectMove)
 
                 if(!clusterSelectMove){ //애니메이션으로 움직인게 아니라면 데이터 가져옴.
-                    text_nophoto_maplist_f.visibility = View.GONE
+                    const_nophoto_map_f.visibility = View.GONE
+                    noPhoto = false
                     sendCameraRange()
                 }
                 clusterSelectMove =false
@@ -659,8 +668,9 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     }
 
     override fun noPhoto(){ //카메라 범위에 해당하는 사진이 없을때
-        text_spotnumber_maplist_f.text = "0"
-        text_nophoto_maplist_f.visibility = View.VISIBLE
+        text_spotnumber_map_f.text = "0"
+        const_nophoto_map_f.visibility = View.VISIBLE
+        noPhoto = true
     }
 
     private fun getPagedItems(){ //페이징으로 나눠서 아이템 추가

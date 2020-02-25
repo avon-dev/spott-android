@@ -8,7 +8,7 @@ interface UserContract {
 
     interface View: BaseView<Presenter> {
         fun showPhotoUi(id:Int)
-        fun setUserInfo(nickname:String, photo:String?)
+        fun setUserInfo(nickname:String, photo:String?, isPublic: Boolean, myself:Boolean)
         fun noPhoto()
         fun addItems(userItems:ArrayList<MapCluster>)
         fun clearAdapter()
