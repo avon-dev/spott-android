@@ -41,7 +41,7 @@ class EmailPresenter(val emailView: EmailContract.View) : EmailContract.Presente
 
     @SuppressLint("CheckResult")
     override fun sendEmail(baseUrl: String, email: String) {
-        Retrofit(baseUrl).getNonHeader("/spott/email-authen", Parser.toJson(EmailAuth(ACTION_EMAIL, email)))
+        Retrofit(baseUrl).getNonHeader("/spott/email-auth", Parser.toJson(EmailAuth(ACTION_EMAIL, email)))
             .subscribe({ response ->
                 logd(TAG, response.body())
                 val number = response.body()?.let { Parser.fromJson<Number>(it) }
