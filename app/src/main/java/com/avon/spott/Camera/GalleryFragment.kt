@@ -21,12 +21,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.avon.spott.Data.GalleryImage
 import com.avon.spott.R
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.fragment_image.*
+import kotlinx.android.synthetic.main.fragment_gallery.*
 
 /**
  * A simple [Fragment] subclass.
  */
-class ImageFragment : Fragment() {
+class GalleryFragment : Fragment() {
 
     private val backReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -47,13 +47,13 @@ class ImageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_image, container, false)
+        return inflater.inflate(R.layout.fragment_gallery, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        img_back_image_f.setOnClickListener {
+        img_back_gallery_f.setOnClickListener {
             Navigation.findNavController(requireActivity(), R.id.fragment_container_camerax).navigateUp()
         }
 
@@ -61,8 +61,8 @@ class ImageFragment : Fragment() {
         getThumbInfo(imgList)
 
 //        recycler_image_f.layoutManager = GridLayoutManager(view.context, 4)
-        recycler_image_f.layoutManager = GridLayoutManager(view.context, 4)
-        recycler_image_f.adapter = ImageAdapter(view.context, imgList)
+        recycler_gallery_f.layoutManager = GridLayoutManager(view.context, 4)
+        recycler_gallery_f.adapter = ImageAdapter(view.context, imgList)
 
         val filter = IntentFilter().apply { addAction(KEY_EVENT_ACTION) }
         broadcastManager = LocalBroadcastManager.getInstance(view.context)
