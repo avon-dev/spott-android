@@ -20,10 +20,13 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
         commentView.showHashtagUi(sending)
     }
 
-    override fun getComments(baseurl: String, start: Int, photoId: Int) {
-        val homePaging = HomePaging(start, commentView.refreshTimeStamp)
+    override fun getComments(baseurl: String, start: Int, photoId: Int, comeFrom:Int) {
+
+
+
+        val homePaging = commentPaging(start, commentView.refreshTimeStamp, comeFrom)
         logd(TAG, "파서테스트 = " + Parser.toJson(homePaging))
-        Retrofit(baseurl).get(App.prefs.temporary_token,"/spott/posts/"+photoId.toString()+"/comment", Parser.toJson(homePaging))
+        Retrofit(baseurl).get(App.prefs.token,"/spott/posts/"+photoId.toString()+"/comment", Parser.toJson(homePaging))
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 
@@ -43,6 +46,12 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
 
                 commentView.refreshTimeStamp = result.created_time //리프리쉬 타임 설정
 
+                if(comeFrom==9999){
+                    /***************알림에서 왔을 때 분기 처리해줘야함. **************/
+                    commentView.setPhotoData(result.notice_data.contents, result.notice_data.user_profile_image,
+                        result.notice_data.user_nickname, DateTimeFormatter.formatCreated(result.notice_data.created), result.notice_data.user)
+                }
+
                 commentView.addItems(result.items) //아이템들 추가
 
 
@@ -61,7 +70,7 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
 
         val sending = CommentPost(caption)
 
-        Retrofit(baseurl).post(App.prefs.temporary_token,"/spott/posts/"+photoId.toString()+"/comment", Parser.toJson(sending))
+        Retrofit(baseurl).post(App.prefs.token,"/spott/posts/"+photoId.toString()+"/comment", Parser.toJson(sending))
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 
@@ -72,8 +81,7 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
                 if(result.result){
                     commentView.postDone()
                 }else{
-
-                    commentView.showToast("댓글 등록에 실패했습니다")
+                    commentView.showFailsComment(1)
                 }
 
             }, { throwable ->
@@ -85,7 +93,7 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
                     )
                 }
 
-                commentView.showToast("댓글 등록에 실패했습니다")
+                commentView.showFailsComment(1)
             })
     }
 
@@ -105,7 +113,7 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
         logd(TAG, "URL은? "+"/spott/posts/"+photoId.toString()+"/comment/"+commentId.toString())
         logd(TAG, "Sending은? "+Parser.toJson(sending))
 
-        Retrofit(baseurl).patch(App.prefs.temporary_token,"/spott/posts/"+photoId.toString()+"/comment/"+commentId.toString(),
+        Retrofit(baseurl).patch(App.prefs.token,"/spott/posts/"+photoId.toString()+"/comment/"+commentId.toString(),
             Parser.toJson(sending))
 
             .subscribe({ response ->
@@ -118,7 +126,7 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
                 if(result.result){
                     commentView.updateDone(alertDialog, position, content)
                 }else{
-                    commentView.showToast("댓글 수정에 실패했습니다")
+                    commentView.showFailsComment(2)
                 }
 
             }, { throwable ->
@@ -130,14 +138,14 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
                     )
                 }
 
-                commentView.showToast("댓글 수정에 실패했습니다")
+                commentView.showFailsComment(2)
             })
 
     }
 
     override fun deleteComment(baseurl: String, photoId: Int, commentId: Int,
                       alertDialog: AlertDialog, position: Int){
-        Retrofit(baseurl).delete(App.prefs.temporary_token,"/spott/posts/"+photoId.toString()+"/comment/"+commentId.toString(),
+        Retrofit(baseurl).delete(App.prefs.token,"/spott/posts/"+photoId.toString()+"/comment/"+commentId.toString(),
             "")
 
             .subscribe({ response ->
@@ -150,7 +158,7 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
                 if(result.result){
                     commentView.deleteDone(alertDialog, position)
                 }else{
-                    commentView.showToast("댓글 삭제에 실패했습니다")
+                    commentView.showFailsComment(3)
                 }
 
             }, { throwable ->
@@ -162,7 +170,7 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
                     )
                 }
 
-                commentView.showToast("댓글 삭제에 실패했습니다")
+                commentView.showFailsComment(3)
             })
     }
 
@@ -183,5 +191,37 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
             commentView.setCaption(text)
         }
 
+    }
+
+    override fun  report(baseurl: String, reason:Int, detail:String, postId:Int, contents:String,
+                              commentId:Int, alertDialog: AlertDialog,position:Int){
+        val reportComment = ReportComment(contents, commentId, postId, detail, reason)
+        val sending = Parser.toJson(reportComment)
+        logd(TAG, "sending : $sending")
+
+        Retrofit(baseurl).post(App.prefs.token, "spott/report",  sending)
+            .subscribe({ response ->
+                logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
+
+                val string  = response.body()
+                val result = Parser.fromJson<BooleanResult>(string!!)
+                if(result.result){
+                    commentView.reportDone(alertDialog,position)
+                }else{
+                    commentView.serverError()
+                }
+
+
+            }, { throwable ->
+                logd(TAG, throwable.message)
+                if (throwable is HttpException) {
+                    logd(
+                        TAG,
+                        "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
+                    )
+                }
+
+                commentView.serverError()
+            })
     }
 }

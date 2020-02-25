@@ -11,7 +11,6 @@ interface HomeContract {
         fun addItems(homeItemItems: ArrayList<HomeItem>)
         fun removePageLoading()
         fun clearAdapter()
-        fun getPagedItems()
         fun showSearchUi()
 
         var hasNext : Boolean
@@ -21,8 +20,8 @@ interface HomeContract {
     interface Presenter{
         fun openPhoto(id:Int)
         fun openSearch()
-        fun getPhotos(baseUrl:String, start:Int)
-        fun getToken(baseUrl: String, start:Int)
+        fun getPhotos(baseUrl:String, start:Int, action:Int)
+//        fun getToken(baseUrl: String, start:Int, action:Int)
     }
 
 }

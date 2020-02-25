@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/text_header_report_d"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:paddingBottom="16dp"
+        android:text="@string/report_comment"
+        android:textColor="@color/text_black"
+        android:textSize="19dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RadioGroup
+        android:id="@+id/radiogroup_report_d"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_header_report_d">
+
+        <RadioButton
+            android:id="@+id/radio_spam_report_d"
+            android:textColor="@drawable/text_report_radio"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:button="@null"
+            android:paddingLeft="16dp"
+            android:text="@string/spam"
+            android:textSize="16dp" />
+
+        <RadioButton
+            android:id="@+id/radio_abuse_report_d"
+            android:textColor="@drawable/text_report_radio"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:button="@null"
+            android:paddingLeft="16dp"
+            android:text="@string/abuse_and_slander"
+            android:textSize="16dp" />
+
+        <RadioButton
+            android:id="@+id/radio_pornography_report_d"
+            android:textColor="@drawable/text_report_radio"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:button="@null"
+            android:paddingLeft="16dp"
+            android:text="@string/pornography"
+            android:textSize="16dp" />
+
+        <RadioButton
+            android:id="@+id/radio_unauthorized_report_d"
+            android:textColor="@drawable/text_report_radio"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:button="@null"
+            android:paddingLeft="16dp"
+            android:text="@string/unauthorized_use"
+            android:textSize="16dp" />
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/text_etc_report_d"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:text="@string/etc"
+        android:textColor="@color/text_black"
+        android:textSize="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/radiogroup_report_d" />
+
+    <Button
+        android:id="@+id/btn_report_d"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/corner_round_graybtn"
+        android:clickable="false"
+        android:text="@string/report"
+        android:textColor="@color/text_white"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_etc_report_d" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -34,4 +34,9 @@
 
     <color name="hashtag_highlight">#C5D1E6</color>
 
+    <color name="nophoto_grey">#A2A2A2</color>
+
+    <color name="photo_pass">#6DA76F</color>
+
+
 </resources>

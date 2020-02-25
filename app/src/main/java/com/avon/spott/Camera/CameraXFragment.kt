@@ -594,8 +594,8 @@ class CameraXFragment : Fragment() {
     }
 
     @SuppressLint("CheckResult")
-    private fun getScrapData() {
-        Retrofit(getString(R.string.baseurl)).get(App.prefs.token, "/spott/scrap/ids", "").subscribe({ response ->
+    private fun getScrapData() {              /** temporary_token로 수정 2020-02-25 */
+        Retrofit(getString(R.string.baseurl)).get(App.prefs.token, "/spott/users/my-scrap", "").subscribe({ response ->
             logd(TAG, "response: ${response.body()}")
             val result = response.body()?.let { Parser.fromJson<ArrayList<ScrapResult>>(it) }
             if(result != null) {
@@ -677,7 +677,7 @@ class CameraXFragment : Fragment() {
                 .into(holder.photo)
 
             holder.itemView.setOnClickListener {
-                onItemClickListener.ItemClick(list[position].posts_image)
+                onItemClickListener.ItemClick(list[position].back_image) /** back_image로 수정 2020-02-25 */
             }
 
         }

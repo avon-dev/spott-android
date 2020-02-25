@@ -45,6 +45,11 @@ class HashtagFragment: Fragment(), HashtagContract.View, View.OnClickListener{
 
     private var checkInit = false
 
+    private val PHOTO = 1101
+    private val SEARCH = 1102
+    private val NOTI = 1103
+
+    private var comeFrom = 0
     private var fromSearch = false
     private var hashtag = ""
 
@@ -78,8 +83,13 @@ class HashtagFragment: Fragment(), HashtagContract.View, View.OnClickListener{
 
         if(arguments?.getString("hashtag")!= null){
             hashtag = arguments?.getString("hashtag")!!
+            comeFrom = PHOTO
+        }else if(arguments?.getString("notiHashtag")!= null) {
+            hashtag = arguments?.getString("notiHashtag")!!
+            comeFrom = NOTI
         }else{
             hashtag = arguments?.getString("Searchedhashtag")!!
+            comeFrom = SEARCH
             fromSearch = true
         }
 
@@ -107,7 +117,7 @@ class HashtagFragment: Fragment(), HashtagContract.View, View.OnClickListener{
                         recyclerView.smoothScrollToPosition(recyclerView.adapter!!.itemCount-1)
 
                         Handler().postDelayed({
-                            presenter.getPhotos(getString(R.string.baseurl), start, hashtag)
+                            presenter.getPhotos(getString(R.string.baseurl), start, hashtag, false)
                         }, 400) //로딩 주기
                     }
                 }
@@ -120,14 +130,14 @@ class HashtagFragment: Fragment(), HashtagContract.View, View.OnClickListener{
                 //페이징 시작위치와 시간 초기화
                 start = 0
                 refreshTimeStamp = ""
-                presenter.getPhotos(getString(R.string.baseurl), start, hashtag)
+                presenter.getPhotos(getString(R.string.baseurl), start, hashtag, false)
 
             }, 600) //로딩 주기
         }
 
         if(!checkInit){
             //처음 사진을 가져오는 코드 (처음 이후에는 리프레쉬 전까지 가져오지않는다.)
-            presenter.getPhotos(getString(R.string.baseurl), start, hashtag)
+            presenter.getPhotos(getString(R.string.baseurl), start, hashtag, fromSearch)
             checkInit = true
         }
 
@@ -194,8 +204,10 @@ class HashtagFragment: Fragment(), HashtagContract.View, View.OnClickListener{
 
     override fun showPhotoUi(photoId:Int){
         val bundle = bundleOf("photoId" to photoId)
-        if(!fromSearch){
+        if(comeFrom == PHOTO){
             findNavController().navigate(R.id.action_hashtagFragment_to_photoFragment, bundle)
+        }else if(comeFrom == NOTI){
+            findNavController().navigate(R.id.action_notiHashtagFragment_to_photo, bundle)
         }else{
             findNavController().navigate(R.id.action_searchedHashtagFragment_to_photo, bundle)
         }

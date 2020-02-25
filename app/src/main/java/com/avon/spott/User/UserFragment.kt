@@ -25,7 +25,6 @@ import kotlinx.android.synthetic.main.toolbar.view.*
 
 class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
 
-
     private val TAG = "forUserFragment"
 
     lateinit var mapRecyclerViewUser : RecyclerView  //Map recyclerview
@@ -52,8 +51,17 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
         }
     }
 
+    private val PHOTO = 1101
+    private val SEARCH = 1102
+    private val NOTI = 1103
+
     private var fromSearch = false
+    private var comeFrom = 0
+
     private var userId = 0
+
+    private var isPublic = true
+    private var myself = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,10 +78,15 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
         logd(TAG, "user's id : "+arguments?.getInt("userId"))
         logd(TAG, "from search user' id : "+arguments?.getInt("SearcheduserId"))
 
-        if(arguments?.getInt("userId")!=0){
+        if(arguments?.getInt("userId")!=0) {
             userId = arguments?.getInt("userId")!!
+            comeFrom = PHOTO
+        }else if(arguments?.getInt("notiUserId")!=0){
+            userId = arguments?.getInt("notiUserId")!!
+            comeFrom = NOTI
         }else{
             userId = arguments?.getInt("SearcheduserId")!!
+            comeFrom = SEARCH
             fromSearch = true
         }
 
@@ -87,7 +100,7 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
 
 
         if(userNickname!=null){
-            setUserInfo(userNickname!!, userPhoto)
+            setUserInfo(userNickname!!, userPhoto, isPublic, myself)
         }
 
         recycler_grid_user_f.layoutManager  = layoutManager
@@ -96,15 +109,14 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
 
         swiperefresh_user_f.setOnRefreshListener {
             Handler().postDelayed({
-                presenter.getUserphotos(getString(R.string.baseurl), userId)
+                presenter.getUserphotos(getString(R.string.baseurl), userId, fromSearch)
             }, 600) //로딩 주기
         }
 
         if(!checkInit) {
             //처음 사진을 가져오는 코드 (처음 이후에는 리프레쉬 전까지 가져오지않는다.)
-            presenter.getUserphotos(getString(R.string.baseurl), userId)
+            presenter.getUserphotos(getString(R.string.baseurl), userId, fromSearch)
 
-            checkInit = true
         }
 
         swiperefresh_user_f.setColorSchemeColors(ContextCompat.getColor(context!!, R.color.colorPrimary))
@@ -114,12 +126,25 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
     override fun onStart() {
         super.onStart()
 
-        // 툴바 유저이미지, 유저닉네임 보이게
-        controlToolbar(View.VISIBLE, View.VISIBLE, View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE)
-        MainActivity.mToolbar.visibility = View.VISIBLE
+        if(!checkInit){
+            // 뒤로가기만 보이게
+            controlToolbar(View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE)
+            MainActivity.mToolbar.visibility = View.VISIBLE
 
-        if( wholeItems!=null &&  wholeItems!!.size == 0){ //서버에서 불러왔던 사진아이템 사이즈가 0이면 사진없음 문구 보이게
-            text_nophoto_user_f.visibility = View.VISIBLE
+        }else{
+            // 툴바 유저이미지, 유저닉네임 보이게
+            controlToolbar(View.VISIBLE, View.VISIBLE, View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE)
+            MainActivity.mToolbar.visibility = View.VISIBLE
+        }
+
+
+        if( wholeItems!=null &&  wholeItems!!.size == 0 ){ //서버에서 불러왔던 사진아이템 사이즈가 0이면 사진없음 문구 보이게
+            if(myself){
+                const_nophoto_user_f.visibility = View.VISIBLE
+            }else if(isPublic){
+                const_nophoto_user_f.visibility = View.VISIBLE
+            }
+
         }
 
 
@@ -141,8 +166,10 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
 
     override fun showPhotoUi(id:Int) {//PhotoFragment로 이동
         val bundle = bundleOf("photoId" to id)
-        if(!fromSearch){
+        if(comeFrom == PHOTO) {
             findNavController().navigate(R.id.action_userFragment_to_photoFragment, bundle)
+        }else if(comeFrom == NOTI){
+            findNavController().navigate(R.id.action_notiUserFragment_to_photo, bundle)
         }else{
             findNavController().navigate(R.id.action_searchedUserFragment_to_photo, bundle)
         }
@@ -174,7 +201,7 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
 
 
     override fun noPhoto(){
-        text_nophoto_user_f.visibility = View.VISIBLE
+        const_nophoto_user_f.visibility = View.VISIBLE
     }
 
 
@@ -227,9 +254,10 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
     }
 
 
-    override fun setUserInfo(nickname:String, photo:String?){
+    override fun setUserInfo(nickname:String, photo:String?, isPublic: Boolean, myself:Boolean){
         userNickname = nickname
         userPhoto = photo
+        this.myself = myself
 
         if(photo==null){
             mToolbar.img_profile_toolbar.setImageResource(R.drawable.img_person)
@@ -240,6 +268,24 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
         }
 
         mToolbar.text_name_toolbar.text=nickname
+
+        showPublic(isPublic)
+
+        if(!checkInit){
+            // 툴바 유저이미지, 유저닉네임 보이게
+            controlToolbar(View.VISIBLE, View.VISIBLE, View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE)
+            MainActivity.mToolbar.visibility = View.VISIBLE
+            checkInit = true
+        }
+
+    }
+
+    private fun showPublic(isPublic: Boolean) {
+        this.isPublic = isPublic
+        if(!myself){
+            const_private_user_f.visibility = if(isPublic) View.GONE else View.VISIBLE
+        }else const_private_user_f.visibility = View.GONE
+
     }
 
 

@@ -1,6 +1,5 @@
 package com.avon.spott.Home
 
-import com.avon.spott.Data.HomeItem
 import com.avon.spott.Data.HomePaging
 import com.avon.spott.Data.HomeResult
 import com.avon.spott.Utils.App
@@ -18,39 +17,38 @@ class HomePresenter(val homeView:HomeContract.View) : HomeContract.Presenter {
 
     override fun openSearch(){homeView.showSearchUi()}
 
-//    val adddummy = addDummy() //테스트 코드 추가
+//    override fun getToken(baseUrl: String, start:Int, action:Int) {
+//        if(App.prefs.temporary_token!=""){
+//            logd(TAG, "토큰 있음")
+//            getPhotos(baseUrl, start, action)
+//        }else{
+//            logd(TAG, "토큰 없음")
+//            Retrofit(baseUrl).postNonHeader( "/spott/home/token","")
+//                .subscribe({ response ->
+//                    logd(TAG, response.body())
+//                    val newToken = response.body()
+//
+//                    App.prefs.temporary_token = newToken!!
+//
+//                    getPhotos(baseUrl, start, action)
+//
+//                }, { throwable ->
+//                    logd(TAG, throwable.message)
+//                    if (throwable is HttpException) {
+//                        logd(
+//                            TAG,
+//                            "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
+//                        )
+//                    }
+//                })
+//        }
+//    }
 
-    override fun getToken(baseUrl: String, start:Int) {
-        if(App.prefs.temporary_token!=""){
-            logd(TAG, "토큰 있음")
-            getPhotos(baseUrl, start)
-        }else{
-            logd(TAG, "토큰 없음")
-            Retrofit(baseUrl).postNonHeader( "/spott/home/token","")
-                .subscribe({ response ->
-                    logd(TAG, response.body())
-                    val newToken = response.body()
+    override fun getPhotos(baseUrl:String, start:Int, action:Int){
 
-                    App.prefs.temporary_token = newToken!!
-
-                    getPhotos(baseUrl, start)
-
-                }, { throwable ->
-                    logd(TAG, throwable.message)
-                    if (throwable is HttpException) {
-                        logd(
-                            TAG,
-                            "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
-                        )
-                    }
-                })
-        }
-    }
-
-    override fun getPhotos(baseUrl:String, start:Int){
-
-         val homePaging = HomePaging(start, homeView.refreshTimeStamp)
-         Retrofit(baseUrl).get(App.prefs.temporary_token,"/spott/posts", Parser.toJson(homePaging))
+         val homePaging = HomePaging(start, homeView.refreshTimeStamp, action)
+        logd(TAG, "home sending : "+ Parser.toJson(homePaging))
+         Retrofit(baseUrl).get(App.prefs.token,"/spott/posts", Parser.toJson(homePaging))
 
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
@@ -81,39 +79,8 @@ class HomePresenter(val homeView:HomeContract.View) : HomeContract.Presenter {
                 }
             })
 
-        //더미테스트 코드============================================
-//        val string  = adddummy
-//        val result = Parser.fromJson<HomeResult>(string!!)
-//        logd(TAG, "start : " + start)
-//        if(homeView.hasNext && start!=0){
-//            logd(TAG, "plusssss")
-//            homeView.removePageLoading()
-//        }else if(start==0 && homeView.refreshTimeStamp!=null){
-//            logd(TAG, "refreshing")
-//            homeView.refreshTimeStamp=""
-//            homeView.clearAdapter()
-//        }
-//
-//        homeView.hasNext = result.hasNext
-//
-//        homeView.addItems(result.photos)
-        //=======================================================
     }
 
-    /*============================= 더미 데이터 넣는 코드=========================================== */
-    private fun addDummy() : String{
-         val dummyALHome = ArrayList<HomeItem>()
-        for(i in 0..4){
-            dummyALHome.add(HomeItem("https://cdn.pixabay.com/photo/2017/08/06/12/06/people-2591874_1280.jpg",i))
-            dummyALHome.add(HomeItem("https://cdn.pixabay.com/photo/2017/06/23/17/41/morocco-2435391_960_720.jpg",i+1))
-        }
-        val dummyALHomeResult = HomeResult(true, dummyALHome, "yes")
-
-        val dummyString = "{ payload : "+Parser.toJson(dummyALHomeResult) + "}"
-
-        return dummyString
-    }
-    /*============================= 더미 데이터 넣는 코드 끝======================================= */
 
 
 }

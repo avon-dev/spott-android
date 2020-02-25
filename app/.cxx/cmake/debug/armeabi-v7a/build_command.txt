@@ -1,0 +1,20 @@
+Executable : C:\Users\BAEK\AppData\Local\Android\Sdk\cmake\3.10.2.4988404\bin\cmake.exe
+arguments : 
+-HC:\apps\github\spott_android\app\src\main\cpp
+-BC:\apps\github\spott_android\app\.cxx\cmake\debug\armeabi-v7a
+-DANDROID_ABI=armeabi-v7a
+-DANDROID_PLATFORM=android-21
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=C:\apps\github\spott_android\app\build\intermediates\cmake\debug\obj\armeabi-v7a
+-DCMAKE_BUILD_TYPE=Debug
+-DANDROID_NDK=C:\Users\BAEK\AppData\Local\Android\Sdk\ndk\21.0.6113669
+-DCMAKE_CXX_FLAGS=-std=c++11
+-DCMAKE_SYSTEM_NAME=Android
+-DCMAKE_ANDROID_ARCH_ABI=armeabi-v7a
+-DCMAKE_SYSTEM_VERSION=21
+-DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+-DCMAKE_ANDROID_NDK=C:\Users\BAEK\AppData\Local\Android\Sdk\ndk\21.0.6113669
+-DCMAKE_TOOLCHAIN_FILE=C:\Users\BAEK\AppData\Local\Android\Sdk\ndk\21.0.6113669\build\cmake\android.toolchain.cmake
+-G Ninja
+-DCMAKE_MAKE_PROGRAM=C:\Users\BAEK\AppData\Local\Android\Sdk\cmake\3.10.2.4988404\bin\ninja.exe
+jvmArgs : 
+

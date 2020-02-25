@@ -1,8 +1,10 @@
 package com.avon.spott.Photo
 
+import android.app.AlertDialog
 import com.avon.spott.Data.BooleanResult
 import com.avon.spott.Data.LikeScrapResult
 import com.avon.spott.Data.PhotoResult
+import com.avon.spott.Data.ReportPhoto
 import com.avon.spott.Mypage.MypageFragment
 import com.avon.spott.Utils.*
 import com.avon.spott.Utils.DateTimeFormatter.Companion.formatCreated
@@ -44,35 +46,41 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
     }
 
     override fun getPhotoDetail(baseUrl:String, photoId:Int){
-        Retrofit(baseUrl).get(App.prefs.temporary_token, "/spott/posts/"+photoId,  "")
+        Retrofit(baseUrl).get(App.prefs.token, "/spott/posts/"+photoId,  "")
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 
                 val string  = response.body()
                 val result = Parser.fromJson<PhotoResult>(string!!)
 
-                val hashArrayList = ArrayList<Array<Int>>()
+                if(result.result == 12001){
+                    photoView.showReportedDialog()
+                }else if(result.result == 12000){
+                    val hashArrayList = ArrayList<Array<Int>>()
 
-                val matcher = Validator.validHashtag(result.contents)
-                while (matcher.find()){
-                    if(matcher.group(1) != "") {
+                    val matcher = Validator.validHashtag(result.contents)
+                    while (matcher.find()){
+                        if(matcher.group(1) != "") {
 
-                      val currentSapn =arrayOf(matcher.start(), matcher.end())
-                        hashArrayList.add(currentSapn)
+                            val currentSapn =arrayOf(matcher.start(), matcher.end())
+                            hashArrayList.add(currentSapn)
+                        }
                     }
+
+                    var hasHash = false
+                    if(hashArrayList.size>0){
+                        photoView.setCaption(result.contents, hashArrayList)
+                        hasHash = true
+                    }
+
+
+                    photoView.setPhotoDetail(result.user.profile_image, result.user.nickname,
+                        result.posts_image, result.back_image, result.latitude, result.longitude,
+                        result.contents, result.comment, formatCreated(result.created), result.count,
+                        result.like_checked, result.scrap_checked, result.myself, result.user.id, hasHash)
                 }
 
-                var hasHash = false
-                if(hashArrayList.size>0){
-                    photoView.setCaption(result.contents, hashArrayList)
-                    hasHash = true
-                }
 
-
-                photoView.setPhotoDetail(result.user.profile_image, result.user.nickname,
-                    result.posts_image, result.back_image, result.latitude, result.longitude,
-                    result.contents, result.comment, formatCreated(result.created), result.count,
-                    result.like_checked, result.scrap_checked, result.myself, result.user.id, hasHash)
 
             }, { throwable ->
                 logd(TAG, throwable.message)
@@ -87,7 +95,8 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
     }
 
     override fun postLike(baseUrl: String, photoId: Int){
-        Retrofit(baseUrl).post(App.prefs.temporary_token, "/spott/like/"+photoId,  "")
+        Retrofit(baseUrl).post(App.prefs.token, "/spott/posts/"+photoId.toString()+"/likes",  "")
+
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 
@@ -114,7 +123,7 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
     }
 
     override fun deleteLike(baseUrl: String, photoId: Int){
-        Retrofit(baseUrl).delete(App.prefs.temporary_token, "/spott/like/"+photoId,  "")
+        Retrofit(baseUrl).delete(App.prefs.token, "/spott/posts/"+photoId.toString()+"/likes",  "")
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 
@@ -143,7 +152,7 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
 
     override fun postScrap(baseUrl: String, photoId: Int){
         /* 임시 수정 : temporary_token -> token*/
-        Retrofit(baseUrl).post(App.prefs.token, "/spott/scrap/"+photoId,  "")
+        Retrofit(baseUrl).post(App.prefs.token, "/spott/posts/"+photoId.toString()+"/scrap",  "")
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 
@@ -170,7 +179,7 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
     }
 
     override fun deleteScrap(baseUrl: String, photoId: Int) {
-        Retrofit(baseUrl).delete(App.prefs.temporary_token, "/spott/scrap/"+photoId,  "")
+        Retrofit(baseUrl).delete(App.prefs.token, "/spott/posts/"+photoId.toString()+"/scrap",  "")
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 
@@ -197,7 +206,7 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
 
 
     override fun deletePhoto(baseUrl: String, photoId: Int) {
-        Retrofit(baseUrl).delete(App.prefs.temporary_token, "/spott/posts/"+photoId,  "")
+        Retrofit(baseUrl).delete(App.prefs.token, "/spott/posts/"+photoId,  "")
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 
@@ -223,6 +232,48 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
                 photoView.showToast("사진이 삭제되지 않았습니다\n다시 시도하세요")
 
             })
+    }
+
+    override fun report(
+        baseUrl: String,
+        reason: Int,
+        detail: String,
+        postId: Int,
+        postUrl: String,
+        postCaption: String,
+        alertDialog: AlertDialog
+    ) {
+        val reportPhoto = ReportPhoto(postUrl, postCaption, postId, detail, reason)
+
+        val sending = Parser.toJson(reportPhoto)
+        logd(TAG, "sending : $sending")
+
+        Retrofit(baseUrl).post(App.prefs.token, "spott/report",  sending)
+            .subscribe({ response ->
+                logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
+
+                val string  = response.body()
+                val result = Parser.fromJson<BooleanResult>(string!!)
+                if(result.result){
+                    photoView.reportDone(alertDialog)
+                    photoView.navigateUp()
+                }else{
+                   photoView.serverError()
+                }
+
+
+            }, { throwable ->
+                logd(TAG, throwable.message)
+                if (throwable is HttpException) {
+                    logd(
+                        TAG,
+                        "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
+                    )
+                }
+
+                photoView.serverError()
+            })
+
     }
 
 

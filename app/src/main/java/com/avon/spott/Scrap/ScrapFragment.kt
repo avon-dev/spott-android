@@ -102,9 +102,8 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
         }else{
 
             text_scraps_scrap_f.text = scrapCount.toString()
-            if(scrapCount==0){
-                text_noscrap_scrap_f.visibility = View.VISIBLE
-            }
+
+            const_noscrap_scrap_f.visibility =   if(scrapCount==0) View.VISIBLE else View.GONE
 
             if(scrapChange){
                 scrapAdapter.clearItemsAdapter()
@@ -278,7 +277,6 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
                     }
                     return true
                 }
-
             })
 
 
@@ -325,9 +323,9 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
         scrapCount = scrapItems.size
         text_scraps_scrap_f.text = scrapCount.toString()
         if(scrapCount ==0){
-            text_noscrap_scrap_f.visibility = View.VISIBLE
+            const_noscrap_scrap_f.visibility = View.VISIBLE
         }else{
-            text_noscrap_scrap_f.visibility = View.GONE
+            const_noscrap_scrap_f.visibility = View.GONE
         }
     }
 
@@ -342,7 +340,7 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
 
     override fun deleteError(){
         scrapAdapter.deleteItemsError()
-        showToast("서버 연결에 오류가 발생했습니다.")
+        showToast(getString(R.string.server_connection_error))
     }
 
     override fun showToast(string: String) {
@@ -354,7 +352,7 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
         scrapCount = count
 
         if(count==0){
-            text_noscrap_scrap_f.visibility = View.VISIBLE
+            const_noscrap_scrap_f.visibility = View.VISIBLE
         }
 
     }

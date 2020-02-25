@@ -2,7 +2,9 @@ package com.avon.spott.Mypage
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -14,7 +16,9 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -23,16 +27,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.avon.spott.*
 import com.avon.spott.AddPhoto.AddPhotoActivity
 import com.avon.spott.Data.MapCluster
 import com.avon.spott.EditMyinfo.EditMyInfoActivity
-import com.avon.spott.R
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
 import com.avon.spott.Main.controlToolbar
-import com.avon.spott.PhotoRenderer
+import com.avon.spott.R
 import com.avon.spott.Utils.logd
-import com.avon.spott.animSlide
-import com.avon.spott.getMarkerBitmapFromView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -103,6 +105,16 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
     private var userNickname:String? = null
     private var userPhoto:String? = null
 
+    //공개 비공개 여부
+    private var isPublic = true
+
+    //확인 안 한 알림 카운트
+    private var noticount = 0
+
+    private var checkInit = false
+
+    var mPhotoPath: Uri? = null
+
     val mypageInterListener = object : mypageInter{
         override fun itemClick(id:Int){
             presenter.openPhoto(id)
@@ -148,9 +160,8 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         mapRecyclerView.layoutManager = maplayoutManager
         mapRecyclerView.adapter = mypageMapAdapter
 
-        ////////////////////////////////////////////////////////
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_grid_on_white_24dp))
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_map_white_24dp))
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_photo_white_24dp))
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_location_on_white_24dp))
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -183,9 +194,6 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
             const_grid_mypage_f.visibility = View.GONE
             const_map_mypage_f.visibility = View.VISIBLE
         }
-        ///////////////////////////
-
-
 
         if(mapRecyclerViewShow){
             mapRecyclerView.visibility = View.VISIBLE
@@ -193,10 +201,8 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
             mapRecyclerView.visibility = View.GONE
         }
 
-
-
         if(userNickname!=null){
-            setUserInfo(userNickname!!, userPhoto)
+            setUserInfo(userNickname!!, userPhoto, isPublic)
         }
 
         swiperefresh_mypager_f.setOnRefreshListener {
@@ -213,31 +219,31 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
     override fun onStart() {
         super.onStart()
 
-        // 툴바 유저이미지, 유저닉네임, 알람, 메뉴 보이게
-        controlToolbar(View.GONE, View.VISIBLE, View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.VISIBLE, View.GONE)
-        mToolbar.visibility = View.VISIBLE
+        if(!checkInit){
+            // 뒤로가기만 보이게
+            controlToolbar(View.GONE, View.GONE, View.GONE, View.GONE, View.GONE, View.VISIBLE, View.VISIBLE, View.GONE)
+            mToolbar.visibility = View.VISIBLE
+        }else{
+            // 툴바 유저이미지, 유저닉네임, 알람, 메뉴 보이게
+            controlToolbar(View.GONE, View.VISIBLE, View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.VISIBLE, View.GONE)
+            mToolbar.visibility = View.VISIBLE
+        }
 
+
+        setNotiCount(noticount)
 
         if( wholeItems!=null &&  wholeItems!!.size == 0){ //서버에서 불러왔던 사진아이템 사이즈가 0이면 사진없음 문구 보이게
             text_nophoto_mypage_f.visibility = View.VISIBLE
         }
 
         if(mypageChange){ //마이페이지에 변화가 있으면 새로 불러온다.
+            text_nophoto_mypage_f.visibility = View.GONE
             mypageChange = false
-
-            mypageAdapter.clearItemsAdapter()
-            mypageAdapter.notifyDataSetChanged()
-
-            mypageMapAdapter.clearItemsAdapter()
-            mypageMapAdapter.notifyDataSetChanged()
-
-            clusterManager.clearItems()
-            clusterManager.cluster()
-
-            mapRecyclerView.visibility = View.GONE
-            selectedMarkerMypage = null
+            clearMypage()
 
             presenter.getMyphotos(getString(R.string.baseurl))
+        }else if(checkInit){
+            presenter.getNotiCount(getString(R.string.baseurl)) // 새로운 알림을 가져옴
         }
 
     }
@@ -260,7 +266,8 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
     fun init(){
         mypagePresenter = MypagePresenter(this)
 
-        mToolbar.img_noti_toolbar.setOnClickListener(this)
+        mToolbar.frame_noti_toolbar.setOnClickListener(this)
+        mToolbar.img_menu_toolbar.setOnClickListener(this)
         floatimgbtn_addphoto_mypage.setOnClickListener(this)
 
     }
@@ -383,42 +390,22 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         clusterManager = ClusterManager<MapCluster>(context, mMap)
 
         mCustomClusterItemRenderer = PhotoRenderer(context!!, mMap, clusterManager, false)
-        clusterManager!!.renderer = mCustomClusterItemRenderer
-        clusterManager!!.renderer.setAnimation(false)
+        clusterManager.renderer = mCustomClusterItemRenderer
+        clusterManager.renderer.setAnimation(false)
 
         mMap.setOnMarkerClickListener(clusterManager)
         mMap.setOnInfoWindowClickListener(clusterManager)
         mMap.setOnCameraIdleListener(clusterManager)
-        clusterManager!!.setOnClusterClickListener(this)
-        clusterManager!!.setOnClusterItemClickListener(this)
+        clusterManager.setOnClusterClickListener(this)
+        clusterManager.setOnClusterItemClickListener(this)
 
         presenter.getMyphotos(getString(R.string.baseurl))
-
-//        swiperefresh_mypager_f.setOnRefreshListener {
-//            Handler().postDelayed({
-//                presenter.getMyphotos(getString(R.string.baseurl))
-//            }, 600) //로딩 주기
-//        }
-//
-//        swiperefresh_mypager_f.setColorSchemeColors(ContextCompat.getColor(context!!, R.color.colorPrimary))
 
     }
 
     override fun clearAdapter(){
         if(swiperefresh_mypager_f.isRefreshing){
-            mypageAdapter.clearItemsAdapter()
-            mypageAdapter.notifyDataSetChanged()
-
-            clusterManager.clearItems()
-            clusterManager.cluster()
-
-            mypageMapAdapter.clearItemsAdapter()
-            mypageMapAdapter.notifyDataSetChanged()
-            selectedMarkerMypage  = null
-
-            mapRecyclerView.visibility = View.GONE
-
-
+            clearMypage()
             swiperefresh_mypager_f.isRefreshing = false
 
         }
@@ -431,10 +418,16 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         clusterManager.addItems(mypageItems)
         clusterManager.cluster()
 
-
         mypageAdapter.addItemsAdapter(mypageItems)
         mypageAdapter.notifyDataSetChanged()
 
+        if(!checkInit){
+            // 툴바 유저이미지, 유저닉네임, 알람, 메뉴 보이게
+            controlToolbar(View.GONE, View.VISIBLE, View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.VISIBLE, View.GONE)
+            mToolbar.visibility = View.VISIBLE
+        }
+
+        checkInit = true
     }
 
     override fun noPhoto(){
@@ -450,11 +443,11 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         findNavController().navigate(R.id.action_mypageFragment_to_photo, bundle)
     }
 
-    override fun showAddPhotoUi(mFilePath : String) {
+    override fun showAddPhotoUi(mFilePath : String, mCropPath: String) {
         val nextIntent = Intent(context, AddPhotoActivity::class.java)
+        nextIntent.putExtra("cropPhoto",  mCropPath)
         nextIntent.putExtra("photo", mFilePath)
         startActivity(nextIntent)
-        logd("photoTEST", "Mypagefragment에서 넘겨줌 " + mFilePath)
     }
 
     override fun showAlarmUi() {
@@ -467,9 +460,12 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
 
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.img_noti_toolbar -> {presenter.openAlarm()}
+            R.id.frame_noti_toolbar -> {presenter.openAlarm()}
             R.id.floatimgbtn_addphoto_mypage -> {
                 presenter.clickAddPhoto()
+            }
+            R.id.img_menu_toolbar -> {
+                showMenuDialog()
             }
         }
     }
@@ -597,10 +593,11 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
          if (resultCode == Activity.RESULT_OK && null != data) {
                 if(requestCode == 102) {
                 if (data.getData() != null) {
-                    var mPhotoPath: Uri = data.getData()
+                   mPhotoPath = data.getData()!!
                     logd(TAG, "photopath : " + mPhotoPath)
 
                     val options = UCrop.Options()
@@ -609,6 +606,8 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
                     options.setToolbarCropDrawable(R.drawable.ic_arrow_forward_black_24dp)
                     options.setActiveControlsWidgetColor(ContextCompat.getColor(context!!, R.color.colorPrimary))
                     options.setStatusBarColor(ContextCompat.getColor(context!!, R.color.bg_black))
+//                    options.setCompressionQuality(100)
+//                    options.setMaxBitmapSize(10000)
                     options.setAspectRatioOptions(1,
 //                        AspectRatio("16 : 9", 16f, 9f),
                         AspectRatio("4 : 3", 4f, 3f),
@@ -620,7 +619,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
                     /* 현재시간을 임시 파일 이름에 넣는 이유 : 중복방지
                     / (안넣으면 AddPhotoActivity의 이미지뷰에 다른 사진 보여진다.) */
                     val timeStamp = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
-                    UCrop.of(mPhotoPath, Uri.fromFile(File(context!!.cacheDir, timeStamp+SAMPLE_CROPPED_IMAGE_NAME)))
+                    UCrop.of(mPhotoPath!!, Uri.fromFile(File(context!!.cacheDir, timeStamp+SAMPLE_CROPPED_IMAGE_NAME)))
                         .withMaxResultSize(resources.getDimension(R.dimen.upload_width).toInt(),
                             resources.getDimension(R.dimen.upload_heigth).toInt())
                         .withOptions(options)
@@ -630,7 +629,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
             }else if(requestCode == UCrop.REQUEST_CROP){
                     var mCropPath: Uri? = UCrop.getOutput(data)
                     logd(TAG, "croppath : " + mCropPath)
-                    presenter.openAddPhoto(mCropPath.toString())
+                    presenter.openAddPhoto(mPhotoPath.toString(), mCropPath.toString())
                 }
         }
         if(resultCode == UCrop.RESULT_ERROR){
@@ -638,7 +637,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         }
     }
 
-    override fun setUserInfo(nickname:String, photo:String?){
+    override fun setUserInfo(nickname:String, photo:String?, isPublic:Boolean){
         userNickname = nickname
         userPhoto = photo
 
@@ -651,7 +650,104 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         }
 
         mToolbar.text_name_toolbar.text=nickname
+        showPublic(isPublic)
     }
+
+    private fun clearMypage(){
+        // 그리드 리사이클러뷰 클리어
+        mypageAdapter.clearItemsAdapter()
+        mypageAdapter.notifyDataSetChanged()
+
+        //클러스터 클리어
+        clusterManager.clearItems()
+        clusterManager.cluster()
+
+        //맵 리사이클러뷰 클리어 및 사라지게 처리
+        mypageMapAdapter.clearItemsAdapter()
+        mypageMapAdapter.notifyDataSetChanged()
+        mapRecyclerView.visibility = View.GONE
+
+        //선택했던 마커 없애기
+        selectedMarkerMypage  = null
+    }
+
+    private fun showMenuDialog(){
+        val builder = AlertDialog.Builder(context)
+
+        val arrayList = ArrayList<String>()
+        arrayList.add(getString(R.string.text_title_editmyinfo_a))
+        arrayList.add(if(isPublic) getString(R.string.keep_private) else getString(R.string.keep_public))
+        arrayList.add(getString(R.string.inquiry))
+        arrayList.add(getString(R.string.text_terms_of_service))
+        arrayList.add(getString(R.string.text_open_source_library))
+
+        val adapter = ArrayAdapter<String>(context!!, android.R.layout.simple_list_item_1, arrayList)
+        val listener = object : DialogInterface.OnClickListener{
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+                when(which){
+                    0 -> { // 내 정보 수정 눌렀을 때
+                        presenter.openEditMyInfo()
+                    }
+                    1 -> { // 공개, 비공개 전환
+                       presenter.changePublic(getString(R.string.baseurl), isPublic)
+                    }
+                    2 ->{ //문의하기 눌렀을 때
+                        /** 메일 앱으로 연동하거나
+                         *  어드민사이트로 보낼 예정*/
+                        inquire(context!!)
+                    }
+                    3->{ //이용약관 눌렀을 때
+
+                    }
+                    4->{ //오픈소스 라이브러리 눌렀을 때
+
+                    }
+                }
+            }
+        }
+
+        builder.setAdapter(adapter, listener)
+        builder.show()
+
+    }
+
+    override fun showPublic(isPublic: Boolean){
+        this.isPublic = isPublic
+        const_private_mypage_f.visibility = if(isPublic) View.GONE else View.VISIBLE
+    }
+
+    override fun showErrorToast() {
+        showToast(getString(R.string.server_connection_error))
+    }
+
+    override fun showToast(string: String) {
+        Toast.makeText(this.context, string, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun setNotiCount(count: Int) {
+//        val count = 0
+//        showToast(count.toString())
+
+        noticount = count
+
+        mToolbar.text_noticount_toolbar.text = count.toString()
+
+        var padding :Int
+        if(count<10){
+            padding = resources.getDimension(R.dimen.noti_count_1).toInt()
+        }else if(count<100){
+            padding = resources.getDimension(R.dimen.noti_count_2).toInt()
+        }else{
+            mToolbar.text_noticount_toolbar.text = "99+"
+            padding = resources.getDimension(R.dimen.noti_count_3).toInt()
+        }
+        mToolbar.text_noticount_toolbar.setPadding(padding,0,padding,0)
+
+        mToolbar.text_noticount_toolbar.visibility = if(count == 0) View.GONE else View.VISIBLE
+
+    }
+
+
 
 }
 

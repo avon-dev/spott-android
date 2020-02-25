@@ -2,6 +2,7 @@ package com.avon.spott.Hashtag
 
 import com.avon.spott.Data.HashtagPaging
 import com.avon.spott.Data.HomeResult
+import com.avon.spott.Search.SearchFragment.Companion.recentChange
 import com.avon.spott.Utils.App
 import com.avon.spott.Utils.Parser
 import com.avon.spott.Utils.Retrofit
@@ -18,11 +19,20 @@ class HashtagPresenter(val hashtagView : HashtagContract.View):HashtagContract.P
         hashtagView.showPhotoUi(id)
     }
 
-    override fun getPhotos(baseUrl: String, start: Int, hashtag:String) {
+    override fun getPhotos(baseUrl: String, start: Int, hashtag:String, fromSearch:Boolean) {
 
+        //검색에서 온 게시물일 때 아닐때 구분에서 sending에 추가해줘야함.
+        var action = 1102
+        if(fromSearch){
+            action = 1101
+            recentChange = true
+        }
 
-        val hashtagPaging = HashtagPaging(start, hashtagView.refreshTimeStamp, hashtag)
-        Retrofit(baseUrl).get(App.prefs.temporary_token,"/spott/tag", Parser.toJson(hashtagPaging))
+        val hashtagPaging = HashtagPaging(start, hashtagView.refreshTimeStamp, hashtag, action)
+
+        logd(TAG, "hashtagPaging : $hashtagPaging")
+
+        Retrofit(baseUrl).get(App.prefs.token,"/spott/tag", Parser.toJson(hashtagPaging))
 
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")

@@ -1,6 +1,5 @@
 package com.avon.spott.EditCaption
 
-import android.os.Build
 import android.text.Editable
 import com.avon.spott.Data.BooleanResult
 import com.avon.spott.Data.CommentUpdate
@@ -41,7 +40,7 @@ class EditCaptionPresenter(val editCaptionView:EditCaptionContract.View):EditCap
 
         logd(TAG, "sending : "+sending)
 
-        Retrofit(baseUrl).patch(App.prefs.temporary_token, "/spott/posts/"+photoId.toString(), Parser.toJson(sending))
+        Retrofit(baseUrl).patch(App.prefs.token, "/spott/posts/"+photoId.toString(), Parser.toJson(sending))
             .subscribe({ response ->
                 logd(
                     TAG,

@@ -3,6 +3,7 @@ package com.avon.spott.Comment
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Handler
@@ -16,9 +17,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.ImageButton
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.navigation.fragment.findNavController
@@ -34,6 +33,9 @@ import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.dialog_comment.view.*
+import kotlinx.android.synthetic.main.dialog_report.*
+import kotlinx.android.synthetic.main.dialog_report.view.*
+import kotlinx.android.synthetic.main.dialog_report_etc.view.*
 import kotlinx.android.synthetic.main.fragment_comment.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
@@ -51,6 +53,9 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
     //게시글의 id
     private var photoId = 0
 
+    //게시글 글쓴이 id
+    private var userId = 0
+
     //페이징
     private var start: Int = 0//페이징 시작 위치
     private val pageItems = 20  // 한번에 보여지는 리사이클러뷰 아이템 수
@@ -60,7 +65,18 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
     private var checkInit = false
 
+    private val PHOTO = 1000
+    private val NOTI = 2000
+
+    private var fromNoti = false
+    private var comeFrom = 0
+
     private var baseurl = ""
+
+    private lateinit var photoCaption: String
+    private var userPhoto: String? = null
+    private lateinit var userNickname: String
+    private lateinit var photoDateTime: String
 
     val commentInterListener = object :commentInter{
         override fun userClick(userId:Int){
@@ -95,7 +111,16 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
         baseurl = getString(R.string.baseurl)
 
-        photoId = arguments?.getInt("photoId")!!
+        if(arguments?.getInt("photoId")!=0) {
+            photoId = arguments?.getInt("photoId")!!
+            userId = arguments?.getInt("userId")!!
+            comeFrom = PHOTO
+        }else{
+            photoId = arguments?.getInt("notiPhotoId")!!
+            comeFrom = NOTI
+            fromNoti = true
+        }
+
 
         return root
     }
@@ -120,7 +145,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                         recyclerView.smoothScrollToPosition(recyclerView.adapter!!.itemCount-1)
 
                         Handler().postDelayed({
-                            presenter.getComments(baseurl, start, photoId)
+                            presenter.getComments(baseurl, start, photoId, PHOTO)
                         }, 400) //로딩 주기
                     }
                 }
@@ -135,16 +160,20 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                 start = 0
                 refreshTimeStamp = ""
 
-                presenter.getComments(baseurl, start, photoId)
+                presenter.getComments(baseurl, start, photoId, PHOTO)
             }, 600) //로딩 주기
         }
 
         if(!checkInit) {
             //처음 사진을 가져오는 코드 (처음 이후에는 리프레쉬 전까지 가져오지않는다.)
-            presenter.getComments(baseurl, start, photoId)
+            presenter.getComments(baseurl, start, photoId, comeFrom)
 
             checkInit = true
+        }else{
+            setPhotoData(photoCaption, userPhoto, userNickname, photoDateTime, userId)
         }
+
+
 
     }
 
@@ -171,20 +200,11 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
 
         //PhotoFragment에서 넘어온 게시글 데이터
-        presenter.getHash(arguments?.getString("photoCaption").toString())
-
-        if(arguments?.getString("userPhoto")!=""){
-            Glide.with(context!!)
-                .load(arguments?.getString("userPhoto"))
-                .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                .error(android.R.drawable.stat_notify_error)
-                .into(img_profile_comment_f)
-        }else{
-            img_profile_comment_f.setImageResource(R.drawable.img_person)
+        if(comeFrom ==PHOTO){
+           setPhotoData(arguments?.getString("photoCaption").toString(),
+               arguments?.getString("userPhoto"), arguments?.getString("userNickname").toString(),
+               arguments?.getString("photoDateTime").toString(), userId)
         }
-
-        text_nickname_comment_f.text = arguments?.getString("userNickname").toString()
-        text_date_comment_f.text = arguments?.getString("photoDateTime").toString()
 
         edit_comment_comment_f.addTextChangedListener {
             presenter.checkEditString(it.toString())
@@ -197,19 +217,57 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
     override fun showUserUi(userId:Int) {
         val bundle = Bundle()
-        bundle.putInt("userId", userId)
-        findNavController().navigate(R.id.action_commentFragment_to_userFragment, bundle)
+        if(comeFrom ==PHOTO){
+            bundle.putInt("userId", userId)
+            findNavController().navigate(R.id.action_commentFragment_to_userFragment, bundle)
+        }else if(comeFrom == NOTI){
+            bundle.putInt("notiUserId", userId)
+            findNavController().navigate(R.id.action_notiCommentFragment_to_notiUserFragment, bundle)
+        }
+
     }
 
     override fun showHashtagUi(hashtag:String){
         val bundle = Bundle()
-        bundle.putString("hashtag", hashtag)
-        findNavController().navigate(R.id.action_commentFragment_to_hashtagFragment, bundle)
+        if(comeFrom == PHOTO){
+            bundle.putString("hashtag", hashtag)
+            findNavController().navigate(R.id.action_commentFragment_to_hashtagFragment, bundle)
+        }else if(comeFrom ==NOTI){
+            bundle.putString("notiHashtag", hashtag)
+            findNavController().navigate(R.id.action_notiCommentFragment_to_notiHashtagFragment, bundle)
+        }
+
+    }
+
+    override fun setPhotoData(photoCaption:String, userPhoto:String?, userNickname:String, photoDateTime:String, userId: Int){
+
+        this.photoCaption = photoCaption
+        this.userPhoto = userPhoto
+        this.userNickname =userNickname
+        this.photoDateTime = photoDateTime
+
+        if(this.userId ==0 ) {
+            this.userId = userId
+        }
+        presenter.getHash(photoCaption)
+        if(userPhoto!="" && userPhoto!= null){
+            Glide.with(context!!)
+                .load(userPhoto)
+                .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                .error(android.R.drawable.stat_notify_error)
+                .into(img_profile_comment_f)
+        }else{
+            img_profile_comment_f.setImageResource(R.drawable.img_person)
+        }
+
+        text_nickname_comment_f.text = userNickname
+        text_date_comment_f.text = photoDateTime
     }
 
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.text_nickname_comment_f -> {presenter.openUser(arguments?.getInt("userId")!!)}
+            R.id.img_profile_comment_f -> {presenter.openUser(userId)}
+            R.id.text_nickname_comment_f -> {presenter.openUser(userId)}
             R.id.imgbtn_write_comment_f -> {presenter.postCommnet(baseurl,
                 photoId, edit_comment_comment_f.text.toString())}
         }
@@ -282,7 +340,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         //리싸이클러뷰 아래로 드래그시 페이징 로딩아이템 추가
         fun addPageLoadingItem() {
             isLoadingAdded = true
-            addPage(Comment(0, UserData("","",0),false,"",""))
+            addPage(Comment(0, UserData("","",0, true),false,"",""))
         }
 
         fun removePageLoadingItem(){
@@ -334,17 +392,6 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                     itemViewholder.content.text = it.contents
                     itemViewholder.date.text = formatCreated(it.created)
 
-                    if(it.myself){
-                        itemViewholder.editor.visibility = View.VISIBLE
-                        itemViewholder.remover.visibility = View.VISIBLE
-                        itemViewholder.reporter.visibility = View.GONE
-                    }else{
-                        itemViewholder.editor.visibility = View.GONE
-                        itemViewholder.remover.visibility = View.GONE
-                        itemViewholder.reporter.visibility = View.VISIBLE
-                    }
-
-
                     fun editORdelete(delete:Boolean){ //댓글 수정 or 삭제
                         val mDialogView = LayoutInflater.from(holder.itemView.context).inflate(R.layout.dialog_comment, null)
                         //AlertDialogBuilder
@@ -380,19 +427,119 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                         }
                     }
 
-                    //아이템 수정하기 클릭시
-                    itemViewholder.editor.setOnClickListener{
-                        editORdelete(false)
+                    fun reportEtc(){
+                        val mDialogView = LayoutInflater.from(context!!).inflate(R.layout.dialog_report_etc, null)
+                        //AlertDialogBuilder
+
+                        val mBuilder = AlertDialog.Builder(context!!)
+                            .setView(mDialogView)
+
+                        mDialogView.text_header_reportetc_d.text = getString(R.string.report_photo)
+
+                        val  mAlertDialog = mBuilder.show()
+                        mAlertDialog.setCanceledOnTouchOutside(false)
+
+                        mDialogView.edit_reportetc_d.addTextChangedListener {
+                            if(it!!.trim().length>0){
+                                mDialogView.btn_reportetc_d.isClickable = true
+                                mDialogView.btn_reportetc_d.setBackgroundResource(R.drawable.corner_round_primary)
+                            }
+                        }
+
+                        mDialogView.btn_reportetc_d.setOnClickListener {
+                            presenter.report(getString(R.string.baseurl), 0, mDialogView.edit_reportetc_d.text.toString(),
+                                arguments?.getInt("photoId")!!, itemsList[position].contents, itemsList[position].id, mAlertDialog, position)
+
+                        }
+
                     }
 
-                    //아이템 삭제하기 클릭시
-                    itemViewholder.remover.setOnClickListener{
-                        editORdelete(true)
+                    fun report(){
+                        val mDialogView = LayoutInflater.from(context!!).inflate(R.layout.dialog_report, null)
+                        //AlertDialogBuilder
+
+                        val mBuilder = AlertDialog.Builder(context!!)
+                            .setView(mDialogView)
+
+                        mDialogView.text_header_report_d.text = getString(R.string.report_photo)
+
+                        val  mAlertDialog = mBuilder.show()
+                        mAlertDialog.setCanceledOnTouchOutside(false)
+
+                        mDialogView.radiogroup_report_d.setOnCheckedChangeListener(
+                            RadioGroup.OnCheckedChangeListener { group, checkedId ->
+                                mDialogView.btn_report_d.isClickable = true
+                                mDialogView.btn_report_d.setBackgroundResource(R.drawable.corner_round_primary)
+                            }
+                        )
+
+                        mDialogView.btn_report_d.setOnClickListener {
+                            val radioId = mDialogView.radiogroup_report_d.checkedRadioButtonId
+                            val checkedRadio = mDialogView.radiogroup_report_d.findViewById<View>(radioId)
+                            val index = mDialogView.radiogroup_report_d.indexOfChild(checkedRadio)
+
+                            val detail:String
+                            when(index){
+                                0 ->{ detail = getString(R.string.spam) }
+                                1 ->{ detail = getString(R.string.abuse_and_slander)}
+                                2 -> {detail = getString(R.string.pornography)}
+                                3 -> {detail = getString(R.string.unauthorized_use)}
+                                else -> {detail = ""}
+                            }
+
+
+
+                            presenter.report(getString(R.string.baseurl), index+1, detail,
+                                arguments?.getInt("photoId")!!, itemsList[position].contents, itemsList[position].id, mAlertDialog, position )
+
+                        }
+
+                        mDialogView.text_etc_report_d.setOnClickListener {
+                            mAlertDialog.dismiss()
+                            reportEtc()
+                        }
                     }
 
-                    itemViewholder.reporter.setOnClickListener {
-                        /** 댓글 신고 처리하는 코드 넣어야함.*/
+
+
+                    itemViewholder.more.setOnClickListener {
+                        val builder = AlertDialog.Builder(context)
+                        val arrayList = ArrayList<String>()
+                        val listener : DialogInterface.OnClickListener
+                        if(itemsList[position].myself){
+                            arrayList.add(getString(R.string.modify))
+                            arrayList.add(getString(R.string.delete))
+
+                            listener = object : DialogInterface.OnClickListener{
+                                override fun onClick(dialog: DialogInterface?, which: Int) {
+                                    when(which){
+                                        0 -> {  //수정 클릭시
+                                            editORdelete(false)
+                                        }
+                                        1 -> {   //삭제 클릭시
+                                            editORdelete(true)
+                                        }
+                                    }
+                                }
+                            }
+                        }else{
+                            arrayList.add(getString(R.string.report))
+
+                            listener = object : DialogInterface.OnClickListener{
+                                override fun onClick(dialog: DialogInterface?, which: Int) {
+                                    when(which){
+                                        0 -> {  //신고 클릭시
+                                            report()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        val adapter = ArrayAdapter<String>(context!!, android.R.layout.simple_list_item_1, arrayList)
+                        builder.setAdapter(adapter, listener)
+                        builder.show()
                     }
+
 
                     //아이템 닉네임 클릭시 이벤트 -> 유저페이지로 이동
                     itemViewholder.nickname.setOnClickListener {
@@ -404,13 +551,8 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                         commentInterListener.userClick(itemsList[position].user.id)
                     }
 
-
-
                 }
 
-
-
-            }else{
 
             }
 
@@ -422,9 +564,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
             val content = itemView!!.findViewById<TextView>(R.id.text_content_comment_i) as TextView
             val date = itemView!!.findViewById<TextView>(R.id.text_date_comment_i) as TextView
 
-            val editor = itemView!!.findViewById<ImageButton>(R.id.imgbtn_edit_comment_i)
-            val remover = itemView!!.findViewById<ImageButton>(R.id.imgbtn_remove_comment_i)
-            val reporter = itemView!!.findViewById<ImageButton>(R.id.imgbtn_report_comment_i)
+            val more = itemView!!.findViewById<ImageButton>(R.id.imgbtn_more_comment_i)
 
         }
 
@@ -440,7 +580,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
             if(boolean) R.color.colorPrimary else R.color.background_grey)))
     }
 
-    override fun showToast(string: String) {
+    fun showToast(string: String) {
         Toast.makeText(this.context, string, Toast.LENGTH_SHORT).show()
     }
 
@@ -454,7 +594,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         Handler().postDelayed({
             start = 0
             refreshTimeStamp = ""
-            presenter.getComments(baseurl, start, photoId)
+            presenter.getComments(baseurl, start, photoId, PHOTO)
         }, 600) //로딩 주기
 
     }
@@ -478,10 +618,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
         var spannableString = SpannableString(text)
 
-//        val startList = ArrayList<Int>()
         for (hash in hashList) {
-//            if(!startList.contains(hash[0])){
-//                startList.add(hash[0])
 
                 val start = hash[0]
                 val end = hash[1]
@@ -493,18 +630,39 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
                     }
                     override fun onClick(widget: View) {
-//                        showToast(text.substring(start,end))
                         presenter.openHashtag(text.substring(start,end))
                     }
                 }, start, end,  Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-//            }
 
         }
-//        logd(TAG, "startList : "+startList.toString())
 
         text_content_comment_f.text = spannableString
         text_content_comment_f.movementMethod = LinkMovementMethod.getInstance()
 
+    }
+
+    override fun serverError(){
+        showToast(getString(R.string.server_connection_error))
+    }
+
+    override fun reportDone(alertDialog: AlertDialog, position:Int){
+        showToast(getString(R.string.report_done))
+        alertDialog.dismiss()
+        commentAdapter.commentDeleted(position)
+    }
+
+    override fun showFailsComment(state: Int) {
+        when(state){
+            1->{
+                showToast(getString(R.string.failed_to_upload_comment))
+            }
+            2->{
+                showToast(getString(R.string.failed_to_edit_comment))
+            }
+            3->{
+                showToast(getString(R.string.failed_to_delete_comment))
+            }
+        }
     }
 
 

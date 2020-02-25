@@ -18,7 +18,7 @@ interface HashtagContract {
 
     interface Presenter{
         fun openPhoto(id:Int)
-        fun getPhotos(baseUrl:String, start:Int, hashtag:String)
+        fun getPhotos(baseUrl:String, start:Int, hashtag:String, fromSearch:Boolean)
 
     }
 }

@@ -12,6 +12,6 @@ fun controlToolbar(back:Int, profile:Int, name:Int, title:Int, more:Int, menu:In
     MainActivity.mToolbar.text_title_toolbar.visibility = title
     MainActivity.mToolbar.img_more_toolbar.visibility = more
     MainActivity.mToolbar.img_menu_toolbar.visibility = menu
-    MainActivity.mToolbar.img_noti_toolbar.visibility = noti
+    MainActivity.mToolbar.frame_noti_toolbar.visibility = noti
     MainActivity.mToolbar.edit_search_toolbar.visibility = search
 }
