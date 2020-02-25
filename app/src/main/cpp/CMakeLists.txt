@@ -51,14 +51,14 @@
 cmake_minimum_required(VERSION 3.4.1)
 
 
-set(pathPROJECT C:/Users/ParkMinSeok/AndroidStudioProjects/Spott)
+set(pathPROJECT C:/apps/github/spott_android)
 set(pathOPENCV C:/OpenCV-android-sdk/sdk)
-set(pathLIBOPENCV_JAVA C:/Users/ParkMinSeok/AndroidStudioProjects/Spott/opencv/native/libs/${ANDROID_ABI}/libopencv_java4.so)
+set(pathLIBOPENCV_JAVA C:/apps/github/spott_android/opencv/native/libs/${ANDROID_ABI}/libopencv_java4.so)
 
 set(CMAKE_VERBOSE_MAKEFILE on)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 
-include_directories(C:/Users/ParkMinSeok/AndroidStudioProjects/Spott/opencv/native/jni/include)
+include_directories(C:/apps/github/spott_android/opencv/native/jni/include)
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.

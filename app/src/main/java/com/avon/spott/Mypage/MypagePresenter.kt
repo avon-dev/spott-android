@@ -1,8 +1,5 @@
 package com.avon.spott.Mypage
 
-import android.graphics.Bitmap
-import com.avon.spott.Data.BooleanResult
-import com.avon.spott.Data.MapCluster
 import com.avon.spott.Data.MypageResult
 import com.avon.spott.Data.Public
 import com.avon.spott.Utils.App
@@ -45,7 +42,7 @@ class MypagePresenter(val mypageView:MypageContract.View):MypageContract.Present
 
     override fun getMyphotos(baseUrl: String) {
 
-        Retrofit(baseUrl).get(App.prefs.temporary_token, "/spott/users/my-posts",  "")
+        Retrofit(baseUrl).get(App.prefs.token, "/spott/users/my-posts",  "")
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 
@@ -81,7 +78,7 @@ class MypagePresenter(val mypageView:MypageContract.View):MypageContract.Present
     }
 
     override fun getNotiCount(baseUrl: String) {
-        Retrofit(baseUrl).get(App.prefs.temporary_token, "/spott/users/my-posts",  "")
+        Retrofit(baseUrl).get(App.prefs.token, "/spott/users/my-posts",  "")
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 
@@ -106,7 +103,7 @@ class MypagePresenter(val mypageView:MypageContract.View):MypageContract.Present
         val public = Public(!isPublic)
         logd(TAG, "public sending : "+Parser.toJson(public))
 
-        Retrofit(baseUrl).patch(App.prefs.temporary_token, "/spott/mypage",  Parser.toJson(public))
+        Retrofit(baseUrl).patch(App.prefs.token, "/spott/mypage",  Parser.toJson(public))
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 

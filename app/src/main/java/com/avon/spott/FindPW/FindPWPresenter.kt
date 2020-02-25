@@ -1,14 +1,15 @@
 package com.avon.spott.FindPW
 
 import android.annotation.SuppressLint
+import com.avon.spott.Data.EmailAuth
 import com.avon.spott.Data.Number
-import com.avon.spott.Data.User
 import com.avon.spott.Utils.*
 import retrofit2.HttpException
 
 class FindPWPresenter(val findPWView: FindPWContract.View) : FindPWContract.Presenter {
 
     private val TAG = "FindPWPresenter"
+    private val ACTION_EMAIL = 1002
 
     init {
         findPWView.presenter = this
@@ -24,7 +25,9 @@ class FindPWPresenter(val findPWView: FindPWContract.View) : FindPWContract.Pres
 
     @SuppressLint("CheckResult")
     override fun sendEmail(email: String, baseUrl: String) {
-        Retrofit(baseUrl).getNonHeader("/spott/email-authen", Parser.toJson(User(email)))
+        findPWView.showLoading()
+
+        Retrofit(baseUrl).getNonHeader("/spott/email-authen", Parser.toJson(EmailAuth(ACTION_EMAIL, email)))
             .subscribe({ response ->
                 logd(TAG, response.body())
                 val number = response.body()?.let { Parser.fromJson<Number>(it) }
@@ -40,6 +43,9 @@ class FindPWPresenter(val findPWView: FindPWContract.View) : FindPWContract.Pres
                         "http exception : code ${throwable.code()}, message ${throwable.message()}"
                     )
                 }
+                findPWView.showError("다시 시도해주세요")
+            }, {
+                logd(TAG, "onComplete()")
             })
     }
 }

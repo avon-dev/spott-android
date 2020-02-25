@@ -19,12 +19,13 @@ import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.avon.spott.Camera.CameraXActivity
 import com.avon.spott.EditCaption.EditCaptionActivity
-import com.avon.spott.R
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
 import com.avon.spott.Main.controlToolbar
 import com.avon.spott.PhotoEnlargementActivity
+import com.avon.spott.R
 import com.avon.spott.Scrap.ScrapFragment.Companion.scrapChange
 import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
@@ -494,10 +495,14 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
     }
 
     override fun showCameraUi(photoUrl: String) {
-        showToast(photoUrl)
+//        showToast(photoUrl)
         /**
          * 여기에 카메라 연결하는 코드 넣으면 됨!!!!!
          *                                    */
+        Intent(context, CameraXActivity::class.java).let {
+            it.putExtra("photoUrl", photoUrl)
+            startActivity(it)
+        }
     }
 
     override fun navigateUp(){

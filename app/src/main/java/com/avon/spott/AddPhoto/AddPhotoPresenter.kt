@@ -1,27 +1,18 @@
 package com.avon.spott.AddPhoto
 
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.net.Uri
-import android.os.Build
 import android.text.Editable
-import android.text.Spanned
-import android.text.style.ForegroundColorSpan
 import com.avon.spott.Data.NewPhoto
 import com.avon.spott.Data.NewPhotoHash
 import com.avon.spott.Mypage.MypageFragment.Companion.mypageChange
 import com.avon.spott.Utils.*
 import com.google.android.gms.maps.model.LatLng
-import kotlinx.android.synthetic.main.activity_add_photo.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.opencv.android.Utils
-import org.opencv.core.Mat
 import retrofit2.HttpException
 import java.io.File
-import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -122,31 +113,31 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
 
             logd(TAG, "sending : "+sending)
 
-//            Retrofit(baseUrl).postPhoto(App.prefs.temporary_token, "/spott/posts", sending, images)
-//                .subscribe({ response ->
-//                    logd(
-//                        TAG,
-//                        "response code: ${response.code()}, response body : ${response.body()}"
-//                    )
-//                    val result = response.body()
-//                    if (result != null) {
-//                        addPhotoView.showToast("성공") /**  성공 메세지 수정해야함.  */
-//                        mypageChange = true
-//                        addPhotoView.navigateUp()
-//                    }
-//                }, { throwable ->
-//                    logd(TAG, throwable.message)
-//                    if (throwable is HttpException) {
-//                        val exception = throwable
-//                        logd(
-//                            TAG,
-//                            "http exception code: ${exception.code()}, http exception message: ${exception.message()}"
-//                        )
-//                        addPhotoView.enableTouching(true)
-//                        addPhotoView.showLoading(false)
-//                        addPhotoView.showToast("서버 연결에 오류가 발생했습니다")
-//                    }
-//                })
+            Retrofit(baseUrl).postPhoto(App.prefs.token, "/spott/posts", sending, images)
+                .subscribe({ response ->
+                    logd(
+                        TAG,
+                        "response code: ${response.code()}, response body : ${response.body()}"
+                    )
+                    val result = response.body()
+                    if (result != null) {
+                        addPhotoView.showToast("성공") /**  성공 메세지 수정해야함.  */
+                        mypageChange = true
+                        addPhotoView.navigateUp()
+                    }
+                }, { throwable ->
+                    logd(TAG, throwable.message)
+                    if (throwable is HttpException) {
+                        val exception = throwable
+                        logd(
+                            TAG,
+                            "http exception code: ${exception.code()}, http exception message: ${exception.message()}"
+                        )
+                        addPhotoView.enableTouching(true)
+                        addPhotoView.showLoading(false)
+                        addPhotoView.showToast("서버 연결에 오류가 발생했습니다")
+                    }
+                })
 
 
         }

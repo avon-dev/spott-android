@@ -103,6 +103,13 @@ class Retrofit(baseUrl:String) {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    fun patchNonHeader(url:String, sending:String): Observable<Response<String>> {
+        return retrofitService.patchNonHeader(url, sending)
+            .subscribeOn(Schedulers.io())
+            .map { t -> if (t.isSuccessful) t else throw HttpException(t) }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
     fun postFieldNonHeader(url: String, sending: String): Observable<Response<String>> {
         return retrofitService.postFieldNonHeader(url, sending)
             .subscribeOn(Schedulers.io())

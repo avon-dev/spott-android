@@ -1,5 +1,6 @@
 package com.avon.spott.FindPW
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -7,10 +8,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.avon.spott.Camera.EMAIL_FIND_RESENDING_MILLS
 import com.avon.spott.Data.Number
+import com.avon.spott.NewPassword.NewPasswordActivity
 import com.avon.spott.R
 import kotlinx.android.synthetic.main.activity_find_pw.*
 import kotlinx.android.synthetic.main.toolbar.*
 
+const val FIND_PW = "find_pw"
 class FindPWActivity : AppCompatActivity(), FindPWContract.View, View.OnClickListener {
 
     override lateinit var presenter: FindPWContract.Presenter
@@ -35,17 +38,22 @@ class FindPWActivity : AppCompatActivity(), FindPWContract.View, View.OnClickLis
     }
 
     private fun init() {
+        // 임시
+        edit_email_findpw_a.setText("baek5@seunghyun.com")
+
         findPWPresenter = FindPWPresenter(this)
 
         text_title_toolbar.text = getString(R.string.findpw)
 
         img_back_toolbar.setOnClickListener(this)
         btn_send_findpw_a.setOnClickListener(this)
+        btn_confirm_findpw_a.setOnClickListener(this)
 
         edit_email_findpw_a.addTextChangedListener {
             presenter.isEmail(it.toString())
         }
 
+        text_block_findpw_a.setOnTouchListener { v, event -> true }
     }
 
     override fun navigateUp() {
@@ -63,6 +71,8 @@ class FindPWActivity : AppCompatActivity(), FindPWContract.View, View.OnClickLis
     }
 
     override fun getNumber(number: Number) {
+        hideLoading()
+
         this.transmitable = false
         this.number = number
         this.startTime = System.currentTimeMillis()
@@ -80,8 +90,21 @@ class FindPWActivity : AppCompatActivity(), FindPWContract.View, View.OnClickLis
             btn_send_findpw_a.setBackgroundResource(R.drawable.corner_round_primary)
             transmitable = true
         }, resending)
+    }
 
+    override fun showError(msg: String) {
+        hideLoading()
+        Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
+    }
 
+    override fun showLoading() {
+        text_block_findpw_a.visibility = View.VISIBLE
+        progress_findpw_a.visibility = View.VISIBLE
+    }
+
+    override fun hideLoading() {
+        text_block_findpw_a.visibility = View.GONE
+        progress_findpw_a.visibility = View.GONE
     }
 
     override fun onClick(v: View?) {
@@ -101,6 +124,20 @@ class FindPWActivity : AppCompatActivity(), FindPWContract.View, View.OnClickLis
                     Toast.makeText(
                         applicationContext,
                         "${remainingTime}초 후 시도해주세요",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+            R.id.btn_confirm_findpw_a -> {
+                if(edit_number_findpw_a.text.toString().equals(number.code)) {
+                    Intent(this@FindPWActivity, NewPasswordActivity::class.java).let {
+                        it.putExtra(FIND_PW, edit_email_findpw_a.text.toString())
+                        startActivity(it)
+                    }
+                } else {
+                    Toast.makeText(
+                        this@FindPWActivity,
+                        getString(R.string.toast_wrong_number_findpw_a),
                         Toast.LENGTH_SHORT
                     ).show()
                 }

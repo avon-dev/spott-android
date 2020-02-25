@@ -42,10 +42,12 @@ class EmailLoginPresenter(val emailLoginView: EmailLoginContract.View) :
             if (throwable is HttpException) {
                 val exception = throwable
                 loge(TAG, "http exception code: ${exception.code()}, http exception message: ${exception.message()}")
-                if(exception.code() == HTTP_BAD_REQUEST) {
+                if(exception.code() == HTTP_BAD_REQUEST) { // 잘못된 요청
                     emailLoginView.showError("이메일, 비밀번호를 확인해주세요")
-                } else if (exception.code() == HTTP_UNAUTHORIZED) {
+                } else if (exception.code() == HTTP_UNAUTHORIZED) { // 권한 없을 때
                     emailLoginView.showError("이메일, 비밀번호를 확인해주세요")
+                } else {
+                    emailLoginView.showError("다시 시도해주세요")
                 }
             }
         })

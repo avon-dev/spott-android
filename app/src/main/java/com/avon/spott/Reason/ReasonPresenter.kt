@@ -21,7 +21,7 @@ class ReasonPresenter(val reasonView:ReasonContract.View):ReasonContract.Present
     }
 
     override fun getReason(baseUrl: String, notiId: Int) {
-        Retrofit(baseUrl).get(App.prefs.temporary_token,"/spott/notice/"+notiId.toString(), "")
+        Retrofit(baseUrl).get(App.prefs.token,"/spott/notice/"+notiId.toString(), "")
 
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")

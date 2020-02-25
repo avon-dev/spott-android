@@ -23,6 +23,12 @@ class CameraXActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera_x)
         container = findViewById(R.id.fragment_container_camerax)
+
+        val receive = intent.extras
+
+        if(receive != null) {
+            photoUrl = receive.getString("photoUrl")
+        }
     }
 
     override fun onResume() {
@@ -35,22 +41,34 @@ class CameraXActivity : AppCompatActivity() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         return when (keyCode) {
-            KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP, KeyEvent.KEYCODE_BACK -> {
+            KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP -> {
                 val intent = Intent(KEY_EVENT_ACTION).apply { putExtra(KEY_EVENT_EXTRA, keyCode) }
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
                 true
             }
-//            KeyEvent.KEYCODE_BACK -> {
+//            KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP, KeyEvent.KEYCODE_BACK -> {
 //                val intent = Intent(KEY_EVENT_ACTION).apply { putExtra(KEY_EVENT_EXTRA, keyCode) }
 //                LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
 //                true
 //            }
+            KeyEvent.KEYCODE_BACK -> {
+                val intent = Intent(KEY_EVENT_ACTION).apply { putExtra(KEY_EVENT_EXTRA, keyCode) }
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+                true
+            }
             else -> super.onKeyDown(keyCode, event)
         }
     }
 
 
+    override fun onDestroy() {
+        photoUrl = null
+        super.onDestroy()
+    }
+
     companion object {
+
+        private var photoUrl:String? = null
 
         fun getOutputDirectory(context: Context): File {
             val appContext = context.applicationContext
@@ -58,6 +76,10 @@ class CameraXActivity : AppCompatActivity() {
                 File(it, "Spott").apply { mkdirs() } }
             return if (mediaDir != null && mediaDir.exists())
                 mediaDir else appContext.filesDir
+        }
+
+        fun getPhotoURI():String? {
+            return photoUrl
         }
     }
 
