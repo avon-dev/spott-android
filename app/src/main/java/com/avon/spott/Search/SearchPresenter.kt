@@ -5,9 +5,9 @@ import com.avon.spott.Data.Search
 import com.avon.spott.Data.SearchResult
 import com.avon.spott.Utils.App
 import com.avon.spott.Utils.Parser
+import com.avon.spott.Utils.Retrofit
 import com.avon.spott.Utils.logd
 import retrofit2.HttpException
-import com.avon.spott.Utils.Retrofit
 
 class SearchPresenter(val searchView:SearchContract.View):SearchContract.Presenter {
 
@@ -25,7 +25,7 @@ class SearchPresenter(val searchView:SearchContract.View):SearchContract.Present
 
     override fun deleteRecent(baseUrl: String, position:Int) {
 
-        Retrofit(baseUrl).delete(App.prefs.temporary_token,"/spott/recent/"+position.toString(), "")
+        Retrofit(baseUrl).delete(App.prefs.token,"/spott/recent/"+position.toString(), "")
 
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
@@ -51,7 +51,7 @@ class SearchPresenter(val searchView:SearchContract.View):SearchContract.Present
     }
 
     override fun deleteAll(baseUrl: String) {
-        Retrofit(baseUrl).delete(App.prefs.temporary_token,"/spott/recent/-1", "")
+        Retrofit(baseUrl).delete(App.prefs.token,"/spott/recent/-1", "")
 
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
@@ -76,7 +76,7 @@ class SearchPresenter(val searchView:SearchContract.View):SearchContract.Present
 
     override fun getRecent(baseUrl: String) {
 
-        Retrofit(baseUrl).get(App.prefs.temporary_token,"/spott/recent", "")
+        Retrofit(baseUrl).get(App.prefs.token,"/spott/recent", "")
 
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
@@ -112,7 +112,7 @@ class SearchPresenter(val searchView:SearchContract.View):SearchContract.Present
 
         logd(TAG, "sending : " + sending)
 
-        Retrofit(baseUrl).get(App.prefs.temporary_token,"/spott/search", sending)
+        Retrofit(baseUrl).get(App.prefs.token,"/spott/search", sending)
 
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")

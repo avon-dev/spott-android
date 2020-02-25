@@ -32,7 +32,7 @@ class HashtagPresenter(val hashtagView : HashtagContract.View):HashtagContract.P
 
         logd(TAG, "hashtagPaging : $hashtagPaging")
 
-        Retrofit(baseUrl).get(App.prefs.temporary_token,"/spott/tag", Parser.toJson(hashtagPaging))
+        Retrofit(baseUrl).get(App.prefs.token,"/spott/tag", Parser.toJson(hashtagPaging))
 
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")

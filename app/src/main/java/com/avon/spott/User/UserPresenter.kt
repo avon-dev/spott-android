@@ -7,7 +7,6 @@ import com.avon.spott.Utils.App
 import com.avon.spott.Utils.Parser
 import com.avon.spott.Utils.Retrofit
 import com.avon.spott.Utils.logd
-import com.google.android.gms.maps.model.LatLng
 import retrofit2.HttpException
 
 class UserPresenter (val userView:UserContract.View):UserContract.Presenter {
@@ -33,7 +32,7 @@ class UserPresenter (val userView:UserContract.View):UserContract.Presenter {
 
         logd(TAG, "sending  : " + Parser.toJson(fromSearch))
 
-        Retrofit(baseurl).get(App.prefs.temporary_token, "/spott/user/"+userId.toString()+"/posts",  Parser.toJson(fromSearch))
+        Retrofit(baseurl).get(App.prefs.token, "/spott/user/"+userId.toString()+"/posts",  Parser.toJson(fromSearch))
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 

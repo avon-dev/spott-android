@@ -26,7 +26,7 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
 
         val homePaging = commentPaging(start, commentView.refreshTimeStamp, comeFrom)
         logd(TAG, "파서테스트 = " + Parser.toJson(homePaging))
-        Retrofit(baseurl).get(App.prefs.temporary_token,"/spott/posts/"+photoId.toString()+"/comment", Parser.toJson(homePaging))
+        Retrofit(baseurl).get(App.prefs.token,"/spott/posts/"+photoId.toString()+"/comment", Parser.toJson(homePaging))
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 
@@ -70,7 +70,7 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
 
         val sending = CommentPost(caption)
 
-        Retrofit(baseurl).post(App.prefs.temporary_token,"/spott/posts/"+photoId.toString()+"/comment", Parser.toJson(sending))
+        Retrofit(baseurl).post(App.prefs.token,"/spott/posts/"+photoId.toString()+"/comment", Parser.toJson(sending))
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 
@@ -113,7 +113,7 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
         logd(TAG, "URL은? "+"/spott/posts/"+photoId.toString()+"/comment/"+commentId.toString())
         logd(TAG, "Sending은? "+Parser.toJson(sending))
 
-        Retrofit(baseurl).patch(App.prefs.temporary_token,"/spott/posts/"+photoId.toString()+"/comment/"+commentId.toString(),
+        Retrofit(baseurl).patch(App.prefs.token,"/spott/posts/"+photoId.toString()+"/comment/"+commentId.toString(),
             Parser.toJson(sending))
 
             .subscribe({ response ->
@@ -145,7 +145,7 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
 
     override fun deleteComment(baseurl: String, photoId: Int, commentId: Int,
                       alertDialog: AlertDialog, position: Int){
-        Retrofit(baseurl).delete(App.prefs.temporary_token,"/spott/posts/"+photoId.toString()+"/comment/"+commentId.toString(),
+        Retrofit(baseurl).delete(App.prefs.token,"/spott/posts/"+photoId.toString()+"/comment/"+commentId.toString(),
             "")
 
             .subscribe({ response ->
@@ -199,7 +199,7 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
         val sending = Parser.toJson(reportComment)
         logd(TAG, "sending : $sending")
 
-        Retrofit(baseurl).post(App.prefs.temporary_token, "spott/report",  sending)
+        Retrofit(baseurl).post(App.prefs.token, "spott/report",  sending)
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 

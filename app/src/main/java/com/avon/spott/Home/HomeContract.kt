@@ -21,7 +21,7 @@ interface HomeContract {
         fun openPhoto(id:Int)
         fun openSearch()
         fun getPhotos(baseUrl:String, start:Int, action:Int)
-        fun getToken(baseUrl: String, start:Int, action:Int)
+//        fun getToken(baseUrl: String, start:Int, action:Int)
     }
 
 }

@@ -14,16 +14,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.avon.spott.Data.HomeItem
-import com.avon.spott.R
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
-import com.avon.spott.Utils.DateTimeFormatter.Companion.formatCreated
+import com.avon.spott.R
 import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.fragment_home.view.*
-import java.text.DateFormat
-import java.util.*
-import kotlin.collections.ArrayList
 
 class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
@@ -110,7 +105,7 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
         if(!checkInit) {
             //처음 사진을 가져오는 코드 (처음 이후에는 리프레쉬 전까지 가져오지않는다.)
-            presenter.getToken(getString(R.string.baseurl), start, ACTION)
+            presenter.getPhotos(getString(R.string.baseurl), start, ACTION)
 
             checkInit = true
         }

@@ -12,7 +12,7 @@ class MySharedPreferences (context: Context) {
     val PREF_ACCESS_TOKEN = "access"
 
     /**  토큰 테스트용!!!!! 임시 토큰 2020-02-04   */
-    val PRED_KEY_TEST_FOR_TOKEN = "temporary_token"
+//    val PRED_KEY_TEST_FOR_TOKEN = "temporary_token"
 
     // 파일 이름과 데이터를 저장할 Key 값을 만들고 prefs 인스턴스 초기화
     val prefs: SharedPreferences = context.getSharedPreferences(PREFS_FILENAME, Context.MODE_PRIVATE)
@@ -33,9 +33,9 @@ class MySharedPreferences (context: Context) {
         set(value) = prefs.edit().putFloat(PREF_KEY_POSITION_ZOOM,  value).apply()
 
     /**  토큰 테스트용!!!!! 임시 토큰 2020-02-04   */
-    var temporary_token:String //임시 토큰
-        get() = prefs.getString(PRED_KEY_TEST_FOR_TOKEN, "")
-        set(value) = prefs.edit().putString(PRED_KEY_TEST_FOR_TOKEN, value).apply()
+//    var temporary_token:String //임시 토큰
+//        get() = prefs.getString(PRED_KEY_TEST_FOR_TOKEN, "")
+//        set(value) = prefs.edit().putString(PRED_KEY_TEST_FOR_TOKEN, value).apply()
 
     val token:String
         get() = prefs.getString(PREF_ACCESS_TOKEN, "")

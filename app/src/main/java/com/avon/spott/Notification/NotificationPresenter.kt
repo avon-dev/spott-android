@@ -1,8 +1,6 @@
 package com.avon.spott.Notification
 
-import android.app.AlertDialog
 import com.avon.spott.Data.BooleanResult
-import com.avon.spott.Data.HomePaging
 import com.avon.spott.Data.NotiPaging
 import com.avon.spott.Data.NotiResult
 import com.avon.spott.Utils.App
@@ -33,7 +31,7 @@ class NotificationPresenter (val notiView: NotificationContract.View) : Notifica
 
         val paging = NotiPaging(start, notiView.refreshTimeStamp)
 
-        Retrofit(baseUrl).get(App.prefs.temporary_token,"/spott/notice", Parser.toJson(paging))
+        Retrofit(baseUrl).get(App.prefs.token,"/spott/notice", Parser.toJson(paging))
 
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
@@ -68,7 +66,7 @@ class NotificationPresenter (val notiView: NotificationContract.View) : Notifica
     }
 
     override fun deleteNoti(baseUrl: String, notiId: Int, position: Int) {
-        Retrofit(baseUrl).delete(App.prefs.temporary_token,"/spott/notice/"+notiId.toString(),"")
+        Retrofit(baseUrl).delete(App.prefs.token,"/spott/notice/"+notiId.toString(),"")
 
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
