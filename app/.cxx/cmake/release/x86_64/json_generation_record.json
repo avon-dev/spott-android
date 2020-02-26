@@ -9,18 +9,6 @@
   },
   {
     "level": "INFO",
-    "message": "- force flag, will remove stale json folder"
-  },
-  {
-    "level": "INFO",
-    "message": "- expected json C:\\apps\\github\\spott_android\\app\\.cxx\\cmake\\release\\x86_64\\android_gradle_build.json file is not present, will remove stale json folder"
-  },
-  {
-    "level": "INFO",
-    "message": "- missing previous command file C:\\apps\\github\\spott_android\\app\\.cxx\\cmake\\release\\x86_64\\build_command.txt, will remove stale json folder"
-  },
-  {
-    "level": "INFO",
     "message": "- command changed from previous, will remove stale json folder"
   },
   {

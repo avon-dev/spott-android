@@ -1,0 +1,7 @@
+Executable : C:\Users\BAEK\AppData\Local\Android\Sdk\cmake\3.10.2.4988404\bin\ninja.exe
+arguments : 
+-C
+C:\apps\github\spott_android\app\.cxx\cmake\debug\x86
+native-lib
+jvmArgs : 
+

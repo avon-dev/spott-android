@@ -486,7 +486,7 @@ class CameraXFragment : Fragment() {
 //            startActivityForResult(pickPhoto, REQUEST_CODE)
 
                 Navigation.findNavController(requireActivity(), R.id.fragment_container_camerax).navigate(
-                    CameraXFragmentDirections.actionCameraToImage()
+                    CameraXFragmentDirections.actionCameraToGallery()
                 )
         }
 

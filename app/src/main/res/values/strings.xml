@@ -135,7 +135,7 @@
 
     <string name="private_status">비공개 상태입니다</string>
     <string name="private_account">비공개 계정입니다</string>
-    
+
     <string name="text_terms_of_service">이용 약관</string>
     <string name="text_open_source_library">오픈 소스 라이브러리</string>
     <string name="inquiry">문의하기</string>

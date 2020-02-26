@@ -136,6 +136,9 @@ class GalleryFragment : Fragment() {
 
             holder.itemView.setOnClickListener {
                 Toast.makeText(context, imgList[position].data, Toast.LENGTH_SHORT).show()
+                Navigation.findNavController(requireActivity(), R.id.fragment_container_camerax).navigate(
+                    GalleryFragmentDirections.actionGalleryToImage()
+                )
             }
         }
 
