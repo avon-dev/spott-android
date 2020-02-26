@@ -1,0 +1,8 @@
+Executable : C:\Users\ParkMinSeok\AppData\Local\Android\Sdk\cmake\3.6.4111459\bin\cmake.exe
+arguments : 
+--build
+C:\Users\ParkMinSeok\AndroidStudioProjects\Spott\opencv\.cxx\cmake\debug\x86_64
+--target
+opencv_jni_shared
+jvmArgs : 
+

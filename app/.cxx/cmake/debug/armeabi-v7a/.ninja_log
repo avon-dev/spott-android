@@ -1,3 +1,25 @@
 # ninja log v5
-1	3257	604323534	CMakeFiles/native-lib.dir/native-lib.cpp.o	a426bf0f9e604d53
-3264	3618	604323534	C:/apps/github/spott_android/app/build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so	a6e649d2f76d5fc5
+1	1857	604324769	CMakeFiles/native-lib.dir/native-lib.cpp.o	358a6879812a1741
+1860	2035	604324769	C:/Users/ParkMinSeok/AndroidStudioProjects/Spott/app/build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so	8797995cc3809395
+0	10	0	clean	f46d4348659d85c6
+1	12	0	clean	f46d4348659d85c6
+4	5628	604330088	CMakeFiles/native-lib.dir/native-lib.cpp.o	358a6879812a1741
+5628	5865	604330088	C:/Users/ParkMinSeok/AndroidStudioProjects/Spott/app/build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so	8797995cc3809395
+5	1966	604335202	CMakeFiles/native-lib.dir/native-lib.cpp.o	358a6879812a1741
+1967	2181	604335202	C:/Users/ParkMinSeok/AndroidStudioProjects/Spott/app/build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so	8797995cc3809395
+4	1798	604344494	CMakeFiles/native-lib.dir/native-lib.cpp.o	358a6879812a1741
+1798	1950	604344494	C:/Users/ParkMinSeok/AndroidStudioProjects/Spott/app/build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so	8797995cc3809395
+4	1807	604344783	CMakeFiles/native-lib.dir/native-lib.cpp.o	358a6879812a1741
+1807	1962	604344784	C:/Users/ParkMinSeok/AndroidStudioProjects/Spott/app/build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so	8797995cc3809395
+4	1773	604344887	CMakeFiles/native-lib.dir/native-lib.cpp.o	358a6879812a1741
+1774	1923	604344887	C:/Users/ParkMinSeok/AndroidStudioProjects/Spott/app/build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so	8797995cc3809395
+4	1778	604344977	CMakeFiles/native-lib.dir/native-lib.cpp.o	358a6879812a1741
+1778	1926	604344977	C:/Users/ParkMinSeok/AndroidStudioProjects/Spott/app/build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so	8797995cc3809395
+3	1776	604345095	CMakeFiles/native-lib.dir/native-lib.cpp.o	358a6879812a1741
+1776	1927	604345095	C:/Users/ParkMinSeok/AndroidStudioProjects/Spott/app/build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so	8797995cc3809395
+3	1836	604345163	CMakeFiles/native-lib.dir/native-lib.cpp.o	358a6879812a1741
+1836	1987	604345163	C:/Users/ParkMinSeok/AndroidStudioProjects/Spott/app/build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so	8797995cc3809395
+4	1862	604345699	CMakeFiles/native-lib.dir/native-lib.cpp.o	358a6879812a1741
+1862	2014	604345699	C:/Users/ParkMinSeok/AndroidStudioProjects/Spott/app/build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so	8797995cc3809395
+13	2182	604426869	CMakeFiles/native-lib.dir/native-lib.cpp.o	358a6879812a1741
+2182	2422	604426869	C:/Users/ParkMinSeok/AndroidStudioProjects/Spott/app/build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so	8797995cc3809395

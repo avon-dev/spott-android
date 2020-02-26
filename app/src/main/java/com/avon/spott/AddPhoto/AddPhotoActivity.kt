@@ -80,18 +80,6 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         //처음 키보드 올라오기 방지용
         text_guide_addphoto_a.requestFocus()
 
-        //깃 테스트
-//        text_guide_addphoto_a.setOnClickListener {
-//            val path = getPath(Uri.parse(intent.getStringExtra("photo")))
-//            val options = BitmapFactory.Options()
-//            options.inSampleSize = 4
-//            mInputImage = BitmapFactory.decodeFile(path, options)
-//
-//            if (mInputImage != null) {
-//                detectEdgeUsingJNI()
-//            }
-//        }
-
         init()
     }
 
@@ -102,29 +90,27 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         }
     }
 
-    external fun detectEdgeJNI(inputImage: Long, outputImage: Long, th1: Int, th2: Int)
+    external fun detectEdgeJNI(inputImage: Long, outputImage: Long, th1: Int, th2: Int, th3:Int)
 
-    override fun detectEdgeUsingJNI(mInputImage:Bitmap) : File {
+    override fun detectEdgeUsingJNI(mInputImage:Bitmap) : Bitmap {
 
         mInputImage!!.setHasAlpha(true)
         val src = Mat()
         Utils.bitmapToMat(mInputImage, src)
         val edge = Mat()
-        detectEdgeJNI(src.nativeObjAddr, edge.nativeObjAddr, 50, 150)
+        detectEdgeJNI(src.nativeObjAddr, edge.nativeObjAddr, 3, 9, 13)
         Utils.matToBitmap(edge, mInputImage)
 
-        //파일로 저장 및 크기 확인
-        val timeStamp = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
-        val file = File(applicationContext.cacheDir, timeStamp+"canny.jpg")
-        file.createNewFile()
-        val out = FileOutputStream(file)
-        mInputImage!!.compress(Bitmap.CompressFormat.JPEG, 100 , out)
-        out.close()
+//        //파일로 저장 및 크기 확인
+//        val timeStamp = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
+//        val file = File(applicationContext.cacheDir, timeStamp+"back.png")
+//        file.createNewFile()
+//        val out = FileOutputStream(file)
+//        mInputImage!!.compress(Bitmap.CompressFormat.PNG, 100 , out)
+//        out.close()
 
-        return file
-//
-//        val size = (file.length()/1024).toString() //사이즈 크기 kB
-//        Log.d(TAG,"size2 : $size")
+        return mInputImage
+
     }
 
     private fun init(){
@@ -150,7 +136,6 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
                     return
                 }
                 presenter.sendPhoto(getString(R.string.baseurl),intent.getStringExtra("cropPhoto"),
-                    intent.getStringExtra("photo"),
                     edit_caption_addphoto_a.text.toString(), markerLatLng, hashArrayList)
             }
             R.id.img_back_toolbar ->{ presenter.navigateUp() }
@@ -271,6 +256,20 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
 
     override fun showFindPlaceUi() {
         startActivity(Intent(this, FindPlaceActivity::class.java))
+    }
+
+    override fun makeFile(bitmap:Bitmap, name:String, quality:Int, type:Int) : File{
+        val timeStamp = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
+        val file = File(applicationContext.cacheDir, timeStamp+name)
+        file.createNewFile()
+        val out = FileOutputStream(file)
+
+        bitmap!!.compress(if(type ==0) Bitmap.CompressFormat.JPEG else Bitmap.CompressFormat.PNG
+            , quality , out)
+
+        out.close()
+
+        return file
     }
 
 }

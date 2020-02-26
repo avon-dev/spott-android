@@ -6,48 +6,41 @@ using namespace cv;
 extern "C" JNIEXPORT void JNICALL
 Java_com_avon_spott_AddPhoto_AddPhotoActivity_detectEdgeJNI(JNIEnv *env, jobject instance,
         jlong inputImage, jlong outputImage,
-        jint th1, jint th2) {
+        jint th1, jint th2, jint th3) {
 
-// TODO
-Mat &inputMat = *(Mat *) inputImage;
-Mat &outputMat = *(Mat *) outputImage;
-
-//Canny로 윤곽선 따오기
-cvtColor(inputMat, outputMat, COLOR_RGB2GRAY);
-Canny(outputMat, outputMat, th1, th2);
+    Mat &inputMat = *(Mat *) inputImage;
+    Mat &outputMat = *(Mat *) outputImage;
 
 
-//색상 반전
-Mat srcImage = outputMat;
+    cvtColor(inputMat, outputMat, COLOR_RGB2GRAY);
+
+    medianBlur(outputMat, outputMat, th1);
+    adaptiveThreshold(outputMat, outputMat, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY,  th2, th3);
+
+    bitwise_not ( outputMat, outputMat); //색상 반전
 
 
-Mat_<uchar>image(srcImage);
-Mat_<uchar>destImage(srcImage.size());
+    cvtColor(outputMat, outputMat, COLOR_GRAY2RGBA);
 
-for(int y = 0 ; y < image.rows ; y++){
-for(int x = 0; x < image.cols; x++){
-uchar r = image(y,x);
-destImage(y,x) = 255 - r;
+    for(int i = 0; i<outputMat.rows;i++){ // 검정색(면) 부분 투명으로 //왜 선부분을 제외한 면부부만 투명이 되는지 모르겠음...
+        for(int j=0;j<outputMat.cols;j++){
+            outputMat.at<cv::Vec4b>(i,j)[3]=0;
+        }
+    }
 
-//            Vec4b & color = destImage.at<Vec4b>(y,x);
-//            if(destImage(y,x)==255){
-//                // get pixel
-//                // ... do something to the color ....
-//
-//                color[1] =232;
-//                color[2] =23;
-//                color[3] =122;
-//
-//
-//            }
-//
-//            destImage.at<Vec4b>(y,x) = color;
+    for(int i = 0; i<outputMat.rows;i++){ // 하얀색(윤곽선) 부분 하늘색으로
+        for(int j=0;j<outputMat.cols;j++){
+            if(outputMat.at<cv::Vec4b>(i,j)[0] == 255 && outputMat.at<cv::Vec4b>(i,j)[1] == 255 && outputMat.at<cv::Vec4b>(i,j)[2] ==255 )
+            {
+                outputMat.at<cv::Vec4b>(i,j)[0]=86; //86
+                outputMat.at<cv::Vec4b>(i,j)[1]=144; //144
+                outputMat.at<cv::Vec4b>(i,j)[2]=232; //232
+                outputMat.at<cv::Vec4b>(i,j)[3]=255;
+            }
+        }
+    }
 
 
-}
-}
 
-
-outputMat = destImage.clone();
 }
 

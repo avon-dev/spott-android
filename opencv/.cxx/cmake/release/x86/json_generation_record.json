@@ -5,47 +5,7 @@
   },
   {
     "level": "INFO",
-    "message": "rebuilding JSON C:\\apps\\github\\spott_android\\opencv\\.cxx\\cmake\\release\\x86\\android_gradle_build.json due to:"
-  },
-  {
-    "level": "INFO",
-    "message": "- force flag, will remove stale json folder"
-  },
-  {
-    "level": "INFO",
-    "message": "- command changed from previous, will remove stale json folder"
-  },
-  {
-    "level": "INFO",
-    "message": "- a dependent build file changed"
-  },
-  {
-    "level": "INFO",
-    "message": "  - C:\\apps\\github\\spott_android\\opencv\\libcxx_helper\\CMakeLists.txt"
-  },
-  {
-    "level": "INFO",
-    "message": "removing stale contents from \u0027C:\\apps\\github\\spott_android\\opencv\\.cxx\\cmake\\release\\x86\u0027"
-  },
-  {
-    "level": "INFO",
-    "message": "created folder \u0027C:\\apps\\github\\spott_android\\opencv\\.cxx\\cmake\\release\\x86\u0027"
-  },
-  {
-    "level": "INFO",
-    "message": "executing cmake Executable : C:\\Users\\BAEK\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe\narguments : \n-HC:\\apps\\github\\spott_android\\opencv\\libcxx_helper\n-BC:\\apps\\github\\spott_android\\opencv\\.cxx\\cmake\\release\\x86\n-DANDROID_ABI\u003dx86\n-DANDROID_PLATFORM\u003dandroid-21\n-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003dC:\\apps\\github\\spott_android\\opencv\\build\\intermediates\\cmake\\release\\obj\\x86\n-DCMAKE_BUILD_TYPE\u003dRelease\n-DANDROID_NDK\u003dC:\\Users\\BAEK\\AppData\\Local\\Android\\Sdk\\ndk\\21.0.6113669\n-DCMAKE_SYSTEM_NAME\u003dAndroid\n-DCMAKE_ANDROID_ARCH_ABI\u003dx86\n-DCMAKE_SYSTEM_VERSION\u003d21\n-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON\n-DCMAKE_ANDROID_NDK\u003dC:\\Users\\BAEK\\AppData\\Local\\Android\\Sdk\\ndk\\21.0.6113669\n-DCMAKE_TOOLCHAIN_FILE\u003dC:\\Users\\BAEK\\AppData\\Local\\Android\\Sdk\\ndk\\21.0.6113669\\build\\cmake\\android.toolchain.cmake\n-G Ninja\n-DCMAKE_MAKE_PROGRAM\u003dC:\\Users\\BAEK\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\ninja.exe\n-DANDROID_STL\u003dc++_shared\njvmArgs : \n\n"
-  },
-  {
-    "level": "INFO",
-    "message": "done executing cmake"
-  },
-  {
-    "level": "INFO",
-    "message": "write build output C:\\apps\\github\\spott_android\\opencv\\.cxx\\cmake\\release\\x86\\build_output.txt"
-  },
-  {
-    "level": "INFO",
-    "message": "write command file C:\\apps\\github\\spott_android\\opencv\\.cxx\\cmake\\release\\x86\\build_command.txt"
+    "message": "JSON \u0027C:\\Users\\ParkMinSeok\\AndroidStudioProjects\\Spott\\opencv\\.cxx\\cmake\\release\\x86\\android_gradle_build.json\u0027 was up-to-date"
   },
   {
     "level": "INFO",
