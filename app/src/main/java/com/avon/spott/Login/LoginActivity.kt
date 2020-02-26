@@ -15,19 +15,12 @@ import com.avon.spott.Main.MainActivity
 import com.avon.spott.R
 import com.avon.spott.Utils.logd
 import com.avon.spott.Utils.loge
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
-import com.facebook.GraphRequest
-import com.facebook.login.LoginManager
-import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import kotlinx.android.synthetic.main.activity_login.*
-import java.util.*
 
 
 class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListener {
@@ -39,7 +32,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
     private val TAG = "LoginActivity"
 
 
-    private lateinit var callbackManager:CallbackManager
+//    private lateinit var callbackManager:CallbackManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,53 +50,53 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         text_signup_login_a.setOnClickListener(this)
         btn_facebooklogin_a.setOnClickListener(this)
 
-        callbackManager = CallbackManager.Factory.create();
+//        callbackManager = CallbackManager.Factory.create();
 
 
 //        btn_facebooklogin_a.setReadPermissions("email")
-        btn_facebooklogin_a.setPermissions(Arrays.asList("email"))
+//        btn_facebooklogin_a.setPermissions(Arrays.asList("email"))
 
 //        val loginButton = findViewById(R.id.btn_facebooklogin_a) as LoginButton
 
         // Callback registration
-        btn_facebooklogin_a.registerCallback(callbackManager, object :
-            FacebookCallback<LoginResult?> {
-            override fun onSuccess(loginResult: LoginResult?) { // App code
-
-                if(loginResult != null) {
-                    logd(TAG, "success: ${loginResult.accessToken}")
-
-                    val request = GraphRequest.newMeRequest(loginResult.accessToken, GraphRequest.GraphJSONObjectCallback { jsonObject, response ->
-                        try {
-                            if(jsonObject.has("email")) { // 이메일을 허락해줬을 때
-                                logd(TAG, "fb email: " + jsonObject.getString("email"))
-                                Toast.makeText(this@LoginActivity, "페북 로그인 성공", Toast.LENGTH_SHORT).show()
-                            } else { // 이메일을 허락하지 않았을 때
-                                // 로그인 실패로 간주하고 권한을 허락해달라고 해야 함.
-                                LoginManager.getInstance().logOut()
-//                                btn_facebooklogin_a.simulateClick()
-                                Toast.makeText(this@LoginActivity, "페북 로그인 실패 (권한이 필요합니다)", Toast.LENGTH_SHORT).show()
-                            }
-                        } catch (e:Exception) {
-                            e.printStackTrace()
-                        }
-                    })
-
-                    val parameter = Bundle()
-                    parameter.putString("fields", "id,name,email");
-                    request.parameters = parameter
-                    request.executeAsync()
-                }
-            }
-
-            override fun onCancel() { // App code
-            }
-
-            override fun onError(exception: FacebookException) { // App code
-                loge(TAG, "${exception.message}")
-                exception.printStackTrace()
-            }
-        })
+//        btn_facebooklogin_a.registerCallback(callbackManager, object :
+//            FacebookCallback<LoginResult?> {
+//            override fun onSuccess(loginResult: LoginResult?) { // App code
+//
+//                if(loginResult != null) {
+//                    logd(TAG, "success: ${loginResult.accessToken}")
+//
+//                    val request = GraphRequest.newMeRequest(loginResult.accessToken, GraphRequest.GraphJSONObjectCallback { jsonObject, response ->
+//                        try {
+//                            if(jsonObject.has("email")) { // 이메일을 허락해줬을 때
+//                                logd(TAG, "fb email: " + jsonObject.getString("email"))
+//                                Toast.makeText(this@LoginActivity, "페북 로그인 성공", Toast.LENGTH_SHORT).show()
+//                            } else { // 이메일을 허락하지 않았을 때
+//                                // 로그인 실패로 간주하고 권한을 허락해달라고 해야 함.
+//                                LoginManager.getInstance().logOut()
+////                                btn_facebooklogin_a.simulateClick()
+//                                Toast.makeText(this@LoginActivity, "페북 로그인 실패 (권한이 필요합니다)", Toast.LENGTH_SHORT).show()
+//                            }
+//                        } catch (e:Exception) {
+//                            e.printStackTrace()
+//                        }
+//                    })
+//
+//                    val parameter = Bundle()
+//                    parameter.putString("fields", "id,name,email");
+//                    request.parameters = parameter
+//                    request.executeAsync()
+//                }
+//            }
+//
+//            override fun onCancel() { // App code
+//            }
+//
+//            override fun onError(exception: FacebookException) { // App code
+//                loge(TAG, "${exception.message}")
+//                exception.printStackTrace()
+//            }
+//        })
 
 
 
@@ -127,9 +120,9 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
 //                val accessToken = AccessToken.getCurrentAccessToken()
 //                val isLoggedIn = accessToken != null && !accessToken.isExpired
 
-                LoginManager.getInstance().logInWithReadPermissions(
-                    this@LoginActivity,
-                    Arrays.asList("email"));
+//                LoginManager.getInstance().logInWithReadPermissions(
+//                    this@LoginActivity,
+//                    Arrays.asList("email"));
 
             }
         }, 20, 31, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -147,7 +140,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        callbackManager.onActivityResult(requestCode, resultCode, data)
+//        callbackManager.onActivityResult(requestCode, resultCode, data)
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == RC_SIGN_IN) {
