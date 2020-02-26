@@ -7,10 +7,10 @@
     tools:context=".Camera.ImageFragment">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar2"
+        android:id="@+id/toolbar_image_f"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="@color/bg_black"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
@@ -18,16 +18,30 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
+            android:id="@+id/img_back_image_f"
             android:layout_width="35dp"
             android:layout_height="?attr/actionBarSize"
+            android:tint="@color/text_white"
             app:srcCompat="@drawable/baseline_keyboard_arrow_left_black_24" />
 
         <TextView
+            android:id="@+id/text_title_image_f"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="test" />
-
+            android:textColor="@color/text_white"
+            android:textSize="18dp"
+            tools:text="Title" />
     </androidx.appcompat.widget.Toolbar>
+
+    <ImageView
+        android:id="@+id/img_image_f"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_image_f"
+        app:srcCompat="@android:drawable/progress_horizontal" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

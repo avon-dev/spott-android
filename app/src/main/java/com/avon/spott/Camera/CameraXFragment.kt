@@ -3,7 +3,9 @@ package com.avon.spott.Camera
 
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
-import android.content.*
+import android.content.ContentUris
+import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.database.Cursor
 import android.graphics.Color
@@ -15,12 +17,17 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.DisplayMetrics
-import android.view.*
+import android.view.LayoutInflater
+import android.view.ScaleGestureDetector
+import android.view.View
+import android.view.ViewGroup
 import android.webkit.MimeTypeMap
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.camera.core.*
 import androidx.camera.core.ImageCapture.Metadata
 import androidx.camera.core.ImageCapture.OnImageSavedCallback
@@ -32,7 +39,6 @@ import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -58,7 +64,7 @@ class CameraXFragment : Fragment() {
     private lateinit var container: ConstraintLayout
     private lateinit var viewFinder: PreviewView
     private lateinit var outputDirectory: File
-    private lateinit var broadcastManager: LocalBroadcastManager // 현재 프로세스 안에만 유효한 Broadcast. 액티비티 내부 객체간의 상호 의존성을 낮춰 깔끔한 프로그램 구조를 만들 수 있고 우리 앱의 정보를 밖으로 유출하지 않는다.
+//    private lateinit var broadcastManager: LocalBroadcastManager // 현재 프로세스 안에만 유효한 Broadcast. 액티비티 내부 객체간의 상호 의존성을 낮춰 깔끔한 프로그램 구조를 만들 수 있고 우리 앱의 정보를 밖으로 유출하지 않는다.
     private lateinit var displayManager: DisplayManager
     private lateinit var mainExecutor: Executor
 //    private lateinit var analysisExecutor: Executor
@@ -71,16 +77,16 @@ class CameraXFragment : Fragment() {
     private var camera: Camera? = null
 
     // 사진 찍을 때 쓸 볼륨 다운 버튼 리시버
-    private val volumeReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            when (intent.getIntExtra(KEY_EVENT_EXTRA, KeyEvent.KEYCODE_UNKNOWN)) {
-                KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP -> {
-                    val shutter = container.findViewById<ImageButton>(R.id.imgbtn_shoot_camerax_f)
-                    shutter.simulateClick()
-                }
-            }
-        }
-    }
+//    private val volumeReceiver = object : BroadcastReceiver() {
+//        override fun onReceive(context: Context, intent: Intent) {
+//            when (intent.getIntExtra(KEY_EVENT_EXTRA, KeyEvent.KEYCODE_UNKNOWN)) {
+//                KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP -> {
+//                    val shutter = container.findViewById<ImageButton>(R.id.imgbtn_shoot_camerax_f)
+//                    shutter.simulateClick()
+//                }
+//            }
+//        }
+//    }
 
     // 구성 변경을 유발하지 않는 방향 변경에 대해 디스플레이리스너가 필요하다.
     // 예를 들어 매니페스트에서 구성 변경 또는 180도 방향 변경에 대해 재정의하도록 선택한 경우
@@ -109,20 +115,20 @@ class CameraXFragment : Fragment() {
     private lateinit var rightRotation:ImageView
 
     // 뒤로가기 키 리시버
-    private val backReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            when (intent.getIntExtra(KEY_EVENT_EXTRA, KeyEvent.KEYCODE_UNKNOWN)) {
-                KeyEvent.KEYCODE_BACK -> {
-                    if (overlayImage.isVisible)
-                        hideOverlayImage()
-                    else if (recyclerview.isVisible)
-                        recyclerview.visibility = View.INVISIBLE
-                    else
-                        activity?.onBackPressed()
-                }
-            }
-        }
-    }
+//    private val backReceiver = object : BroadcastReceiver() {
+//        override fun onReceive(context: Context, intent: Intent) {
+//            when (intent.getIntExtra(KEY_EVENT_EXTRA, KeyEvent.KEYCODE_UNKNOWN)) {
+//                KeyEvent.KEYCODE_BACK -> {
+//                    if (overlayImage.isVisible)
+//                        hideOverlayImage()
+//                    else if (recyclerview.isVisible)
+//                        recyclerview.visibility = View.INVISIBLE
+//                    else
+//                        activity?.onBackPressed()
+//                }
+//            }
+//        }
+//    }
 
     // 리사이클러뷰 어댑터 클릭 리스너
     interface OnItemClickListener {
@@ -146,11 +152,20 @@ class CameraXFragment : Fragment() {
         }
     }
 
+    private lateinit var onBackPressedCallback:OnBackPressedCallback
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainExecutor =
             ContextCompat.getMainExecutor(requireContext()) // requireContext() : fragment 수명주기와 관련하여 사용해야 함.
 //        analysisExecutor = Executors.newSingleThreadExecutor()
+
+//        broadcastManager = LocalBroadcastManager.getInstance(view.context)
+
+        // 메인 액티비티로부터 받을 인텐트 필터 이벤트 설정
+//        val filter = IntentFilter().apply { addAction(KEY_EVENT_ACTION) }
+//        broadcastManager.registerReceiver(volumeReceiver, filter)
+//        broadcastManager.registerReceiver(backReceiver, filter)
     }
 
     override fun onResume() {
@@ -165,11 +180,18 @@ class CameraXFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         // 브로드캐스트 리시버와 리스너 해제
-        broadcastManager.unregisterReceiver(volumeReceiver) // 동적 리시버는 해제하지 않을시 메모리 누수가 발생하므로 꼭 해준다
-        broadcastManager.unregisterReceiver(backReceiver)
+//        broadcastManager.unregisterReceiver(volumeReceiver) // 동적 리시버는 해제하지 않을시 메모리 누수가 발생하므로 꼭 해준다
+//        broadcastManager.unregisterReceiver(backReceiver)
         displayManager.unregisterDisplayListener(displayListener)
+
+        super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        logd("LifeCycle", "CameraXActivity - onDestroy()")
+
+        super.onDestroy()
     }
 
     override fun onCreateView(
@@ -226,8 +248,6 @@ class CameraXFragment : Fragment() {
                 arrayOf(mimeType),
                 null
             )
-
-
         }
     }
 
@@ -237,12 +257,12 @@ class CameraXFragment : Fragment() {
 
         container = view as ConstraintLayout
         viewFinder = container.findViewById(R.id.preview_viewfinder_camerax_f)
-        broadcastManager = LocalBroadcastManager.getInstance(view.context)
+//        broadcastManager = LocalBroadcastManager.getInstance(view.context)
 
         // 메인 액티비티로부터 받을 인텐트 필터 이벤트 설정
-        val filter = IntentFilter().apply { addAction(KEY_EVENT_ACTION) }
-        broadcastManager.registerReceiver(volumeReceiver, filter)
-        broadcastManager.registerReceiver(backReceiver, filter)
+//        val filter = IntentFilter().apply { addAction(KEY_EVENT_ACTION) }
+//        broadcastManager.registerReceiver(volumeReceiver, filter)
+//        broadcastManager.registerReceiver(backReceiver, filter)
 
         // 장치 바향이 변경될 때마다 레이아웃을 다시 계산
         displayManager =
@@ -314,12 +334,18 @@ class CameraXFragment : Fragment() {
 //                val bitmap = BitmapFactory.decodeStream(inputStream)
 //                if(inputStream != null)
 //                    inputStream.close()
-                imgbtn_gallery_camerax_f.setImageURI(imageUri)
+
+                Glide.with(view.context)
+                    .load(imageUri)
+                    .override(1080, 600)
+                    .into(imgbtn_gallery_camerax_f)
+
+//                imgbtn_gallery_camerax_f.setImageURI(imageUri)
 //                imgbtn_gallery_camerax_f.setImageBitmap(bitmap)
             }
             cursor.close()
         } catch (e: SecurityException) {
-            Toast.makeText(view!!.context, getString(R.string.toast_get_image_error_message), Toast.LENGTH_SHORT).show()
+            Toast.makeText(view.context, getString(R.string.toast_get_image_error_message), Toast.LENGTH_SHORT).show()
                 imgbtn_gallery_camerax_f.setImageResource(R.drawable.ic_photo_library_black_24dp)
         }
 
@@ -333,6 +359,28 @@ class CameraXFragment : Fragment() {
 
             showOverlayImage()
         }
+
+//        val onBackPressedCallback = requireActivity().onBackPressedDispatcher.addCallback(this) {
+//            if (overlayImage.isVisible)
+//                hideOverlayImage()
+//            else if (recyclerview.isVisible)
+//                recyclerview.visibility = View.INVISIBLE
+//            else
+//                activity?.onBackPressed()
+//        }
+
+        onBackPressedCallback = requireActivity().onBackPressedDispatcher.addCallback(this) {
+            if (overlayImage.isVisible)
+                hideOverlayImage()
+            else if (recyclerview.isVisible)
+                recyclerview.visibility = View.INVISIBLE
+            else
+                activity?.finish()
+        }
+        onBackPressedCallback.isEnabled = true
+
+        val dispatcher = requireActivity().onBackPressedDispatcher
+        dispatcher.addCallback(onBackPressedCallback)
     }
 
     private fun getImage(): Cursor {
@@ -463,7 +511,9 @@ class CameraXFragment : Fragment() {
 
         // 카메라 액티비티 나가기
         view!!.findViewById<ImageButton>(R.id.imgbtn_back_camerax_f).setOnClickListener {
-            activity?.onBackPressed()
+//            activity?.onBackPressed()
+            activity?.finish()
+
         }
 
         // 갤러리에서 사진 가져오기
@@ -484,6 +534,8 @@ class CameraXFragment : Fragment() {
 //            val pickPhoto = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
 //            pickPhoto.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 //            startActivityForResult(pickPhoto, REQUEST_CODE)
+
+                onBackPressedCallback.isEnabled = false
 
                 Navigation.findNavController(requireActivity(), R.id.fragment_container_camerax).navigate(
                     CameraXFragmentDirections.actionCameraToGallery()

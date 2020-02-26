@@ -1,7 +1,7 @@
 [
 {
-  "directory": "C:/apps/github/spott_android/opencv/.cxx/cmake/release/x86",
-  "command": "C:\\Users\\BAEK\\AppData\\Local\\Android\\Sdk\\ndk\\21.0.6113669\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang++.exe --target=i686-none-linux-android21 --gcc-toolchain=C:/Users/BAEK/AppData/Local/Android/Sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/BAEK/AppData/Local/Android/Sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/windows-x86_64/sysroot    -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -O2 -DNDEBUG  -fPIC   -o CMakeFiles\\opencv_jni_shared.dir\\dummy.cpp.o -c C:\\apps\\github\\spott_android\\opencv\\libcxx_helper\\dummy.cpp",
-  "file": "C:\\apps\\github\\spott_android\\opencv\\libcxx_helper\\dummy.cpp"
+  "directory": "F:/Github/spott_android/opencv/.cxx/cmake/release/x86",
+  "command": "C:\\Users\\BAEK\\AppData\\Local\\Android\\Sdk\\ndk\\21.0.6113669\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang++.exe --target=i686-none-linux-android21 --gcc-toolchain=C:/Users/BAEK/AppData/Local/Android/Sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/BAEK/AppData/Local/Android/Sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/windows-x86_64/sysroot    -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -O2 -DNDEBUG  -fPIC   -o CMakeFiles\\opencv_jni_shared.dir\\dummy.cpp.o -c F:\\Github\\spott_android\\opencv\\libcxx_helper\\dummy.cpp",
+  "file": "F:\\Github\\spott_android\\opencv\\libcxx_helper\\dummy.cpp"
 }
 ]

@@ -5,7 +5,11 @@
   },
   {
     "level": "INFO",
-    "message": "rebuilding JSON C:\\apps\\github\\spott_android\\app\\.cxx\\cmake\\release\\x86_64\\android_gradle_build.json due to:"
+    "message": "- CMake found from cmake.dir at \u0027C:\\Users\\BAEK\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\u0027 had version \u00273.10.2\u0027"
+  },
+  {
+    "level": "INFO",
+    "message": "rebuilding JSON F:\\Github\\spott_android\\app\\.cxx\\cmake\\release\\x86_64\\android_gradle_build.json due to:"
   },
   {
     "level": "INFO",
@@ -13,15 +17,31 @@
   },
   {
     "level": "INFO",
-    "message": "removing stale contents from \u0027C:\\apps\\github\\spott_android\\app\\.cxx\\cmake\\release\\x86_64\u0027"
+    "message": "- a dependent build file changed"
   },
   {
     "level": "INFO",
-    "message": "created folder \u0027C:\\apps\\github\\spott_android\\app\\.cxx\\cmake\\release\\x86_64\u0027"
+    "message": "  - C:\\Users\\BAEK\\AppData\\Local\\Android\\Sdk\\ndk\\21.0.6113669\\build\\cmake\\android.toolchain.cmake"
   },
   {
     "level": "INFO",
-    "message": "executing cmake Executable : C:\\Users\\BAEK\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe\narguments : \n-HC:\\apps\\github\\spott_android\\app\\src\\main\\cpp\n-BC:\\apps\\github\\spott_android\\app\\.cxx\\cmake\\release\\x86_64\n-DANDROID_ABI\u003dx86_64\n-DANDROID_PLATFORM\u003dandroid-21\n-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003dC:\\apps\\github\\spott_android\\app\\build\\intermediates\\cmake\\release\\obj\\x86_64\n-DCMAKE_BUILD_TYPE\u003dRelease\n-DANDROID_NDK\u003dC:\\Users\\BAEK\\AppData\\Local\\Android\\Sdk\\ndk\\21.0.6113669\n-DCMAKE_CXX_FLAGS\u003d-std\u003dc++11\n-DCMAKE_SYSTEM_NAME\u003dAndroid\n-DCMAKE_ANDROID_ARCH_ABI\u003dx86_64\n-DCMAKE_SYSTEM_VERSION\u003d21\n-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON\n-DCMAKE_ANDROID_NDK\u003dC:\\Users\\BAEK\\AppData\\Local\\Android\\Sdk\\ndk\\21.0.6113669\n-DCMAKE_TOOLCHAIN_FILE\u003dC:\\Users\\BAEK\\AppData\\Local\\Android\\Sdk\\ndk\\21.0.6113669\\build\\cmake\\android.toolchain.cmake\n-G Ninja\n-DCMAKE_MAKE_PROGRAM\u003dC:\\Users\\BAEK\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\ninja.exe\njvmArgs : \n\n"
+    "message": "  - C:\\apps\\github\\spott_android\\app\\src\\main\\cpp\\CMakeLists.txt"
+  },
+  {
+    "level": "INFO",
+    "message": "  - C:\\Users\\BAEK\\AppData\\Local\\Android\\Sdk\\ndk\\21.0.6113669\\build\\cmake\\platforms.cmake"
+  },
+  {
+    "level": "INFO",
+    "message": "removing stale contents from \u0027F:\\Github\\spott_android\\app\\.cxx\\cmake\\release\\x86_64\u0027"
+  },
+  {
+    "level": "INFO",
+    "message": "created folder \u0027F:\\Github\\spott_android\\app\\.cxx\\cmake\\release\\x86_64\u0027"
+  },
+  {
+    "level": "INFO",
+    "message": "executing cmake Executable : C:\\Users\\BAEK\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe\narguments : \n-HF:\\Github\\spott_android\\app\\src\\main\\cpp\n-BF:\\Github\\spott_android\\app\\.cxx\\cmake\\release\\x86_64\n-DANDROID_ABI\u003dx86_64\n-DANDROID_PLATFORM\u003dandroid-21\n-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003dF:\\Github\\spott_android\\app\\build\\intermediates\\cmake\\release\\obj\\x86_64\n-DCMAKE_BUILD_TYPE\u003dRelease\n-DANDROID_NDK\u003dC:\\Users\\BAEK\\AppData\\Local\\Android\\Sdk\\ndk\\21.0.6113669\n-DCMAKE_CXX_FLAGS\u003d-std\u003dc++11\n-DCMAKE_SYSTEM_NAME\u003dAndroid\n-DCMAKE_ANDROID_ARCH_ABI\u003dx86_64\n-DCMAKE_SYSTEM_VERSION\u003d21\n-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON\n-DCMAKE_ANDROID_NDK\u003dC:\\Users\\BAEK\\AppData\\Local\\Android\\Sdk\\ndk\\21.0.6113669\n-DCMAKE_TOOLCHAIN_FILE\u003dC:\\Users\\BAEK\\AppData\\Local\\Android\\Sdk\\ndk\\21.0.6113669\\build\\cmake\\android.toolchain.cmake\n-G Ninja\n-DCMAKE_MAKE_PROGRAM\u003dC:\\Users\\BAEK\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\ninja.exe\njvmArgs : \n\n"
   },
   {
     "level": "INFO",
@@ -29,11 +49,11 @@
   },
   {
     "level": "INFO",
-    "message": "write build output C:\\apps\\github\\spott_android\\app\\.cxx\\cmake\\release\\x86_64\\build_output.txt"
+    "message": "write build output F:\\Github\\spott_android\\app\\.cxx\\cmake\\release\\x86_64\\build_output.txt"
   },
   {
     "level": "INFO",
-    "message": "write command file C:\\apps\\github\\spott_android\\app\\.cxx\\cmake\\release\\x86_64\\build_command.txt"
+    "message": "write command file F:\\Github\\spott_android\\app\\.cxx\\cmake\\release\\x86_64\\build_command.txt"
   },
   {
     "level": "INFO",
