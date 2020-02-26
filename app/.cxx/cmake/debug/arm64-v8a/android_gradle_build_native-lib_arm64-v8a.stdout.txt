@@ -1,2 +1,3 @@
 ninja: Entering directory `C:\Users\ParkMinSeok\AndroidStudioProjects\Spott\app\.cxx\cmake\debug\arm64-v8a'
-ninja: no work to do.
+[1/2] Building CXX object CMakeFiles/native-lib.dir/native-lib.cpp.o
+[2/2] Linking CXX shared library C:\Users\ParkMinSeok\AndroidStudioProjects\Spott\app\build\intermediates\cmake\debug\obj\arm64-v8a\libnative-lib.so

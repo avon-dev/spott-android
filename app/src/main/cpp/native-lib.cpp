@@ -32,9 +32,9 @@ Java_com_avon_spott_AddPhoto_AddPhotoActivity_detectEdgeJNI(JNIEnv *env, jobject
         for(int j=0;j<outputMat.cols;j++){
             if(outputMat.at<cv::Vec4b>(i,j)[0] == 255 && outputMat.at<cv::Vec4b>(i,j)[1] == 255 && outputMat.at<cv::Vec4b>(i,j)[2] ==255 )
             {
-                outputMat.at<cv::Vec4b>(i,j)[0]=86; //86
-                outputMat.at<cv::Vec4b>(i,j)[1]=144; //144
-                outputMat.at<cv::Vec4b>(i,j)[2]=232; //232
+                outputMat.at<cv::Vec4b>(i,j)[0]=2; //2
+                outputMat.at<cv::Vec4b>(i,j)[1]=201; //201
+                outputMat.at<cv::Vec4b>(i,j)[2]=252; //252
                 outputMat.at<cv::Vec4b>(i,j)[3]=255;
             }
         }
