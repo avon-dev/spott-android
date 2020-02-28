@@ -1,6 +1,7 @@
 package com.avon.spott.Login
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.Spannable
 import android.text.Spanned
@@ -15,7 +16,6 @@ import com.avon.spott.EmailLogin.EmailLoginActivity
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.Nickname.NicknameActivity
 import com.avon.spott.Password.PasswordActivity
-import com.avon.spott.R
 import com.avon.spott.Utils.MySharedPreferences
 import com.avon.spott.Utils.logd
 import com.avon.spott.Utils.loge
@@ -25,6 +25,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import kotlinx.android.synthetic.main.activity_login.*
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
+
+
 
 
 class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListener {
@@ -40,7 +46,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        setContentView(com.avon.spott.R.layout.activity_login)
 
         // 자동 로그인
         // 1. shared확인
@@ -145,6 +151,49 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
             }
         }, 20, 31, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         text_privacyinfo_login_a.movementMethod = LinkMovementMethod.getInstance()
+
+        // 기기 설정 나라 시간
+        var tz:TimeZone = TimeZone.getDefault()
+        var location = tz.id
+        val date = Date()
+        val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss (z Z)")
+
+        // 그냥 Date는 어떤 시간인지
+        logd(TAG, "date:${df.format(date)}")
+        // date에 값 설정할 수 있나?
+//        date.hours = 10
+        date.time = 10L
+
+        logd(TAG, "date.time:${df.format(date)}")
+
+        // date 형식의 스트링도 변환해주나?
+        val strDate = "Fri Feb 28 16:49:55 GMT+09:00 2020"
+        val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss (z Z)")
+        } else {
+            SimpleDateFormat("yyyy-MM-dd HH:mm:ss (z Z)")
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            logd(TAG, "Build.VERSION.SDK_INT >= Build.VERSION_CODES.O")
+            var now = LocalDate.now()
+            val dateNow = LocalDate.parse(strDate, formatter as DateTimeFormatter?)
+            logd(TAG, "$dateNow")
+        }
+
+        // df에 시간 설정
+        df.timeZone = tz
+        logd(TAG, "id:${tz.id}")
+        logd(TAG, "location:${location}")
+        logd(TAG, "${tz.displayName} // ${df.format(date)}")
+
+        // 로스엔젤레스로 설정
+        tz = TimeZone.getTimeZone("America/Los_Angeles")
+        location = tz.id
+        df.timeZone = tz
+        logd(TAG, "id:${tz.id}")
+        logd(TAG, "location:${location}")
+        logd(TAG, "${tz.displayName} // ${df.format(date)}")
     }
 
     override fun showEmailLoginUi() {
@@ -192,7 +241,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.btn_googlelogin_login_a -> { // 구글 로그인
+            com.avon.spott.R.id.btn_googlelogin_login_a -> { // 구글 로그인
                 val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestEmail()
                     .build();
@@ -202,10 +251,10 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
                 val signInIntent = googleSignInClient.signInIntent
                 startActivityForResult(signInIntent, RC_SIGN_IN)
             }
-            R.id.btn_emaillogin_login_a -> { // 이메일 로그인
+            com.avon.spott.R.id.btn_emaillogin_login_a -> { // 이메일 로그인
                 presenter.openEmailLogin()
             }
-            R.id.text_signup_login_a -> { // 회원가입
+            com.avon.spott.R.id.text_signup_login_a -> { // 회원가입
                 presenter.openSignup()
             }
 
