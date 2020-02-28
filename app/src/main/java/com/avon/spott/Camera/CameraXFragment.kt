@@ -130,27 +130,32 @@ class CameraXFragment : Fragment() {
 //        }
 //    }
 
+
+
     // 리사이클러뷰 어댑터 클릭 리스너
     interface OnItemClickListener {
-        fun ItemClick(postImage:String, backImage: String?)
+        fun ItemClick(scrapItem: ScrapItem)
     }
 
     private val onItemClickListener = object : OnItemClickListener {
-        override fun ItemClick(postImage:String, backImage: String?) {
+        override fun ItemClick(scrapItem: ScrapItem) {
+
+            this@CameraXFragment.scrapItem = scrapItem
+
             // 리사이클러 뷰에서 선택한 아이템 이미지뷰에 띄우기
             if (overlayImage.isVisible)
                 hideOverlayImage()
-            else {
+            else { // 스크랩 이미지 보여쥑
 
-                if(backImage != null) {
+                if(scrapItem.back_image!= null) {
                     Glide.with(overlayImage)
-                        .load(backImage)
+                        .load(scrapItem.back_image)
                         .placeholder(android.R.drawable.progress_indeterminate_horizontal)
                         .error(android.R.drawable.stat_notify_error)
                         .into(overlayImage)
                 } else {
                     Glide.with(overlayImage)
-                        .load(postImage)
+                        .load(scrapItem.posts_image)
                         .placeholder(android.R.drawable.progress_indeterminate_horizontal)
                         .error(android.R.drawable.stat_notify_error)
                         .into(overlayImage)
@@ -161,6 +166,7 @@ class CameraXFragment : Fragment() {
         }
     }
 
+    private var scrapItem:ScrapItem? = null
     private lateinit var onBackPressedCallback:OnBackPressedCallback
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -358,9 +364,10 @@ class CameraXFragment : Fragment() {
                 imgbtn_gallery_camerax_f.setImageResource(R.drawable.ic_photo_library_black_24dp)
         }
 
+        // 사진 게시글에서 카메라로 넘어올 때
         val photoUrl = CameraXActivity.getPhotoURI()
         if(photoUrl != null) {
-            Glide.with(overlayImage)
+            Glide.with(view.context)
                 .load(photoUrl)
                 .placeholder(android.R.drawable.progress_indeterminate_horizontal)
                 .error(android.R.drawable.stat_notify_error)
@@ -390,6 +397,18 @@ class CameraXFragment : Fragment() {
 
         val dispatcher = requireActivity().onBackPressedDispatcher
         dispatcher.addCallback(onBackPressedCallback)
+
+        img_changeimage_camerax_f.setOnClickListener {
+            // 이미지 바꾸기
+            // 아이템 클릭시 아이템 내용을 기억하고 있어야 하는 변수가 필요함.
+            // 그 아이템을 가지고 이미지를 바꿔주도록 하자
+            Glide.with(view.context)
+                .load(photoUrl)
+                .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                .error(android.R.drawable.stat_notify_error)
+                .into(overlayImage)
+
+        }
     }
 
     private fun getImage(): Cursor {
@@ -642,7 +661,7 @@ class CameraXFragment : Fragment() {
         overlayImage.visibility = View.VISIBLE
         opacitySeekbar.visibility = View.VISIBLE
         closeImage.visibility = View.VISIBLE
-
+        img_changeimage_camerax_f.visibility = View.VISIBLE
 //        rightRotation.visibility = View.VISIBLE
     }
 
@@ -651,6 +670,7 @@ class CameraXFragment : Fragment() {
         overlayImage.visibility = View.GONE
         opacitySeekbar.visibility = View.GONE
         closeImage.visibility = View.GONE
+        img_changeimage_camerax_f.visibility = View.GONE
 //        rightRotation.visibility = View.GONE
     }
 
@@ -675,9 +695,6 @@ class CameraXFragment : Fragment() {
             showScrapData()
         })
     }
-
-
-
 
     companion object {
 
@@ -738,7 +755,7 @@ class CameraXFragment : Fragment() {
                 .into(holder.photo)
 
             holder.itemView.setOnClickListener {
-                onItemClickListener.ItemClick(list[position].posts_image, list[position].back_image) /** back_image로 수정 2020-02-25 */
+                onItemClickListener.ItemClick(list[position]) /** back_image로 수정 2020-02-25 */
             }
 
         }
