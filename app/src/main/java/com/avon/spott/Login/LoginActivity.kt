@@ -7,12 +7,16 @@ import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.avon.spott.Data.User
 import com.avon.spott.Email.EmailActivity
+import com.avon.spott.Email.INTENT_EXTRA_USER
 import com.avon.spott.EmailLogin.EmailLoginActivity
 import com.avon.spott.Main.MainActivity
+import com.avon.spott.Nickname.NicknameActivity
+import com.avon.spott.Password.PasswordActivity
 import com.avon.spott.R
+import com.avon.spott.Utils.MySharedPreferences
 import com.avon.spott.Utils.logd
 import com.avon.spott.Utils.loge
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -38,7 +42,21 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        init()
+        // 자동 로그인
+        // 1. shared확인
+        // 2-1. main으로 이동
+        // 2-2. 로그인 액티비티 실행
+        val shared = MySharedPreferences(this)
+        val token = shared.token
+        if(!token.equals("")) { // 토큰이 있으면
+            val intent = Intent(this@LoginActivity, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        } else { // 자동 로그인 실패시
+            init()
+        }
+
     }
 
     // 초기화
@@ -116,7 +134,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
 
         span.setSpan(object : ClickableSpan() {
             override fun onClick(widget: View) {
-//                Intent(this@LoginActivity, PasswordActivity::class.java).let { startActivity(it) }
+                Intent(this@LoginActivity, PasswordActivity::class.java).let { startActivity(it) }
 //                val accessToken = AccessToken.getCurrentAccessToken()
 //                val isLoggedIn = accessToken != null && !accessToken.isExpired
 
@@ -149,12 +167,23 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         }
     }
 
+    // 구글 로그인 결과 핸들링
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
-            logd(TAG, "${account.toString()}")
+            logd(TAG, "google account: ${account.toString()}")
+
+            if(account != null) {
+                val email = account.email
+                if(email != null) {
+                    Intent(this@LoginActivity, NicknameActivity::class.java).let {
+                        it.putExtra(INTENT_EXTRA_USER, User(email))
+                        startActivity(it)
+                    }
+                }
+            }
 //            Intent(this@LoginActivity, MainActivity::class.java).let { startActivity(it) }
-            Toast.makeText(this, "구글 로그인 성공", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this, "구글 로그인 성공", Toast.LENGTH_SHORT).show()
         } catch (e:ApiException) {
             loge(TAG, "signInResult:failed code=${e.statusCode}, ${e.message}")
             println(e.stackTrace.toString())

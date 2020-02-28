@@ -8,7 +8,7 @@ import retrofit2.HttpException
 
 class EmailPresenter(val emailView: EmailContract.View) : EmailContract.Presenter {
 
-    private val TAG = "EMAILPRESENTER"
+    private val TAG = "EmailPresenter"
     private val ACTION_EMAIL = 1001
 
     init {
