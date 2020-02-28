@@ -132,20 +132,29 @@ class CameraXFragment : Fragment() {
 
     // 리사이클러뷰 어댑터 클릭 리스너
     interface OnItemClickListener {
-        fun ItemClick(uri: String)
+        fun ItemClick(postImage:String, backImage: String?)
     }
 
     private val onItemClickListener = object : OnItemClickListener {
-        override fun ItemClick(uri: String) {
+        override fun ItemClick(postImage:String, backImage: String?) {
             // 리사이클러 뷰에서 선택한 아이템 이미지뷰에 띄우기
             if (overlayImage.isVisible)
                 hideOverlayImage()
             else {
-                Glide.with(overlayImage)
-                    .load(uri)
-                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                    .error(android.R.drawable.stat_notify_error)
-                    .into(overlayImage)
+
+                if(backImage != null) {
+                    Glide.with(overlayImage)
+                        .load(backImage)
+                        .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                        .error(android.R.drawable.stat_notify_error)
+                        .into(overlayImage)
+                } else {
+                    Glide.with(overlayImage)
+                        .load(postImage)
+                        .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                        .error(android.R.drawable.stat_notify_error)
+                        .into(overlayImage)
+                }
 
                 showOverlayImage()
             }
@@ -729,7 +738,7 @@ class CameraXFragment : Fragment() {
                 .into(holder.photo)
 
             holder.itemView.setOnClickListener {
-                onItemClickListener.ItemClick(list[position].back_image) /** back_image로 수정 2020-02-25 */
+                onItemClickListener.ItemClick(list[position].posts_image, list[position].back_image) /** back_image로 수정 2020-02-25 */
             }
 
         }
