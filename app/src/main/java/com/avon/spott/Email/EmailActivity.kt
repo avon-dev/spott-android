@@ -48,6 +48,9 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
 
     // 초기화
     private fun init() {
+        // 임시
+        edit_email_email_a.setText("baek@seunghyun.com")
+
         signUpPresenter = EmailPresenter(this)
 
         text_title_toolbar.text = getString(R.string.email)

@@ -14,8 +14,6 @@
 /captures
 .externalNativeBuild
 /app/src/main/cpp/CMakeLists.txt
-
-
 ##api key and local url
 /app/src/main/res/values/key.xml
 
@@ -32,10 +30,16 @@
 */CTestTestfile.cmake
 _deps
 
+
 ### CMake Patch ###
 # External projects
 *-prefix/
 
+
+### CMake Patch ###
+# External projects
+*-prefix/
+>>>>>>> 25746c948c274b2879c33bf4e0fb7e149ff4e3fa
 ### OpenCV ###
 #OpenCV for Mac and Linux
 #build and release folders
@@ -44,6 +48,7 @@ _deps
 */Makefile
 */cmake_install.cmake
 .DS_Store
+
 
 # Replacement of .externalNativeBuild directories introduced
 # with Android Studio 3.5.
