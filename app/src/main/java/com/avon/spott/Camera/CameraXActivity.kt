@@ -1,13 +1,11 @@
 package com.avon.spott.Camera
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.view.KeyEvent
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.avon.spott.R
+import com.avon.spott.Utils.logd
 import java.io.File
 
 
@@ -39,29 +37,35 @@ class CameraXActivity : AppCompatActivity() {
         }, IMMERSIVE_FLAG_TIMEOUT)
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        return when (keyCode) {
-            KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP -> {
-                val intent = Intent(KEY_EVENT_ACTION).apply { putExtra(KEY_EVENT_EXTRA, keyCode) }
-                LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
-                true
-            }
-//            KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP, KeyEvent.KEYCODE_BACK -> {
+//    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+//        return when (keyCode) {
+//            KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP -> {
 //                val intent = Intent(KEY_EVENT_ACTION).apply { putExtra(KEY_EVENT_EXTRA, keyCode) }
 //                LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
 //                true
 //            }
-            KeyEvent.KEYCODE_BACK -> {
-                val intent = Intent(KEY_EVENT_ACTION).apply { putExtra(KEY_EVENT_EXTRA, keyCode) }
-                LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
-                true
-            }
-            else -> super.onKeyDown(keyCode, event)
-        }
-    }
+////            KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP, KeyEvent.KEYCODE_BACK -> {
+////                val intent = Intent(KEY_EVENT_ACTION).apply { putExtra(KEY_EVENT_EXTRA, keyCode) }
+////                LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+////                true
+////            }
+//            KeyEvent.KEYCODE_BACK -> {
+//                logd("LifeCycle", "keyCode - keycode_back")
+//
+//                val intent = Intent(KEY_EVENT_ACTION).apply { putExtra(KEY_EVENT_EXTRA, keyCode) }
+//                LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+//                true
+//            }
+//            else -> {
+//                logd("LifeCycle", "keyCode: - else")
+//                super.onKeyDown(keyCode, event)
+//            }
+//        }
+//    }
 
 
     override fun onDestroy() {
+        logd("LifeCycle", "CameraXActivity - onDestroy()")
         photoUrl = null
         super.onDestroy()
     }

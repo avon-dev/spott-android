@@ -42,7 +42,7 @@ rule CUSTOM_COMMAND
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = C:\Users\BAEK\AppData\Local\Android\Sdk\cmake\3.10.2.4988404\bin\cmake.exe -HC:\apps\github\spott_android\app\src\main\cpp -BC:\apps\github\spott_android\app\.cxx\cmake\debug\x86
+  command = C:\Users\BAEK\AppData\Local\Android\Sdk\cmake\3.10.2.4988404\bin\cmake.exe -HF:\Github\spott_android\app\src\main\cpp -BF:\Github\spott_android\app\.cxx\cmake\debug\x86
   description = Re-running CMake...
   generator = 1
 

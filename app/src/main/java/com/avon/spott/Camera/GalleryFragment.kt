@@ -1,25 +1,21 @@
 package com.avon.spott.Camera
 
 
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.avon.spott.Data.GalleryImage
 import com.avon.spott.R
+import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_gallery.*
 
@@ -28,19 +24,17 @@ import kotlinx.android.synthetic.main.fragment_gallery.*
  */
 class GalleryFragment : Fragment() {
 
-    private val backReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            when (intent.getIntExtra(KEY_EVENT_EXTRA, KeyEvent.KEYCODE_UNKNOWN)) {
-                KeyEvent.KEYCODE_BACK -> {
-//                    activity?.onBackPressed()
-//                    Toast.makeText(view!!.context, getString(R.string.toast_no_scrap_message), Toast.LENGTH_SHORT).show()
-                    Navigation.findNavController(requireActivity(), R.id.fragment_container_camerax).navigateUp()
-                }
-            }
-        }
-    }
-
-    private lateinit var broadcastManager: LocalBroadcastManager // 현재 프로세스 안에만 유효한 Broadcast. 액티비티 내부 객체간의 상호 의존성을 낮춰 깔끔한 프로그램 구조를 만들 수 있고 우리 앱의 정보를 밖으로 유출하지 않는다.
+//    private val backReceiver = object : BroadcastReceiver() {
+//        override fun onReceive(context: Context, intent: Intent) {
+//            when (intent.getIntExtra(KEY_EVENT_EXTRA, KeyEvent.KEYCODE_UNKNOWN)) {
+//                KeyEvent.KEYCODE_BACK -> {
+////                    Navigation.findNavController(requireActivity(), R.id.fragment_container_camerax).popBackStack()
+//                }
+//            }
+//        }
+//    }
+//
+//    private lateinit var broadcastManager: LocalBroadcastManager // 현재 프로세스 안에만 유효한 Broadcast. 액티비티 내부 객체간의 상호 의존성을 낮춰 깔끔한 프로그램 구조를 만들 수 있고 우리 앱의 정보를 밖으로 유출하지 않는다.
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,7 +48,8 @@ class GalleryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         img_back_gallery_f.setOnClickListener {
-            Navigation.findNavController(requireActivity(), R.id.fragment_container_camerax).navigateUp()
+//            Navigation.findNavController(requireActivity(), R.id.fragment_container_camerax).popBackStack(R.id.camerax_fragment, true)
+            requireActivity().onBackPressed()
         }
 
         val imgList = ArrayList<GalleryImage>()
@@ -64,14 +59,19 @@ class GalleryFragment : Fragment() {
         recycler_gallery_f.layoutManager = GridLayoutManager(view.context, 4)
         recycler_gallery_f.adapter = ImageAdapter(view.context, imgList)
 
-        val filter = IntentFilter().apply { addAction(KEY_EVENT_ACTION) }
-        broadcastManager = LocalBroadcastManager.getInstance(view.context)
-        broadcastManager.registerReceiver(backReceiver, filter)
+//        val filter = IntentFilter().apply { addAction(KEY_EVENT_ACTION) }
+//        broadcastManager = LocalBroadcastManager.getInstance(view.context)
+//        broadcastManager.registerReceiver(backReceiver, filter)
     }
 
     override fun onDestroyView() {
+//        broadcastManager.unregisterReceiver(backReceiver)
         super.onDestroyView()
-        broadcastManager.unregisterReceiver(backReceiver)
+    }
+
+    override fun onDestroy() {
+        logd("LifeCycle", "GalleryFragment - onDestroy()")
+        super.onDestroy()
     }
 
     fun getThumbInfo(imgList:ArrayList<GalleryImage>) {
@@ -93,7 +93,7 @@ class GalleryFragment : Fragment() {
             val thumbsDataCol = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
             val thumbsImageNameCol = imageCursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME);
             val thumbsSizeCol = imageCursor.getColumnIndex(MediaStore.Images.Media.SIZE);
-            val thumbAlbumCol = imageCursor.getColumnIndex(MediaStore.EXTRA_MEDIA_ALBUM)
+//            val thumbAlbumCol = imageCursor.getColumnIndex(MediaStore.EXTRA_MEDIA_ALBUM)
 
             var thumbsID:String
             var thumbsName:String
@@ -136,6 +136,13 @@ class GalleryFragment : Fragment() {
 
             holder.itemView.setOnClickListener {
                 Toast.makeText(context, imgList[position].data, Toast.LENGTH_SHORT).show()
+
+                val bundle = Bundle()
+                bundle.putString("url", imgList[position].data)
+
+                Navigation.findNavController(requireActivity(), R.id.fragment_container_camerax).navigate(
+                    R.id.action_gallery_to_image, bundle
+                )
             }
         }
 

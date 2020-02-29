@@ -1,3 +1,3 @@
 # ninja log v5
-2	3836	604323530	CMakeFiles/native-lib.dir/native-lib.cpp.o	8e38f956115777b7
-3844	4599	604323530	C:/apps/github/spott_android/app/build/intermediates/cmake/debug/obj/arm64-v8a/libnative-lib.so	66bc28f76a0ff52a
+1	4357	604668132	CMakeFiles/native-lib.dir/native-lib.cpp.o	8e38f956115777b7
+4365	4985	604668132	C:/apps/github/spott_android/app/build/intermediates/cmake/debug/obj/arm64-v8a/libnative-lib.so	66bc28f76a0ff52a
