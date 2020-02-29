@@ -65,8 +65,6 @@ class PasswordPresenter(val numberView: PasswordContract.View) : PasswordContrac
         logd(TAG, "digest:$digest")
 
 
-
-
         val bytearraytobinarystring = byteArrayToBinaryString(ciphertext)
         val binarystringtonytearray = binaryStringToByteArray(bytearraytobinarystring)
 

@@ -47,8 +47,8 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
             presenter.openPhoto(id)
         }
 
-        override fun itemLongClick(photoUrl: String) {
-            presenter.openCamera(photoUrl)
+        override fun itemLongClick(scrapItem: ScrapItem) {
+            presenter.openCamera(scrapItem)
         }
 
         override fun deleteScraps(scrapItems: ArrayList<ScrapItem>){
@@ -140,14 +140,14 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
         findNavController().navigate(R.id.action_scrapFragment_to_photo, bundle)
     }
 
-    override fun showCameraUi(photoUrl: String) {
+    override fun showCameraUi(scrapItem: ScrapItem) {
 //        showToast(photoUrl)
         /**
          * 여기에 카메라 연결하는 코드 넣으면 됨!!!!!
          *                                    */
 
         Intent(context, CameraXActivity::class.java).let {
-            it.putExtra("photoUrl", photoUrl)
+            it.putExtra("photo", scrapItem)
             startActivity(it)
         }
     }
@@ -168,7 +168,7 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
 
     interface scrapInter{
         fun itemClick(id: Int)
-        fun itemLongClick(photoUrl: String)
+        fun itemLongClick(scrapItem: ScrapItem)
         fun deleteScraps(scrapItems: ArrayList<ScrapItem>)
         fun returnText()
         fun counttext(count: Int)
@@ -273,7 +273,7 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
             holder.itemView.setOnLongClickListener(object :View.OnLongClickListener{
                 override fun onLongClick(v: View?): Boolean {
                      if(!selectingReady){
-                      scrapInterListener.itemLongClick(itemsList[position].back_image)
+                      scrapInterListener.itemLongClick(itemsList[position])
                     }
                     return true
                 }

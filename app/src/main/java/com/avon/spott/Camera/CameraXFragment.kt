@@ -365,13 +365,21 @@ class CameraXFragment : Fragment() {
         }
 
         // 사진 게시글에서 카메라로 넘어올 때
-        val photoUrl = CameraXActivity.getPhotoURI()
+        val photoUrl = CameraXActivity.getPhoto()
         if(photoUrl != null) {
-            Glide.with(view.context)
-                .load(photoUrl)
-                .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                .error(android.R.drawable.stat_notify_error)
-                .into(overlayImage)
+            if(photoUrl.back_image != null) {
+                Glide.with(view.context)
+                    .load(photoUrl.back_image)
+                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                    .error(android.R.drawable.stat_notify_error)
+                    .into(overlayImage)
+            } else {
+                Glide.with(view.context)
+                    .load(photoUrl.posts_image)
+                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                    .error(android.R.drawable.stat_notify_error)
+                    .into(overlayImage)
+            }
 
             showOverlayImage()
         }

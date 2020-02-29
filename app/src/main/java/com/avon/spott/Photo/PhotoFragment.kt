@@ -29,9 +29,7 @@ import com.avon.spott.R
 import com.avon.spott.Scrap.ScrapFragment.Companion.scrapChange
 import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.dialog_report.*
 import kotlinx.android.synthetic.main.dialog_report.view.*
-import kotlinx.android.synthetic.main.dialog_report_etc.*
 import kotlinx.android.synthetic.main.dialog_report_etc.view.*
 import kotlinx.android.synthetic.main.fragment_photo.*
 import kotlinx.android.synthetic.main.toolbar.view.*
@@ -491,7 +489,6 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
         val  mAlertDialog =  builder.show()
         mAlertDialog.setCanceledOnTouchOutside(false)
-
     }
 
     override fun showCameraUi(photoUrl: String) {
