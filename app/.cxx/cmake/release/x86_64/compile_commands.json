@@ -1,7 +1,0 @@
-[
-{
-  "directory": "F:/Github/spott_android/app/.cxx/cmake/release/x86_64",
-  "command": "C:\\Users\\BAEK\\AppData\\Local\\Android\\Sdk\\ndk\\21.0.6113669\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang++.exe --target=x86_64-none-linux-android21 --gcc-toolchain=C:/Users/BAEK/AppData/Local/Android/Sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/BAEK/AppData/Local/Android/Sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -Dnative_lib_EXPORTS -IF:/Github/spott_android/opencv/native/jni/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -std=c++11 -std=gnu++11 -O2 -DNDEBUG  -fPIC   -o CMakeFiles\\native-lib.dir\\native-lib.cpp.o -c F:\\Github\\spott_android\\app\\src\\main\\cpp\\native-lib.cpp",
-  "file": "F:\\Github\\spott_android\\app\\src\\main\\cpp\\native-lib.cpp"
-}
-]
