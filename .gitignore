@@ -18,3 +18,34 @@
 
 ##api key and local url
 /app/src/main/res/values/key.xml
+
+### CMake ###
+*/CMakeLists.txt.user
+*/CMakeCache.txt
+*/CMakeFiles
+*/CMakeScripts
+*/Testing
+*/Makefile
+*/cmake_install.cmake
+*/install_manifest.txt
+*/compile_commands.json
+*/CTestTestfile.cmake
+_deps
+
+### CMake Patch ###
+# External projects
+*-prefix/
+
+### OpenCV ###
+#OpenCV for Mac and Linux
+#build and release folders
+*/CMakeFiles
+*/CMakeCache.txt
+*/Makefile
+*/cmake_install.cmake
+.DS_Store
+
+# Replacement of .externalNativeBuild directories introduced
+# with Android Studio 3.5.
+*/.cxx/
+/opencv/build
