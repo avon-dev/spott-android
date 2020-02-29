@@ -1,2 +1,2 @@
-ninja: Entering directory `F:\Github\spott_android\opencv\.cxx\cmake\debug\armeabi-v7a'
+ninja: Entering directory `C:\apps\github\spott_android\opencv\.cxx\cmake\debug\armeabi-v7a'
 ninja: no work to do.

@@ -9,6 +9,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.avon.spott.Data.Token
 import com.avon.spott.Data.User
 import com.avon.spott.Email.EmailActivity
 import com.avon.spott.Email.INTENT_EXTRA_USER
@@ -16,6 +17,7 @@ import com.avon.spott.EmailLogin.EmailLoginActivity
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.Nickname.NicknameActivity
 import com.avon.spott.Password.PasswordActivity
+import com.avon.spott.R
 import com.avon.spott.Utils.MySharedPreferences
 import com.avon.spott.Utils.logd
 import com.avon.spott.Utils.loge
@@ -53,16 +55,13 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         // 2-1. main으로 이동
         // 2-2. 로그인 액티비티 실행
         val shared = MySharedPreferences(this)
-        val token = shared.token
-        if(!token.equals("")) { // 토큰이 있으면
-            val intent = Intent(this@LoginActivity, MainActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-        } else { // 자동 로그인 실패시
-            init()
+        val access = shared.token
+        val refresh = shared.refresh
+        if(!access.equals("") and !refresh.equals("")) { // 토큰이 있으면
+            presenter.availableToken(getString(R.string.baseurl), "/spott/token/verify",Token(access, refresh))
         }
 
+        init()
     }
 
     // 초기화
@@ -194,6 +193,13 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         logd(TAG, "id:${tz.id}")
         logd(TAG, "location:${location}")
         logd(TAG, "${tz.displayName} // ${df.format(date)}")
+    }
+
+    override fun showMainUi() {
+        val intent = Intent(this@LoginActivity, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
     }
 
     override fun showEmailLoginUi() {

@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Spott</string>
 
+    <!--위젯_이름_위치_구분-->
+
     <!-- EditMyinfoActivity [Start]-->
     <string name="text_title_editmyinfo_a">내 정보 수정</string>
     <string name="text_editing">편 집</string>
