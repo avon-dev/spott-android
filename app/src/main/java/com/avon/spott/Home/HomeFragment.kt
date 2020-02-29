@@ -282,18 +282,24 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
                 val builder = AdLoader.Builder(context!!, getString(R.string.banner_ad_unit_id_for_test))
 
                 builder.forUnifiedNativeAd { unifiedNativeAd ->
+                    val new = unifiedNativeAd
                     // OnUnifiedNativeAdLoadedListener implementation.
                     if(adList.size> (position+1)/20-1){ //해당 위치의 광고가 이미 보여진적이 있을 때
-                        logd(TAG, "adList.size : " +adList.size)
-                        logd(TAG, "headline : " +adList[(position+1)/20-1].headline)
-                        logd(TAG, "mediaContent : " +adList[(position+1)/20-1].mediaContent.mainImage)
+//                        logd(TAG, "adList.size : " +adList.size)
+//                        logd(TAG, "headline : " +adList[(position+1)/20-1].headline)
+//                        logd(TAG, "mediaContent : " +adList[(position+1)/20-1].mediaContent.mainImage)
                         populateUnifiedNativeAdView(adList[(position+1)/20-1], adViewholder.adView)
                     }else{//해당 위치의 광고가 처음 보여질 때
-                        adList.add(unifiedNativeAd)
+                        adList.add(new)
                         populateUnifiedNativeAdView(unifiedNativeAd, adViewholder.adView)
                     }
 
                 }
+
+                for(i in 0..adList.size-1){
+                    logd(TAG, "mediaContent $i : " +adList[i].mediaContent.mainImage)
+                }
+
 
 //                val adOptions = NativeAdOptions.Builder()
 //                    .setReturnUrlsForImageAssets(true)
