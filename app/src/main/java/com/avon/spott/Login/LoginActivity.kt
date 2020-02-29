@@ -9,7 +9,6 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.avon.spott.Data.Token
 import com.avon.spott.Data.User
 import com.avon.spott.Email.EmailActivity
 import com.avon.spott.Email.INTENT_EXTRA_USER
@@ -17,7 +16,6 @@ import com.avon.spott.EmailLogin.EmailLoginActivity
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.Nickname.NicknameActivity
 import com.avon.spott.Password.PasswordActivity
-import com.avon.spott.R
 import com.avon.spott.Utils.MySharedPreferences
 import com.avon.spott.Utils.logd
 import com.avon.spott.Utils.loge
@@ -50,6 +48,8 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         super.onCreate(savedInstanceState)
         setContentView(com.avon.spott.R.layout.activity_login)
 
+        init()
+
         // 자동 로그인
         // 1. shared확인
         // 2-1. main으로 이동
@@ -61,7 +61,6 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
 //            presenter.availableToken(getString(R.string.baseurl), "/spott/token/verify",Token(access, refresh))
         }
 
-        init()
     }
 
     // 초기화
