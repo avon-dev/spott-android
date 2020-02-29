@@ -58,7 +58,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         val access = shared.token
         val refresh = shared.refresh
         if(!access.equals("") and !refresh.equals("")) { // 토큰이 있으면
-            presenter.availableToken(getString(R.string.baseurl), "/spott/token/verify",Token(access, refresh))
+//            presenter.availableToken(getString(R.string.baseurl), "/spott/token/verify",Token(access, refresh))
         }
 
         init()

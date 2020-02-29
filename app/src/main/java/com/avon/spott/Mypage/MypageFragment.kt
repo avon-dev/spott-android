@@ -61,7 +61,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
 
     private val TAG = "forMypageFragment"
 
-    private val SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage.jpg"
+    private val SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage.png"
 
     companion object{
         var selectedMarkerMypage : Marker? = null //선택한 마커
@@ -443,10 +443,9 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         findNavController().navigate(R.id.action_mypageFragment_to_photo, bundle)
     }
 
-    override fun showAddPhotoUi(mFilePath : String, mCropPath: String) {
+    override fun showAddPhotoUi(mCropPath: String) {
         val nextIntent = Intent(context, AddPhotoActivity::class.java)
         nextIntent.putExtra("cropPhoto",  mCropPath)
-        nextIntent.putExtra("photo", mFilePath)
         startActivity(nextIntent)
     }
 
@@ -606,14 +605,12 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
                     options.setToolbarCropDrawable(R.drawable.ic_arrow_forward_black_24dp)
                     options.setActiveControlsWidgetColor(ContextCompat.getColor(context!!, R.color.colorPrimary))
                     options.setStatusBarColor(ContextCompat.getColor(context!!, R.color.bg_black))
-//                    options.setCompressionQuality(100)
-//                    options.setMaxBitmapSize(10000)
+                    options.setCompressionQuality(100)
+                    options.setMaxBitmapSize(10000)
                     options.setAspectRatioOptions(1,
-//                        AspectRatio("16 : 9", 16f, 9f),
                         AspectRatio("4 : 3", 4f, 3f),
                         AspectRatio("1 : 1", 1f, 1f),
                         AspectRatio("3 : 4", 3f, 4f)
-//                        AspectRatio("9 : 16", 9f, 16f)
                     )
 
                     /* 현재시간을 임시 파일 이름에 넣는 이유 : 중복방지
@@ -629,7 +626,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
             }else if(requestCode == UCrop.REQUEST_CROP){
                     var mCropPath: Uri? = UCrop.getOutput(data)
                     logd(TAG, "croppath : " + mCropPath)
-                    presenter.openAddPhoto(mPhotoPath.toString(), mCropPath.toString())
+                    presenter.openAddPhoto(mCropPath.toString())
                 }
         }
         if(resultCode == UCrop.RESULT_ERROR){

@@ -1,5 +1,6 @@
 package com.avon.spott.AddPhoto
 
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.text.Editable
@@ -13,6 +14,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.HttpException
 import java.io.File
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -49,8 +51,8 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
         addPhotoView.addMarker(latLng)
     }
 
-    override fun sendPhoto(baseUrl:String,  cropPhoto:String,photo: String,
-                           caption: String, latLng: LatLng?, hashArrayList: ArrayList<String>) {
+    override fun sendPhoto(baseUrl:String,  cropPhoto:String,
+                           caption: String, latLng: LatLng?, hashArrayList: ArrayList<String>, lowQuality:Boolean) {
         if(latLng==null){ //사진에 대한 위치정보가 없을 때
             addPhotoView.showToast("사진의 위치를 표시해주세요")
         }else if(caption.trim().length==0) { //사진에 대한 설명이 없을 때 (빈공간 제외)
@@ -61,41 +63,36 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
             addPhotoView.enableTouching(false)
 
             var images = ArrayList<MultipartBody.Part>()
-            val file = File(addPhotoView.getPath(Uri.parse(cropPhoto)))
+            val path = addPhotoView.getPath(Uri.parse(cropPhoto))
 
-            val path = addPhotoView.getPath(Uri.parse(photo))
-
-            //////////////////////
+            val timeStamp = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
 
             val options = BitmapFactory.Options()
-            options.inSampleSize = 4
-             val mInputImage = BitmapFactory.decodeFile(path, options)
-
-            val con_file  = addPhotoView.detectEdgeUsingJNI(mInputImage)
-
-
-            //////////
-
-
-
-
-            val size = (file.length()/1024).toString() //사이즈 크기 kB
-            val size_back = (con_file.length()/1024).toString() //사이즈 크기 kB
+            options.inSampleSize = 2
+            val bitmapPost = BitmapFactory.decodeFile(path, options)
+            val filePost = addPhotoView.makeFile(bitmapPost, "post.jpg", 70, 0)
+            val size = ( filePost.length()/1024).toString() //사이즈 크기 kB
             logd(TAG, "File post photo size : " + size)
-            logd(TAG, "File back photo size : " +size_back)
+            var requestBody_post: RequestBody = RequestBody.create(MediaType.parse("image/jpg"), filePost)
+            images.add(
+                MultipartBody.Part.createFormData( "posts_image","post" + timeStamp + ".jpg", requestBody_post)
+            )
 
-            /*----------------서버에 이미지 업로드 테스트용 이미지 2개 생성 ---------------------------------
-            * 변경예정사항 : 1. 윤곽선이미지 추가해야함. 2. 이미지 이름 바꿔야함.*/
-            val timeStamp = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
-            var requestBody: RequestBody = RequestBody.create(MediaType.parse("image/jpeg"), file)
-            var con_requestBody: RequestBody = RequestBody.create(MediaType.parse("image/jpeg"), con_file)
-            images.add(
-                MultipartBody.Part.createFormData( "posts_image","p" + timeStamp + ".jpg", requestBody)
-            )
-            images.add(
-                MultipartBody.Part.createFormData("back_image","b" + timeStamp + ".jpg",con_requestBody)
-            )
-            /* -------------------------------------------------------------------------------------- */
+
+            if(!lowQuality){
+                val optionsback = BitmapFactory.Options()
+                optionsback.inSampleSize = 2
+                val bitmapback = BitmapFactory.decodeFile(path, optionsback)
+                val bitmapBack  = addPhotoView.detectEdgeUsingJNI(bitmapback)
+                val fileBack = addPhotoView.makeFile(bitmapBack, "back.png", 100, 1)
+                val size_back = (fileBack.length()/1024).toString() //사이즈 크기 kB
+                logd(TAG, "File back photo size : " +size_back)
+                var requestBody_back: RequestBody = RequestBody.create(MediaType.parse("image/png"), fileBack)
+                images.add(
+                    MultipartBody.Part.createFormData("back_image","back" + timeStamp + ".png",requestBody_back)
+                )
+            }
+
 
             var sending = ""
             if(hashArrayList.size ==0) {

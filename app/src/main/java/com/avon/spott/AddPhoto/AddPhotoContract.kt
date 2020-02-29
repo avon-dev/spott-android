@@ -23,12 +23,12 @@ interface AddPhotoContract {
         fun highlightHashtag(boolean:Boolean,editable: Editable?, start:Int, end:Int)
         fun getCursorPostion():Int
         fun showFindPlaceUi()
-        fun detectEdgeUsingJNI(mInputImage:Bitmap) : File
+        fun detectEdgeUsingJNI(mInputImage:Bitmap) : Bitmap
+        fun makeFile(bitmap:Bitmap, name:String, quality:Int, type:Int) : File
     }
 
     interface Presenter{
-        fun sendPhoto(baseUrl:String, cropPhoto:String,
-                      photo: String, caption: String, latLng: LatLng?, hashArrayList: ArrayList<String>)
+        fun sendPhoto(baseUrl:String, cropPhoto:String, caption: String, latLng: LatLng?, hashArrayList: ArrayList<String>, lowQuality:Boolean)
         fun navigateUp()
         fun usePhoto(photo: String)
         fun newMarker(latLng: LatLng)

@@ -15,8 +15,8 @@ class MypagePresenter(val mypageView:MypageContract.View):MypageContract.Present
 
     init{mypageView.presenter = this}
 
-    override fun openAddPhoto(mFilePath : String, mCropPath: String) {
-        mypageView.showAddPhotoUi(mFilePath, mCropPath)
+    override fun openAddPhoto(mCropPath: String) {
+        mypageView.showAddPhotoUi(mCropPath)
     }
 
     override fun openAlarm() {

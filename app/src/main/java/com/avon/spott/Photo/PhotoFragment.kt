@@ -356,7 +356,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
     }
 
     override fun setPhotoDetail(userPhoto:String?, userNickName:String, postPhotoUrl: String,
-                                backPhotoUrl:String, photoLat:Double, photoLng:Double,
+                                backPhotoUrl:String?, photoLat:Double, photoLng:Double,
                                 caption:String, comments:Int, dateTime:String, likeCount:Int,
                                 likeChecked:Boolean, scrapChecked:Boolean, myself:Boolean,
                                 userId:Int,hasHash:Boolean){

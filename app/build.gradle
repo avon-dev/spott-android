@@ -123,6 +123,10 @@ dependencies {
 
     // facebook
     implementation 'com.facebook.android:facebook-login:[5,6)'
+
+    //opencv
     implementation project(path: ':opencv')
 
+    //google ads
+    implementation 'com.google.android.gms:play-services-ads:18.3.0'
 }

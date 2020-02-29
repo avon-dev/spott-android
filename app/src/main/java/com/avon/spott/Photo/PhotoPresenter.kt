@@ -53,9 +53,9 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
                 val string  = response.body()
                 val result = Parser.fromJson<PhotoResult>(string!!)
 
-                if(result.result == 12001){
+                if(result.result == 1201){
                     photoView.showReportedDialog()
-                }else if(result.result == 12000){
+                }else if(result.result == 1200){
                     val hashArrayList = ArrayList<Array<Int>>()
 
                     val matcher = Validator.validHashtag(result.contents)

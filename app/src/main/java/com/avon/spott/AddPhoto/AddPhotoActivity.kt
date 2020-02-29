@@ -67,6 +67,8 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
 
     private var mIsOpenCVReady = false
 
+    private var lowQuality = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_photo)
@@ -80,18 +82,6 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         //처음 키보드 올라오기 방지용
         text_guide_addphoto_a.requestFocus()
 
-        //깃 테스트
-//        text_guide_addphoto_a.setOnClickListener {
-//            val path = getPath(Uri.parse(intent.getStringExtra("photo")))
-//            val options = BitmapFactory.Options()
-//            options.inSampleSize = 4
-//            mInputImage = BitmapFactory.decodeFile(path, options)
-//
-//            if (mInputImage != null) {
-//                detectEdgeUsingJNI()
-//            }
-//        }
-
         init()
     }
 
@@ -102,29 +92,19 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         }
     }
 
-    external fun detectEdgeJNI(inputImage: Long, outputImage: Long, th1: Int, th2: Int)
+    external fun detectEdgeJNI(inputImage: Long, outputImage: Long, th1: Int, th2: Int, th3:Int)
 
-    override fun detectEdgeUsingJNI(mInputImage:Bitmap) : File {
+    override fun detectEdgeUsingJNI(mInputImage:Bitmap) : Bitmap {
 
         mInputImage!!.setHasAlpha(true)
         val src = Mat()
         Utils.bitmapToMat(mInputImage, src)
         val edge = Mat()
-        detectEdgeJNI(src.nativeObjAddr, edge.nativeObjAddr, 50, 150)
+        detectEdgeJNI(src.nativeObjAddr, edge.nativeObjAddr, 5, 15, 17)
         Utils.matToBitmap(edge, mInputImage)
 
-        //파일로 저장 및 크기 확인
-        val timeStamp = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
-        val file = File(applicationContext.cacheDir, timeStamp+"canny.jpg")
-        file.createNewFile()
-        val out = FileOutputStream(file)
-        mInputImage!!.compress(Bitmap.CompressFormat.JPEG, 100 , out)
-        out.close()
+        return mInputImage
 
-        return file
-//
-//        val size = (file.length()/1024).toString() //사이즈 크기 kB
-//        Log.d(TAG,"size2 : $size")
     }
 
     private fun init(){
@@ -133,14 +113,13 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         include_toolbar_addphoto_a.img_back_toolbar.setOnClickListener(this)
 //        imgbtn_search_addphoto_a.setOnClickListener(this)
 
+        checkQuality(intent.getStringExtra("cropPhoto"))
 
         edit_caption_addphoto_a.addTextChangedListener {
-
             hashArrayList.clear()
             presenter.checkEdit(it)
-
-
         }
+
     }
 
     override fun onClick(v: View?) {
@@ -150,8 +129,7 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
                     return
                 }
                 presenter.sendPhoto(getString(R.string.baseurl),intent.getStringExtra("cropPhoto"),
-                    intent.getStringExtra("photo"),
-                    edit_caption_addphoto_a.text.toString(), markerLatLng, hashArrayList)
+                    edit_caption_addphoto_a.text.toString(), markerLatLng, hashArrayList, lowQuality)
             }
             R.id.img_back_toolbar ->{ presenter.navigateUp() }
 //            R.id.imgbtn_search_addphoto_a ->{presenter.openFindPlace()}
@@ -259,7 +237,6 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
             for(span in spans){
                 editable!!.removeSpan(span)
             }
-
         }
 
 
@@ -271,6 +248,37 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
 
     override fun showFindPlaceUi() {
         startActivity(Intent(this, FindPlaceActivity::class.java))
+    }
+
+    override fun makeFile(bitmap:Bitmap, name:String, quality:Int, type:Int) : File{
+        val timeStamp = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
+        val file = File(applicationContext.cacheDir, timeStamp+name)
+        file.createNewFile()
+        val out = FileOutputStream(file)
+
+        bitmap!!.compress(if(type ==0) Bitmap.CompressFormat.JPEG else Bitmap.CompressFormat.PNG
+            , quality , out)
+
+        out.close()
+
+        return file
+    }
+
+    private fun checkQuality(photoPath:String){
+        val path =getPath(Uri.parse(photoPath))
+        val mOriginalImage = BitmapFactory.decodeFile(path, BitmapFactory.Options())
+        val file = File(path)
+        val size = (file.length()/1024).toString() //사이즈 크기 kB
+
+        if(mOriginalImage!!.width<200 || mOriginalImage!!.height<200 || size.toInt()<500){
+            showToast(getString(R.string.toast_low_quality))
+        }else lowQuality = false
+
+        logd(TAG, "size : $size")
+        logd(TAG, "width : " + mOriginalImage!!.width)
+        logd(TAG, "height : " + mOriginalImage!!.height)
+
+
     }
 
 }

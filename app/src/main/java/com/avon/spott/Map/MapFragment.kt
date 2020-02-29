@@ -113,7 +113,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         //그리드레이아웃 매니저 spansize 다르게 하기(일반 아이템일 때는 한 열에 두 개씩, 로딩아이템일 때는 한 개씩)
         layoutManager.setSpanSizeLookup(object :GridLayoutManager.SpanSizeLookup(){
             override fun getSpanSize(position: Int): Int {
-                if(mapAdapter.getItemViewType(position) == 0){
+                if(mapAdapter.getItemViewType(position) == 0 || mapAdapter.getItemViewType(position) == 2){
                     return 1
                 }else{
                     return 2
@@ -315,9 +315,16 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
         val ITEM = 0
         val LOADING = 1
+//        val ADS = 2
         private var isLoadingAdded = false
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+            /** 에드몹 테스트 */
+//            if(viewType == ADS){
+//                val view = LayoutInflater.from(context).inflate(R.layout.item_ads, parent, false)
+//                return AdViewHolder(view)
+//            }else
+            /**-----------------------*/
             if(viewType == ITEM){ //아이템일 때 아이템뷰홀더 선택
                 val view =  LayoutInflater.from(context).inflate(R.layout.item_photo_square, parent, false)
                 return ItemViewHolder(view)
@@ -344,18 +351,34 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
             add(MapCluster(0.0,0.0, "",0))
         }
 
+//        fun addAdItem(){
+//            itemsList.add(MapCluster(0.0,0.0, "",0))
+//            notifyDataSetChanged()
+//        }
+
         fun removeLoadingItem(){
+
+
             isLoadingAdded = false
             val position = itemsList.size -1
-            val item = getItem(position)
+
+//            val item = getItem(position)
+//            logd(TAG, "deleting position : " + position)
+//            itemsList.remove(item)
+
+            itemsList.removeAt(position)
 
 
-            itemsList.remove(item)
             notifyItemRemoved(position)
 
         }
 
         override fun getItemViewType(position: Int): Int {
+            /** 에드몹 테스트 */
+//            if(position%20 ==19){
+//                return ADS
+//            }else
+            /**-----------------------*/
             if(position==itemsList.size-1 && isLoadingAdded){
                 return LOADING
             }else return ITEM
@@ -372,6 +395,11 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         //=========================================================
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+            /** 에드몹 테스트 */
+//            if(getItemViewType(position)==ADS){
+//
+//            }else
+            /**-----------------------*/
             if(getItemViewType(position)==ITEM) {
                 val mapholder :ItemViewHolder = holder as ItemViewHolder
                 itemsList[position].let {
@@ -394,6 +422,9 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
         inner class LoadingViewHolder(itemView:View):RecyclerView.ViewHolder(itemView){
         }
+//        inner class AdViewHolder(itemView:View):RecyclerView.ViewHolder(itemView){
+//        }
+
 
     }
 
@@ -694,6 +725,11 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
             }
             start = start + pageItems //시작점 변경.
         }
+
+//        if(start < selectedItems!!.size){
+//            mapAdapter.addAdItem()
+//        }
+
 
        mapAdapter.notifyDataSetChanged()
        pageLoading = false
