@@ -52,7 +52,7 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
     }
 
     override fun sendPhoto(baseUrl:String,  cropPhoto:String,
-                           caption: String, latLng: LatLng?, hashArrayList: ArrayList<String>) {
+                           caption: String, latLng: LatLng?, hashArrayList: ArrayList<String>, lowQuality:Boolean) {
         if(latLng==null){ //사진에 대한 위치정보가 없을 때
             addPhotoView.showToast("사진의 위치를 표시해주세요")
         }else if(caption.trim().length==0) { //사진에 대한 설명이 없을 때 (빈공간 제외)
@@ -63,38 +63,36 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
             addPhotoView.enableTouching(false)
 
             var images = ArrayList<MultipartBody.Part>()
-//            val file = File(addPhotoView.getPath(Uri.parse(cropPhoto)))
             val path = addPhotoView.getPath(Uri.parse(cropPhoto))
 
-            val options = BitmapFactory.Options()
-            options.inSampleSize = 4
-            val bitmapPost = BitmapFactory.decodeFile(path, options)
-
-            val bitmapback = BitmapFactory.decodeFile(path, options)
-            val bitmapBack  = addPhotoView.detectEdgeUsingJNI(bitmapback)
-            logd(TAG, "bitmapPost : " + bitmapPost)
-            logd(TAG, "bitmapBack : " +bitmapBack)
-
-            val filePost = addPhotoView.makeFile(bitmapPost, "post.jpg", 90, 0)
-            val fileBack = addPhotoView.makeFile(bitmapBack, "back.png", 100, 1)
-
-            val size = ( filePost.length()/1024).toString() //사이즈 크기 kB
-            val size_back = (fileBack.length()/1024).toString() //사이즈 크기 kB
-            logd(TAG, "File post photo size : " + size)
-            logd(TAG, "File back photo size : " +size_back)
-
-            /*----------------서버에 이미지 업로드 테스트용 이미지 2개 생성 ---------------------------------
-            * 변경예정사항 : 1. 윤곽선이미지 추가해야함. 2. 이미지 이름 바꿔야함.*/
             val timeStamp = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
+
+            val options = BitmapFactory.Options()
+            options.inSampleSize = 2
+            val bitmapPost = BitmapFactory.decodeFile(path, options)
+            val filePost = addPhotoView.makeFile(bitmapPost, "post.jpg", 70, 0)
+            val size = ( filePost.length()/1024).toString() //사이즈 크기 kB
+            logd(TAG, "File post photo size : " + size)
             var requestBody_post: RequestBody = RequestBody.create(MediaType.parse("image/jpg"), filePost)
-            var requestBody_back: RequestBody = RequestBody.create(MediaType.parse("image/png"), fileBack)
             images.add(
                 MultipartBody.Part.createFormData( "posts_image","post" + timeStamp + ".jpg", requestBody_post)
             )
-            images.add(
-                MultipartBody.Part.createFormData("back_image","back" + timeStamp + ".png",requestBody_back)
-            )
-            /* -------------------------------------------------------------------------------------- */
+
+
+            if(!lowQuality){
+                val optionsback = BitmapFactory.Options()
+                optionsback.inSampleSize = 2
+                val bitmapback = BitmapFactory.decodeFile(path, optionsback)
+                val bitmapBack  = addPhotoView.detectEdgeUsingJNI(bitmapback)
+                val fileBack = addPhotoView.makeFile(bitmapBack, "back.png", 100, 1)
+                val size_back = (fileBack.length()/1024).toString() //사이즈 크기 kB
+                logd(TAG, "File back photo size : " +size_back)
+                var requestBody_back: RequestBody = RequestBody.create(MediaType.parse("image/png"), fileBack)
+                images.add(
+                    MultipartBody.Part.createFormData("back_image","back" + timeStamp + ".png",requestBody_back)
+                )
+            }
+
 
             var sending = ""
             if(hashArrayList.size ==0) {

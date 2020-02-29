@@ -61,7 +61,7 @@ class MapPresenter (val mapView:MapContract.View) : MapContract.Presenter {
 
         logd(TAG, "맵은"+ Parser.toJson(cameraRange))
 
-        Retrofit(baseUrl).get(App.prefs.token,"/spott/map/posts",  Parser.toJson(cameraRange))
+        Retrofit(baseUrl).get(App.prefs.token,"/spott/posts",  Parser.toJson(cameraRange))
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 

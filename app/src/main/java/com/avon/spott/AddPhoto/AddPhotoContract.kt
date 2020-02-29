@@ -28,7 +28,7 @@ interface AddPhotoContract {
     }
 
     interface Presenter{
-        fun sendPhoto(baseUrl:String, cropPhoto:String, caption: String, latLng: LatLng?, hashArrayList: ArrayList<String>)
+        fun sendPhoto(baseUrl:String, cropPhoto:String, caption: String, latLng: LatLng?, hashArrayList: ArrayList<String>, lowQuality:Boolean)
         fun navigateUp()
         fun usePhoto(photo: String)
         fun newMarker(latLng: LatLng)

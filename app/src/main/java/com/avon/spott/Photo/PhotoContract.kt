@@ -14,7 +14,7 @@ class PhotoContract {
         fun showCameraUi(photoUrl: String)
         fun showToast(string: String)
         fun setPhotoDetail(userPhoto:String?, userNickName:String, postPhotoUrl: String,
-                           backPhotoUrl:String, photoLat:Double, photoLng:Double,
+                           backPhotoUrl:String?, photoLat:Double, photoLng:Double,
                            caption:String, comments:Int, dateTime:String, likeCount:Int,
                            likeChecked:Boolean, scrapChecked:Boolean, myself:Boolean, userId:Int
                             ,hasHash:Boolean)

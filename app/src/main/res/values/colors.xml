@@ -37,6 +37,8 @@
     <color name="nophoto_grey">#A2A2A2</color>
 
     <color name="photo_pass">#6DA76F</color>
+    <color name="photo_test">#01EEF5</color>
 
+    <color name="light_grey">#E9E9E9</color>
 
 </resources>

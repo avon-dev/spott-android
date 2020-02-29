@@ -1,12 +1,13 @@
 package com.avon.spott.Home
 
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -18,7 +19,14 @@ import com.avon.spott.Main.MainActivity.Companion.mToolbar
 import com.avon.spott.R
 import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
+import com.google.android.gms.ads.*
+import com.google.android.gms.ads.formats.MediaView
+import com.google.android.gms.ads.formats.NativeAdOptions
+import com.google.android.gms.ads.formats.UnifiedNativeAd
+import com.google.android.gms.ads.formats.UnifiedNativeAdView
 import kotlinx.android.synthetic.main.fragment_home.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
@@ -32,7 +40,7 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
     //페이징
     private var start: Int = 0//페이징 시작 위치
-    private val pageItems = 20  // 한번에 보여지는 리사이클러뷰 아이템 수
+    private val pageItems = 19  // 한번에 보여지는 리사이클러뷰 아이템 수
     private var pageLoading = false // 페이징이 중복 되지 않게하기위함
     override var hasNext: Boolean = false // 다음으로 가져올 페이지가 있는지 여부
     override var refreshTimeStamp:String = "" // 서버에서 페이지를 가지고오는 시간적 기준점(페이징 도중 사진이 추가될 때 중복됨을 방지)
@@ -159,6 +167,10 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         homeAdapter.addItemsAdapter(homeItemItems)
         homeAdapter.notifyDataSetChanged()
 
+        if(hasNext){
+            homeAdapter.addAdItem()
+        }
+
         pageLoading = false
     }
 
@@ -177,12 +189,20 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
     inner class HomeAdapter(val context: Context, val homeInterListner:homeInter) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
         private var itemsList = ArrayList<HomeItem>()
+        private var adList = ArrayList<UnifiedNativeAd>()
 
         val ITEM = 0
         val LOADING = 1
+        val ADS = 2
         private var isLoadingAdded = false
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+            /** 에드몹 테스트 */
+            if(viewType == ADS){
+                val view = LayoutInflater.from(context).inflate(R.layout.item_ads, parent, false)
+                return AdViewHolder(view)
+            }else
+            /**-----------------------*/
             if(viewType == ITEM) { //아이템일 때 아이템뷰홀더 선택
                 val view = LayoutInflater.from(context).inflate(R.layout.item_camera, parent, false)
                 return ItemViewHolder(view)
@@ -198,10 +218,16 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
         fun clearItemsAdapter() {
             itemsList.clear()
+            adList.clear()
         }
 
         fun addItemsAdapter(homeItemItems: ArrayList<HomeItem>){
             itemsList.addAll(homeItemItems)
+        }
+
+        fun addAdItem(){
+            itemsList.add(HomeItem("",0))
+            notifyDataSetChanged()
         }
 
         //리싸이클러뷰 아래로 드래그시 페이징 로딩아이템 추가
@@ -213,10 +239,12 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         fun removePageLoadingItem(){
             isLoadingAdded = false
             val position = itemsList.size -1
-            val item = getItem(position)
 
-                itemsList.remove(item)
-                notifyItemRemoved(position)
+//               val item = getItem(position)
+//                itemsList.remove(item)
+            itemsList.removeAt(position)
+
+            notifyItemRemoved(position)
         }
 
         fun addPage(homeItemItem:HomeItem){
@@ -229,12 +257,64 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         }
 
         override fun getItemViewType(position: Int): Int {
-            if(position==itemsList.size-1 && isLoadingAdded){
+            /** 에드몹 테스트 */
+            if(position%20 ==19){
+                return ADS
+            }else
+            /**-----------------------*/
+            if(
+                position==itemsList.size-1 &&
+                isLoadingAdded){
                 return LOADING
             }else return ITEM
         }
 
+
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+            /** 에드몹 테스트 */
+            if(getItemViewType(position)==ADS){
+                logd(TAG, "getItemViewType(position)==ADS!!!!!!!! : $position")
+                val adViewholder :AdViewHolder = holder as AdViewHolder
+
+                adViewholder.adView.visibility = View.INVISIBLE
+
+
+                val builder = AdLoader.Builder(context!!, getString(R.string.banner_ad_unit_id_for_test))
+
+                builder.forUnifiedNativeAd { unifiedNativeAd ->
+                    // OnUnifiedNativeAdLoadedListener implementation.
+                    if(adList.size> (position+1)/20-1){ //해당 위치의 광고가 이미 보여진적이 있을 때
+                        logd(TAG, "adList.size : " +adList.size)
+                        logd(TAG, "headline : " +adList[(position+1)/20-1].headline)
+                        logd(TAG, "mediaContent : " +adList[(position+1)/20-1].mediaContent.mainImage)
+                        populateUnifiedNativeAdView(adList[(position+1)/20-1], adViewholder.adView)
+                    }else{//해당 위치의 광고가 처음 보여질 때
+                        adList.add(unifiedNativeAd)
+                        populateUnifiedNativeAdView(unifiedNativeAd, adViewholder.adView)
+                    }
+
+                }
+
+//                val adOptions = NativeAdOptions.Builder()
+//                    .setReturnUrlsForImageAssets(true)
+//                    .build()
+//
+//                builder.withNativeAdOptions(adOptions)
+
+                val adLoader = builder.withAdListener(object : AdListener() {
+                    override fun onAdFailedToLoad(errorCode: Int) {
+                        logd(TAG, "Failed to load native ad: " + errorCode)
+                        Toast.makeText(context!!, "Failed to load native ad: " + errorCode, Toast.LENGTH_SHORT).show()
+                    }
+                }).build()
+
+                adLoader.loadAd(AdRequest.Builder().build())
+
+                adViewholder.adView.visibility = View.VISIBLE
+
+
+            }else
+            /**-----------------------*/
             if(getItemViewType(position)==ITEM) {
                val itemViewholder :ItemViewHolder = holder as ItemViewHolder
                 itemsList[position].let {
@@ -260,6 +340,122 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         inner class LoadingViewHolder(itemView:View):RecyclerView.ViewHolder(itemView){
         }
 
+        /** 에드몹 테스트 */
+        inner class AdViewHolder(itemView:View):RecyclerView.ViewHolder(itemView){
+            val adView = itemView.findViewById(R.id.adview_ads_i) as UnifiedNativeAdView
+        }
+        /**-----------------------*/
+
     }
+
+
+
+    private fun populateUnifiedNativeAdView(nativeAd: UnifiedNativeAd, adView: UnifiedNativeAdView) {
+        // You must call destroy on old ads when you are done with them,
+        // otherwise you will have a memory leak.
+        // Set the media view.
+        adView.mediaView = adView.findViewById<MediaView>(R.id.ad_media)
+        // Set other ad assets.
+        adView.headlineView = adView.findViewById(R.id.ad_headline)
+        adView.bodyView = adView.findViewById(R.id.ad_body)
+        adView.callToActionView = adView.findViewById(R.id.ad_call_to_action)
+        adView.iconView = adView.findViewById(R.id.ad_app_icon)
+        adView.priceView = adView.findViewById(R.id.ad_price)
+        adView.starRatingView = adView.findViewById(R.id.ad_stars)
+        adView.storeView = adView.findViewById(R.id.ad_store)
+        adView.advertiserView = adView.findViewById(R.id.ad_advertiser)
+
+        // The headline and media content are guaranteed to be in every UnifiedNativeAd.
+        (adView.headlineView as TextView).text = nativeAd.headline
+
+        adView.mediaView.setMediaContent(nativeAd.mediaContent)
+
+
+        // These assets aren't guaranteed to be in every UnifiedNativeAd, so it's important to
+        // check before trying to display them.
+        if (nativeAd.body == null) {
+            adView.bodyView.visibility = View.INVISIBLE
+        } else {
+            adView.bodyView.visibility = View.VISIBLE
+            (adView.bodyView as TextView).text = nativeAd.body
+        }
+
+        if (nativeAd.callToAction == null) {
+            adView.callToActionView.visibility = View.INVISIBLE
+        } else {
+            adView.callToActionView.visibility = View.VISIBLE
+            (adView.callToActionView as Button).text = nativeAd.callToAction
+        }
+
+        if (nativeAd.icon == null) {
+            adView.iconView.visibility = View.GONE
+        } else {
+            (adView.iconView as ImageView).setImageDrawable(
+                nativeAd.icon.drawable)
+            adView.iconView.visibility = View.VISIBLE
+        }
+
+        if (nativeAd.price == null) {
+            adView.priceView.visibility = View.INVISIBLE
+        } else {
+            adView.priceView.visibility = View.VISIBLE
+            (adView.priceView as TextView).text = nativeAd.price
+        }
+
+        if (nativeAd.store == null) {
+            adView.storeView.visibility = View.INVISIBLE
+        } else {
+            adView.storeView.visibility = View.VISIBLE
+            (adView.storeView as TextView).text = nativeAd.store
+        }
+
+        if (nativeAd.starRating == null) {
+            adView.starRatingView.visibility = View.INVISIBLE
+        } else {
+            (adView.starRatingView as RatingBar).rating = nativeAd.starRating!!.toFloat()
+            adView.starRatingView.visibility = View.VISIBLE
+        }
+
+        if (nativeAd.advertiser == null) {
+            adView.advertiserView.visibility = View.INVISIBLE
+        } else {
+            (adView.advertiserView as TextView).text = nativeAd.advertiser
+            adView.advertiserView.visibility = View.VISIBLE
+        }
+
+        // This method tells the Google Mobile Ads SDK that you have finished populating your
+        // native ad view with this native ad.
+        adView.setNativeAd(nativeAd)
+
+        // Get the video controller for the ad. One will always be provided, even if the ad doesn't
+        // have a video asset.
+//        val vc = nativeAd.videoController
+
+        // Updates the UI to say whether or not this ad has a video asset.
+//        if (vc.hasVideoContent()) {
+//            videostatus_text.text = String.format(
+//                Locale.getDefault(),
+//                "Video status: Ad contains a %.2f:1 video asset.",
+//                vc.aspectRatio)
+//
+//            // Create a new VideoLifecycleCallbacks object and pass it to the VideoController. The
+//            // VideoController will call methods on this object when events occur in the video
+//            // lifecycle.
+//            vc.videoLifecycleCallbacks = object : VideoController.VideoLifecycleCallbacks() {
+//                override fun onVideoEnd() {
+//                    // Publishers should allow native ads to complete video playback before
+//                    // refreshing or replacing them with another ad in the same UI location.
+//                    refresh_button.isEnabled = true
+//                    videostatus_text.text = "Video status: Video playback has ended."
+//                    super.onVideoEnd()
+//                }
+//            }
+//        } else {
+//            videostatus_text.text = "Video status: Ad does not contain a video asset."
+//            refresh_button.isEnabled = true
+//        }
+    }
+
+
 
 }
