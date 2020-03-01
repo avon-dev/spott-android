@@ -495,6 +495,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 //        showToast(photoUrl)
         /**
          * 여기에 카메라 연결하는 코드 넣으면 됨!!!!!
+         * scrapitem 클래스로 변경하기
          *                                    */
         Intent(context, CameraXActivity::class.java).let {
             it.putExtra("photoUrl", photoUrl)
