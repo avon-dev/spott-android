@@ -1,7 +1,7 @@
 package com.avon.spott.Home
 
 import android.content.Context
-import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -21,11 +21,9 @@ import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.formats.MediaView
-import com.google.android.gms.ads.formats.NativeAdOptions
 import com.google.android.gms.ads.formats.UnifiedNativeAd
 import com.google.android.gms.ads.formats.UnifiedNativeAdView
 import kotlinx.android.synthetic.main.fragment_home.*
-import java.util.*
 import kotlin.collections.ArrayList
 
 class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
@@ -48,6 +46,8 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
     private var checkInit = false
 
     private var ACTION = 1003
+
+
 
     val homeInterListener = object :homeInter{
         override fun itemClick(id: Int) {
@@ -273,25 +273,19 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             /** 에드몹 테스트 */
             if(getItemViewType(position)==ADS){
+
                 logd(TAG, "getItemViewType(position)==ADS!!!!!!!! : $position")
                 val adViewholder :AdViewHolder = holder as AdViewHolder
-
-                adViewholder.adView.visibility = View.INVISIBLE
-
 
                 val builder = AdLoader.Builder(context!!, getString(R.string.banner_ad_unit_id_for_test))
 
                 builder.forUnifiedNativeAd { unifiedNativeAd ->
-                    val new = unifiedNativeAd
                     // OnUnifiedNativeAdLoadedListener implementation.
                     if(adList.size> (position+1)/20-1){ //해당 위치의 광고가 이미 보여진적이 있을 때
-//                        logd(TAG, "adList.size : " +adList.size)
-//                        logd(TAG, "headline : " +adList[(position+1)/20-1].headline)
-//                        logd(TAG, "mediaContent : " +adList[(position+1)/20-1].mediaContent.mainImage)
                         populateUnifiedNativeAdView(adList[(position+1)/20-1], adViewholder.adView)
                     }else{//해당 위치의 광고가 처음 보여질 때
-                        adList.add(new)
-                        populateUnifiedNativeAdView(unifiedNativeAd, adViewholder.adView)
+                        adList.add(unifiedNativeAd)
+                        populateUnifiedNativeAdView(unifiedNativeAd, adViewholder.adView )
                     }
 
                 }
@@ -299,13 +293,6 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
                 for(i in 0..adList.size-1){
                     logd(TAG, "mediaContent $i : " +adList[i].mediaContent.mainImage)
                 }
-
-
-//                val adOptions = NativeAdOptions.Builder()
-//                    .setReturnUrlsForImageAssets(true)
-//                    .build()
-//
-//                builder.withNativeAdOptions(adOptions)
 
                 val adLoader = builder.withAdListener(object : AdListener() {
                     override fun onAdFailedToLoad(errorCode: Int) {
@@ -315,10 +302,6 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
                 }).build()
 
                 adLoader.loadAd(AdRequest.Builder().build())
-
-                adViewholder.adView.visibility = View.VISIBLE
-
-
             }else
             /**-----------------------*/
             if(getItemViewType(position)==ITEM) {
@@ -375,7 +358,6 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         (adView.headlineView as TextView).text = nativeAd.headline
 
         adView.mediaView.setMediaContent(nativeAd.mediaContent)
-
 
         // These assets aren't guaranteed to be in every UnifiedNativeAd, so it's important to
         // check before trying to display them.

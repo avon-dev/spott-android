@@ -1,14 +1,17 @@
 package com.avon.spott.Login
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
 import android.text.Spannable
 import android.text.Spanned
+import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.avon.spott.Data.User
 import com.avon.spott.Email.EmailActivity
 import com.avon.spott.Email.INTENT_EXTRA_USER
@@ -16,6 +19,7 @@ import com.avon.spott.EmailLogin.EmailLoginActivity
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.Nickname.NicknameActivity
 import com.avon.spott.Password.PasswordActivity
+import com.avon.spott.R
 import com.avon.spott.Utils.MySharedPreferences
 import com.avon.spott.Utils.logd
 import com.avon.spott.Utils.loge
@@ -127,6 +131,14 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         text_privacyinfo_login_a.movementMethod = LinkMovementMethod.getInstance()
 
         span.setSpan(object : ClickableSpan() {
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                //span text 색상 변경 및 밑줄없애기, 진하게
+                ds.color = ContextCompat.getColor(this@LoginActivity, R.color.span_text)
+                ds.isUnderlineText = false
+                ds.setTypeface(Typeface.DEFAULT_BOLD)
+
+            }
             override fun onClick(widget: View) {
                 Intent(this@LoginActivity, MainActivity::class.java).let { startActivity(it) }
             }
@@ -137,6 +149,14 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         text_privacyinfo_login_a.movementMethod = LinkMovementMethod.getInstance()
 
         span.setSpan(object : ClickableSpan() {
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                //span text 색상 변경 및 밑줄없애기, 진하게
+                ds.color = ContextCompat.getColor(this@LoginActivity, R.color.span_text)
+                ds.isUnderlineText = false
+                ds.setTypeface(Typeface.DEFAULT_BOLD)
+
+            }
             override fun onClick(widget: View) {
                 Intent(this@LoginActivity, PasswordActivity::class.java).let { startActivity(it) }
 //                val accessToken = AccessToken.getCurrentAccessToken()
