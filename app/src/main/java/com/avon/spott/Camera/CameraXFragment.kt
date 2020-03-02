@@ -420,13 +420,26 @@ class CameraXFragment : Fragment() {
             // 아이템 클릭시 아이템 내용을 기억하고 있어야 하는 변수가 필요함.
             // 그 아이템을 가지고 이미지를 바꿔주도록 하자
 
+            if(currentPhoto == BACK_IMAGE) {
+                currentPhoto = POST_IMAGE
+                Glide.with(view.context)
+                    .load(photoUrl[POST_IMAGE])
+                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                    .error(android.R.drawable.stat_notify_error)
+                    .into(overlayImage)
+            } else {
+                if(photoUrl[BACK_IMAGE] == null) {
+                    Toast.makeText(view.context, "윤곽선이 없는 사진입니다", Toast.LENGTH_SHORT).show()
+                } else {
+                    currentPhoto = BACK_IMAGE
 
-            Glide.with(view.context)
-                .load(photoUrl)
-                .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                .error(android.R.drawable.stat_notify_error)
-                .into(overlayImage)
-
+                    Glide.with(view.context)
+                        .load(photoUrl[BACK_IMAGE])
+                        .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                        .error(android.R.drawable.stat_notify_error)
+                        .into(overlayImage)
+                }
+            }
         }
     }
 
