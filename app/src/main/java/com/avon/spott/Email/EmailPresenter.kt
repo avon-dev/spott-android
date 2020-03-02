@@ -47,10 +47,15 @@ class EmailPresenter(val emailView: EmailContract.View) : EmailContract.Presente
                 val number = response.body()?.let { Parser.fromJson<Number>(it) }
 
                 if(number != null) {
-                    if (!number.duplication && !number.code.equals(""))
+                    if(number.duplication) { // 중복된 이메일
+                        emailView.showError("이미 가입된 이메일입니다")
+                    } else { // 사용 가능한 이메일
                         emailView.getNumber(number)
-                    else
-                        emailView.showError("이미 가입한 이메일입니다")
+                    }
+//                    if (!number.duplication && !number.code.equals(""))
+//                        emailView.getNumber(number)
+//                    else
+//                        emailView.showError("이미 가입한 이메일입니다")
                 }
             }, { throwable ->
                 loge(TAG, throwable.message)
