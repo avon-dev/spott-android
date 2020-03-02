@@ -367,15 +367,15 @@ class CameraXFragment : Fragment() {
         // 사진 게시글에서 카메라로 넘어올 때
         val photoUrl = CameraXActivity.getPhoto()
         if(photoUrl != null) {
-            if(photoUrl.back_image != null) {
+            if(photoUrl.get(1) != null) {
                 Glide.with(view.context)
-                    .load(photoUrl.back_image)
+                    .load(photoUrl[1])
                     .placeholder(android.R.drawable.progress_indeterminate_horizontal)
                     .error(android.R.drawable.stat_notify_error)
                     .into(overlayImage)
             } else {
                 Glide.with(view.context)
-                    .load(photoUrl.posts_image)
+                    .load(photoUrl[0])
                     .placeholder(android.R.drawable.progress_indeterminate_horizontal)
                     .error(android.R.drawable.stat_notify_error)
                     .into(overlayImage)

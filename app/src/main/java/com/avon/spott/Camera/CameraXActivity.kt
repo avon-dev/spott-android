@@ -27,7 +27,9 @@ class CameraXActivity : AppCompatActivity() {
 
         if(receive != null) {
 //            photoData = receive.getString("photoUrl")
-            photoData = receive.getParcelable("photo")
+//            photoData = receive.getParcelable("photo")
+            postPhotoUrl = receive.getString("postPhotoUrl")
+            backPhotoUrl = receive.getString("backPhotoUrl")
         }
     }
 
@@ -76,6 +78,9 @@ class CameraXActivity : AppCompatActivity() {
 
         private var photoData:ScrapItem? = null
 
+        private var postPhotoUrl:String? = null
+        private var backPhotoUrl:String? = null
+
         fun getOutputDirectory(context: Context): File {
             val appContext = context.applicationContext
             val mediaDir = context.externalMediaDirs.firstOrNull()?.let {
@@ -84,9 +89,7 @@ class CameraXActivity : AppCompatActivity() {
                 mediaDir else appContext.filesDir
         }
 
-        fun getPhoto():ScrapItem? {
-            return photoData
-        }
+        fun getPhoto() = arrayOf(postPhotoUrl, backPhotoUrl)
     }
 
 }

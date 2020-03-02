@@ -72,6 +72,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
     private var showdetail = false
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_photo, container, false)
 
@@ -199,9 +200,13 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
                 }
             }
             R.id.imgbtn_camera_photo_f->{
+                postPhotoUrl?.let { presenter.openCamera(it, backPhotoUrl) }
+
+                /* // 수정
                 if(backPhotoUrl!=null){
                     presenter.openCamera(backPhotoUrl!!)
                 }
+                */
             }
             R.id.const_comment_photo_f -> {presenter.openComment()}
             R.id.text_nickname_photo_f -> {presenter.openUser()}
@@ -491,14 +496,16 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         mAlertDialog.setCanceledOnTouchOutside(false)
     }
 
-    override fun showCameraUi(photoUrl: String) {
+    override fun showCameraUi(postPhotoUrl: String, backPhotoUrl: String?) {
 //        showToast(photoUrl)
         /**
          * 여기에 카메라 연결하는 코드 넣으면 됨!!!!!
          * scrapitem 클래스로 변경하기
          *                                    */
+
         Intent(context, CameraXActivity::class.java).let {
-            it.putExtra("photoUrl", photoUrl)
+            it.putExtra("postPhotoUrl", postPhotoUrl)
+            it.putExtra("backPhotoUrl", backPhotoUrl)
             startActivity(it)
         }
     }

@@ -11,7 +11,7 @@ class PhotoContract {
         fun showEditCaptionUi()
         fun showPhotoEnlagementUi(photoUrl: String)
         fun showHashtagUi(hashtag:String)
-        fun showCameraUi(photoUrl: String)
+        fun showCameraUi(postPhotoUrl: String, backPhotoUrl: String?)
         fun showToast(string: String)
         fun setPhotoDetail(userPhoto:String?, userNickName:String, postPhotoUrl: String,
                            backPhotoUrl:String?, photoLat:Double, photoLng:Double,
@@ -38,7 +38,7 @@ class PhotoContract {
         fun openEditCaption()
         fun openPhotoEnlargement(photoUrl: String)
         fun openHashtag(hashtag: String)
-        fun openCamera(photoUrl:String)
+        fun openCamera(postPhotoUrl: String, backPhotoUrl: String?)
         fun getPhotoDetail(baseUrl:String, photoId:Int)
         fun postLike(baseUrl: String, photoId: Int)
         fun deleteLike(baseUrl: String, photoId: Int)
