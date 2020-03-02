@@ -6,7 +6,8 @@ import com.avon.spott.Data.User
 import com.avon.spott.Utils.*
 import retrofit2.HttpException
 
-class NewPasswordPresenter(val newPasswordView:NewPasswordContract.View) : NewPasswordContract.Presenter {
+class NewPasswordPresenter(val newPasswordView: NewPasswordContract.View) :
+    NewPasswordContract.Presenter {
 
     private val TAG = "NewPasswordPresenter"
 
@@ -19,11 +20,15 @@ class NewPasswordPresenter(val newPasswordView:NewPasswordContract.View) : NewPa
     }
 
     override fun isPassword(password: String) {
-        newPasswordView.isPassword(Validator.validPassword(password))
+        val isPassword = Validator.validPassword(password)
+        newPasswordView.isPassword(isPassword)
+        newPasswordView.showWarning()
     }
 
     override fun isCheck(password: String, checkpw: String) {
-        newPasswordView.isCheck(checkpw.equals(password))
+        val isCheck = checkpw.equals(password)
+        newPasswordView.isCheck(isCheck)
+        newPasswordView.showWarning()
     }
 
     @SuppressLint("CheckResult")
@@ -35,15 +40,15 @@ class NewPasswordPresenter(val newPasswordView:NewPasswordContract.View) : NewPa
         Retrofit(baseUrl).patchNonHeader("/spott/account", sending).subscribe({ response ->
             logd(TAG, "response: ${response.body()}")
             val result = response.body()?.let { Parser.fromJson<BooleanResult>(it) }
-            if(result != null) {
+            if (result != null) {
                 newPasswordView.fixResult(result.result)
             }
         }, { throwable ->
             loge(TAG, "${throwable.message}")
-            if(throwable is HttpException) {
-                loge(TAG, "http exception code:${throwable.code()}, msg: ${throwable.message()}")
+            if (throwable is HttpException) {
+                loge(TAG, "code: ${throwable.code()}, msg: ${throwable.message()}")
+                newPasswordView.showMessage(throwable.code())
             }
-            newPasswordView.showError("다시 시도해주세요")
         })
     }
 }

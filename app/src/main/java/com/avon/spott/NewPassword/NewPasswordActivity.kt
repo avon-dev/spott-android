@@ -9,6 +9,7 @@ import androidx.core.widget.addTextChangedListener
 import com.avon.spott.FindPW.FIND_PW
 import com.avon.spott.Login.LoginActivity
 import com.avon.spott.R
+import com.avon.spott.Utils.App
 import kotlinx.android.synthetic.main.activity_new_password.*
 import kotlinx.android.synthetic.main.toolbar.*
 
@@ -21,6 +22,9 @@ class NewPasswordActivity : AppCompatActivity(), NewPasswordContract.View, View.
 
     private var isPassword:Boolean = false
     private var isCheck:Boolean = false
+
+    private val SUCCESS_CHANGE_PASSWORD = 1
+    private val ERROR_CHECK_PASSWORD = 3
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,16 +58,46 @@ class NewPasswordActivity : AppCompatActivity(), NewPasswordContract.View, View.
 
     override fun isPassword(isPassword: Boolean) {
         this.isPassword = isPassword
-        showWaringMessage()
+//        showWaringMessage()
     }
 
     override fun isCheck(isCheck: Boolean) {
         this.isCheck = isCheck
-        showWaringMessage()
+//        showWaringMessage()
     }
 
-    override fun showError(msg: String) {
-        Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
+    override fun showMessage(code: Int) {
+        when (code) {
+            App.SERVER_ERROR_400 -> {
+//                Toast.makeText(applicationContext, getString(R.string.error_400), Toast.LENGTH_SHORT).show()
+            }
+            App.SERVER_ERROR_404 -> {
+//                Toast.makeText(applicationContext, getString(R.string.error_404), Toast.LENGTH_SHORT).show()
+            }
+            App.SERVER_ERROR_500 -> {
+//                Toast.makeText(applicationContext, getString(R.string.error_500), Toast.LENGTH_SHORT).show()
+            }
+            ERROR_CHECK_PASSWORD -> {
+                Toast.makeText(applicationContext, getString(R.string.error_check_password), Toast.LENGTH_SHORT).show()
+            }
+            SUCCESS_CHANGE_PASSWORD -> {
+                Toast.makeText(applicationContext, getString(R.string.success_change_password), Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    override fun showWarning() {
+        if(isPassword) {
+            text_warnmessage_newpassword_a.visibility = View.INVISIBLE
+        } else {
+            text_warnmessage_newpassword_a.visibility = View.VISIBLE
+        }
+
+        if(isCheck) {
+            text_warnmessage2_newpassword_a.visibility = View.INVISIBLE
+        } else {
+            text_warnmessage2_newpassword_a.visibility = View.VISIBLE
+        }
     }
 
     private fun showWaringMessage() {
@@ -87,9 +121,9 @@ class NewPasswordActivity : AppCompatActivity(), NewPasswordContract.View, View.
                 it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(it)
             }
-            showError("비밀번호가 변경되었습니다")
+            showMessage(SUCCESS_CHANGE_PASSWORD)
         } else {
-            showError("다시 시도해주세요")
+//            showMessage("다시 시도해주세요")
         }
     }
 
@@ -105,7 +139,7 @@ class NewPasswordActivity : AppCompatActivity(), NewPasswordContract.View, View.
                 if(isPassword and isCheck)
                     presenter.fixPassword(getString(R.string.baseurl), email, edit_newpassword_a.text.toString())
                 else {
-                    showError("비밀번호를 확인해주세요")
+                    showMessage(ERROR_CHECK_PASSWORD)
                 }
             }
         }

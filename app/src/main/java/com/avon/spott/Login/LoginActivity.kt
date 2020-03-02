@@ -114,7 +114,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
                                 // 로그인 실패로 간주하고 권한을 허락해달라고 해야 함.
                                 LoginManager.getInstance().logOut()
 //                                btn_facebooklogin_a.simulateClick()
-                                Toast.makeText(this@LoginActivity, "페북 로그인 실패 (권한이 필요합니다)", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@LoginActivity, getString(R.string.error_fb_email_permission), Toast.LENGTH_SHORT).show()
                             }
                         } catch (e:Exception) {
                             e.printStackTrace()
