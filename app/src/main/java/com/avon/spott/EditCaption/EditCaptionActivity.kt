@@ -107,4 +107,12 @@ class EditCaptionActivity : AppCompatActivity(), EditCaptionContract.View, View.
     override fun getCursorPostion():Int{ //EditText의 현재 커서 위치
         return edit_caption_addphoto_a.selectionEnd
     }
+
+    override fun failedToEditCaption() {
+        showToast(getString(R.string.failed_to_edit_caption))
+    }
+
+    override fun showErrorToast() {
+        showToast(getString(R.string.server_connection_error))
+    }
 }

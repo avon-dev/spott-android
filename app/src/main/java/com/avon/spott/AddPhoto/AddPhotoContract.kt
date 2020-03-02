@@ -25,6 +25,9 @@ interface AddPhotoContract {
         fun showFindPlaceUi()
         fun detectEdgeUsingJNI(mInputImage:Bitmap) : Bitmap
         fun makeFile(bitmap:Bitmap, name:String, quality:Int, type:Int) : File
+        fun showErrorToast()
+        fun showNoLoactionInfoToast()
+        fun showNoCaptionToast()
     }
 
     interface Presenter{

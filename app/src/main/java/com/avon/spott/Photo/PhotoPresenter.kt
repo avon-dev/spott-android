@@ -116,7 +116,7 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
                     )
                 }
 
-                photoView.showToast("서버 연결에 오류가 발생했습니다")
+                photoView.serverError()
                 photoView.likeResultError()
 
             })
@@ -144,7 +144,7 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
                     )
                 }
 
-                photoView.showToast("서버 연결에 오류가 발생했습니다")
+                photoView.serverError()
                 photoView.likeResultError()
 
             })
@@ -172,7 +172,7 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
                     )
                 }
 
-                photoView.showToast("서버 연결에 오류가 발생했습니다")
+                photoView.serverError()
                 photoView.scrapResultError()
 
             })
@@ -199,7 +199,7 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
                     )
                 }
 
-                photoView.showToast("서버 연결에 오류가 발생했습니다")
+                photoView.serverError()
                 photoView.scrapResultError()
             })
     }
@@ -216,7 +216,7 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
                 MypageFragment.mypageChange = true
                 photoView.navigateUp()
                 }else{
-                    photoView.showToast("사진이 삭제되지 않았습니다\n다시 시도하세요")
+                    photoView.photoDeleteError()
                 }
 
 
@@ -229,7 +229,7 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
                     )
                 }
 
-                photoView.showToast("사진이 삭제되지 않았습니다\n다시 시도하세요")
+                photoView.photoDeleteError()
 
             })
     }

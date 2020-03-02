@@ -538,7 +538,7 @@ class CameraXFragment : Fragment() {
         }
 
         // 카메라 액티비티 나가기
-        view!!.findViewById<ImageButton>(R.id.imgbtn_back_camerax_f).setOnClickListener {
+        view!!.findViewById<ImageView>(R.id.imgbtn_back_camerax_f).setOnClickListener {
 //            activity?.onBackPressed()
             activity?.finish()
 

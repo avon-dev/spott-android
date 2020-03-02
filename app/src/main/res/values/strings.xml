@@ -174,4 +174,17 @@
 
     <string name="toast_low_quality">사진의 화질이 낮아 윤곽선 없이 업로드됩니다</string>
 
+    <string name="toast_photo_delete_error">사진이 삭제되지 않았습니다\n다시 시도하세요</string>
+
+    <string name="failed_to_edit_caption">설명 편집에 실패했습니다</string>
+
+    <string name="no_location_info">사진의 위치를 표시해주세요</string>
+
+    <string name="no_photo_caption">사진에 대한 설명을 입력해주세요</string>
+
+    <string name="already_finding_location">현재 위치를 가지고 오는 중입니다. 잠시 후 다시 시도해주세요</string>
+
+
+
+
 </resources>

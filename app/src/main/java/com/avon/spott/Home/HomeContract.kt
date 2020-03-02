@@ -12,6 +12,7 @@ interface HomeContract {
         fun removePageLoading()
         fun clearAdapter()
         fun showSearchUi()
+        fun loadNativeAds(homeItemItems: ArrayList<HomeItem>)
 
         var hasNext : Boolean
         var refreshTimeStamp:String

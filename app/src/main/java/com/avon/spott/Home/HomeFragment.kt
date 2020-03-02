@@ -4,12 +4,14 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
+import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.util.set
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -23,7 +25,9 @@ import com.google.android.gms.ads.*
 import com.google.android.gms.ads.formats.MediaView
 import com.google.android.gms.ads.formats.UnifiedNativeAd
 import com.google.android.gms.ads.formats.UnifiedNativeAdView
+import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import java.util.*
 import kotlin.collections.ArrayList
 
 class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
@@ -47,6 +51,9 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
     private var ACTION = 1003
 
+    private var adList = ArrayList<UnifiedNativeAd>()
+    private var adMediaList = ArrayList<UnifiedNativeAd.MediaContent>()
+    private var adRealList = ArrayList<UnifiedNativeAd>()
 
 
     val homeInterListener = object :homeInter{
@@ -63,6 +70,8 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         layoutManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
 
         homeAdapter = HomeAdapter(context!!, homeInterListener)
+
+
     }
 
 
@@ -120,6 +129,8 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
         //스와이퍼리프레쉬 레이아웃 색상변경
         swiperefresh_home_f.setColorSchemeColors(ContextCompat.getColor(context!!, R.color.colorPrimary))
+
+//        adLoader = AdLoader.Builder(context!!, ADMO)
 
     }
 
@@ -189,7 +200,7 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
     inner class HomeAdapter(val context: Context, val homeInterListner:homeInter) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
         private var itemsList = ArrayList<HomeItem>()
-        private var adList = ArrayList<UnifiedNativeAd>()
+
 
         val ITEM = 0
         val LOADING = 1
@@ -219,6 +230,8 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         fun clearItemsAdapter() {
             itemsList.clear()
             adList.clear()
+            adMediaList.clear()
+            adRealList.clear()
         }
 
         fun addItemsAdapter(homeItemItems: ArrayList<HomeItem>){
@@ -240,8 +253,6 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
             isLoadingAdded = false
             val position = itemsList.size -1
 
-//               val item = getItem(position)
-//                itemsList.remove(item)
             itemsList.removeAt(position)
 
             notifyItemRemoved(position)
@@ -277,31 +288,8 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
                 logd(TAG, "getItemViewType(position)==ADS!!!!!!!! : $position")
                 val adViewholder :AdViewHolder = holder as AdViewHolder
 
-                val builder = AdLoader.Builder(context!!, getString(R.string.banner_ad_unit_id_for_test))
+                populateUnifiedNativeAdView(adRealList[(position+1)/20-1], adViewholder.adView, adMediaList[(position+1)/20-1])
 
-                builder.forUnifiedNativeAd { unifiedNativeAd ->
-                    // OnUnifiedNativeAdLoadedListener implementation.
-                    if(adList.size> (position+1)/20-1){ //해당 위치의 광고가 이미 보여진적이 있을 때
-                        populateUnifiedNativeAdView(adList[(position+1)/20-1], adViewholder.adView)
-                    }else{//해당 위치의 광고가 처음 보여질 때
-                        adList.add(unifiedNativeAd)
-                        populateUnifiedNativeAdView(unifiedNativeAd, adViewholder.adView )
-                    }
-
-                }
-
-                for(i in 0..adList.size-1){
-                    logd(TAG, "mediaContent $i : " +adList[i].mediaContent.mainImage)
-                }
-
-                val adLoader = builder.withAdListener(object : AdListener() {
-                    override fun onAdFailedToLoad(errorCode: Int) {
-                        logd(TAG, "Failed to load native ad: " + errorCode)
-                        Toast.makeText(context!!, "Failed to load native ad: " + errorCode, Toast.LENGTH_SHORT).show()
-                    }
-                }).build()
-
-                adLoader.loadAd(AdRequest.Builder().build())
             }else
             /**-----------------------*/
             if(getItemViewType(position)==ITEM) {
@@ -337,9 +325,43 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
     }
 
+    override fun loadNativeAds(homeItemItems: ArrayList<HomeItem>){
+        val builder = AdLoader.Builder(context!!, getString(R.string.banner_ad_unit_id_for_test))
+
+        builder.forUnifiedNativeAd(object : UnifiedNativeAd.OnUnifiedNativeAdLoadedListener{
+            override fun onUnifiedNativeAdLoaded(unifiedNativeAd: UnifiedNativeAd) {
+                 adList.add(unifiedNativeAd)
+                makeMediaList(adList)
+                addItems(homeItemItems)
+            }
+        })
 
 
-    private fun populateUnifiedNativeAdView(nativeAd: UnifiedNativeAd, adView: UnifiedNativeAdView) {
+        val adLoader = builder.withAdListener(object : AdListener() {
+            override fun onAdFailedToLoad(errorCode: Int) {
+                logd(TAG, "Failed to load native ad: " + errorCode)
+                Toast.makeText(context!!, "Failed to load native ad: " + errorCode, Toast.LENGTH_SHORT).show()
+            }
+        }).build()
+
+        adLoader.loadAd(AdRequest.Builder().build())
+    }
+
+    private fun makeMediaList(adList:ArrayList<UnifiedNativeAd>){
+        adMediaList.add(adList[adList.size-1].mediaContent)
+        adRealList.add(adList[adList.size-1])
+        for(i in 0..adRealList.size-1){
+            logd(TAG, "mediaContent $i : " +adRealList[i].mediaContent.mainImage)
+        }
+
+
+
+    }
+
+
+
+    private fun populateUnifiedNativeAdView(nativeAd: UnifiedNativeAd, adView: UnifiedNativeAdView,
+                                           adMedia:UnifiedNativeAd.MediaContent) {
         // You must call destroy on old ads when you are done with them,
         // otherwise you will have a memory leak.
         // Set the media view.
@@ -357,7 +379,10 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         // The headline and media content are guaranteed to be in every UnifiedNativeAd.
         (adView.headlineView as TextView).text = nativeAd.headline
 
+//        adView.mediaView.clearFindViewByIdCache()
         adView.mediaView.setMediaContent(nativeAd.mediaContent)
+//        adView.mediaView.setMediaContent(adMedia)
+        logd(TAG, "populateUnifiedNativeAdView : "+adMedia.mainImage.toString())
 
         // These assets aren't guaranteed to be in every UnifiedNativeAd, so it's important to
         // check before trying to display them.
@@ -414,34 +439,6 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         // This method tells the Google Mobile Ads SDK that you have finished populating your
         // native ad view with this native ad.
         adView.setNativeAd(nativeAd)
-
-        // Get the video controller for the ad. One will always be provided, even if the ad doesn't
-        // have a video asset.
-//        val vc = nativeAd.videoController
-
-        // Updates the UI to say whether or not this ad has a video asset.
-//        if (vc.hasVideoContent()) {
-//            videostatus_text.text = String.format(
-//                Locale.getDefault(),
-//                "Video status: Ad contains a %.2f:1 video asset.",
-//                vc.aspectRatio)
-//
-//            // Create a new VideoLifecycleCallbacks object and pass it to the VideoController. The
-//            // VideoController will call methods on this object when events occur in the video
-//            // lifecycle.
-//            vc.videoLifecycleCallbacks = object : VideoController.VideoLifecycleCallbacks() {
-//                override fun onVideoEnd() {
-//                    // Publishers should allow native ads to complete video playback before
-//                    // refreshing or replacing them with another ad in the same UI location.
-//                    refresh_button.isEnabled = true
-//                    videostatus_text.text = "Video status: Video playback has ended."
-//                    super.onVideoEnd()
-//                }
-//            }
-//        } else {
-//            videostatus_text.text = "Video status: Ad does not contain a video asset."
-//            refresh_button.isEnabled = true
-//        }
     }
 
 

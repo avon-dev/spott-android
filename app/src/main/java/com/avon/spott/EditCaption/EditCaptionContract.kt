@@ -12,6 +12,8 @@ interface EditCaptionContract {
         fun addHashtag(hashtag:String)
         fun highlightHashtag(boolean:Boolean, editable: Editable?, start:Int, end:Int)
         fun getCursorPostion():Int
+        fun showErrorToast()
+        fun failedToEditCaption()
     }
 
     interface Presenter{
