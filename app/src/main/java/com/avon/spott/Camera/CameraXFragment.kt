@@ -429,7 +429,7 @@ class CameraXFragment : Fragment() {
                     .into(overlayImage)
             } else {
                 if(photoUrl[BACK_IMAGE] == null) {
-                    Toast.makeText(view.context, "윤곽선이 없는 사진입니다", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(view.context, getString(R.string.error_none_back_image), Toast.LENGTH_SHORT).show()
                 } else {
                     currentPhoto = BACK_IMAGE
 

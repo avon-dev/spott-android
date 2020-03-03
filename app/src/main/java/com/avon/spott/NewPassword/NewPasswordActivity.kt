@@ -81,7 +81,7 @@ class NewPasswordActivity : AppCompatActivity(), NewPasswordContract.View, View.
                 Toast.makeText(applicationContext, getString(R.string.error_check_password), Toast.LENGTH_SHORT).show()
             }
             SUCCESS_CHANGE_PASSWORD -> {
-                Toast.makeText(applicationContext, getString(R.string.success_change_password), Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, getString(R.string.success_changed_password), Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -63,10 +63,10 @@ class ChangePasswordActivity : AppCompatActivity(), ChangePasswordContract.View,
 
     override fun checkPassword(check: Boolean) {
         originPassword = check
-        if (originPassword)
-            Toast.makeText(applicationContext, "확인되었습니다", Toast.LENGTH_SHORT).show()
-        else
-            Toast.makeText(applicationContext, "비밀번호를 다시 확인해주세요", Toast.LENGTH_SHORT).show()
+        if (originPassword) // 비밀번호 확인
+            Toast.makeText(applicationContext, getString(R.string.checked), Toast.LENGTH_SHORT).show()
+        else // 비밀번호 확인 실패
+            Toast.makeText(applicationContext, getString(R.string.error_wrong_password), Toast.LENGTH_SHORT).show()
     }
 
     override fun isPassword(isPassword: Boolean) { // 비밀번호를 규칙에 맞게 작성했는지
@@ -107,7 +107,7 @@ class ChangePasswordActivity : AppCompatActivity(), ChangePasswordContract.View,
             R.id.btn_check_changepassword_a -> { // 기존 비밀번호 확인하기
                 val token = MySharedPreferences(applicationContext).prefs.getString("access", "")
 
-                if (!token.equals(""))
+                if (token!= null && !token.equals(""))
                     presenter.checkPassword(getString(R.string.baseurl),token, edit_origin_changepassword_a.text.toString())
             }
 
@@ -117,7 +117,7 @@ class ChangePasswordActivity : AppCompatActivity(), ChangePasswordContract.View,
                     if(isPassword && isCheck) {
                         val token = MySharedPreferences(applicationContext).prefs.getString("access", "")
 
-                        if(!token.equals(""))
+                        if(token!=null && !token.equals(""))
                             presenter.changePassword(getString(R.string.baseurl), token, edit_changepassword_a.text.toString())
                     } else {
                         Toast.makeText(applicationContext, getString(R.string.toast_check_changepassword), Toast.LENGTH_SHORT).show()

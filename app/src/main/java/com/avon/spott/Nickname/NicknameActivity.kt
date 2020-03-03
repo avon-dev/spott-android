@@ -124,7 +124,7 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
                         Toast.makeText(this@NicknameActivity, "소셜 회원 가입", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Toast.makeText(this@NicknameActivity, "닉네임을 4글자 이상 작성해주세요", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@NicknameActivity, getString(R.string.error_invalid_nickname), Toast.LENGTH_SHORT).show()
                 }
             }
         }
