@@ -86,7 +86,13 @@ class CameraXActivity : AppCompatActivity() {
                 mediaDir else appContext.filesDir
         }
 
-        fun getPhoto() = arrayOf(postPhotoUrl, backPhotoUrl)
+        fun getPhoto(): Array<String?>? {
+            var array = arrayOf(postPhotoUrl, backPhotoUrl)
+
+            if (array.firstOrNull() != null) { return array }
+            else { return null }
+        }
+
     }
 
 }
