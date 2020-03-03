@@ -312,8 +312,6 @@ class CameraXFragment : Fragment() {
         adapter = CameraXAdapter(view.context, onItemClickListener)
         recyclerview.adapter = adapter
 
-//        getScrapData()
-
         overlayImage = view.findViewById(R.id.img_overlay_camerax_f)
         closeImage = view.findViewById(R.id.img_close_camerax_f)
         opacitySeekbar = view.findViewById(R.id.seekbar_opacity_camerax_f)

@@ -1,7 +1,6 @@
 package com.avon.spott.Login
 
 import android.content.Intent
-import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
 import android.text.Spannable
@@ -12,7 +11,6 @@ import android.text.style.ClickableSpan
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-
 import androidx.core.content.ContextCompat
 import com.avon.spott.Data.Token
 import com.avon.spott.Data.User
@@ -21,7 +19,6 @@ import com.avon.spott.Email.INTENT_EXTRA_USER
 import com.avon.spott.EmailLogin.EmailLoginActivity
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.Nickname.NicknameActivity
-import com.avon.spott.Password.PasswordActivity
 import com.avon.spott.R
 import com.avon.spott.TOS.TOSActivity
 import com.avon.spott.Utils.MySharedPreferences
@@ -71,7 +68,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         val access = shared.token
         val refresh = shared.refresh
         if(!access.equals("") and !refresh.equals("")) { // 토큰이 있으면
-            presenter.availableToken(getString(R.string.baseurl), "/spott/token/verify", Token(access, refresh))
+            presenter.availableToken(getString(R.string.baseurl), "/spott/token/verify", Token(refresh, access))
         }
 
     }

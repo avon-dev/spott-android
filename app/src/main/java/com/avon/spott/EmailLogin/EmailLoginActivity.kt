@@ -31,11 +31,11 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
     private fun init() {
 
         // 임시
-        edit_username_emaillogin_a.setText("pms939@test.com")
-        edit_password_emaillogin_a.setText("qwer1234!")
+//        edit_username_emaillogin_a.setText("pms939@test.com")
+//        edit_password_emaillogin_a.setText("qwer1234!")
 
-//        edit_username_emaillogin_a.setText("baek5@seunghyun.com")
-//        edit_password_emaillogin_a.setText("sunghyun1!")
+        edit_username_emaillogin_a.setText("baek@seunghyun.com")
+        edit_password_emaillogin_a.setText("seunghyun1!")
 
 
         emailLoginPresenter = EmailLoginPresenter(this)
