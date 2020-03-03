@@ -19,7 +19,7 @@ class ChangePasswordPresenter(val view:ChangePasswordContract.View) : ChangePass
     }
 
     @SuppressLint("CheckResult")
-    override fun checkPassword(baseUrl:String, token:String, password: String) {
+    override fun checkPassword(baseUrl:String, token:String, password: String) { // 비밀번호 확인
         val pw = Password(password)
         val sending = Parser.toJson(pw)
 

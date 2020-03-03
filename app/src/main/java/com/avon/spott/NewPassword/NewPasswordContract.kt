@@ -8,8 +8,9 @@ interface NewPasswordContract {
         fun navigateUp()
         fun isPassword(isPassword:Boolean)
         fun isCheck(isCheck:Boolean)
+        fun showWarning()
         fun fixResult(result:Boolean)
-        fun showError(msg:String)
+        fun showMessage(code:Int)
     }
 
     interface Presenter {

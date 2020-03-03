@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.avon.spott.Data.ScrapItem
 import com.avon.spott.R
 import com.avon.spott.Utils.logd
 import java.io.File
@@ -25,7 +26,10 @@ class CameraXActivity : AppCompatActivity() {
         val receive = intent.extras
 
         if(receive != null) {
-            photoUrl = receive.getString("photoUrl")
+//            photoData = receive.getString("photoUrl")
+//            photoData = receive.getParcelable("photo")
+            postPhotoUrl = receive.getString("postPhotoUrl")
+            backPhotoUrl = receive.getString("backPhotoUrl")
         }
     }
 
@@ -66,13 +70,16 @@ class CameraXActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         logd("LifeCycle", "CameraXActivity - onDestroy()")
-        photoUrl = null
+        photoData = null
         super.onDestroy()
     }
 
     companion object {
 
-        private var photoUrl:String? = null
+        private var photoData:ScrapItem? = null
+
+        private var postPhotoUrl:String? = null
+        private var backPhotoUrl:String? = null
 
         fun getOutputDirectory(context: Context): File {
             val appContext = context.applicationContext
@@ -82,9 +89,7 @@ class CameraXActivity : AppCompatActivity() {
                 mediaDir else appContext.filesDir
         }
 
-        fun getPhotoURI():String? {
-            return photoUrl
-        }
+        fun getPhoto() = arrayOf(postPhotoUrl, backPhotoUrl)
     }
 
 }

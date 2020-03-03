@@ -10,6 +10,10 @@ class App : Application(), CameraXConfig.Provider {
     companion object {
         lateinit var prefs : MySharedPreferences
         lateinit var mContext: Context
+
+        val SERVER_ERROR_404 = 404
+        val SERVER_ERROR_400 = 400
+        val SERVER_ERROR_500 = 500
     }
     /* prefs라는 이름의 MySharedPreferences 하나만 생성할 수 있도록 설정. */
 

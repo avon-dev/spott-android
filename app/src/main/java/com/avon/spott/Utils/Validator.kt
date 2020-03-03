@@ -36,7 +36,7 @@ class Validator {
 
         fun validNickname(nickname:String):Boolean {
             // 4자리 이상의 영문 또는 숫자만 가능
-            val reg = Regex("(?=.*^[A-za-z0-9]).{4,}")
+            val reg = Regex("([a-zA-Z0-9]){4,}")
 
             return nickname.matches(reg)
         }

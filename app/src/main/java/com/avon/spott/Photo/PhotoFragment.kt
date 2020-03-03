@@ -29,9 +29,7 @@ import com.avon.spott.R
 import com.avon.spott.Scrap.ScrapFragment.Companion.scrapChange
 import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.dialog_report.*
 import kotlinx.android.synthetic.main.dialog_report.view.*
-import kotlinx.android.synthetic.main.dialog_report_etc.*
 import kotlinx.android.synthetic.main.dialog_report_etc.view.*
 import kotlinx.android.synthetic.main.fragment_photo.*
 import kotlinx.android.synthetic.main.toolbar.view.*
@@ -73,6 +71,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
     private var myself = false
 
     private var showdetail = false
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_photo, container, false)
@@ -201,9 +200,13 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
                 }
             }
             R.id.imgbtn_camera_photo_f->{
+                postPhotoUrl?.let { presenter.openCamera(it, backPhotoUrl) }
+
+                /* // 수정
                 if(backPhotoUrl!=null){
                     presenter.openCamera(backPhotoUrl!!)
                 }
+                */
             }
             R.id.const_comment_photo_f -> {presenter.openComment()}
             R.id.text_nickname_photo_f -> {presenter.openUser()}
@@ -491,16 +494,18 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
         val  mAlertDialog =  builder.show()
         mAlertDialog.setCanceledOnTouchOutside(false)
-
     }
 
-    override fun showCameraUi(photoUrl: String) {
+    override fun showCameraUi(postPhotoUrl: String, backPhotoUrl: String?) {
 //        showToast(photoUrl)
         /**
          * 여기에 카메라 연결하는 코드 넣으면 됨!!!!!
+         * scrapitem 클래스로 변경하기
          *                                    */
+
         Intent(context, CameraXActivity::class.java).let {
-            it.putExtra("photoUrl", photoUrl)
+            it.putExtra("postPhotoUrl", postPhotoUrl)
+            it.putExtra("backPhotoUrl", backPhotoUrl)
             startActivity(it)
         }
     }

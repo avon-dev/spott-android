@@ -17,8 +17,8 @@ class ScrapPresenter(val scrapView:ScrapContract.View) : ScrapContract.Presenter
 
     override fun openPhoto(id: Int) { scrapView.showPhotoUi(id) }
 
-    override fun openCamera(photoUrl: String) {
-        scrapView.showCameraUi(photoUrl)
+    override fun openCamera(postPhotoUrl:String, backPhotoUrl: String?) {
+        scrapView.showCameraUi(postPhotoUrl, backPhotoUrl)
     }
 
     override fun getScraps(baseUrl: String) {

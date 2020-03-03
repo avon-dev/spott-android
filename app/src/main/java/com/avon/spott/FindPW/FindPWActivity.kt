@@ -83,8 +83,11 @@ class FindPWActivity : AppCompatActivity(), FindPWContract.View, View.OnClickLis
 
         btn_send_findpw_a.setBackgroundResource(R.drawable.corner_round_graybtn)
 
-        Toast.makeText(this@FindPWActivity, "인증번호가 전송되었습니다 ${number.code}", Toast.LENGTH_SHORT)
-            .show()
+        Toast.makeText(this@FindPWActivity, getString(R.string.send_authentication_number), Toast.LENGTH_SHORT).show()
+
+        // 임시
+//        Toast.makeText(this@FindPWActivity, "인증번호가 전송되었습니다 ${number.code}", Toast.LENGTH_SHORT)
+//            .show()
 
         btn_send_findpw_a.postDelayed({ // 30초에 한번 보낼 수 있도록 설정
             btn_send_findpw_a.setBackgroundResource(R.drawable.corner_round_primary)

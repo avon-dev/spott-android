@@ -1,6 +1,7 @@
 package com.avon.spott.Nickname
 
 import com.avon.spott.BaseView
+import com.avon.spott.Data.SocialUser
 import com.avon.spott.Data.Token
 import com.avon.spott.Data.User
 
@@ -16,6 +17,7 @@ interface NicknameContract {
         fun navigateUp()
         fun isNickname(nickname:String)
         fun signUp(baseUrl:String, user: User)
+        fun signUp(baseUrl:String, url:String, socialUser: SocialUser)
         fun getToken(baseUrl:String, email:String, password:String)
     }
 }
