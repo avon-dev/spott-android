@@ -20,6 +20,7 @@ import com.avon.spott.Main.MainActivity
 import com.avon.spott.Nickname.NicknameActivity
 import com.avon.spott.Password.PasswordActivity
 import com.avon.spott.R
+import com.avon.spott.TOS.TOSActivity
 import com.avon.spott.Utils.MySharedPreferences
 import com.avon.spott.Utils.logd
 import com.avon.spott.Utils.loge
@@ -136,11 +137,12 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
                 //span text 색상 변경 및 밑줄없애기, 진하게
                 ds.color = ContextCompat.getColor(this@LoginActivity, R.color.span_text)
                 ds.isUnderlineText = false
-                ds.setTypeface(Typeface.DEFAULT_BOLD)
+//                ds.setTypeface(Typeface.DEFAULT_BOLD)
 
             }
             override fun onClick(widget: View) {
-                Intent(this@LoginActivity, MainActivity::class.java).let { startActivity(it) }
+//                Intent(this@LoginActivity, MainActivity::class.java).let { startActivity(it) }
+                Intent(this@LoginActivity, TOSActivity::class.java).let { startActivity(it) }
             }
         }, 13, 17, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         text_privacyinfo_login_a.movementMethod = LinkMovementMethod.getInstance()
@@ -154,11 +156,13 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
                 //span text 색상 변경 및 밑줄없애기, 진하게
                 ds.color = ContextCompat.getColor(this@LoginActivity, R.color.span_text)
                 ds.isUnderlineText = false
-                ds.setTypeface(Typeface.DEFAULT_BOLD)
+//                ds.setTypeface(Typeface.DEFAULT_BOLD)
 
             }
             override fun onClick(widget: View) {
-                Intent(this@LoginActivity, PasswordActivity::class.java).let { startActivity(it) }
+                val intent = Intent(this@LoginActivity, TOSActivity::class.java)
+                intent.putExtra("private", "private")
+                startActivity(intent)
 //                val accessToken = AccessToken.getCurrentAccessToken()
 //                val isLoggedIn = accessToken != null && !accessToken.isExpired
 
@@ -167,7 +171,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
 //                    Arrays.asList("email"));
 
             }
-        }, 20, 31, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }, 20, 28, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         text_privacyinfo_login_a.movementMethod = LinkMovementMethod.getInstance()
 
         // 기기 설정 나라 시간

@@ -8,11 +8,11 @@ interface HomeContract {
 
     interface View: BaseView<Presenter>{
         fun showPhotoUi(id:Int)
-        fun addItems(homeItemItems: ArrayList<HomeItem>)
+        fun addItems()
         fun removePageLoading()
         fun clearAdapter()
         fun showSearchUi()
-        fun loadNativeAds(homeItemItems: ArrayList<HomeItem>)
+        fun loadNativeAds(homeItemItems: ArrayList<HomeItem>, pagable:Boolean)
 
         var hasNext : Boolean
         var refreshTimeStamp:String

@@ -51,10 +51,6 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
     private var ACTION = 1003
 
-    private var adList = ArrayList<UnifiedNativeAd>()
-    private var adMediaList = ArrayList<UnifiedNativeAd.MediaContent>()
-    private var adRealList = ArrayList<UnifiedNativeAd>()
-
 
     val homeInterListener = object :homeInter{
         override fun itemClick(id: Int) {
@@ -99,9 +95,8 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
                         homeAdapter.addPageLoadingItem() //리싸이클러뷰에 로딩아이템 생성 생성
                         recyclerView.smoothScrollToPosition(recyclerView.adapter!!.itemCount-1)
 
-                        Handler().postDelayed({
-                            presenter.getPhotos(getString(R.string.baseurl), start, ACTION)
-                        }, 400) //로딩 주기
+                        presenter.getPhotos(getString(R.string.baseurl), start, ACTION)
+
                     }
                 }
             }
@@ -129,8 +124,6 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
         //스와이퍼리프레쉬 레이아웃 색상변경
         swiperefresh_home_f.setColorSchemeColors(ContextCompat.getColor(context!!, R.color.colorPrimary))
-
-//        adLoader = AdLoader.Builder(context!!, ADMO)
 
     }
 
@@ -172,15 +165,10 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         fun itemClick(id: Int)
     }
 
-    override fun addItems(homeItemItems: ArrayList<HomeItem>){
+    override fun addItems(){
         start = start + pageItems
 
-        homeAdapter.addItemsAdapter(homeItemItems)
         homeAdapter.notifyDataSetChanged()
-
-        if(hasNext){
-            homeAdapter.addAdItem()
-        }
 
         pageLoading = false
     }
@@ -199,8 +187,7 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
     inner class HomeAdapter(val context: Context, val homeInterListner:homeInter) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
-        private var itemsList = ArrayList<HomeItem>()
-
+        var mRecylerViewItems = ArrayList<Any>()
 
         val ITEM = 0
         val LOADING = 1
@@ -208,13 +195,10 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         private var isLoadingAdded = false
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-            /** 에드몹 테스트 */
             if(viewType == ADS){
                 val view = LayoutInflater.from(context).inflate(R.layout.item_ads, parent, false)
                 return AdViewHolder(view)
-            }else
-            /**-----------------------*/
-            if(viewType == ITEM) { //아이템일 때 아이템뷰홀더 선택
+            }else if(viewType == ITEM) { //아이템일 때 아이템뷰홀더 선택
                 val view = LayoutInflater.from(context).inflate(R.layout.item_camera, parent, false)
                 return ItemViewHolder(view)
             }else{ //로딩일 때 로딩뷰홀더 선택
@@ -224,23 +208,11 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         }
 
         override fun getItemCount(): Int {
-            return itemsList.size
+            return  mRecylerViewItems.size
         }
 
         fun clearItemsAdapter() {
-            itemsList.clear()
-            adList.clear()
-            adMediaList.clear()
-            adRealList.clear()
-        }
-
-        fun addItemsAdapter(homeItemItems: ArrayList<HomeItem>){
-            itemsList.addAll(homeItemItems)
-        }
-
-        fun addAdItem(){
-            itemsList.add(HomeItem("",0))
-            notifyDataSetChanged()
+            mRecylerViewItems.clear()
         }
 
         //리싸이클러뷰 아래로 드래그시 페이징 로딩아이템 추가
@@ -251,30 +223,24 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
         fun removePageLoadingItem(){
             isLoadingAdded = false
-            val position = itemsList.size -1
+            val position = mRecylerViewItems.size -1
 
-            itemsList.removeAt(position)
+            mRecylerViewItems.removeAt(position)
 
             notifyItemRemoved(position)
         }
 
         fun addPage(homeItemItem:HomeItem){
-            itemsList.add(homeItemItem)
-            notifyItemInserted(itemsList.size-1)
+            mRecylerViewItems.add(homeItemItem)
+            notifyItemInserted(mRecylerViewItems.size-1)
         }
 
-        fun getItem(position: Int):HomeItem{
-            return itemsList.get(position)
-        }
 
         override fun getItemViewType(position: Int): Int {
-            /** 에드몹 테스트 */
-            if(position%20 ==19){
+            if(mRecylerViewItems[position] is UnifiedNativeAd){
                 return ADS
-            }else
-            /**-----------------------*/
-            if(
-                position==itemsList.size-1 &&
+            }else if(
+                position==mRecylerViewItems.size-1 &&
                 isLoadingAdded){
                 return LOADING
             }else return ITEM
@@ -282,19 +248,21 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-            /** 에드몹 테스트 */
             if(getItemViewType(position)==ADS){
 
                 logd(TAG, "getItemViewType(position)==ADS!!!!!!!! : $position")
                 val adViewholder :AdViewHolder = holder as AdViewHolder
 
-                populateUnifiedNativeAdView(adRealList[(position+1)/20-1], adViewholder.adView, adMediaList[(position+1)/20-1])
+                populateUnifiedNativeAdView(mRecylerViewItems[position] as UnifiedNativeAd, adViewholder.adView)
 
-            }else
-            /**-----------------------*/
-            if(getItemViewType(position)==ITEM) {
+                logd("PLEASE~", "mediaContent $position : " +(mRecylerViewItems[position] as UnifiedNativeAd).mediaContent)
+
+
+            }else if(getItemViewType(position)==ITEM) {
                val itemViewholder :ItemViewHolder = holder as ItemViewHolder
-                itemsList[position].let {
+
+                val homeitem = mRecylerViewItems[position] as HomeItem
+                homeitem.let {
                     Glide.with(holder.itemView.context)
                         .load(it.posts_image)
                         .placeholder(android.R.drawable.progress_indeterminate_horizontal)
@@ -302,7 +270,7 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
                         .into(itemViewholder.photo)
                 }
                 itemViewholder.itemView.setOnClickListener{
-                    homeInterListner.itemClick(itemsList[position].id)
+                    homeInterListner.itemClick(homeitem.id)
                 }
             }else{
                 val layoutParams = holder.itemView.layoutParams as StaggeredGridLayoutManager.LayoutParams
@@ -317,51 +285,71 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         inner class LoadingViewHolder(itemView:View):RecyclerView.ViewHolder(itemView){
         }
 
-        /** 에드몹 테스트 */
         inner class AdViewHolder(itemView:View):RecyclerView.ViewHolder(itemView){
             val adView = itemView.findViewById(R.id.adview_ads_i) as UnifiedNativeAdView
         }
-        /**-----------------------*/
 
     }
 
-    override fun loadNativeAds(homeItemItems: ArrayList<HomeItem>){
+    override fun loadNativeAds(homeItemItems: ArrayList<HomeItem>, pagable:Boolean){
+
+        if(start == 0 || !pagable){
+            if(start!=0 && hasNext){
+                removePageLoading()
+            }
+            hasNext = pagable
+
+            homeAdapter.mRecylerViewItems.addAll(homeItemItems)
+
+            addItems()
+
+            return
+        }
+
         val builder = AdLoader.Builder(context!!, getString(R.string.banner_ad_unit_id_for_test))
 
-        builder.forUnifiedNativeAd(object : UnifiedNativeAd.OnUnifiedNativeAdLoadedListener{
+        val adLoader = builder.forUnifiedNativeAd(object : UnifiedNativeAd.OnUnifiedNativeAdLoadedListener{
             override fun onUnifiedNativeAdLoaded(unifiedNativeAd: UnifiedNativeAd) {
-                 adList.add(unifiedNativeAd)
-                makeMediaList(adList)
-                addItems(homeItemItems)
+                if(hasNext){
+                    removePageLoading()
+                }
+                hasNext = pagable
+
+                homeAdapter.mRecylerViewItems.add(unifiedNativeAd)
+                homeAdapter.mRecylerViewItems.addAll(homeItemItems)
+
+
+                addItems()
             }
-        })
-
-
-        val adLoader = builder.withAdListener(object : AdListener() {
+        }).withAdListener(object : AdListener() {
             override fun onAdFailedToLoad(errorCode: Int) {
                 logd(TAG, "Failed to load native ad: " + errorCode)
                 Toast.makeText(context!!, "Failed to load native ad: " + errorCode, Toast.LENGTH_SHORT).show()
+                if(hasNext){
+                    removePageLoading()
+                }
+                hasNext = pagable
+
+                homeAdapter.mRecylerViewItems.addAll(homeItemItems)
+                addItems()
             }
         }).build()
 
         adLoader.loadAd(AdRequest.Builder().build())
     }
 
-    private fun makeMediaList(adList:ArrayList<UnifiedNativeAd>){
-        adMediaList.add(adList[adList.size-1].mediaContent)
-        adRealList.add(adList[adList.size-1])
-        for(i in 0..adRealList.size-1){
-            logd(TAG, "mediaContent $i : " +adRealList[i].mediaContent.mainImage)
-        }
+//    private fun makeMediaList(adList:ArrayList<UnifiedNativeAd>){
+////        adMediaList.add(adList[adList.size-1].mediaContent)
+////        adRealList.add(adList[adList.size-1])
+////        for(i in 0..adRealList.size-1){
+////            logd(TAG, "mediaContent $i : " +adRealList[i].mediaContent.mainImage)
+////        }
+////
+////    }
 
 
 
-    }
-
-
-
-    private fun populateUnifiedNativeAdView(nativeAd: UnifiedNativeAd, adView: UnifiedNativeAdView,
-                                           adMedia:UnifiedNativeAd.MediaContent) {
+    private fun populateUnifiedNativeAdView(nativeAd: UnifiedNativeAd, adView: UnifiedNativeAdView) {
         // You must call destroy on old ads when you are done with them,
         // otherwise you will have a memory leak.
         // Set the media view.
@@ -382,7 +370,7 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 //        adView.mediaView.clearFindViewByIdCache()
         adView.mediaView.setMediaContent(nativeAd.mediaContent)
 //        adView.mediaView.setMediaContent(adMedia)
-        logd(TAG, "populateUnifiedNativeAdView : "+adMedia.mainImage.toString())
+        logd(TAG, "populateUnifiedNativeAdView : "+nativeAd.mediaContent.toString())
 
         // These assets aren't guaranteed to be in every UnifiedNativeAd, so it's important to
         // check before trying to display them.

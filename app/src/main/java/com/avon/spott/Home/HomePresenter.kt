@@ -32,19 +32,18 @@ class HomePresenter(val homeView:HomeContract.View) : HomeContract.Presenter {
 
                 if (start ==0){
                     homeView.clearAdapter()
-                }else if(homeView.hasNext){
-                    homeView.removePageLoading()
                 }
+//                else if(homeView.hasNext){
+//                    homeView.removePageLoading()
+//                }
 
-                homeView.hasNext = result.pageable //페이지가 남아있는지 여부
+//                homeView.hasNext = result.pageable //페이지가 남아있는지 여부
 
                 homeView.refreshTimeStamp = result.created_time //리프리쉬 타임 설정
 
-                if(result.pageable){
-                    homeView.loadNativeAds(result.items)
-                }else{
-                    homeView.addItems(result.items) //아이템들 추가
-                }
+
+                homeView.loadNativeAds(result.items, result.pageable)
+
 
             }, { throwable ->
                 logd(TAG, throwable.message)

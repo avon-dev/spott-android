@@ -1,5 +1,6 @@
 package com.avon.spott.Reason
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -11,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.avon.spott.GuidelineActivity
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.Main.controlToolbar
 import com.avon.spott.R
@@ -149,6 +151,6 @@ class ReasonFragment :Fragment(), ReasonContract.View, View.OnClickListener{
     }
 
     override fun showGuidelineUi() {
-        /** 가이드라인 액티비티로 이동 */
+        Intent(context!!, GuidelineActivity::class.java).let { startActivity(it) }
     }
 }

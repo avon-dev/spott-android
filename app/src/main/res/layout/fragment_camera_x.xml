@@ -106,6 +106,8 @@
             android:background="@android:color/transparent"
             android:padding="10dp"
             android:scaleType="fitCenter"
+            android:visibility="gone"
+            tools:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/img_right_rotation_camerax_f"
             app:layout_constraintTop_toTopOf="parent">

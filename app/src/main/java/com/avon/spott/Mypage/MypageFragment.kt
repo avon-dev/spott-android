@@ -34,6 +34,7 @@ import com.avon.spott.EditMyinfo.EditMyInfoActivity
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
 import com.avon.spott.Main.controlToolbar
 import com.avon.spott.R
+import com.avon.spott.TOS.TOSActivity
 import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
@@ -677,6 +678,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         arrayList.add(getString(R.string.inquiry))
         arrayList.add(getString(R.string.text_terms_of_service))
         arrayList.add(getString(R.string.text_open_source_library))
+        arrayList.add(getString(R.string.see_photo_uploading_guideline))
 
         val adapter = ArrayAdapter<String>(context!!, android.R.layout.simple_list_item_1, arrayList)
         val listener = object : DialogInterface.OnClickListener{
@@ -694,10 +696,13 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
                         inquire(context!!)
                     }
                     3->{ //이용약관 눌렀을 때
-
+                        Intent(context!!, TOSActivity::class.java).let { startActivity(it) }
                     }
                     4->{ //오픈소스 라이브러리 눌렀을 때
-
+                        Intent(context!!, OpensourceActivity::class.java).let { startActivity(it) }
+                    }
+                    5->{//사진 업로드 가이드라인 보기
+                        Intent(context!!, GuidelineActivity::class.java).let { startActivity(it) }
                     }
                 }
             }
