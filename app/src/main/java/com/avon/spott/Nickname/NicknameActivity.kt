@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import com.avon.spott.Data.SocialUser
 import com.avon.spott.Data.Token
 import com.avon.spott.Data.User
 import com.avon.spott.Email.INTENT_EXTRA_USER
@@ -20,7 +21,14 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
     override lateinit var presenter: NicknameContract.Presenter
     private lateinit var nicknamePresenter: NicknamePresenter
 
-    private lateinit var user: User
+    private lateinit var emailUser: User
+    private lateinit var socialUser: SocialUser
+
+    private val EMAIL = 0
+    private val SOCIAL = 1
+    private var login:Int = -1
+
+    private var enable = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +39,14 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
 
     private fun init() {
 
-        user = intent?.getParcelableExtra(INTENT_EXTRA_USER)!!
+        login = intent.extras.getInt("login", EMAIL)
+
+        if(login == EMAIL) { // 이메일 로그인일 때
+            emailUser = intent?.getParcelableExtra(INTENT_EXTRA_USER)!!
+        } else if (login == SOCIAL) { // 소셜 로그인일 때
+            val email = intent.extras.getString("email", "")
+            socialUser = SocialUser(email)
+        }
 
         nicknamePresenter = NicknamePresenter(this)
 
@@ -45,15 +60,15 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
     }
 
     override fun enableSignUp(enable: Boolean) {
-        val btnConfirm = btn_confirm_nickname_a
+        this.enable = enable
 
         if (enable) {
-            btnConfirm.apply {
+            btn_confirm_nickname_a.apply {
                 setBackgroundResource(R.drawable.corner_round_primary)
                 isClickable = true
             }
         } else {
-            btnConfirm.apply {
+            btn_confirm_nickname_a.apply {
                 setBackgroundResource(R.drawable.corner_round_graybtn)
                 isClickable = false
             }
@@ -66,7 +81,7 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
 
     override fun signUp(result: Boolean) {
         if (result) {
-            presenter.getToken(getString(R.string.baseurl), user.email, user.password!!)
+            presenter.getToken(getString(R.string.baseurl), emailUser.email, emailUser.password!!)
         } else {
             Toast.makeText(this@NicknameActivity, getString(R.string.toast_duplication_nickname), Toast.LENGTH_SHORT).show()
         }
@@ -99,11 +114,17 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
 
             // 가입하기
             R.id.btn_confirm_nickname_a -> {
-                if (edit_nickname_a.text.length > 3) {
-                    user.nickname = edit_nickname_a.text.toString()
-                    presenter.signUp(getString(R.string.baseurl), user)
+                if (enable) {
+                    if(login == EMAIL) {
+                        emailUser.nickname = edit_nickname_a.text.toString()
+                        presenter.signUp(getString(R.string.baseurl), emailUser)
+                    } else if (login == SOCIAL) {
+                        socialUser.nickname = edit_nickname_a.text.toString()
+//                        presenter.signUp(getString(R.string.baseurl), "socialurl", socialUser)
+                        Toast.makeText(this@NicknameActivity, "소셜 회원 가입", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
-                    Toast.makeText(this@NicknameActivity, "닉네임을 4글자 이상 작성해주세요", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@NicknameActivity, getString(R.string.error_invalid_nickname), Toast.LENGTH_SHORT).show()
                 }
             }
         }

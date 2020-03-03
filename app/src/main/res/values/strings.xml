@@ -8,7 +8,8 @@
     <string name="btn_withdrawal_editmyinfo_a">회원탈퇴</string>
     <string name="imgbtn_changepw_editmyinfo_a">비밀번호 변경</string>
     <string name="signin">로그인</string>
-    <string name="signin_email">이메일로 로그인</string>
+    <string name="signin_email">Sign in with email</string>
+<!--    <string name="signin_email">Sign in with email</string>-->
     <string name="check">확인</string>
 
     <!-- Hint -->
@@ -172,5 +173,23 @@
     <string name="inquiry_subject">[문의] 스팟에 문의합니다.</string>
 
     <string name="toast_low_quality">사진의 화질이 낮아 윤곽선 없이 업로드됩니다</string>
+
+    <string name="error_400">400 에러</string>
+    <string name="error_404">404 에러</string>
+    <string name="error_500">500 에러</string>
+    <string name="error_fb_email_permission">페북 로그인시 이메일 권한을 허가해주세요</string>
+    <string name="error_camera_permission">권한이 필요합니다</string>
+    <string name="error_check_password">비밀번호를 확인해주세요</string>
+    <string name="error_none_back_image">윤곽선이 없는 사진입니다</string>
+    <string name="error_invalid_nickname">닉네임을 4글자 이상 작성해주세요</string>
+    <string name="error_retry">다시 시도해주세요</string>
+
+    <string name="error_wrong_password">비밀번호를 다시 확인해주세요</string>
+
+    <string name="success_changed_password">비밀번호가 변경되었습니다</string>
+
+    <string name="checked">확인되었습니다</string>
+    <string name="send_authentication_number">인증번호가 전송되었습니다</string>
+
 
 </resources>

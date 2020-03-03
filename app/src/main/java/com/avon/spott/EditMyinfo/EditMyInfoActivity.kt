@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -112,7 +113,7 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
     override fun getNickname(result: Boolean) {
         if(!result) { // 닉네임 변경에 실패 했을 때
             edit_nickname_editmyinfo_a.setText(buffNickname) // 이전 닉네임으로 되돌리기
-            Toast.makeText(applicationContext, "다시 시도해주세요", Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, getString(R.string.error_retry), Toast.LENGTH_SHORT).show()
         } else {
             buffNickname = edit_nickname_editmyinfo_a.text.toString()
         }
@@ -122,7 +123,7 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
         if(result) {
             presenter.signOut(MySharedPreferences(this))
         } else {
-            Toast.makeText(applicationContext, "다시 시도해주세요", Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, getString(R.string.error_retry), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -154,7 +155,7 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
         if (resultCode == Activity.RESULT_OK && null != data) {
             if(requestCode == 102) {
                 if (data.getData() != null) {
-                    var mPhotoPath: Uri = data.getData()
+                    var mPhotoPath: Uri = data.getData() as Uri
                     logd(TAG, "photopath : " + mPhotoPath)
 
                     val options = UCrop.Options()
@@ -225,6 +226,7 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
                     edit_nickname_editmyinfo_a.apply { // 수정 가능한 상태로 만들기
                         isFocusableInTouchMode = true
                         isFocusable = true
+                        setBackgroundColor(Color.LTGRAY)
                         setSelection(edit_nickname_editmyinfo_a.length())
                     }
 
@@ -235,6 +237,7 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
                     edit_nickname_editmyinfo_a.apply { // 수정 불가능한 상태로 만들기
                         isClickable = false
                         isFocusable = false
+                        setBackgroundColor(Color.TRANSPARENT)
                     }
 
                     imm.hideSoftInputFromWindow(edit_nickname_editmyinfo_a.windowToken, 0)
@@ -245,12 +248,12 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
 
                         if (token != null && !buffNickname.equals(edit_nickname_editmyinfo_a.text.toString()))
                             presenter.changeNickname(getString(R.string.baseurl), token, edit_nickname_editmyinfo_a.text.toString())
-                        else
-                            Toast.makeText(applicationContext, "닉네임을 변경해주세요", Toast.LENGTH_SHORT).show()
+//                        else
+//                            Toast.makeText(applicationContext, "닉네임을 변경해주세요", Toast.LENGTH_SHORT).show()
 
                     } else { // 닉네임이 규칙에 맞지 않은경우
                         edit_nickname_editmyinfo_a.setText(buffNickname)
-                        Toast.makeText(applicationContext, "${getString(R.string.hint_nickname)}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext, getString(R.string.hint_nickname), Toast.LENGTH_SHORT).show()
                     }
                 }
 
@@ -268,13 +271,13 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
                 val builder: AlertDialog.Builder = AlertDialog.Builder(this@EditMyInfoActivity)
                 builder.setMessage(R.string.dialog_withdrawl_message)
                     .setTitle(R.string.dialog_withdrawl_title)
-                    .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener{ dialog, id ->
+                    .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener{ dialog, _ ->
                         dialog.cancel()
                     })
-                    .setPositiveButton(R.string.ok, DialogInterface.OnClickListener{ dialog, id ->
+                    .setPositiveButton(R.string.ok, DialogInterface.OnClickListener{ _, _->
                         // 서버와 통신해서 데이터 없애고 로그아웃 로직
                         val token = MySharedPreferences(applicationContext).prefs.getString("access", "")
-                        presenter.withDrawl(getString(R.string.baseurl), token)
+                        presenter.withDrawl(getString(R.string.baseurl), token!!)
                     })
 
                 val dialog:AlertDialog = builder.create()

@@ -2,6 +2,7 @@ package com.avon.spott.Nickname
 
 import android.annotation.SuppressLint
 import com.avon.spott.Data.NicknmaeResult
+import com.avon.spott.Data.SocialUser
 import com.avon.spott.Data.Token
 import com.avon.spott.Data.User
 import com.avon.spott.Utils.*
@@ -42,6 +43,17 @@ class NicknamePresenter(val nicknameView: NicknameContract.View) : NicknameContr
                     "http exception code: ${exception.code()}, http exception message: ${exception.message()}"
                 )
             }
+        })
+    }
+
+    @SuppressLint("CheckResult")
+    override fun signUp(baseUrl: String, url: String, socialUser: SocialUser) {
+        Retrofit(baseUrl).postFieldNonHeader(url, Parser.toJson(socialUser)).subscribe({ response ->
+            logd(TAG, "response code: ${response.code()}, response body : ${response.body()}")
+
+        }, { throwable ->
+            loge(TAG, throwable.message)
+
         })
     }
 
