@@ -50,11 +50,10 @@ class EditCaptionPresenter(val editCaptionView:EditCaptionContract.View):EditCap
                 val string  = response.body()
                 val result = Parser.fromJson<BooleanResult>(string!!)
                 if(result.result){
-                    editCaptionView.showToast("수정 완료") /**  성공 메세지 수정해야함.  */
                     captionChange = true
                     editCaptionView.navigateUp()
                 }else{
-                    editCaptionView.showToast("설명 편집에 실패했습니다")
+                    editCaptionView.failedToEditCaption()
                 }
             }, { throwable ->
                 logd(TAG, throwable.message)
@@ -64,7 +63,7 @@ class EditCaptionPresenter(val editCaptionView:EditCaptionContract.View):EditCap
                         TAG,
                         "http exception code: ${exception.code()}, http exception message: ${exception.message()}"
                     )
-                    editCaptionView.showToast("서버 연결에 오류가 발생했습니다")
+                    editCaptionView.showErrorToast()
                 }
             })
 

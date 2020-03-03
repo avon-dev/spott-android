@@ -20,16 +20,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+
+
     <com.facebook.login.widget.LoginButton
         android:id="@+id/btn_facebooklogin_a"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:paddingLeft="12dp"
+        android:gravity="center"
         android:layout_gravity="center_horizontal"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="16dp"
         android:textSize="12sp"
         android:textStyle="bold"
+        android:elevation="3dp"
         app:layout_constraintBottom_toTopOf="@id/btn_googlelogin_login_a"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -56,51 +63,74 @@
     <Button
         android:id="@+id/btn_googlelogin_login_a"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
-        android:background="@drawable/common_google_signin_btn_text_light_normal"
-        android:text="google+ 로그인"
+        android:background="@drawable/corner_round_white"
+        android:paddingLeft="11dp"
+        android:paddingRight="23dp"
+        android:text="@string/signin_google"
+        android:textAllCaps="false"
         android:textSize="12sp"
         android:textStyle="bold"
+        android:drawableLeft="@drawable/googleg_standard_color_18"
         app:layout_constraintBottom_toTopOf="@+id/text_privacyinfo_login_a"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_titlelogo_login_a"
-        app:layout_constraintVertical_bias="0.37" />
+        app:layout_constraintTop_toBottomOf="@+id/text_titlelogo_login_a" />
+
+<!--    <Button-->
+<!--        android:id="@+id/btn_googlelogin_login_a"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="54dp"-->
+<!--        android:layout_marginStart="28.5dp"-->
+<!--        android:layout_marginEnd="28.5dp"-->
+<!--        android:background="@drawable/common_google_signin_btn_text_light_normal"-->
+<!--        android:paddingLeft="30dp"-->
+<!--        android:paddingRight="23dp"-->
+<!--        android:text="@string/signin_google"-->
+<!--        android:textAllCaps="false"-->
+<!--        android:textSize="12sp"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/text_privacyinfo_login_a"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.0"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/text_titlelogo_login_a" />-->
 
     <Button
 
         android:id="@+id/btn_emaillogin_login_a"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/corner_round_graybtn"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/corner_round_primary"
         android:drawableLeft="@drawable/ic_mail_black_24dp"
         android:gravity="center"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:paddingLeft="11dp"
+        android:paddingRight="23dp"
         android:text="@string/signin_email"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/text_white"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@id/btn_googlelogin_login_a"
-        app:layout_constraintStart_toStartOf="@id/btn_googlelogin_login_a"
-        app:layout_constraintTop_toBottomOf="@+id/btn_googlelogin_login_a"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_googlelogin_login_a" />
 
     <TextView
         android:id="@+id/text_signup_login_a"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:text="@string/signup_"
-        android:textColor="#5B9DC9"
-        android:textSize="12sp"
+        android:textColor="@color/span_text"
+        android:textSize="13dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_emaillogin_login_a"/>
+        app:layout_constraintTop_toBottomOf="@+id/btn_emaillogin_login_a" />
 
     <TextView
         android:id="@+id/text_privacyinfo_login_a"
@@ -112,6 +142,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="32dp"
         android:bufferType="spannable"
+        android:textColor="@color/text_black"
         android:gravity="center"
         android:text="@string/text_privacyinfo_login_a"
         android:textColorHighlight="@color/default_background"

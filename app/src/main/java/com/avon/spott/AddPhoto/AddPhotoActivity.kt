@@ -277,8 +277,18 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         logd(TAG, "size : $size")
         logd(TAG, "width : " + mOriginalImage!!.width)
         logd(TAG, "height : " + mOriginalImage!!.height)
+    }
 
+    override fun showErrorToast() {
+        showToast(getString(R.string.server_connection_error))
+    }
 
+    override fun showNoLoactionInfoToast() {
+        showToast(getString(R.string.no_location_info))
+    }
+
+    override fun showNoCaptionToast() {
+        showToast(getString(R.string.no_photo_caption))
     }
 
 }

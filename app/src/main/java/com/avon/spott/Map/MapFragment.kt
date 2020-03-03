@@ -653,7 +653,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         if(mylocation!=null){
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 16f))
         }else{
-            showToast("현재 위치를 가지고 오는 중입니다. 잠시 후 다시 시도해주세요.")
+            showToast(getString(R.string.already_finding_location))
         }
     }
 

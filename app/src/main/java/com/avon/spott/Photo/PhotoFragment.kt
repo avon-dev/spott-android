@@ -570,6 +570,10 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         mAlertDialog.setCanceledOnTouchOutside(false)
     }
 
+    override fun photoDeleteError() {
+        showToast(getString(R.string.toast_photo_delete_error))
+    }
+
 
 
 

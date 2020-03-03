@@ -54,9 +54,9 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
     override fun sendPhoto(baseUrl:String,  cropPhoto:String,
                            caption: String, latLng: LatLng?, hashArrayList: ArrayList<String>, lowQuality:Boolean) {
         if(latLng==null){ //사진에 대한 위치정보가 없을 때
-            addPhotoView.showToast("사진의 위치를 표시해주세요")
+            addPhotoView.showNoLoactionInfoToast()
         }else if(caption.trim().length==0) { //사진에 대한 설명이 없을 때 (빈공간 제외)
-            addPhotoView.showToast("사진에 대한 설명을 입력해주세요")
+            addPhotoView.showNoCaptionToast()
             addPhotoView.focusEdit() //editText 포커스
         }else{
             addPhotoView.showLoading(true)
@@ -68,7 +68,11 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
             val timeStamp = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
 
             val options = BitmapFactory.Options()
-            options.inSampleSize = 2
+
+            if(!lowQuality){
+                options.inSampleSize = 2
+            }
+
             val bitmapPost = BitmapFactory.decodeFile(path, options)
             val filePost = addPhotoView.makeFile(bitmapPost, "post.jpg", 70, 0)
             val size = ( filePost.length()/1024).toString() //사이즈 크기 kB
@@ -118,7 +122,6 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
                     )
                     val result = response.body()
                     if (result != null) {
-                        addPhotoView.showToast("성공") /**  성공 메세지 수정해야함.  */
                         mypageChange = true
                         addPhotoView.navigateUp()
                     }
@@ -132,7 +135,7 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
                         )
                         addPhotoView.enableTouching(true)
                         addPhotoView.showLoading(false)
-                        addPhotoView.showToast("서버 연결에 오류가 발생했습니다")
+                        addPhotoView.showErrorToast()
                     }
                 })
 

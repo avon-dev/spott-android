@@ -36,12 +36,7 @@ class PasswordActivity : AppCompatActivity(), PasswordContract.View, View.OnClic
     }
 
     fun init() {
-        // 임시
-        user = User("email")
-        edit_password_a.setText("seunghyun1!")
-        edit_check_password_a.setText("seunghyun1!")
-
-//        user = intent.getParcelableExtra(INTENT_EXTRA_USER)
+        user = intent.getParcelableExtra(INTENT_EXTRA_USER)
 
         passwordPresenter = PasswordPresenter(this)
 

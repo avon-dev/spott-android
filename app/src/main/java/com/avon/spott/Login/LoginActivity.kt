@@ -1,15 +1,19 @@
 package com.avon.spott.Login
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
 import android.text.Spannable
 import android.text.Spanned
+import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+
+import androidx.core.content.ContextCompat
 import com.avon.spott.Data.Token
 import com.avon.spott.Data.User
 import com.avon.spott.Email.EmailActivity
@@ -19,6 +23,7 @@ import com.avon.spott.Main.MainActivity
 import com.avon.spott.Nickname.NicknameActivity
 import com.avon.spott.Password.PasswordActivity
 import com.avon.spott.R
+import com.avon.spott.TOS.TOSActivity
 import com.avon.spott.Utils.MySharedPreferences
 import com.avon.spott.Utils.logd
 import com.avon.spott.Utils.loge
@@ -145,8 +150,17 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         text_privacyinfo_login_a.movementMethod = LinkMovementMethod.getInstance()
 
         span.setSpan(object : ClickableSpan() {
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                //span text 색상 변경 및 밑줄없애기, 진하게
+                ds.color = ContextCompat.getColor(this@LoginActivity, R.color.span_text)
+                ds.isUnderlineText = false
+//                ds.setTypeface(Typeface.DEFAULT_BOLD)
+
+            }
             override fun onClick(widget: View) {
-                Intent(this@LoginActivity, MainActivity::class.java).let { startActivity(it) }
+//                Intent(this@LoginActivity, MainActivity::class.java).let { startActivity(it) }
+                Intent(this@LoginActivity, TOSActivity::class.java).let { startActivity(it) }
             }
         }, 13, 17, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         text_privacyinfo_login_a.movementMethod = LinkMovementMethod.getInstance()
@@ -155,8 +169,18 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         text_privacyinfo_login_a.movementMethod = LinkMovementMethod.getInstance()
 
         span.setSpan(object : ClickableSpan() {
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                //span text 색상 변경 및 밑줄없애기, 진하게
+                ds.color = ContextCompat.getColor(this@LoginActivity, R.color.span_text)
+                ds.isUnderlineText = false
+//                ds.setTypeface(Typeface.DEFAULT_BOLD)
+
+            }
             override fun onClick(widget: View) {
-                Intent(this@LoginActivity, PasswordActivity::class.java).let { startActivity(it) }
+                val intent = Intent(this@LoginActivity, TOSActivity::class.java)
+                intent.putExtra("private", "private")
+                startActivity(intent)
 //                val accessToken = AccessToken.getCurrentAccessToken()
 //                val isLoggedIn = accessToken != null && !accessToken.isExpired
 
@@ -165,7 +189,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
 //                    Arrays.asList("email"));
 
             }
-        }, 20, 31, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }, 20, 28, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         text_privacyinfo_login_a.movementMethod = LinkMovementMethod.getInstance()
 
         // 기기 설정 나라 시간

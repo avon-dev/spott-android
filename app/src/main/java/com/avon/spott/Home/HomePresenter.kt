@@ -17,32 +17,6 @@ class HomePresenter(val homeView:HomeContract.View) : HomeContract.Presenter {
 
     override fun openSearch(){homeView.showSearchUi()}
 
-//    override fun getToken(baseUrl: String, start:Int, action:Int) {
-//        if(App.prefs.temporary_token!=""){
-//            logd(TAG, "토큰 있음")
-//            getPhotos(baseUrl, start, action)
-//        }else{
-//            logd(TAG, "토큰 없음")
-//            Retrofit(baseUrl).postNonHeader( "/spott/home/token","")
-//                .subscribe({ response ->
-//                    logd(TAG, response.body())
-//                    val newToken = response.body()
-//
-//                    App.prefs.temporary_token = newToken!!
-//
-//                    getPhotos(baseUrl, start, action)
-//
-//                }, { throwable ->
-//                    logd(TAG, throwable.message)
-//                    if (throwable is HttpException) {
-//                        logd(
-//                            TAG,
-//                            "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
-//                        )
-//                    }
-//                })
-//        }
-//    }
 
     override fun getPhotos(baseUrl:String, start:Int, action:Int){
 
@@ -58,15 +32,17 @@ class HomePresenter(val homeView:HomeContract.View) : HomeContract.Presenter {
 
                 if (start ==0){
                     homeView.clearAdapter()
-                }else if(homeView.hasNext){
-                    homeView.removePageLoading()
                 }
+//                else if(homeView.hasNext){
+//                    homeView.removePageLoading()
+//                }
 
-                homeView.hasNext = result.pageable //페이지가 남아있는지 여부
+//                homeView.hasNext = result.pageable //페이지가 남아있는지 여부
 
                 homeView.refreshTimeStamp = result.created_time //리프리쉬 타임 설정
 
-                homeView.addItems(result.items) //아이템들 추가
+
+                homeView.loadNativeAds(result.items, result.pageable)
 
 
             }, { throwable ->

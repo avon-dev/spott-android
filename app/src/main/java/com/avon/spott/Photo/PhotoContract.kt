@@ -27,6 +27,7 @@ class PhotoContract {
         fun setCaption(text:String, hashList:ArrayList<Array<Int>>)
         fun reportDone(alertDialog: AlertDialog)
         fun serverError()
+        fun photoDeleteError()
         fun showReportedDialog()
 
     }
