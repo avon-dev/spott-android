@@ -31,13 +31,17 @@ class LoginPresenter(val loginView:LoginContract.View) : LoginContract.Presenter
                 logd(TAG, "result code: ${result.result}")
                 // 액세스 토큰 활성 1002
                 if (result.result == 1002) {
+                    logd(TAG, "토큰 사용 가능")
                     loginView.showMainUi()
                 } else if (result.result == 1003) {
                     // 액세스 토큰 만료 1003
                     App.prefs.token = result.access.toString()
+                    logd(TAG, "액세스 만료")
                     loginView.showMainUi()
+
                 } else if (result.result == 1001) {
                     // 리프레시 토큰 만료 1001 -> 그냥 로그인 로직을 타야 함
+                    logd(TAG, "리프레시 만료")
                 }
             }
         }, { throwable ->

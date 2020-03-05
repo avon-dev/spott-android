@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
-import com.avon.spott.Data.ScrapItem
 import com.avon.spott.R
 import com.avon.spott.Utils.logd
 import java.io.File
@@ -70,14 +69,12 @@ class CameraXActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         logd("LifeCycle", "CameraXActivity - onDestroy()")
-        photoData = null
+        postPhotoUrl = null
+        backPhotoUrl = null
         super.onDestroy()
     }
 
     companion object {
-
-        private var photoData:ScrapItem? = null
-
         private var postPhotoUrl:String? = null
         private var backPhotoUrl:String? = null
 
@@ -89,7 +86,13 @@ class CameraXActivity : AppCompatActivity() {
                 mediaDir else appContext.filesDir
         }
 
-        fun getPhoto() = arrayOf(postPhotoUrl, backPhotoUrl)
+        fun getPhoto(): Array<String?>? {
+            var array = arrayOf(postPhotoUrl, backPhotoUrl)
+
+            if (array.firstOrNull() != null) { return array }
+            else { return null }
+        }
+
     }
 
 }

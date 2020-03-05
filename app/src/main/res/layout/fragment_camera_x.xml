@@ -108,11 +108,12 @@
             android:scaleType="fitCenter"
             android:visibility="gone"
             tools:visibility="visible"
+            android:clickable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/img_right_rotation_camerax_f"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/img_changeimageback_camerax_f"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -122,7 +123,7 @@
                 android:tint="@color/dark_grey"
                 app:srcCompat="@drawable/ic_flip_to_back_24px" />
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/img_changeimagefront_camerax_f"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

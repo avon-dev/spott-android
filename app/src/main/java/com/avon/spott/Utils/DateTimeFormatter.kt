@@ -1,7 +1,16 @@
 package com.avon.spott.Utils
 
+import android.annotation.SuppressLint
+import com.avon.spott.R
+import java.text.SimpleDateFormat
+import java.util.*
+
 class DateTimeFormatter {
+
+
     companion object{
+        private val TAG = "DateTimeFormatter"
+
         fun formatCreated(dateTime:String):String{
 
             val array = dateTime.split("T").toTypedArray()
@@ -25,6 +34,50 @@ class DateTimeFormatter {
             val newDate = year+"년 "+month+"월 "+date+"일"
 
             return newDate
+        }
+
+        // 60 1분
+        // 3600 1시간
+        //
+
+        private val MINUTE = 60 // 방금
+        private val HOUR_1 = 3600 // 분 전
+        private val HOUR_24 = 86400 // 시간 전
+
+
+        @SuppressLint("SimpleDateFormat")
+        fun convertLocalDate(created:String):String {
+
+            lateinit var result:String
+
+            // 게시글 서버 시간에서 현지 시간으로 세팅하기
+            val timeZone = TimeZone.getDefault()
+            var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mmX")
+            simpleDateFormat.timeZone = timeZone
+            val createdDate = simpleDateFormat.parse(created)
+
+            // 현재 시간 구하기
+            val now = Calendar.getInstance(timeZone).time
+
+            // 경과한 시간
+            val elapsedTime: Long = (now.time - createdDate.time) / 1000
+
+            if (elapsedTime < MINUTE) { // 방금
+                result = App.mContext.getString(R.string.just)
+            } else if (elapsedTime < HOUR_1) { // 분 전
+                result = String.format(App.mContext.getString(R.string.minute_ago), elapsedTime/60)
+            } else if (elapsedTime < HOUR_24) { // 시간 전
+                result = String.format(App.mContext.getString(R.string.hour_ago), elapsedTime/3600)
+            } else { // 년 월 일
+                simpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
+                simpleDateFormat.timeZone = timeZone
+                val createdDateToString = simpleDateFormat.format(createdDate)
+
+                var list = createdDateToString.split("-")
+                result = String.format(App.mContext.getString(R.string.yyyy_MM_dd), list[0], list[1], list[2])
+            }
+
+            return result
         }
     }
 }
