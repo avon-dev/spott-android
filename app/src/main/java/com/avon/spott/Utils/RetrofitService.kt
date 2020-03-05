@@ -10,7 +10,7 @@ interface RetrofitService {
 
     @FormUrlEncoded
     @POST
-    fun signIn(@Url url: String, @Field("user_uid") email: String, @Field("password") password: String): Observable<Response<JsonObject>>
+    fun signIn(@Url url: String, @Field("email") email: String, @Field("password") password: String): Observable<Response<JsonObject>>
 
     @FormUrlEncoded
     @POST

@@ -28,6 +28,7 @@ import com.avon.spott.Data.UserData
 import com.avon.spott.R
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.Main.controlToolbar
+import com.avon.spott.Utils.DateTimeFormatter.Companion.convertLocalDate
 import com.avon.spott.Utils.DateTimeFormatter.Companion.formatCreated
 import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
@@ -389,7 +390,8 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
                     itemViewholder.nickname.text = it.user.nickname
                     itemViewholder.content.text = it.contents
-                    itemViewholder.date.text = formatCreated(it.created)
+//                    itemViewholder.date.text = formatCreated(it.created)
+                    itemViewholder.date.text = convertLocalDate(it.created)
 
                     fun editORdelete(delete:Boolean){ //댓글 수정 or 삭제
                         val mDialogView = LayoutInflater.from(holder.itemView.context).inflate(R.layout.dialog_comment, null)
