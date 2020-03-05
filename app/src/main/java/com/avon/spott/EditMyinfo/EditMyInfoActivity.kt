@@ -22,6 +22,7 @@ import com.avon.spott.Camera.PermissionsFragment.Companion.hasPermissions
 import com.avon.spott.ChangePassword.ChangePasswordActivity
 import com.avon.spott.Data.UserInfo
 import com.avon.spott.Login.LoginActivity
+import com.avon.spott.Mypage.MypageFragment.Companion.userDataChange
 import com.avon.spott.R
 import com.avon.spott.Utils.MySharedPreferences
 import com.avon.spott.Utils.logd
@@ -106,8 +107,11 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
     }
 
     override fun changedProfile(result:Boolean, photoUri: Uri) {
-        if(result)
+        if(result){
             img_profile_editmyinfo_a.setImageURI(photoUri)
+            userDataChange = true
+        }
+
     }
 
     override fun getNickname(result: Boolean) {
@@ -116,6 +120,7 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
             Toast.makeText(applicationContext, getString(R.string.error_retry), Toast.LENGTH_SHORT).show()
         } else {
             buffNickname = edit_nickname_editmyinfo_a.text.toString()
+            userDataChange = true
         }
     }
 

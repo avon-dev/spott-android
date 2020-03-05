@@ -96,6 +96,8 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
     private val ACTION = 1004
 
+    private var checkInit = false
+
     // 어댑터와 뷰 연결
     val mapInterListener = object : mapInter{
         override fun itemClick(id: Int){ //  맵리스트플래그먼트(하단플래그먼트) 리사이클러뷰 아이템 클릭시
@@ -205,6 +207,10 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
 
         const_nophoto_map_f.visibility = if(noPhoto) View.VISIBLE else View.GONE
+
+        if(!checkInit && this::mMap.isInitialized){
+            presenter.getLastPosition() //카메라 포지션 옮기기. (처음실행 : 서울, 그외 : 최근에 봤던 곳)
+        }
 
 
     }
@@ -348,7 +354,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
         fun addLoadingItem(){
             isLoadingAdded = true
-            add(MapCluster(0.0,0.0, "",0))
+            add(MapCluster(0.0,0.0, "",0,0))
         }
 
 //        fun addAdItem(){
@@ -438,7 +444,6 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 //        mMap.setMinZoomPreference(8f) //지도 최대 축소 지정
 
         setClusterManager() //클러스터 세팅
-
         presenter.getLastPosition() //카메라 포지션 옮기기. (처음실행 : 서울, 그외 : 최근에 봤던 곳)
 
 
@@ -467,7 +472,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
 
         if(selectedMarker !=null){ //전에 선택했던 마커는 다시 하얀색으로 바꾸기
-            val sortItmes = selectedCluster!!.items.sortedByDescending { mapCluster: MapCluster? -> mapCluster!!.id }
+            val sortItmes = selectedCluster!!.items.sortedByDescending { mapCluster: MapCluster? -> mapCluster!!.like_count }
             val firstItem = sortItmes[0]  //첫번째 아이템 선택
 
             Glide.with(context!!)
@@ -501,7 +506,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
     private fun newCluster(cluster: Cluster<MapCluster>?){ //새로 선택한 클러스터 처리
         text_spotnumber_map_f.text = cluster!!.size.toString()
 
-        val sortItmes = cluster.items.sortedByDescending { mapCluster: MapCluster? -> mapCluster!!.id }
+        val sortItmes = cluster.items.sortedByDescending { mapCluster: MapCluster? -> mapCluster!!.like_count }
 
         val firstItem = sortItmes[0] //첫번째 아이템 선택
 
@@ -582,6 +587,8 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         //맵리스트플래그먼트(하단플래그먼트) 내려가게
         mBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         bottomCollapsed()
+
+        checkInit = true
     }
 
 
@@ -610,7 +617,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
             override fun onCameraIdle() {
                 logd(TAG, "onCameraIdle(), animMove : "+ clusterSelectMove)
 
-                if(!clusterSelectMove){ //애니메이션으로 움직인게 아니라면 데이터 가져옴.
+                if(!clusterSelectMove && const_nophoto_map_f!=null){ //애니메이션으로 움직인게 아니라면 데이터 가져옴.
                     const_nophoto_map_f.visibility = View.GONE
                     noPhoto = false
                     sendCameraRange()

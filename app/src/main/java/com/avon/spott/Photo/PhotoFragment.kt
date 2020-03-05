@@ -83,6 +83,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         super.onActivityCreated(savedInstanceState)
         init()
 
+
         //넘어오는 photoId값
         val photoId = arguments?.getInt("photoId")
         showToast(photoId.toString())
@@ -367,6 +368,11 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
         this.myself = myself
 
+        text_like_photo_f.text = likeCount.toString()
+        this.likeCount = likeCount
+
+        text_nickname_photo_f.text = userNickName
+
         if(userPhoto==null){
             logd(TAG,"null")
             img_userphoto_photo_f.setImageResource(R.drawable.img_person)
@@ -377,11 +383,6 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
                 .error(android.R.drawable.stat_notify_error)
                 .into(img_userphoto_photo_f)
         }
-
-        text_like_photo_f.text = likeCount.toString()
-        this.likeCount = likeCount
-
-            text_nickname_photo_f.text = userNickName
 
         Glide.with(context!!)
             .load(postPhotoUrl)
@@ -424,6 +425,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         scrapProgressing = false
 
         scroll_photo_f.visibility = View.VISIBLE
+
 
     }
 

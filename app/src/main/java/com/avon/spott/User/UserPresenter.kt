@@ -32,7 +32,7 @@ class UserPresenter (val userView:UserContract.View):UserContract.Presenter {
 
         logd(TAG, "sending  : " + Parser.toJson(fromSearch))
 
-        Retrofit(baseurl).get(App.prefs.token, "/spott/user/"+userId.toString()+"/posts",  Parser.toJson(fromSearch))
+        Retrofit(baseurl).get(App.prefs.token, "/spott/users/"+userId.toString()+"/posts",  Parser.toJson(fromSearch))
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 

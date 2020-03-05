@@ -121,7 +121,6 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
             fromNoti = true
         }
 
-
         return root
     }
 

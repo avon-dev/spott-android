@@ -214,12 +214,12 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
             SimpleDateFormat("yyyy-MM-dd HH:mm:ss (z Z)")
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            logd(TAG, "Build.VERSION.SDK_INT >= Build.VERSION_CODES.O")
-            var now = LocalDate.now()
-            val dateNow = LocalDate.parse(strDate, formatter as DateTimeFormatter?)
-            logd(TAG, "$dateNow")
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            logd(TAG, "Build.VERSION.SDK_INT >= Build.VERSION_CODES.O")
+//            var now = LocalDate.now()
+//            val dateNow = LocalDate.parse(strDate, formatter as DateTimeFormatter?)
+//            logd(TAG, "$dateNow")
+//        }
 
         // df에 시간 설정
         df.timeZone = tz

@@ -21,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.ScaleGestureDetector
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.webkit.MimeTypeMap
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -148,9 +149,10 @@ class CameraXFragment : Fragment() {
 
             this@CameraXFragment.scrapItem = scrapItem
 
-            if (overlayImage.isVisible) // 이미지 숨기기
+            if (overlayImage.isVisible) {// 이미지 숨기기
                 hideOverlayImage()
-            else { // 리사이클러 뷰에서 선택한 아이템 이미지뷰에 띄우기
+            }
+//            else { // 리사이클러 뷰에서 선택한 아이템 이미지뷰에 띄우기
                 if(scrapItem.back_image!= null) {
                     currentPhoto = BACK_IMAGE
                     Glide.with(overlayImage)
@@ -168,7 +170,9 @@ class CameraXFragment : Fragment() {
                 }
 
                 showOverlayImage()
-            }
+//            }
+
+            recyclerview.visibility = View.GONE /** 리싸이클러뷰 숨기기 추가  */
         }
     }
 
@@ -500,6 +504,9 @@ class CameraXFragment : Fragment() {
         view!!.findViewById<ImageButton>(R.id.imgbtn_shoot_camerax_f).setOnClickListener {
             imageCapture?.let { imageCapture ->
 
+                view!!.findViewById<ImageButton>(R.id.imgbtn_shoot_camerax_f).
+                    startAnimation(AnimationUtils.loadAnimation(context!!, R.anim.scale_camera_shoot))
+
                 val photoFile = createFile(outputDirectory, FILENAME, PHOTO_EXTENSION)
 
                 val metadata = Metadata().apply {
@@ -532,6 +539,10 @@ class CameraXFragment : Fragment() {
 
         // 카메라 스위치
         view!!.findViewById<ImageButton>(R.id.imgbtn_switchcamera_camerax_f).setOnClickListener {
+
+            view!!.findViewById<ImageButton>(R.id.imgbtn_switchcamera_camerax_f).
+                startAnimation(AnimationUtils.loadAnimation(context!!, R.anim.rotate_camera_switch))
+
             lensFacing = if (CameraSelector.LENS_FACING_FRONT === lensFacing) {
                 CameraSelector.LENS_FACING_BACK
             } else {

@@ -13,9 +13,10 @@
     <application
         android:name=".Utils.App"
         android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher"
+        android:fullBackupContent="false"
+        android:icon="@mipmap/ic_launcher_phopo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_phopo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
