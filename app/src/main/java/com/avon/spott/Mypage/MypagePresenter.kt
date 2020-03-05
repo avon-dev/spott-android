@@ -77,7 +77,7 @@ class MypagePresenter(val mypageView:MypageContract.View):MypageContract.Present
 
     }
 
-    override fun getNotiCount(baseUrl: String) {
+    override fun getNotiCount(baseUrl: String, userDataChange:Boolean) {
         Retrofit(baseUrl).get(App.prefs.token, "/spott/users/my-posts",  "")
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
@@ -86,6 +86,10 @@ class MypagePresenter(val mypageView:MypageContract.View):MypageContract.Present
                 val result = Parser.fromJson<MypageResult>(string!!)
 
                 mypageView.setNotiCount(result.is_confirmation)
+
+                if(userDataChange){
+                    mypageView.setUserInfo(result.user.nickname, result.user.profile_image, result.user.is_public)
+                }
 
             }, { throwable ->
                 logd(TAG, throwable.message)
@@ -103,7 +107,7 @@ class MypagePresenter(val mypageView:MypageContract.View):MypageContract.Present
         val public = Public(!isPublic)
         logd(TAG, "public sending : "+Parser.toJson(public))
 
-        Retrofit(baseUrl).patch(App.prefs.token, "/spott/mypage",  Parser.toJson(public))
+        Retrofit(baseUrl).patch(App.prefs.token, "/spott/users/my-posts",  Parser.toJson(public))
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
 

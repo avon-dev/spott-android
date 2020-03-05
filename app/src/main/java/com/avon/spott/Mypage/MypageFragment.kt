@@ -71,6 +71,8 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         var mapRecyclerViewShow = false //마이페이지 맵 리사이클러뷰 visible 여부
 
         var mypageChange = false //내가 작성한 사진이 변화가 있는 지 여부
+
+        var userDataChange = false
     }
 
     var Mypageselectgrid = true //마이페이지 그리드 탭이 보이는지 여부
@@ -244,7 +246,10 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
 
             presenter.getMyphotos(getString(R.string.baseurl))
         }else if(checkInit){
-            presenter.getNotiCount(getString(R.string.baseurl)) // 새로운 알림을 가져옴
+            presenter.getNotiCount(getString(R.string.baseurl), userDataChange) // 새로운 알림을 가져옴
+            userDataChange = false
+        }else{
+            presenter.getMyphotos(getString(R.string.baseurl))
         }
 
     }
@@ -649,6 +654,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
 
         mToolbar.text_name_toolbar.text=nickname
         showPublic(isPublic)
+
     }
 
     private fun clearMypage(){

@@ -28,7 +28,7 @@ interface MypageContract {
 
     interface Presenter{
         fun getMyphotos(baseUrl:String)
-        fun getNotiCount(baseUrl: String)
+        fun getNotiCount(baseUrl: String, userDataChange:Boolean)
         fun openPhoto(id:Int)
         fun openAlarm()
         fun openEditMyInfo()

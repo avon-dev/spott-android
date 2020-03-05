@@ -107,7 +107,8 @@ class PhotoRenderer(mcontext: Context, mMap:GoogleMap, clusterManager: ClusterMa
             }
         }
 
-        val sortItmes = cluster!!.items.sortedByDescending { mapCluster: MapCluster? -> mapCluster!!.id }
+        val sortItmes = cluster!!.items.sortedByDescending { mapCluster: MapCluster? ->
+            if(mapFrag)mapCluster!!.like_count else mapCluster!!.id}
 
         val firstItem = sortItmes[0]  //첫번째 아이템 선택
 

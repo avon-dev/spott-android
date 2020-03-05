@@ -52,7 +52,7 @@ class NotificationFragment : Fragment(), NotificationContract.View, View.OnClick
 
     private var checkInit = false
 
-    val notiInterListner = object : notiInter{
+    val notiInterListener = object : notiInter{
         override fun photoClick(photoId:Int){
             presenter.openPhoto(photoId)
         }
@@ -78,7 +78,7 @@ class NotificationFragment : Fragment(), NotificationContract.View, View.OnClick
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         layoutManager = LinearLayoutManager(context!!)
-        notiAdapter = NoificationAdapter(context!!, notiInterListner)
+        notiAdapter = NoificationAdapter(context!!, notiInterListener)
     }
 
     override fun onCreateView(
@@ -147,7 +147,6 @@ class NotificationFragment : Fragment(), NotificationContract.View, View.OnClick
             //처음 사진을 가져오는 코드 (처음 이후에는 리프레쉬 전까지 가져오지않는다.)
                  presenter.getNoti(getString(R.string.baseurl), start)
 
-            checkInit = true
         }
 
         //스와이퍼리프레쉬 레이아웃 색상변경
@@ -202,6 +201,7 @@ class NotificationFragment : Fragment(), NotificationContract.View, View.OnClick
         notiAdapter.notifyDataSetChanged()
 
         pageLoading = false
+        checkInit = true
     }
 
     override fun removePageLoading(){

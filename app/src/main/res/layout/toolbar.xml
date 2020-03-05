@@ -115,6 +115,7 @@
                 android:id="@+id/img_noti_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:padding="1.5dp"
                 app:srcCompat="@drawable/ic_notifications_black_24dp"
                 tools:ignore="VectorDrawableCompat" />
 
@@ -123,7 +124,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|right"
-                android:layout_marginTop="9dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/text_count_noti"
                 android:paddingHorizontal="1dp"
                 android:textColor="@color/text_white"

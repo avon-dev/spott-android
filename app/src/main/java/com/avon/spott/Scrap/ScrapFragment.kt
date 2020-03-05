@@ -98,7 +98,7 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
 
         if(!checkInit){
             presenter.getScraps(getString(R.string.baseurl))
-            checkInit = true
+
         }else{
 
             text_scraps_scrap_f.text = scrapCount.toString()
@@ -328,6 +328,8 @@ class ScrapFragment : Fragment(), ScrapContract.View, View.OnClickListener {
         }else{
             const_noscrap_scrap_f.visibility = View.GONE
         }
+
+        checkInit = true
     }
 
     override fun showReady(boolean: Boolean){

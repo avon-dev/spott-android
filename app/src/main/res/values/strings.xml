@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Spott</string>
+    <string name="app_name">Phopo</string>
 
     <!-- EditMyinfoActivity [Start]-->
     <string name="text_title_editmyinfo_a">내 정보 수정</string>
@@ -173,7 +173,7 @@
     <string name="failed_to_delete_comment">댓글 삭제에 실패했습니다</string>
     <string name="failed_to_delete_noti">알림 삭제에 실패했습니다</string>
 
-    <string name="inquiry_subject">[문의] 스팟에 문의합니다.</string>
+    <string name="inquiry_subject">[문의] phopo에 문의합니다.</string>
 
     <string name="toast_low_quality">사진의 화질이 낮아 윤곽선 없이 업로드됩니다</string>
 

@@ -22,6 +22,7 @@ import com.avon.spott.Camera.PermissionsFragment.Companion.hasPermissions
 import com.avon.spott.ChangePassword.ChangePasswordActivity
 import com.avon.spott.Data.UserInfo
 import com.avon.spott.Login.LoginActivity
+import com.avon.spott.Mypage.MypageFragment.Companion.userDataChange
 import com.avon.spott.R
 import com.avon.spott.Utils.MySharedPreferences
 import com.avon.spott.Utils.logd
@@ -106,8 +107,11 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
     }
 
     override fun changedProfile(result:Boolean, photoUri: Uri) {
-        if(result)
+        if(result){
             img_profile_editmyinfo_a.setImageURI(photoUri)
+            userDataChange = true
+        }
+
     }
 
     override fun getNickname(result: Boolean) {
@@ -116,6 +120,7 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
             Toast.makeText(applicationContext, getString(R.string.error_retry), Toast.LENGTH_SHORT).show()
         } else {
             buffNickname = edit_nickname_editmyinfo_a.text.toString()
+            userDataChange = true
         }
     }
 
@@ -164,12 +169,8 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
                     options.setToolbarCropDrawable(R.drawable.ic_arrow_forward_black_24dp)
                     options.setActiveControlsWidgetColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
                     options.setStatusBarColor(ContextCompat.getColor(applicationContext, R.color.bg_black))
-                    options.setAspectRatioOptions(2,
-//                        AspectRatio("16 : 9", 16f, 9f),
-                        AspectRatio("4 : 3", 4f, 3f),
-                        AspectRatio("1 : 1", 1f, 1f),
-                        AspectRatio("3 : 4", 3f, 4f)
-//                        AspectRatio("9 : 16", 9f, 16f)
+                    options.setAspectRatioOptions(0,
+                        AspectRatio("1 : 1", 1f, 1f)
                     )
                     options.setCircleDimmedLayer(true)
 

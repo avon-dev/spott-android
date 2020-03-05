@@ -21,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.ScaleGestureDetector
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.webkit.MimeTypeMap
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -153,13 +154,15 @@ class CameraXFragment : Fragment() {
 
 //            this@CameraXFragment.scrapItem = scrapItem
 
-            if (overlayImage.isVisible) // 이미지 숨기기
+            if (overlayImage.isVisible) {// 이미지 숨기기
                 hideOverlayImage()
-            else { // 리사이클러 뷰에서 선택한 아이템 보여주기
+            }
+//            else { // 리사이클러 뷰에서 선택한 아이템 보여주기
 
                 var hasBack:Boolean
 
                 if(photoUrl[BACK_IMAGE]!= null) { // 백 이미지 있을 때, 이미지 변환이 가능함 (frame layout이 보여짐)
+
                     currentPhoto = BACK_IMAGE
                     hasBack = true
                     Glide.with(overlayImage)
@@ -177,8 +180,13 @@ class CameraXFragment : Fragment() {
                         .into(overlayImage)
                 }
 
+
+//            }
+
+              recyclerview.visibility = View.GONE /** 리싸이클러뷰 숨기기 추가  */
+
                 showOverlayImage(hasBack)
-            }
+//            }
         }
     }
 
@@ -403,6 +411,8 @@ class CameraXFragment : Fragment() {
             }
 
             showOverlayImage(hasBack)
+
+
         }
 
 //        val onBackPressedCallback = requireActivity().onBackPressedDispatcher.addCallback(this) {
@@ -436,7 +446,8 @@ class CameraXFragment : Fragment() {
 
             this.photoUrl?.let {
                 if(currentPhoto == BACK_IMAGE) { // back 이면 post로 바꾸기
-                    img_changeimagefront_camerax_f.visibility = View.VISIBLE
+                    img_changeimagefront_camerax_f.visibility = View.GONE
+                    img_changeimageback_camerax_f.visibility = View.VISIBLE
 
                     currentPhoto = POST_IMAGE
                     Glide.with(view.context)
@@ -449,7 +460,8 @@ class CameraXFragment : Fragment() {
 //                        Toast.makeText(view.context, getString(R.string.error_none_back_image), Toast.LENGTH_SHORT).show()
 //                    } else {
                         currentPhoto = BACK_IMAGE
-                        img_changeimagefront_camerax_f.visibility = View.GONE
+                        img_changeimagefront_camerax_f.visibility = View.VISIBLE
+                    img_changeimageback_camerax_f.visibility = View.GONE
 
                         Glide.with(view.context)
                             .load(it[BACK_IMAGE])
@@ -481,6 +493,8 @@ class CameraXFragment : Fragment() {
 //                }
 //            }
         }
+
+        getScrapData()
     }
 
     private fun getImage(): Cursor {
@@ -540,6 +554,9 @@ class CameraXFragment : Fragment() {
         view!!.findViewById<ImageButton>(R.id.imgbtn_shoot_camerax_f).setOnClickListener {
             imageCapture?.let { imageCapture ->
 
+                view!!.findViewById<ImageButton>(R.id.imgbtn_shoot_camerax_f).
+                    startAnimation(AnimationUtils.loadAnimation(context!!, R.anim.scale_camera_shoot))
+
                 val photoFile = createFile(outputDirectory, FILENAME, PHOTO_EXTENSION)
 
                 val metadata = Metadata().apply {
@@ -572,6 +589,10 @@ class CameraXFragment : Fragment() {
 
         // 카메라 스위치
         view!!.findViewById<ImageButton>(R.id.imgbtn_switchcamera_camerax_f).setOnClickListener {
+
+            view!!.findViewById<ImageButton>(R.id.imgbtn_switchcamera_camerax_f).
+                startAnimation(AnimationUtils.loadAnimation(context!!, R.anim.rotate_camera_switch))
+
             lensFacing = if (CameraSelector.LENS_FACING_FRONT === lensFacing) {
                 CameraSelector.LENS_FACING_BACK
             } else {
@@ -584,7 +605,8 @@ class CameraXFragment : Fragment() {
 
         // 스크랩 사진 목록 보여주기
         view!!.findViewById<ImageButton>(R.id.imgbtn_scrap_camerax_f).setOnClickListener {
-            getScrapData()
+//            getScrapData()
+            showScrapData()
 //            showScrapData()
 //            if(adapter.hasData())
 //                if (recyclerview.isVisible)
@@ -733,9 +755,11 @@ class CameraXFragment : Fragment() {
         overlayImage.visibility = View.VISIBLE
         opacitySeekbar.visibility = View.VISIBLE
         closeImage.visibility = View.VISIBLE
-        if(hasBack)
+        if(hasBack){
             img_changeimage_camerax_f.visibility = View.VISIBLE
-        else
+            img_changeimagefront_camerax_f.visibility = View.VISIBLE
+            img_changeimageback_camerax_f.visibility = View.GONE
+        } else
             img_changeimage_camerax_f.visibility = View.GONE
 
 //        rightRotation.visibility = View.VISIBLE
@@ -767,9 +791,11 @@ class CameraXFragment : Fragment() {
             if (throwable is HttpException) {
                 loge(TAG, "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}")
             }
-        }, {
-            showScrapData()
-        })
+        }
+//            , {
+//            showScrapData()
+//        }
+        )
     }
 
     companion object {

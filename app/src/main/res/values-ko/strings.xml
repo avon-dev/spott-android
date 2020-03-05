@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Spott</string>
+    <string name="app_name">Phopo</string>
 
     <!--위젯_이름_위치_구분-->
 
@@ -172,6 +172,6 @@
     <string name="failed_to_delete_comment">댓글 삭제에 실패했습니다</string>
     <string name="failed_to_delete_noti">알림 삭제에 실패했습니다</string>
 
-    <string name="inquiry_subject">[문의] 스팟에 문의합니다.</string>
+    <string name="inquiry_subject">[문의] phopo에 문의합니다.</string>
 
 </resources>

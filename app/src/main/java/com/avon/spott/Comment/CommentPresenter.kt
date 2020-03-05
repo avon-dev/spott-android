@@ -44,7 +44,7 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
 
                 commentView.refreshTimeStamp = result.created_time //리프리쉬 타임 설정
 
-                if(comeFrom==9999){
+                if(comeFrom==2000){
                     /***************알림에서 왔을 때 분기 처리해줘야함. **************/
                     commentView.setPhotoData(result.notice_data.contents, result.notice_data.user_profile_image,
                         result.notice_data.user_nickname, DateTimeFormatter.formatCreated(result.notice_data.created), result.notice_data.user)

@@ -184,6 +184,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
             }
         }, 20, 28, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         text_privacyinfo_login_a.movementMethod = LinkMovementMethod.getInstance()
+
     }
 
     override fun showMainUi() {
