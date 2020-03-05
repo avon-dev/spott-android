@@ -12,6 +12,7 @@ import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.widget.ArrayAdapter
 import android.widget.RadioGroup
@@ -75,6 +76,10 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_photo, container, false)
+
+        activity!!.window.setFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
         return root
     }
@@ -426,6 +431,8 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
         scroll_photo_f.visibility = View.VISIBLE
 
+        activity!!.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
 
     }
 
@@ -517,6 +524,8 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
     }
 
     override fun showNoPhotoDialog(){  /// 다이얼로그 아래 마진 없애야함.
+        activity!!.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
         val builder = AlertDialog.Builder(context!!)
         builder.setMessage(getString(R.string.text_no_photo))
         builder.setCancelable(false) //뒤로가기로 다이얼로그 종료 방지
@@ -560,6 +569,8 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
     }
 
     override fun showReportedDialog() {
+        activity!!.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
         val builder = AlertDialog.Builder(context!!)
         builder.setMessage(getString(R.string.text_reported_photo))
         builder.setCancelable(false) //뒤로가기로 다이얼로그 종료 방지
