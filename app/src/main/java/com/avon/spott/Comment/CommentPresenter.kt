@@ -47,7 +47,7 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
                 if(comeFrom==2000){
                     /***************알림에서 왔을 때 분기 처리해줘야함. **************/
                     commentView.setPhotoData(result.notice_data.contents, result.notice_data.user_profile_image,
-                        result.notice_data.user_nickname, DateTimeFormatter.formatCreated(result.notice_data.created), result.notice_data.user)
+                        result.notice_data.user_nickname, DateTimeFormatter.convertLocalDate(result.notice_data.created), result.notice_data.user)
                 }
 
                 commentView.addItems(result.items) //아이템들 추가

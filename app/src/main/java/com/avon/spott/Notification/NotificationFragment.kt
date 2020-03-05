@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Handler
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,14 +16,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
-import androidx.navigation.NavOptions
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.avon.spott.Data.NotiItem
-import com.avon.spott.R
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.Main.controlToolbar
+import com.avon.spott.R
 import com.avon.spott.Utils.DateTimeFormatter
 import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
@@ -309,7 +308,7 @@ class NotificationFragment : Fragment(), NotificationContract.View, View.OnClick
                 }
 
                 itemsList[position].let{
-                    itemViewholder.textDate.text = DateTimeFormatter.formatCreated(it.created_date)
+                    itemViewholder.textDate.text = DateTimeFormatter.convertLocalDate(it.created_date)
 
                         when (it.kind) {
                             SHARED -> { // 업로드한 사진이 공유 되었을 때
