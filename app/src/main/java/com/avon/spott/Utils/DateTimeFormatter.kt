@@ -52,7 +52,7 @@ class DateTimeFormatter {
 
             // 게시글 서버 시간에서 현지 시간으로 세팅하기
             val timeZone = TimeZone.getDefault()
-            var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mmX")
+            var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm")
             simpleDateFormat.timeZone = timeZone
             val createdDate = simpleDateFormat.parse(created)
 
