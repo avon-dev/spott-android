@@ -42,7 +42,7 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
     //페이징
     private var start: Int = 0//페이징 시작 위치
-    private val pageItems = 19  // 한번에 보여지는 리사이클러뷰 아이템 수
+    private val pageItems = 29  // 한번에 보여지는 리사이클러뷰 아이템 수
     private var pageLoading = false // 페이징이 중복 되지 않게하기위함
     override var hasNext: Boolean = false // 다음으로 가져올 페이지가 있는지 여부
     override var refreshTimeStamp:String = "" // 서버에서 페이지를 가지고오는 시간적 기준점(페이징 도중 사진이 추가될 때 중복됨을 방지)
