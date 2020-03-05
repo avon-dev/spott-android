@@ -380,15 +380,15 @@ class CameraXFragment : Fragment() {
         }
 
         // 사진 게시글에서 카메라로 넘어올 때
-        val photoUrl = CameraXActivity.getPhoto()
-        if(photoUrl != null) {
+        photoUrl = CameraXActivity.getPhoto()
+        photoUrl?.let {
             var hasBack:Boolean
 
-            if(photoUrl[BACK_IMAGE] != null) { // back이 있을 때
+            if(it[BACK_IMAGE] != null) { // back이 있을 때
                 currentPhoto = BACK_IMAGE
                 hasBack = true
                 Glide.with(view.context)
-                    .load(photoUrl[BACK_IMAGE])
+                    .load(it[BACK_IMAGE])
                     .placeholder(android.R.drawable.progress_indeterminate_horizontal)
                     .error(android.R.drawable.stat_notify_error)
                     .into(overlayImage)
@@ -396,7 +396,7 @@ class CameraXFragment : Fragment() {
                 currentPhoto = POST_IMAGE
                 hasBack = false
                 Glide.with(view.context)
-                    .load(photoUrl[POST_IMAGE])
+                    .load(it[POST_IMAGE])
                     .placeholder(android.R.drawable.progress_indeterminate_horizontal)
                     .error(android.R.drawable.stat_notify_error)
                     .into(overlayImage)
@@ -775,7 +775,7 @@ class CameraXFragment : Fragment() {
     companion object {
 
         private const val TAG = "CameraXFragment"
-        private const val FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"
+            private const val FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val PHOTO_EXTENSION = ".jpg"
         private const val RATIO_4_3_VALUE = 4.0 / 3.0
         private const val RATIO_16_9_VALUE = 16.0 / 9.0

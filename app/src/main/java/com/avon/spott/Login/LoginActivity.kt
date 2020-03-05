@@ -1,7 +1,6 @@
 package com.avon.spott.Login
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.text.Spannable
 import android.text.Spanned
@@ -36,9 +35,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import kotlinx.android.synthetic.main.activity_login.*
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -188,49 +184,6 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
             }
         }, 20, 28, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         text_privacyinfo_login_a.movementMethod = LinkMovementMethod.getInstance()
-
-        // 기기 설정 나라 시간
-        var tz:TimeZone = TimeZone.getDefault()
-        var location = tz.id
-        val date = Date()
-        val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss (z Z)")
-
-        // 그냥 Date는 어떤 시간인지
-        logd(TAG, "date:${df.format(date)}")
-        // date에 값 설정할 수 있나?
-//        date.hours = 10
-        date.time = 10L
-
-        logd(TAG, "date.time:${df.format(date)}")
-
-        // date 형식의 스트링도 변환해주나?
-        val strDate = "Fri Feb 28 16:49:55 GMT+09:00 2020"
-        val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss (z Z)")
-        } else {
-            SimpleDateFormat("yyyy-MM-dd HH:mm:ss (z Z)")
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            logd(TAG, "Build.VERSION.SDK_INT >= Build.VERSION_CODES.O")
-            var now = LocalDate.now()
-            val dateNow = LocalDate.parse(strDate, formatter as DateTimeFormatter?)
-            logd(TAG, "$dateNow")
-        }
-
-        // df에 시간 설정
-        df.timeZone = tz
-        logd(TAG, "id:${tz.id}")
-        logd(TAG, "location:${location}")
-        logd(TAG, "${tz.displayName} // ${df.format(date)}")
-
-        // 로스엔젤레스로 설정
-        tz = TimeZone.getTimeZone("America/Los_Angeles")
-        location = tz.id
-        df.timeZone = tz
-        logd(TAG, "id:${tz.id}")
-        logd(TAG, "location:${location}")
-        logd(TAG, "${tz.displayName} // ${df.format(date)}")
     }
 
     override fun showMainUi() {
