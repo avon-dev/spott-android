@@ -53,8 +53,6 @@ class UserPresenter (val userView:UserContract.View):UserContract.Presenter {
                     }
                 }
 
-
-
                 userView.addItems(result.posts)
 
             }, { throwable ->

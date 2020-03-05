@@ -169,12 +169,8 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
                     options.setToolbarCropDrawable(R.drawable.ic_arrow_forward_black_24dp)
                     options.setActiveControlsWidgetColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
                     options.setStatusBarColor(ContextCompat.getColor(applicationContext, R.color.bg_black))
-                    options.setAspectRatioOptions(2,
-//                        AspectRatio("16 : 9", 16f, 9f),
-                        AspectRatio("4 : 3", 4f, 3f),
-                        AspectRatio("1 : 1", 1f, 1f),
-                        AspectRatio("3 : 4", 3f, 4f)
-//                        AspectRatio("9 : 16", 9f, 16f)
+                    options.setAspectRatioOptions(0,
+                        AspectRatio("1 : 1", 1f, 1f)
                     )
                     options.setCircleDimmedLayer(true)
 

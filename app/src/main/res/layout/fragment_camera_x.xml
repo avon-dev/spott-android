@@ -49,45 +49,45 @@
             app:srcCompat="@drawable/ic_rotate_right_black_24dp"
             tools:visibility="gone" />
 
-<!--        <FrameLayout-->
-<!--            android:id="@+id/img_changeimage_camerax_f"-->
-<!--            android:layout_width="48dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginStart="24dp"-->
-<!--            android:layout_marginEnd="8dp"-->
-<!--            android:adjustViewBounds="true"-->
-<!--            android:background="@android:color/transparent"-->
-<!--            android:clickable="true"-->
-<!--            android:padding="10dp"-->
-<!--            android:scaleType="fitCenter"-->
-<!--            android:visibility="gone"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toStartOf="@id/img_right_rotation_camerax_f"-->
-<!--            app:layout_constraintStart_toEndOf="@+id/imgbtn_back_camerax_f"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            tools:visibility="visible">-->
+        <!--        <FrameLayout-->
+        <!--            android:id="@+id/img_changeimage_camerax_f"-->
+        <!--            android:layout_width="48dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginStart="24dp"-->
+        <!--            android:layout_marginEnd="8dp"-->
+        <!--            android:adjustViewBounds="true"-->
+        <!--            android:background="@android:color/transparent"-->
+        <!--            android:clickable="true"-->
+        <!--            android:padding="10dp"-->
+        <!--            android:scaleType="fitCenter"-->
+        <!--            android:visibility="gone"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toStartOf="@id/img_right_rotation_camerax_f"-->
+        <!--            app:layout_constraintStart_toEndOf="@+id/imgbtn_back_camerax_f"-->
+        <!--            app:layout_constraintTop_toTopOf="parent"-->
+        <!--            tools:visibility="visible">-->
 
-<!--            <ImageView-->
-<!--                android:id="@+id/img_changeimageback_camerax_f"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:adjustViewBounds="true"-->
-<!--                android:background="@android:color/transparent"-->
-<!--                android:scaleType="fitCenter"-->
-<!--                android:tint="@color/dark_grey"-->
-<!--                app:srcCompat="@drawable/ic_flip_to_back_24px" />-->
+        <!--            <ImageView-->
+        <!--                android:id="@+id/img_changeimageback_camerax_f"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:adjustViewBounds="true"-->
+        <!--                android:background="@android:color/transparent"-->
+        <!--                android:scaleType="fitCenter"-->
+        <!--                android:tint="@color/dark_grey"-->
+        <!--                app:srcCompat="@drawable/ic_flip_to_back_24px" />-->
 
-<!--            <ImageView-->
-<!--                android:id="@+id/img_changeimagefront_camerax_f"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:adjustViewBounds="true"-->
-<!--                android:background="@android:color/transparent"-->
-<!--                android:scaleType="fitCenter"-->
-<!--                android:tint="@color/dark_grey"-->
-<!--                android:visibility="gone"-->
-<!--                app:srcCompat="@drawable/ic_flip_to_front_24px" />-->
-<!--        </FrameLayout>-->
+        <!--            <ImageView-->
+        <!--                android:id="@+id/img_changeimagefront_camerax_f"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:adjustViewBounds="true"-->
+        <!--                android:background="@android:color/transparent"-->
+        <!--                android:scaleType="fitCenter"-->
+        <!--                android:tint="@color/dark_grey"-->
+        <!--                android:visibility="gone"-->
+        <!--                app:srcCompat="@drawable/ic_flip_to_front_24px" />-->
+        <!--        </FrameLayout>-->
 
         <ImageButton
             android:id="@+id/imgbtn_switchcamera_camerax_f"
@@ -107,21 +107,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageButton
-        android:id="@+id/img_close_camerax_f"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:adjustViewBounds="true"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="3dp"
-        android:background="@android:color/transparent"
-        android:padding="12dp"
-        android:scaleType="fitCenter"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/preview_viewfinder_camerax_f"
-        app:srcCompat="@drawable/ic_close_shadow"
-        tools:visibility="visible" />
+
 
     <ImageView
         android:id="@+id/img_overlay_camerax_f"
@@ -130,6 +116,23 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/preview_viewfinder_camerax_f"
         app:layout_constraintTop_toTopOf="@id/preview_viewfinder_camerax_f"
+        tools:visibility="visible" />
+
+    <ImageButton
+        android:id="@+id/img_close_camerax_f"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:adjustViewBounds="true"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="3dp"
+        android:elevation="10dp"
+        android:background="@android:color/transparent"
+        android:padding="12dp"
+        android:scaleType="fitCenter"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/preview_viewfinder_camerax_f"
+        app:srcCompat="@drawable/ic_close_shadow"
         tools:visibility="visible" />
 
     <!--    <ImageView-->
@@ -169,6 +172,7 @@
             android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
+            android:visibility="gone"
             app:srcCompat="@drawable/ic_back_image" />
 
         <ImageView

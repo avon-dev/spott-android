@@ -5,6 +5,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
 import retrofit2.HttpException
 import retrofit2.Response
 import retrofit2.Retrofit

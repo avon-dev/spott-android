@@ -134,11 +134,10 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
             transmitable = true
         }, resending)
 
-        Toast.makeText(this@EmailActivity, getString(R.string.send_authentication_number), Toast.LENGTH_SHORT).show()
+//        Toast.makeText(this@EmailActivity, getString(R.string.send_authentication_number), Toast.LENGTH_SHORT).show()
 
         // 임시 코드
-//        Toast.makeText(this@EmailActivity, "인증번호가 전송되었습니다 ${number.code}", Toast.LENGTH_SHORT)
-//            .show()
+        Toast.makeText(this@EmailActivity, "인증번호가 전송되었습니다 ${number.code}", Toast.LENGTH_SHORT).show()
     }
 
     // 에러 보여주기

@@ -138,45 +138,59 @@ class CameraXFragment : Fragment() {
 
     private val BACK_IMAGE = 1
     private val POST_IMAGE = 0
+    private var photoUrl:Array<String?>? = null
 
     // 리사이클러뷰 어댑터 클릭 리스너
     interface OnItemClickListener {
-        fun ItemClick(scrapItem: ScrapItem)
+        fun ItemClick(photoUrl: Array<String?>?)
     }
 
     private val onItemClickListener = object : OnItemClickListener {
-        override fun ItemClick(scrapItem: ScrapItem) {
+        override fun ItemClick(photoUrl: Array<String?>?) {
 
-            this@CameraXFragment.scrapItem = scrapItem
+            if(photoUrl == null) return
+
+            this@CameraXFragment.photoUrl = photoUrl
+
+//            this@CameraXFragment.scrapItem = scrapItem
 
             if (overlayImage.isVisible) {// 이미지 숨기기
                 hideOverlayImage()
             }
-//            else { // 리사이클러 뷰에서 선택한 아이템 이미지뷰에 띄우기
-                if(scrapItem.back_image!= null) {
+//            else { // 리사이클러 뷰에서 선택한 아이템 보여주기
+
+                var hasBack:Boolean
+
+                if(photoUrl[BACK_IMAGE]!= null) { // 백 이미지 있을 때, 이미지 변환이 가능함 (frame layout이 보여짐)
+
                     currentPhoto = BACK_IMAGE
+                    hasBack = true
                     Glide.with(overlayImage)
-                        .load(scrapItem.back_image)
+                        .load(photoUrl[BACK_IMAGE])
                         .placeholder(android.R.drawable.progress_indeterminate_horizontal)
                         .error(android.R.drawable.stat_notify_error)
                         .into(overlayImage)
-                } else {
+                } else { // 백 이미지 없을 때, 이미지 변환을 못함(frame layout이 보여지면 안됨)
                     currentPhoto = POST_IMAGE
+                    hasBack = false
                     Glide.with(overlayImage)
-                        .load(scrapItem.posts_image)
+                        .load(photoUrl[POST_IMAGE])
                         .placeholder(android.R.drawable.progress_indeterminate_horizontal)
                         .error(android.R.drawable.stat_notify_error)
                         .into(overlayImage)
                 }
 
-                showOverlayImage()
+
 //            }
 
-            recyclerview.visibility = View.GONE /** 리싸이클러뷰 숨기기 추가  */
+              recyclerview.visibility = View.GONE /** 리싸이클러뷰 숨기기 추가  */
+
+                showOverlayImage(hasBack)
+//            }
         }
     }
 
-    private var scrapItem:ScrapItem? = null
+//    private var scrapItem:ScrapItem? = null
     private lateinit var onBackPressedCallback:OnBackPressedCallback
 
 
@@ -316,8 +330,6 @@ class CameraXFragment : Fragment() {
         adapter = CameraXAdapter(view.context, onItemClickListener)
         recyclerview.adapter = adapter
 
-//        getScrapData()
-
         overlayImage = view.findViewById(R.id.img_overlay_camerax_f)
         closeImage = view.findViewById(R.id.img_close_camerax_f)
         opacitySeekbar = view.findViewById(R.id.seekbar_opacity_camerax_f)
@@ -376,25 +388,31 @@ class CameraXFragment : Fragment() {
         }
 
         // 사진 게시글에서 카메라로 넘어올 때
-        val photoUrl = CameraXActivity.getPhoto()
-        if(photoUrl != null) {
-            if(photoUrl.get(1) != null) {
+        photoUrl = CameraXActivity.getPhoto()
+        photoUrl?.let {
+            var hasBack:Boolean
+
+            if(it[BACK_IMAGE] != null) { // back이 있을 때
                 currentPhoto = BACK_IMAGE
+                hasBack = true
                 Glide.with(view.context)
-                    .load(photoUrl[BACK_IMAGE])
+                    .load(it[BACK_IMAGE])
                     .placeholder(android.R.drawable.progress_indeterminate_horizontal)
                     .error(android.R.drawable.stat_notify_error)
                     .into(overlayImage)
-            } else {
+            } else { // back이 없을 때
                 currentPhoto = POST_IMAGE
+                hasBack = false
                 Glide.with(view.context)
-                    .load(photoUrl[POST_IMAGE])
+                    .load(it[POST_IMAGE])
                     .placeholder(android.R.drawable.progress_indeterminate_horizontal)
                     .error(android.R.drawable.stat_notify_error)
                     .into(overlayImage)
             }
 
-            showOverlayImage()
+            showOverlayImage(hasBack)
+
+
         }
 
 //        val onBackPressedCallback = requireActivity().onBackPressedDispatcher.addCallback(this) {
@@ -419,32 +437,64 @@ class CameraXFragment : Fragment() {
         val dispatcher = requireActivity().onBackPressedDispatcher
         dispatcher.addCallback(onBackPressedCallback)
 
-        img_changeimage_camerax_f.setOnClickListener {
+        img_changeimage_camerax_f.setOnClickListener { // 백 이미지가 있을 때만 보여짐
             // 이미지 바꾸기
             // 아이템 클릭시 아이템 내용을 기억하고 있어야 하는 변수가 필요함.
             // 그 아이템을 가지고 이미지를 바꿔주도록 하자
 
-            if(currentPhoto == BACK_IMAGE) {
-                currentPhoto = POST_IMAGE
-                Glide.with(view.context)
-                    .load(photoUrl[POST_IMAGE])
-                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                    .error(android.R.drawable.stat_notify_error)
-                    .into(overlayImage)
-            } else {
-                if(photoUrl[BACK_IMAGE] == null) {
-                    Toast.makeText(view.context, getString(R.string.error_none_back_image), Toast.LENGTH_SHORT).show()
-                } else {
-                    currentPhoto = BACK_IMAGE
+            if(this.photoUrl == null) return@setOnClickListener
 
+            this.photoUrl?.let {
+                if(currentPhoto == BACK_IMAGE) { // back 이면 post로 바꾸기
+                    img_changeimagefront_camerax_f.visibility = View.GONE
+                    img_changeimageback_camerax_f.visibility = View.VISIBLE
+
+                    currentPhoto = POST_IMAGE
                     Glide.with(view.context)
-                        .load(photoUrl[BACK_IMAGE])
+                        .load(photoUrl?.get(POST_IMAGE))
                         .placeholder(android.R.drawable.progress_indeterminate_horizontal)
                         .error(android.R.drawable.stat_notify_error)
                         .into(overlayImage)
+                } else { // post면 back으로 바꾸기
+//                    if(it[BACK_IMAGE] == null) { // 앞에서 처리함ㄴ
+//                        Toast.makeText(view.context, getString(R.string.error_none_back_image), Toast.LENGTH_SHORT).show()
+//                    } else {
+                        currentPhoto = BACK_IMAGE
+                        img_changeimagefront_camerax_f.visibility = View.VISIBLE
+                    img_changeimageback_camerax_f.visibility = View.GONE
+
+                        Glide.with(view.context)
+                            .load(it[BACK_IMAGE])
+                            .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                            .error(android.R.drawable.stat_notify_error)
+                            .into(overlayImage)
+//                    }
                 }
             }
+
+//            if(currentPhoto == BACK_IMAGE) {
+//                currentPhoto = POST_IMAGE
+//                Glide.with(view.context)
+//                    .load(photoUrl?.get(POST_IMAGE))
+//                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+//                    .error(android.R.drawable.stat_notify_error)
+//                    .into(overlayImage)
+//            } else {
+//                if(this.photoUrl[BACK_IMAGE] == null) {
+//                    Toast.makeText(view.context, getString(R.string.error_none_back_image), Toast.LENGTH_SHORT).show()
+//                } else {
+//                    currentPhoto = BACK_IMAGE
+//
+//                    Glide.with(view.context)
+//                        .load(this.photoUrl[BACK_IMAGE])
+//                        .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+//                        .error(android.R.drawable.stat_notify_error)
+//                        .into(overlayImage)
+//                }
+//            }
         }
+
+        getScrapData()
     }
 
     private fun getImage(): Cursor {
@@ -555,7 +605,8 @@ class CameraXFragment : Fragment() {
 
         // 스크랩 사진 목록 보여주기
         view!!.findViewById<ImageButton>(R.id.imgbtn_scrap_camerax_f).setOnClickListener {
-            getScrapData()
+//            getScrapData()
+            showScrapData()
 //            showScrapData()
 //            if(adapter.hasData())
 //                if (recyclerview.isVisible)
@@ -698,13 +749,19 @@ class CameraXFragment : Fragment() {
     }
 
     // 오버랩으로 보여주기
-    private fun showOverlayImage() {
+    private fun showOverlayImage(hasBack:Boolean) {
         overlayImage.alpha = opacitySeekbar.progress.toFloat() * 0.01f
 
         overlayImage.visibility = View.VISIBLE
         opacitySeekbar.visibility = View.VISIBLE
         closeImage.visibility = View.VISIBLE
-        img_changeimage_camerax_f.visibility = View.VISIBLE
+        if(hasBack){
+            img_changeimage_camerax_f.visibility = View.VISIBLE
+            img_changeimagefront_camerax_f.visibility = View.VISIBLE
+            img_changeimageback_camerax_f.visibility = View.GONE
+        } else
+            img_changeimage_camerax_f.visibility = View.GONE
+
 //        rightRotation.visibility = View.VISIBLE
     }
 
@@ -734,15 +791,17 @@ class CameraXFragment : Fragment() {
             if (throwable is HttpException) {
                 loge(TAG, "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}")
             }
-        }, {
-            showScrapData()
-        })
+        }
+//            , {
+//            showScrapData()
+//        }
+        )
     }
 
     companion object {
 
         private const val TAG = "CameraXFragment"
-        private const val FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"
+            private const val FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val PHOTO_EXTENSION = ".jpg"
         private const val RATIO_4_3_VALUE = 4.0 / 3.0
         private const val RATIO_16_9_VALUE = 16.0 / 9.0
@@ -798,7 +857,7 @@ class CameraXFragment : Fragment() {
                 .into(holder.photo)
 
             holder.itemView.setOnClickListener {
-                onItemClickListener.ItemClick(list[position]) /** back_image로 수정 2020-02-25 */
+                onItemClickListener.ItemClick(arrayOf(list[position].posts_image, list[position].back_image)) /** back_image로 수정 2020-02-25 */
             }
 
         }

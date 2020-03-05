@@ -22,8 +22,6 @@ class CommentPresenter (val commentView:CommentContract.View) : CommentContract.
 
     override fun getComments(baseurl: String, start: Int, photoId: Int, comeFrom:Int) {
 
-
-
         val homePaging = commentPaging(start, commentView.refreshTimeStamp, comeFrom)
         logd(TAG, "파서테스트 = " + Parser.toJson(homePaging))
         Retrofit(baseurl).get(App.prefs.token,"/spott/posts/"+photoId.toString()+"/comment", Parser.toJson(homePaging))
