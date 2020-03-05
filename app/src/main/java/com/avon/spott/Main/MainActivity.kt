@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity(), MainContract.View, View.OnClickListene
     companion object{
         lateinit var mToolbar : ConstraintLayout
         var toFirstMapFragment = false
-        lateinit var bottomNavigationView :BottomNavigationView
     }
 
 
@@ -69,7 +68,7 @@ class MainActivity : AppCompatActivity(), MainContract.View, View.OnClickListene
     }
 
     private fun setupBottomNavigationBar() {
-        bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomnav_main_a)
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomnav_main_a)
 
         val navGraphIds = listOf(R.navigation.home, R.navigation.map, R.navigation.scrap, R.navigation.mypage)
 
