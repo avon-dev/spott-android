@@ -66,7 +66,7 @@ class ScrapPresenter(val scrapView:ScrapContract.View) : ScrapContract.Presenter
 
         logd(TAG, "sending은 " + sending)
 
-        Retrofit(baseUrl).delete(App.prefs.token,"/spott/scrap/ids", sending)
+        Retrofit(baseUrl).delete(App.prefs.token,"/spott/users/my-scrap", sending)
 
             .subscribe({ response ->
                 logd(TAG,"response code: ${response.code()}, response body : ${response.body()}")
