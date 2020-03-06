@@ -57,6 +57,9 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
 
     // 초기화
     private fun init() {
+        btn_facebooklogin_a.visibility = View.GONE
+        btn_googlelogin_login_a.visibility = View.GONE
+
         loginPresenter = LoginPresenter(this)
 
         btn_googlelogin_login_a.setOnClickListener(this)
