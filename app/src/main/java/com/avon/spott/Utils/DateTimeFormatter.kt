@@ -44,6 +44,7 @@ class DateTimeFormatter {
         private val HOUR_1 = 3600 // 분 전
         private val HOUR_24 = 86400 // 시간 전
 
+        // 2020-03-06T03:47Z
 
         @SuppressLint("SimpleDateFormat")
         fun convertLocalDate(created:String):String {
@@ -52,7 +53,7 @@ class DateTimeFormatter {
 
             // 게시글 서버 시간에서 현지 시간으로 세팅하기
             val timeZone = TimeZone.getDefault()
-            var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm")
+            var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
             simpleDateFormat.timeZone = timeZone
             val createdDate = simpleDateFormat.parse(created)
 

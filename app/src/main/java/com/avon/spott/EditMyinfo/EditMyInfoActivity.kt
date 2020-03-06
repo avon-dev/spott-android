@@ -1,6 +1,7 @@
 package com.avon.spott.EditMyinfo
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
@@ -145,9 +146,30 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
 
         if(requestCode == PERMISSIONS_REQUEST_CODE) {
             if (PackageManager.PERMISSION_GRANTED == grantResults.firstOrNull()) { // 권한이 있으면
-                val pickPhoto = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                pickPhoto.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                startActivityForResult(pickPhoto, 102)
+
+
+                val builder = AlertDialog.Builder(this)
+
+                builder.setTitle("프로필 이미지 수정")
+                    .setItems(R.array.edit_profile_item, DialogInterface.OnClickListener { _, pos ->
+                        when(pos) {
+                            0 -> {
+                                val pickPhoto = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                                pickPhoto.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                startActivityForResult(pickPhoto, 102)
+                            }
+                            1 -> {
+                                Toast.makeText(applicationContext, "개발 중입니다", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    })
+
+                val dialog = builder.create()
+                dialog.show()
+
+//                val pickPhoto = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+//                pickPhoto.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+//                startActivityForResult(pickPhoto, 102)
             } else { // 없으면
 
             }
@@ -199,6 +221,7 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
         }
     }
 
+    @SuppressLint("ResourceType")
     override fun onClick(v: View) {
         when (v.id) {
             R.id.img_back_toolbar -> { // 뒤로가기
@@ -207,9 +230,17 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
             R.id.img_profile_editmyinfo_a -> { // 프로필 이미지 편집
                 if(!hasPermissions(applicationContext)) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        requestPermissions(PERMISSIONS_REQUIRED, PERMISSIONS_REQUEST_CODE)
+                            requestPermissions(PERMISSIONS_REQUIRED, PERMISSIONS_REQUEST_CODE)
                     }
-                } else {
+                } else { // 프로필 이미지 수정 전 다이얼로그 띄우기
+//                    AlertDialog.Builder(applicationContext)
+//                        .setTitle("프로필 이미지 수정")
+//                        .setItems(R.array.edit_profile_item, DialogInterface.OnClickListener { _, pos ->
+//                            logd(TAG, "pos:$pos")
+//                        })
+//                        .create()
+//                        .show()
+
                     val pickPhoto = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                     pickPhoto.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                     startActivityForResult(pickPhoto, 102)
