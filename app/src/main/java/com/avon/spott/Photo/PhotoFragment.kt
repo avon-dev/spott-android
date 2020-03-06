@@ -12,7 +12,6 @@ import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.widget.ArrayAdapter
 import android.widget.RadioGroup
@@ -73,13 +72,14 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
     private var showdetail = false
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_photo, container, false)
-
-        activity!!.window.setFlags(
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
         return root
     }
@@ -91,7 +91,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
         //넘어오는 photoId값
         val photoId = arguments?.getInt("photoId")
-        showToast(photoId.toString())
+//        showToast(photoId.toString())
 
         checkbox_like_photo_f.isClickable = false
         likeProgressing = true
@@ -431,8 +431,6 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
         scroll_photo_f.visibility = View.VISIBLE
 
-        activity!!.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-
 
     }
 
@@ -524,7 +522,6 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
     }
 
     override fun showNoPhotoDialog(){  /// 다이얼로그 아래 마진 없애야함.
-        activity!!.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
         val builder = AlertDialog.Builder(context!!)
         builder.setMessage(getString(R.string.text_no_photo))
@@ -569,7 +566,6 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
     }
 
     override fun showReportedDialog() {
-        activity!!.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
         val builder = AlertDialog.Builder(context!!)
         builder.setMessage(getString(R.string.text_reported_photo))
@@ -586,6 +582,8 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
     override fun photoDeleteError() {
         showToast(getString(R.string.toast_photo_delete_error))
     }
+
+
 
 
 

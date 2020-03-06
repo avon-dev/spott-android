@@ -78,6 +78,7 @@
         android:focusable="false"
         android:gravity="center"
         android:maxLength="15"
+        android:inputType="textEmailAddress"
         android:paddingHorizontal="4dp"
         android:singleLine="true"
         android:textSize="14dp"

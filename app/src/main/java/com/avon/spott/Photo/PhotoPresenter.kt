@@ -91,8 +91,9 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
                         TAG,
                         "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
                     )
+                    photoView.showNoPhotoDialog()
                 }
-                photoView.showNoPhotoDialog()
+
             })
     }
 

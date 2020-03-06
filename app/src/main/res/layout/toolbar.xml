@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
             android:layout_marginLeft="5dp"
-            android:textSize="18dp"
+            android:textSize="17dp"
             android:visibility="gone"
             tools:layout_editor_absoluteX="40dp"
             tools:layout_editor_absoluteY="16dp"

@@ -424,6 +424,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         clusterManager.addItems(mypageItems)
         clusterManager.cluster()
 
+        mypageAdapter.clearItemsAdapter()
         mypageAdapter.addItemsAdapter(mypageItems)
         mypageAdapter.notifyDataSetChanged()
 
