@@ -76,7 +76,6 @@ class EditMyInfoPresenter(val editMyInfoView:EditMyInfoContract.View) : EditMyIn
         val userInfo = UserInfo()
         userInfo.nickname = nickname
         val sending = Parser.toJson(userInfo)
-        logd(TAG, sending)
         Retrofit(baseUrl).patch(token, "/spott/users", sending).subscribe({ response ->
             logd(TAG, "response : ${response.body()}")
 

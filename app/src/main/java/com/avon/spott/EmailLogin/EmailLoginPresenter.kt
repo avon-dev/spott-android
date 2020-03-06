@@ -50,6 +50,9 @@ class EmailLoginPresenter(val emailLoginView: EmailLoginContract.View) :
                     emailLoginView.showError("다시 시도해주세요")
                 }
             }
+        }, {
+            logd(TAG, "실패")
         })
+
     }
 }
