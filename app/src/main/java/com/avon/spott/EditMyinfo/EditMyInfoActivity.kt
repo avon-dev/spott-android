@@ -159,7 +159,7 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
                                 startActivityForResult(pickPhoto, 102)
                             }
                             1 -> {
-
+                                Toast.makeText(applicationContext, "개발 중입니다", Toast.LENGTH_SHORT).show()
                             }
                         }
                     })
