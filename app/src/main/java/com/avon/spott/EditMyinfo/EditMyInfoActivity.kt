@@ -240,10 +240,24 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
 //                        })
 //                        .create()
 //                        .show()
+                    val builder = AlertDialog.Builder(this)
 
-                    val pickPhoto = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                    pickPhoto.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                    startActivityForResult(pickPhoto, 102)
+                    builder.setTitle("프로필 이미지 수정")
+                        .setItems(R.array.edit_profile_item, DialogInterface.OnClickListener { _, pos ->
+                            when(pos) {
+                                0 -> {
+                                    val pickPhoto = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                                    pickPhoto.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                    startActivityForResult(pickPhoto, 102)
+                                }
+                                1 -> {
+                                    Toast.makeText(applicationContext, "개발 중입니다", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        })
+
+                    val dialog = builder.create()
+                    dialog.show()
                 }
             }
 

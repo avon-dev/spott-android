@@ -15,7 +15,7 @@ import retrofit2.HttpException
 
 class SplashActivity : Activity() {
 
-    val TAG = "SplashActivity"
+    val TAG = "forSplashActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,11 +31,13 @@ class SplashActivity : Activity() {
             val refresh = shared.refresh
             if(!access.equals("") and !refresh.equals("")) { // 토큰이 있으면
                 availableToken(getString(R.string.baseurl), "/spott/token/verify", Token(refresh, access))
+            }else{
+                showMainUi(false)
             }
 
 
 //            Intent(this@SplashActivity, LoginActivity::class.java).let { startActivity(it) }
-            finish()
+//            finish()
         }, 1000) //로딩 주기
 
         // 자동 로그인 로직 넣기
@@ -80,6 +82,7 @@ class SplashActivity : Activity() {
     }
 
     private fun showMainUi(auto:Boolean) {
+        logd(TAG, "showMainUi")
         var intent:Intent
         if(auto) {
             intent = Intent(this@SplashActivity, MainActivity::class.java)

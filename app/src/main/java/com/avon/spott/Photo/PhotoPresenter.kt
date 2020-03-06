@@ -2,7 +2,6 @@ package com.avon.spott.Photo
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.view.WindowManager
 import com.avon.spott.Data.BooleanResult
 import com.avon.spott.Data.LikeScrapResult
 import com.avon.spott.Data.PhotoResult

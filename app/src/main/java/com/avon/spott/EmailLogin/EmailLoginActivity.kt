@@ -40,8 +40,8 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
 //        edit_username_emaillogin_a.setText("pms939@test.com")
 //        edit_password_emaillogin_a.setText("qwer1234!")
 
-        edit_username_emaillogin_a.setText("baek@seunghyun.com")
-        edit_password_emaillogin_a.setText("seunghyun1!")
+//        edit_username_emaillogin_a.setText("baek@seunghyun.com")
+//        edit_password_emaillogin_a.setText("seunghyun1!")
 
 
         emailLoginPresenter = EmailLoginPresenter(this)
