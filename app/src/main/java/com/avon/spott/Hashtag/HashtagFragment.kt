@@ -93,7 +93,7 @@ class HashtagFragment: Fragment(), HashtagContract.View, View.OnClickListener{
             fromSearch = true
         }
 
-        showToast("from Seached : " + fromSearch + " & hashtag : "+hashtag)
+//        showToast("from Seached : " + fromSearch + " & hashtag : "+hashtag)
 
         return root
     }

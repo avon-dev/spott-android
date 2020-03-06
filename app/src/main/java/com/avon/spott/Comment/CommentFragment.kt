@@ -381,11 +381,16 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
             if(getItemViewType(position)==ITEM) {
                 val itemViewholder :ItemViewHolder = holder as ItemViewHolder
                 itemsList[position].let{
-                    Glide.with(holder.itemView.context)
-                        .load(it.user.profile_image)
-                        .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                        .error(android.R.drawable.stat_notify_error)
-                        .into(itemViewholder.photo)
+                    if(it.user.profile_image!=null){
+                        Glide.with(holder.itemView.context)
+                            .load(it.user.profile_image)
+                            .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                            .error(android.R.drawable.stat_notify_error)
+                            .into(itemViewholder.photo)
+                    }else{
+                        itemViewholder.photo.setImageResource(R.drawable.img_person)
+                    }
+
 
 
                     itemViewholder.nickname.text = it.user.nickname

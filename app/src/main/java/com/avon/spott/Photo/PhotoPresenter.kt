@@ -2,6 +2,7 @@ package com.avon.spott.Photo
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.view.WindowManager
 import com.avon.spott.Data.BooleanResult
 import com.avon.spott.Data.LikeScrapResult
 import com.avon.spott.Data.PhotoResult
@@ -166,8 +167,9 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
                         TAG,
                         "http exception code : ${throwable.code()}, http exception message: ${throwable.message()}"
                     )
+                    photoView.showNoPhotoDialog()
                 }
-                photoView.showNoPhotoDialog()
+
             })
     }
 

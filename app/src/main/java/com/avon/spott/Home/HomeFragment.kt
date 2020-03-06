@@ -324,7 +324,7 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         }).withAdListener(object : AdListener() {
             override fun onAdFailedToLoad(errorCode: Int) {
                 logd(TAG, "Failed to load native ad: " + errorCode)
-                Toast.makeText(context!!, "Failed to load native ad: " + errorCode, Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context!!, "Failed to load native ad: " + errorCode, Toast.LENGTH_SHORT).show()
                 if(hasNext){
                     removePageLoading()
                 }
