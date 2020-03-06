@@ -12,6 +12,5 @@ interface LoginContract {
     interface Presenter {
         fun openEmailLogin() // EmailLogin 이동
         fun openSignup() // SignupActivity 이동
-        fun availableToken(baseUrl:String, url:String, token: Token)
     }
 }

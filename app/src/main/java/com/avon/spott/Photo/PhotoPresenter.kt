@@ -80,84 +80,9 @@ class PhotoPresenter (val photoView:PhotoContract.View) : PhotoContract.Presente
 
                     photoView.setPhotoDetail(result.user.profile_image, result.user.nickname,
                         result.posts_image, result.back_image, result.latitude, result.longitude,
-                        result.contents, result.comment, convertLocalDate(result.created), result.count,
+                        result.contents, result.comment, convertLocalDate("2020-03-06T03:47Z"), result.count,
                         result.like_checked, result.scrap_checked, result.myself, result.user.id, hasHash)
-
-//                    DateTimeFormatter.convertLocalDate(result.created)
-
-//                    var now = Date()
-//                    var ttime:Date
-//                    // 기기 설정 나라 시간
-////                    var tz: TimeZone = TimeZone.getDefault() // 현재 기기에서 설정된 timezone
-////                    val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'")
-//                    val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mmX")
-//
-//                    // 기기 설정 시간
-//                    sdf.timeZone = TimeZone.getDefault()
-//                    sdf.parse(result.created)
-//                    ttime = sdf.parse(result.created)
-//                    println ( sdf.format(ttime) )
-//                    println( sdf.format(now) )
-//
-////                    // 로스 엔젤레스 시간
-//                    sdf.timeZone = TimeZone.getTimeZone("America/Los_Angeles")
-//                    ttime = sdf.parse(result.created)
-//                    sdf.format(ttime)
-//                    println ( sdf.format(ttime) )
-//
-//
-//                    sdf.timeZone = TimeZone.getTimeZone("pdofpdop")
-//                    ttime = sdf.parse(result.created)
-//                    sdf.format(ttime)
-//                    println ( sdf.format(ttime) )
-//
-//                    var location = tz.id // 기기의 위치 얻기
-//                    val date = Date()
-
-//                val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss (z Z)")
-//                    val tdate = sdf.parse("2020-03-04T22:04:00.456145Z")
-//                    val tdate2 = sdf.parse(result.created)
-
-
-                    // 그냥 Date는 어떤 시간인지
-//                logd(TAG, "date:${df.format(date)}")
-//                    logd(TAG, "date:${sdf.format(tdate)}")
-
-
                 }
-
-                // "2020-03-02T11:08:13.456145Z"
-
-//                val ttime = ""
-//                // 기기 설정 나라 시간
-//                var tz: TimeZone = TimeZone.getDefault() // 현재 기기에서 설정된 timezone
-//                var location = tz.id // 기기의 위치 얻기
-//                val date = Date()
-//
-////                val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss (z Z)")
-//                val df = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.getDefault())
-//                val tdate = df.parse("2020-03-02T11:08:13.456145Z")
-//
-//
-//                // 그냥 Date는 어떤 시간인지
-////                logd(TAG, "date:${df.format(date)}")
-//                logd(TAG, "date:${df.format(tdate)}")
-
-
-//                // df에 시간 설정
-//                df.timeZone = tz
-//                logd(TAG, "id:${tz.id}")
-//                logd(TAG, "location:${location}")
-//                logd(TAG, "${tz.displayName} // ${df.format(date)}")
-//
-//                // 로스엔젤레스로 설정
-//                tz = TimeZone.getTimeZone("America/Los_Angeles")
-//                location = tz.id
-//                df.timeZone = tz
-//                logd(TAG, "id:${tz.id}")
-//                logd(TAG, "location:${location}")
-//                logd(TAG, "${tz.displayName} // ${df.format(date)}")
-
 
             }, { throwable ->
                 logd(TAG, throwable.message)
