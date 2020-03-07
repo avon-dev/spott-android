@@ -232,4 +232,6 @@
         <item>"수정하기"</item>
         <item>"삭제하기"</item>
     </string-array>
+
+    <string name="search_edittext_hint">해시태그나 유저를 검색해보세요</string>
 </resources>

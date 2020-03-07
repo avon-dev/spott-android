@@ -440,35 +440,43 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
         logd(TAG, "likeCount1 : "+likeCount)
 
-        likeCount = likeCount + count
-
         logd(TAG, "likeCount2 : "+likeCount)
 
-        text_like_photo_f.text = likeCount.toString()
+        if(text_like_photo_f != null && checkbox_like_photo_f !=null){
+            likeCount = likeCount + count
+            text_like_photo_f.text = likeCount.toString()
 
-        checkbox_like_photo_f.startAnimation(AnimationUtils.loadAnimation(context!!, R.anim.scale_checkbox))
+            checkbox_like_photo_f.startAnimation(AnimationUtils.loadAnimation(context!!, R.anim.scale_checkbox))
+            checkbox_like_photo_f.isClickable = true
+        }
+
 
         likeProgressing = false
-        checkbox_like_photo_f.isClickable = true
+
     }
 
     override fun likeResultError() {
-        if(checkbox_like_photo_f.isChecked){
-            checkbox_like_photo_f.isChecked = false
-        }else{
-            checkbox_like_photo_f.isChecked = true
+        if(checkbox_like_photo_f !=null){
+            if(checkbox_like_photo_f.isChecked){
+                checkbox_like_photo_f.isChecked = false
+            }else{
+                checkbox_like_photo_f.isChecked = true
+            }
+            checkbox_like_photo_f.isClickable= true
         }
+
         likeProgressing = false
-        checkbox_like_photo_f.isClickable= true
+
     }
 
 
     override fun scrapResultDone(){
-        checkbox_scrap_photo_f.startAnimation(AnimationUtils.loadAnimation(context!!, R.anim.scale_checkbox))
+        if(checkbox_scrap_photo_f!=null){
+            checkbox_scrap_photo_f.startAnimation(AnimationUtils.loadAnimation(context!!, R.anim.scale_checkbox))
+            checkbox_scrap_photo_f.isClickable = true
+        }
 
         scrapProgressing = false
-        checkbox_scrap_photo_f.isClickable = true
-
         scrapChange = true
     }
 

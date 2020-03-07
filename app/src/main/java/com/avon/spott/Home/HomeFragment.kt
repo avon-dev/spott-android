@@ -23,10 +23,12 @@ import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.formats.MediaView
+import com.google.android.gms.ads.formats.NativeAdOptions
 import com.google.android.gms.ads.formats.UnifiedNativeAd
 import com.google.android.gms.ads.formats.UnifiedNativeAdView
 import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.item_ads.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -253,9 +255,13 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
                 logd(TAG, "getItemViewType(position)==ADS!!!!!!!! : $position")
                 val adViewholder :AdViewHolder = holder as AdViewHolder
 
+
+
+
                 populateUnifiedNativeAdView(mRecylerViewItems[position] as UnifiedNativeAd, adViewholder.adView)
 
-                logd("PLEASE~", "mediaContent $position : " +(mRecylerViewItems[position] as UnifiedNativeAd).mediaContent)
+
+
 
 
             }else if(getItemViewType(position)==ITEM) {
@@ -306,6 +312,14 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
             return
         }
 
+//        val optionBuilder = NativeAdOptions.Builder()
+//        optionBuilder.setReturnUrlsForImageAssets(true)
+//
+//        val adOptions = optionBuilder.build()
+
+
+
+
         val builder = AdLoader.Builder(context!!, getString(R.string.banner_ad_unit_id_for_test))
 
         val adLoader = builder.forUnifiedNativeAd(object : UnifiedNativeAd.OnUnifiedNativeAdLoadedListener{
@@ -317,6 +331,7 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
                 homeAdapter.mRecylerViewItems.add(unifiedNativeAd)
                 homeAdapter.mRecylerViewItems.addAll(homeItemItems)
+
 
 
                 addItems()
@@ -333,25 +348,21 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
                 homeAdapter.mRecylerViewItems.addAll(homeItemItems)
                 addItems()
             }
-        }).build()
+        })
+//            .withNativeAdOptions(adOptions)
+            .build()
 
         adLoader.loadAd(AdRequest.Builder().build())
     }
 
-//    private fun makeMediaList(adList:ArrayList<UnifiedNativeAd>){
-////        adMediaList.add(adList[adList.size-1].mediaContent)
-////        adRealList.add(adList[adList.size-1])
-////        for(i in 0..adRealList.size-1){
-////            logd(TAG, "mediaContent $i : " +adRealList[i].mediaContent.mainImage)
-////        }
-////
-////    }
 
 
 
     private fun populateUnifiedNativeAdView(nativeAd: UnifiedNativeAd, adView: UnifiedNativeAdView) {
         // You must call destroy on old ads when you are done with them,
         // otherwise you will have a memory leak.
+
+
         // Set the media view.
         adView.mediaView = adView.findViewById<MediaView>(R.id.ad_media)
         // Set other ad assets.
@@ -367,10 +378,28 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         // The headline and media content are guaranteed to be in every UnifiedNativeAd.
         (adView.headlineView as TextView).text = nativeAd.headline
 
-//        adView.mediaView.clearFindViewByIdCache()
-        adView.mediaView.setMediaContent(nativeAd.mediaContent)
-//        adView.mediaView.setMediaContent(adMedia)
-        logd(TAG, "populateUnifiedNativeAdView : "+nativeAd.mediaContent.toString())
+
+
+        for(i in 0..homeAdapter.mRecylerViewItems.size-1){
+            if(homeAdapter.getItemViewType(i)==2){ //광고 타입이면
+                logd("CHECK_ADS", "mainImage : "+(homeAdapter.mRecylerViewItems[i] as UnifiedNativeAd).mediaContent.mainImage)
+
+            }
+        }
+        logd("CHECK_ADS","   ++++++++++++++++++++++++++++++++++++++++++++++++++")
+
+        adView.mediaView.setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+//        adView.mediaView.setMediaContent(nativeAd.mediaContent) ///범인
+
+        for(i in 0..homeAdapter.mRecylerViewItems.size-1){
+            if(homeAdapter.getItemViewType(i)==2){ //광고 타입이면
+                logd("CHECK_ADS", "mainImage : "+(homeAdapter.mRecylerViewItems[i] as UnifiedNativeAd).mediaContent.mainImage)
+
+            }
+        }
+        logd("CHECK_ADS","    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+
+
 
         // These assets aren't guaranteed to be in every UnifiedNativeAd, so it's important to
         // check before trying to display them.
