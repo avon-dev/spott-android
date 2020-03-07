@@ -79,6 +79,8 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
     private lateinit var userNickname: String
     private lateinit var photoDateTime: String
 
+    private var commentUploading = false
+
     val commentInterListener = object :commentInter{
         override fun userClick(userId:Int){
             presenter.openUser(userId)
@@ -268,8 +270,13 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         when(v?.id){
             R.id.img_profile_comment_f -> {presenter.openUser(userId)}
             R.id.text_nickname_comment_f -> {presenter.openUser(userId)}
-            R.id.imgbtn_write_comment_f -> {presenter.postCommnet(baseurl,
-                photoId, edit_comment_comment_f.text.toString())}
+            R.id.imgbtn_write_comment_f -> {
+                if(!commentUploading){
+                    commentUploading = true
+                    presenter.postCommnet(baseurl, photoId, edit_comment_comment_f.text.toString())
+                }
+
+            }
         }
     }
 
@@ -598,6 +605,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         imm.hideSoftInputFromWindow(view!!.windowToken, 0)
 
         Handler().postDelayed({
+            commentUploading = false
             start = 0
             refreshTimeStamp = ""
             presenter.getComments(baseurl, start, photoId, PHOTO)
@@ -660,6 +668,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
     override fun showFailsComment(state: Int) {
         when(state){
             1->{
+                commentUploading = false
                 showToast(getString(R.string.failed_to_upload_comment))
             }
             2->{
