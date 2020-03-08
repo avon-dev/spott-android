@@ -54,14 +54,12 @@ class DateTimeFormatter {
             // 게시글 서버 시간에서 현지 시간으로 세팅하기
             val timeZone = TimeZone.getDefault()
             var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
-            simpleDateFormat.timeZone = timeZone
+//            simpleDateFormat.timeZone = timeZone
+            simpleDateFormat.timeZone = TimeZone.getTimeZone("UTC");
             val createdDate = simpleDateFormat.parse(created)
+            val now = Calendar.getInstance(timeZone).time // 현재 시간 구하기
 
-            // 현재 시간 구하기
-            val now = Calendar.getInstance(timeZone).time
-
-            // 경과한 시간
-            val elapsedTime: Long = (now.time - createdDate.time) / 1000
+            val elapsedTime: Long = (now.time - createdDate.time) / 1000 // 경과한 시간
 
             if (elapsedTime < MINUTE) { // 방금
                 result = App.mContext.getString(R.string.just)
@@ -77,6 +75,25 @@ class DateTimeFormatter {
                 var list = createdDateToString.split("-")
                 result = String.format(App.mContext.getString(R.string.yyyy_MM_dd), list[0], list[1], list[2])
             }
+
+            /* Start */
+            val form = "yyyy-MM-dd'T'HH:mm'Z'"
+
+            val inputFormat = SimpleDateFormat(form)
+            inputFormat.timeZone = TimeZone.getTimeZone("Etc/UTC")
+            val tempDate = inputFormat.parse(created) // Z, Etc/UTC
+
+            val inputFormat2 = SimpleDateFormat(form)
+            inputFormat2.timeZone = TimeZone.getDefault()
+            val tempDate2 = inputFormat2.parse(created) // Z, default
+
+            val form2 = "yyyy-MM-dd'T'HH:mmX"
+            val inputFormat3 = SimpleDateFormat(form2)
+            inputFormat3.timeZone = TimeZone.getDefault()
+            val tempDate3 = inputFormat3.parse(created) // X, default
+
+            val a = 10
+            /* End */
 
             return result
         }

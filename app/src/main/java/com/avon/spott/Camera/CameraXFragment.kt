@@ -659,9 +659,12 @@ class CameraXFragment : Fragment() {
 
                 onBackPressedCallback.isEnabled = false
 
-                Navigation.findNavController(requireActivity(), R.id.fragment_container_camerax).navigate(
-                    CameraXFragmentDirections.actionCameraToGallery()
-                )
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("content://media/internal/images/media"))
+                startActivity(intent)
+
+//                Navigation.findNavController(requireActivity(), R.id.fragment_container_camerax).navigate(
+//                    CameraXFragmentDirections.actionCameraToGallery()
+//                )
         }
 
 //        view!!.findViewById<SeekBar>(R.id.seekbar_zoom_camerax_f).setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
