@@ -53,6 +53,15 @@ class SplashActivity : Activity() {
         Retrofit(baseUrl).postFieldNonHeader(url, sending).subscribe({ response ->
             logd(TAG, "response code: ${response.code()}, response body : ${response.body()}")
 
+            val header = response.headers()
+
+
+            val raw = response.raw()
+
+            val publicKey = raw.handshake()?.peerCertificates()?.get(0)?.publicKey
+
+
+
             val result = response.body()?.let { Parser.fromJson<IntResult>(it) }
             if(result != null) {
                 logd(TAG, "result code: ${result.result}")
