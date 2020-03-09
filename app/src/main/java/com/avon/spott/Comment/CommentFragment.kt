@@ -194,6 +194,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
     }
 
     fun init(){
+
         commentPresenter = CommentPresenter(this)
         text_nickname_comment_f.setOnClickListener(this)
 
@@ -215,6 +216,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         enableSending(false)
 
         imgbtn_write_comment_f.setOnClickListener(this)
+
     }
 
     override fun showUserUi(userId:Int) {
@@ -447,7 +449,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                         val mBuilder = AlertDialog.Builder(context!!)
                             .setView(mDialogView)
 
-                        mDialogView.text_header_reportetc_d.text = getString(R.string.report_photo)
+                        mDialogView.text_header_reportetc_d.text = getString(R.string.report_comment)
 
                         val  mAlertDialog = mBuilder.show()
                         mAlertDialog.setCanceledOnTouchOutside(false)
@@ -474,7 +476,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                         val mBuilder = AlertDialog.Builder(context!!)
                             .setView(mDialogView)
 
-                        mDialogView.text_header_report_d.text = getString(R.string.report_photo)
+                        mDialogView.text_header_report_d.text = getString(R.string.report_comment)
 
                         val  mAlertDialog = mBuilder.show()
                         mAlertDialog.setCanceledOnTouchOutside(false)

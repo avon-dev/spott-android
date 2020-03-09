@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
+import com.avon.spott.AnimSlide.Companion.animSlide
 import com.avon.spott.Data.MapCluster
 import com.avon.spott.Map.MapFragment.Companion.mBottomSheetBehavior
 import com.avon.spott.Map.MapFragment.Companion.selectedMarker

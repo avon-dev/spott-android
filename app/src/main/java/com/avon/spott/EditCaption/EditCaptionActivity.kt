@@ -1,5 +1,6 @@
 package com.avon.spott.EditCaption
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -8,6 +9,7 @@ import android.text.TextPaint
 import android.text.style.BackgroundColorSpan
 import android.text.style.ClickableSpan
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
@@ -54,8 +56,8 @@ class EditCaptionActivity : AppCompatActivity(), EditCaptionContract.View, View.
 
         edit_caption_editcaption_a.setText(formerCaption)
         edit_caption_editcaption_a.setSelection(formerCaption.length) //커서 뒤로 보내주는 역할
-
     }
+
 
     override fun onClick(v: View?) {
         when(v?.id) {

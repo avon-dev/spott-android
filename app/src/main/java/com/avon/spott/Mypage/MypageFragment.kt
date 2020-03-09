@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.avon.spott.*
 import com.avon.spott.AddPhoto.AddPhotoActivity
+import com.avon.spott.AnimSlide.Companion.animSlide
 import com.avon.spott.Data.MapCluster
 import com.avon.spott.EditMyinfo.EditMyInfoActivity
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
