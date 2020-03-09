@@ -200,7 +200,7 @@
     <string name="error_camera_permission">권한이 필요합니다</string>
     <string name="error_check_password">비밀번호를 확인해주세요</string>
     <string name="error_none_back_image">윤곽선이 없는 사진입니다</string>
-    <string name="error_invalid_nickname">닉네임을 4글자 이상 작성해주세요</string>
+    <string name="error_invalid_nickname">닉네임을 4~15 이상 작성해주세요</string>
     <string name="error_retry">다시 시도해주세요</string>
 
     <string name="error_wrong_password">비밀번호를 다시 확인해주세요</string>
