@@ -18,8 +18,7 @@ class GuidelineActivity : AppCompatActivity() {
             onBackPressed()
         }
 
-            /**  가이드라인 url 넣어야함 */
-//           webview_webview_a.loadUrl("")
+           webview_webview_a.loadUrl(getString(R.string.baseurl)+"/spott/guide")
 
 
     }

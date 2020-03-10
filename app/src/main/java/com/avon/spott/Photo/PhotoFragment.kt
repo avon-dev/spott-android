@@ -72,6 +72,8 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
     private var showdetail = false
 
+    private var dialog : AlertDialog? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -142,6 +144,14 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         }
 
         scroll_photo_f.visibility = if(showdetail) View.VISIBLE else View.GONE
+    }
+
+    override fun onDestroy() {
+        if(dialog!=null && dialog!!.isShowing)
+            dialog!!.dismiss()
+
+        super.onDestroy()
+
     }
 
     fun init(){
@@ -248,7 +258,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
                         }
 
                         builder.setAdapter(adapter, listener)
-                        builder.show()
+                        this.dialog = builder.show()
 
                     }else{ //내가 쓴 글이 아닌 경우
 
@@ -269,7 +279,8 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
                         }
 
                         builder.setAdapter(adapter, listener)
-                        builder.show()
+
+                        this.dialog = builder.show()
 
                     }
                 }

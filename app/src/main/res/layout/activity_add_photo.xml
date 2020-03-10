@@ -152,7 +152,7 @@
         android:background="@drawable/edit_search_map"
         android:drawableLeft="@drawable/ic_arrow_forward_black_24dp"
         android:drawablePadding="5dip"
-        android:hint="장소, 지역, 나라를 검색해보세요"
+        android:hint="@string/hint_edit_search_addphoto_a"
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:visibility="gone"

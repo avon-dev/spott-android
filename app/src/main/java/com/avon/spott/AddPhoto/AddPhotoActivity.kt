@@ -157,7 +157,7 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
                     findPlace(edit_search_addphoto_a.text.toString())
                     edit_search_addphoto_a.hideKeyboard()
                 }else{
-                    showToast("장소를 입력해주세요")
+                    showToast(getString(R.string.toast_blank_edit_search_addphoto_a))
                 }
 
                true
@@ -321,7 +321,6 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
     }
 
     override fun setPhoto(photo:String){
-        logd("photoTEST", "이미지 넣기 직전 : " + photo)
         Glide.with(this)
             .load(photo)
             .apply(RequestOptions().centerCrop())
@@ -461,7 +460,7 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
             addMarker(LatLng(addressList!![0].latitude, addressList!![0].longitude))
 
         }else{
-            showToast("장소를 찾을 수 없습니다")
+            showToast(getString(R.string.text_no_place))
         }
 
 

@@ -120,6 +120,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
             comeFrom = PHOTO
         }else{
             photoId = arguments?.getInt("notiPhotoId")!!
+            logd(TAG, "photoId : $photoId")
             comeFrom = NOTI
             fromNoti = true
         }
@@ -463,7 +464,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
                         mDialogView.btn_reportetc_d.setOnClickListener {
                             presenter.report(getString(R.string.baseurl), 0, mDialogView.edit_reportetc_d.text.toString(),
-                                arguments?.getInt("photoId")!!, itemsList[position].contents, itemsList[position].id, mAlertDialog, position)
+                                photoId, itemsList[position].contents, itemsList[position].id, mAlertDialog, position)
 
                         }
 
@@ -505,7 +506,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
 
                             presenter.report(getString(R.string.baseurl), index+1, detail,
-                                arguments?.getInt("photoId")!!, itemsList[position].contents, itemsList[position].id, mAlertDialog, position )
+                                photoId, itemsList[position].contents, itemsList[position].id, mAlertDialog, position )
 
                         }
 
