@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name">Phopo</string>
 
-    <!--위젯_이름_위치_구분-->
-
     <!-- EditMyinfoActivity [Start]-->
     <string name="text_title_editmyinfo_a">내 정보 수정</string>
     <string name="text_editing">편 집</string>
@@ -10,17 +8,18 @@
     <string name="btn_withdrawal_editmyinfo_a">회원탈퇴</string>
     <string name="imgbtn_changepw_editmyinfo_a">비밀번호 변경</string>
     <string name="signin">로그인</string>
+
     <string name="signin_email">이메일로 계속하기</string>
     <string name="signin_google">Google로 계속하기</string>
+
+    <!--    <string name="signin_email">Sign in with email</string>-->
     <string name="check">확인</string>
 
     <!-- Hint -->
-    <string name="hint_nickname">4자리이상의 영문 또는 숫자로 작성해주세요</string>
+    <string name="hint_nickname">4~15자의 영문 또는 숫자로 작성해주세요</string>
     <string name="hint_originpassword">기존 비밀번호</string>
     <string name="hint_email">이메일을 입력해주세요</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <!-- EditMyinfoActivity [End]-->
 
     <!-- MapFragment [Start]-->
@@ -30,7 +29,7 @@
 
 
     <!-- AddPhotoFragment [Start]-->
-    <string name="text_private">비공개&#160;&#160;</string>
+<!--    <string name="text_private">비공개&#160;&#160;</string>-->
     <string name="btn_upload_photo">업로드</string>
     <string name="hint_search_place">장소 검색</string>
     <string name="hint_caption">사진에 대한 설명을 남겨주세요 :)</string>
@@ -49,8 +48,7 @@
     <string name="photo">사진</string>
     <!-- item_alarm.xml [End] -->
 
-    <string name="signup_">회원가입</string>
-    <string name="join">가입</string>
+    <string name="signup">회원가입</string>
     <string name="change">변경</string>
 
     <string name="email">이메일</string>
@@ -129,7 +127,7 @@
     <string name="title_editmyinfo">내 정보 수정</string>
 
     <string name="no_recent_searching">최근 검색 결과가 없습니다</string>
-    <string name="dialog_withdrawl_message">회원 탈퇴시 계정을 복구 할  수 없습니다. 그래도 탈퇴하시겠습니까?</string>
+    <string name="dialog_withdrawl_message">회원 탈퇴시 사진과 댓글이 모두 지워지고 계정을 복구 할 수 없습니다. 그래도 탈퇴하시겠습니까?</string>
     <string name="dialog_withdrawl_title">회원 탈퇴</string>
 
     <string name="ok">확인</string>
@@ -164,7 +162,7 @@
 
     <string name="photo_i_uploaded">내가 업로드한 사진</string>
     <string name="comment_i_wrote">내가 쓴 댓글</string>
-    <string name="text_footer_reason_f">스팟은 건강한 커뮤니티 운영을 위해 가이드라인에 위배되는 사진 혹은 댓글을 삭제하고 있습니다.\n잘못된 조치라고 생각되면 문의하기를 해주세요.</string>
+    <string name="text_footer_reason_f">Phopo는 건강한 커뮤니티 운영을 위해 가이드라인에 위배되는 사진 혹은 댓글을 삭제하고 있습니다.\n잘못된 조치라고 생각되면 문의하기를 해주세요.</string>
     <string name="reason">사유</string>
 
     <string name="failed_to_upload_comment">댓글 등록에 실패했습니다</string>
@@ -174,4 +172,55 @@
 
     <string name="inquiry_subject">[문의] phopo에 문의합니다.</string>
 
+    <string name="toast_low_quality">사진의 화질이 낮아 윤곽선 없이 업로드됩니다</string>
+
+    <string name="toast_photo_delete_error">사진이 삭제되지 않았습니다\n다시 시도하세요</string>
+
+    <string name="failed_to_edit_caption">설명 편집에 실패했습니다</string>
+
+    <string name="no_location_info">사진의 위치를 표시해주세요</string>
+
+    <string name="no_photo_caption">사진에 대한 설명을 입력해주세요</string>
+
+    <string name="already_finding_location">현재 위치를 가지고 오는 중입니다. 잠시 후 다시 시도해주세요</string>
+
+    <string name="privacy_policy">개인정보처리방침</string>
+
+    <string name="location_policy">위치기반서비스 이용약관</string>
+
+    <string name="see_photo_uploading_guideline">사진 업로드 가이드라인 보기</string>
+
+    <string name="error_400">400 에러</string>
+    <string name="error_404">404 에러</string>
+    <string name="error_500">500 에러</string>
+    <string name="error_fb_email_permission">이메일 권한을 허가해주세요</string>
+    <string name="error_camera_permission">권한이 필요합니다</string>
+    <string name="error_check_password">비밀번호를 확인해주세요</string>
+    <string name="error_none_back_image">윤곽선이 없는 사진입니다</string>
+    <string name="error_invalid_nickname">4~15자의 영문 또는 숫자로 작성해주세요</string>
+    <string name="error_retry">다시 시도해주세요</string>
+    <string name="error_duplication_nickname">중복된 닉네임입니다</string>
+    <string name="error_wrong_password">비밀번호를 다시 확인해주세요</string>
+
+    <string name="success_changed_password">비밀번호가 변경되었습니다</string>
+    <string name="success_changed_nickname">닉네임이 변경되었습니다</string>
+
+    <string name="checked">확인되었습니다</string>
+    <string name="send_authentication_number">인증번호가 전송되었습니다</string>
+
+    <string name="just">방금</string>
+
+    <string name="yyyy_MM_dd">%1$s년 %2$s월 %3$s일</string>
+
+    <string name="month_ago">달 전</string>
+    <string name="week_ago">주 전</string>
+    <string name="day_ago">%1$d일 전</string>
+    <string name="hour_ago">%1$d시간 전</string>
+    <string name="minute_ago">%1$d분 전</string>
+
+
+    <string-array name="edit_profile_item">
+        <item>"수정하기"</item>
+        <item>"삭제하기"</item>
+    </string-array>
 </resources>

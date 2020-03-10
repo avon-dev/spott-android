@@ -73,7 +73,7 @@
         android:layout_marginTop="110dp"
         android:background="@drawable/corner_round_primary"
         android:clickable="false"
-        android:text="@string/check"
+        android:text="@string/signin"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="#F4F1FA"
         android:textSize="14sp"

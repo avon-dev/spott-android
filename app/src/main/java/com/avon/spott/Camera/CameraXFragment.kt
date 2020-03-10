@@ -217,6 +217,8 @@ class CameraXFragment : Fragment() {
             )
         }
 
+        onBackPressedCallback.isEnabled = true
+
     }
 
     override fun onDestroyView() {
@@ -294,6 +296,8 @@ class CameraXFragment : Fragment() {
     @SuppressLint("MissingPermission", "ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        logd(TAG, "onViewCreated()")
 
         container = view as ConstraintLayout
         viewFinder = container.findViewById(R.id.preview_viewfinder_camerax_f)
@@ -804,7 +808,7 @@ class CameraXFragment : Fragment() {
     companion object {
 
         private const val TAG = "CameraXFragment"
-            private const val FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"
+        private const val FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val PHOTO_EXTENSION = ".jpg"
         private const val RATIO_4_3_VALUE = 4.0 / 3.0
         private const val RATIO_16_9_VALUE = 16.0 / 9.0

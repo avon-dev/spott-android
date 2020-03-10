@@ -25,6 +25,7 @@ import com.avon.spott.Data.UserInfo
 import com.avon.spott.Login.LoginActivity
 import com.avon.spott.Mypage.MypageFragment.Companion.userDataChange
 import com.avon.spott.R
+import com.avon.spott.Utils.App
 import com.avon.spott.Utils.MySharedPreferences
 import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
@@ -45,6 +46,13 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
     private val TAG = "EditMyInfoActivity"
 
     private val CROPPED_PROFILE_IMAGE_NAME = "ProfileCropImage.jpg"
+
+    private val ERROR_DUPLICATION_NICKNAME = 1
+    private val SUCCESS_CHANGE_NICKNAME = 2
+    private val ERROR_INVALID_NICKNAME = 3
+    private val ERROR_RETRY = 999
+
+    private val SELECT_IMAGE = 102
 
     override lateinit var presenter: EditMyInfoContract.Presenter
     private lateinit var editmyinfoPresenter: EditMyInfoPresenter
@@ -90,7 +98,6 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
 
         edit_nickname_editmyinfo_a.setText(userInfo.nickname)
         if(userInfo.profile_image != null) { // 프로필 이미지 있으면 이미지 세팅하기
-            // 이미지 세팅하고, 편집 글씨 지울까? 말까?
             Glide.with(this@EditMyInfoActivity)
                 .load(userInfo.profile_image)
                 .placeholder(android.R.drawable.progress_indeterminate_horizontal)
@@ -111,14 +118,15 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
         if(result){
             img_profile_editmyinfo_a.setImageURI(photoUri)
             userDataChange = true
+        } else {
+            showMessage(ERROR_RETRY)
         }
-
     }
 
     override fun getNickname(result: Boolean) {
         if(!result) { // 닉네임 변경에 실패 했을 때
             edit_nickname_editmyinfo_a.setText(buffNickname) // 이전 닉네임으로 되돌리기
-            Toast.makeText(applicationContext, getString(R.string.error_retry), Toast.LENGTH_SHORT).show()
+            showMessage(ERROR_DUPLICATION_NICKNAME)
         } else {
             buffNickname = edit_nickname_editmyinfo_a.text.toString()
             userDataChange = true
@@ -129,7 +137,8 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
         if(result) {
             presenter.signOut(MySharedPreferences(this))
         } else {
-            Toast.makeText(applicationContext, getString(R.string.error_retry), Toast.LENGTH_SHORT).show()
+            showMessage(ERROR_RETRY)
+//            Toast.makeText(applicationContext, getString(R.string.error_retry), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -139,6 +148,32 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         startActivity(intent)
+    }
+
+    override fun showMessage(code: Int) {
+        when(code) {
+            App.SERVER_ERROR_400 -> {
+//                Toast.makeText(applicationContext, getString(R.string.error_400), Toast.LENGTH_SHORT).show()
+            }
+            App.SERVER_ERROR_404 -> {
+//                Toast.makeText(applicationContext, getString(R.string.error_404), Toast.LENGTH_SHORT).show()
+            }
+            App.SERVER_ERROR_500 -> {
+//                Toast.makeText(applicationContext, getString(R.string.error_500), Toast.LENGTH_SHORT).show()
+            }
+            ERROR_DUPLICATION_NICKNAME -> {
+                Toast.makeText(applicationContext, getString(R.string.error_duplication_nickname), Toast.LENGTH_SHORT).show()
+            }
+            ERROR_INVALID_NICKNAME -> {
+                Toast.makeText(applicationContext, getString(R.string.error_invalid_nickname), Toast.LENGTH_SHORT).show()
+            }
+            SUCCESS_CHANGE_NICKNAME -> {
+                Toast.makeText(applicationContext, getString(R.string.success_changed_nickname), Toast.LENGTH_SHORT).show()
+            }
+            ERROR_RETRY -> {
+                Toast.makeText(applicationContext, getString(R.string.error_retry), Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -156,10 +191,10 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
                             0 -> {
                                 val pickPhoto = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                                 pickPhoto.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                startActivityForResult(pickPhoto, 102)
+                                startActivityForResult(pickPhoto, SELECT_IMAGE)
                             }
                             1 -> {
-                                Toast.makeText(applicationContext, "개발 중입니다", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(applicationContext, "개발 중인 기능입니다", Toast.LENGTH_SHORT).show()
                             }
                         }
                     })
@@ -180,7 +215,7 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_OK && null != data) {
-            if(requestCode == 102) {
+            if(requestCode == SELECT_IMAGE) {
                 if (data.getData() != null) {
                     var mPhotoPath: Uri = data.getData() as Uri
                     logd(TAG, "photopath : " + mPhotoPath)
@@ -233,13 +268,6 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
                             requestPermissions(PERMISSIONS_REQUIRED, PERMISSIONS_REQUEST_CODE)
                     }
                 } else { // 프로필 이미지 수정 전 다이얼로그 띄우기
-//                    AlertDialog.Builder(applicationContext)
-//                        .setTitle("프로필 이미지 수정")
-//                        .setItems(R.array.edit_profile_item, DialogInterface.OnClickListener { _, pos ->
-//                            logd(TAG, "pos:$pos")
-//                        })
-//                        .create()
-//                        .show()
                     val builder = AlertDialog.Builder(this)
 
                     builder.setTitle("프로필 이미지 수정")
@@ -264,7 +292,6 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
             R.id.imgbtn_editnickname_editmyinfo_a -> { // 닉네임 수정
                 editable = !editable
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-
 
                 if(editable) { // 닉네임 변경하기
                     imgbtn_editnickname_editmyinfo_a.setImageResource(R.drawable.ic_done_black_24dp)

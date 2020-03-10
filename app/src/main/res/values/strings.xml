@@ -2,226 +2,217 @@
     <string name="app_name">Phopo</string>
 
     <!-- EditMyinfoActivity [Start]-->
-    <string name="text_title_editmyinfo_a">내 정보 수정</string>
-    <string name="text_editing">편 집</string>
-    <string name="btn_signout_editmyinfo_a">로그아웃</string>
-    <string name="btn_withdrawal_editmyinfo_a">회원탈퇴</string>
-    <string name="imgbtn_changepw_editmyinfo_a">비밀번호 변경</string>
-    <string name="signin">로그인</string>
+    <string name="text_title_editmyinfo_a">Modify Information</string>
+    <string name="text_editing">Editing</string>
+    <string name="btn_signout_editmyinfo_a">Sign out</string>
+    <string name="btn_withdrawal_editmyinfo_a">Delete Account</string>
+    <string name="imgbtn_changepw_editmyinfo_a">Change password</string>
+    <string name="signin">Sign in</string>
 
-    <string name="signin_email">이메일로 계속하기</string>
-    <string name="signin_google">Google로 계속하기</string>
+<!--    <string name="signin_email">이메일로 계속하기</string>-->
+    <string name="signin_email">Sign in with email</string>
+    <string name="signin_google">Sign in with google</string>
 
-    <!--    <string name="signin_email">Sign in with email</string>-->
-    <string name="check">확인</string>
+    <string name="check">check</string>
 
     <!-- Hint -->
-    <string name="hint_nickname">4~15자의 영문 또는 숫자로 작성해주세요</string>
-    <string name="hint_originpassword">기존 비밀번호</string>
-    <string name="hint_email">이메일을 입력해주세요</string>
+    <string name="hint_nickname">Write 4 to 15 English letters or numbers</string>
+    <string name="hint_originpassword">Old password</string>
+    <string name="hint_email">Enter an e-mail</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <!-- EditMyinfoActivity [End]-->
 
     <!-- MapFragment [Start]-->
-    <string name="text_all">전체</string>
-    <string name="text_find_thisplace">이 지역에서 찾기</string>
+    <string name="text_all">All</string>
+    <string name="text_find_thisplace">Find in this area</string>
     <!-- MapFragment [End]-->
 
 
     <!-- AddPhotoFragment [Start]-->
-    <string name="text_private">비공개&#160;&#160;</string>
-    <string name="btn_upload_photo">업로드</string>
-    <string name="hint_search_place">장소 검색</string>
-    <string name="hint_caption">사진에 대한 설명을 남겨주세요 :)</string>
-    <string name="text_longtab">지도를 길게 눌러서 위치를 표시해주세요</string>
+<!--    <string name="text_private">Private&#160;&#160;</string>-->
+    <string name="btn_upload_photo">Upload</string>
+    <string name="hint_search_place">Search place</string>
+    <string name="hint_caption">Please leave a description of the picture :)</string>
+    <string name="text_longtab">Press and hold the map to indicate the location</string>
     <!-- AddPhotoFragment [End]-->
 
 
     <!-- item_alarm.xml [Start] -->
-    <string name="notification">알림</string>
-    <string name="notification_failure">사진이 반려되었습니다.</string>
-    <string name="notification_sharing">사진이 공유되었습니다.</string>
-    <string name="guideline">가이드라인</string>
-    <string name="notification_reason">(사유 : %1$s)</string>
-    <string name="text_new_comment">%1$s님이 회원님의 사진에 댓글을 남겼습니다.</string>
-    <string name="was_removed_for_reason">%1$s이 가이드라인에 위반되어 삭제되었습니다.</string>
-    <string name="photo">사진</string>
+    <string name="notification">Notification</string>
+    <string name="notification_failure">The picture has been returned</string>
+    <string name="notification_sharing">The picture has been shared</string>
+    <string name="guideline">Guideline</string>
+    <string name="notification_reason">(Reason : %1$s)</string>
+    <string name="text_new_comment">%1$s left a comment on your photo</string>
+    <string name="was_removed_for_reason">%1$s was deleted because it violated the guidelines</string>
+    <string name="photo">Photo</string>
     <!-- item_alarm.xml [End] -->
 
-    <string name="signup_">회원가입</string>
-    <string name="join">가입</string>
-    <string name="change">변경</string>
+    <string name="signup">Sign up</string>
+    <string name="change">Change</string>
 
-    <string name="email">이메일</string>
-    <string name="pw">비밀번호 입력</string>
-    <string name="password_information">8~20자의 영문, 숫자, 특수문자를 최소 1개 포함해주세요</string>
-    <string name="checkpw">비밀번호 확인</string>
-    <string name="originpw">기존 비밀번호</string>
-    <string name="newpw">새 비밀번호 입력</string>
-    <string name="changepw">비밀번호 변경</string>
+    <string name="email">Email</string>
+    <string name="pw">Enter your password</string>
+    <string name="password_information">8~20 characters include at least one special character, English, number</string>
+    <string name="checkpw">Check password</string>
+    <string name="originpw">Old password</string>
+    <string name="newpw">New password</string>
+    <string name="changepw">Change password</string>
 
-    <string name="text_warnmsg1_signup_a">이메일 형식을 확인해주세요</string>
-    <string name="text_warnmsg2_signup_a">비밀번호를 형식에 맞게 입력해주십시오</string>
-    <string name="text_warnmsg3_signup_a">비밀번호가 일치하지 않습니다</string>
+    <string name="text_warnmsg1_signup_a">Check the email format</string>
+    <string name="text_warnmsg2_signup_a">Enter your password according to the format</string>
+    <string name="text_warnmsg3_signup_a">The password does not match.</string>
 
-    <string name="next">다음</string>
-    <string name="findpw">비밀번호 찾기</string>
-    <string name="text_warnmsg_findpw_a">이메일 형식을 확인해주세요</string>
-    <string name="text_warnmessage_number_a">이미 사용하고 있는 닉네임입니다</string>
+    <string name="next">Next</string>
+    <string name="findpw">Find password</string>
+    <string name="text_warnmsg_findpw_a">Check the email format</string>
+    <string name="text_warnmessage_number_a">This nickname is already in use</string>
 
-    <string name="certification_number">인증번호</string>
-    <string name="nickname">닉네임</string>
+    <string name="certification_number">code number</string>
+    <string name="nickname">Nickname</string>
 
-    <string name="text_all_scrap_f">총</string>
-    <string name="text_photos_scrap_f">장</string>
-    <string name="select_delete">선택 삭제</string>
+    <string name="text_all_scrap_f">All</string>
+    <string name="text_photos_scrap_f">images</string>
+    <string name="select_delete">Delete selection</string>
 
-    <string name="text_guide_scrap_f">스크랩한 사진을 따라 찍을 수 있습니다.\n스크랩한 사진을 길게 누르거나 카메라에서 직접 선택하세요.</string>
+    <string name="text_guide_scrap_f">You can follow the scraped pictures.Press and hold\n the scrap picture or select it directly from the camera</string>
 
-    <string name="map">지도</string>
-    <string name="comment">댓글</string>
+    <string name="map">Map</string>
+    <string name="comment">Comment</string>
 
 
-    <string name="text_privacyinfo_login_a">회원가입시 Spott의 이용약관 및 개인정보처리방침에 동의합니다</string>
+    <string name="text_privacyinfo_login_a">I agree with Spot\'s Terms of Use and Privacy Policy when I sign up</string>
 
-    <string name="text_title_emaillogin">이메일 로그인</string>
+    <string name="text_title_emaillogin">Sign in with email</string>
 
-    <string name="send">전송</string>
-    <string name="resend">재전송</string>
-    <string name="certification_message">이메일 주소로 전송된 인증번호를 입력해주세요. </string>
+    <string name="send">Send</string>
+    <string name="resend">Resend</string>
+    <string name="certification_message">Enter the authentication number sent to the email address</string>
 
-    <string name="adding_photo">사진 등록</string>
+    <string name="adding_photo">Add photo</string>
 
-    <string name="toast_nophoto_map_f">등록된 사진이 없습니다. 화면을 이동하거나 지도를 확대/축소해보세요.</string>
-    <string name="map_no_photo">해당 위치에\n등록된 사진이 없습니다</string>
-    <string name="upload_first_photo">첫 번째 사진을 업로드해보세요</string>
+    <string name="toast_nophoto_map_f">There are no registered pictures. Move the screen or zoom in on//down the map</string>
+    <string name="map_no_photo">There are no photos registered at the location</string>
+    <string name="upload_first_photo">Upload the first picture</string>
 
-    <string name="cancel">취소</string>
-    <string name="done">완료</string>
-    <string name="delete">삭제</string>
-    <string name="edit">편집</string>
-    <string name="report">신고</string>
-    <string name="modify">수정</string>
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="report">Report</string>
+    <string name="modify">Modify</string>
 
-    <string name="editing_caption">설명 편집</string>
+    <string name="editing_caption">Edit description</string>
 
-    <string name="edit_comment">댓글 수정</string>
-    <string name="delete_comment">댓글 삭제</string>
-    <string name="report_comment">댓글 신고</string>
-    <string name="text_warning_comment_d">삭제된 댓글은 복구할 수 없습니다.\n댓글을 삭제하시겠습니까?</string>
-    <string name="text_warning_deleting_photo">삭제된 사진은 복구할 수 없습니다.\n\n사진을 삭제하시겠습니까?\n</string>
+    <string name="edit_comment">Modifying comment</string>
+    <string name="delete_comment">Delete comment</string>
+    <string name="report_comment">Report comment</string>
+    <string name="text_warning_comment_d">Deleted comments cannot be recovered.\nAre you sure you want to delete the comments?</string>
+    <string name="text_warning_deleting_photo">Deleted pictures cannot be recovered.\n\nAre you sure you want to delete the picture?\n</string>
 
-    <string name="text_no_photo">해당 사진을 찾을 수 없습니다.</string>
+    <string name="text_no_photo">The picture could not be found</string>
 
-    <string name="recent_searching">최근 검색</string>
-    <string name="delete_all">전체 삭제</string>
+    <string name="recent_searching">Recent Search</string>
+    <string name="delete_all">Delete All</string>
 
-    <string name="toast_origin_changepassword">기존 비밀번호를 확인해주세요</string>
-    <string name="toast_check_changepassword">비밀번호를 확인해주세요</string>
-    <string name="toast_fail_changepw">다시 시도해주세요</string>
-    <string name="toast_success_changepw">비밀번호가 변경되었습니다</string>
-    <string name="toast_duplication_nickname">중복된 닉네임입니다</string>
-    <string name="toast_no_scrap_message">스크랩한 이미지가 없습니다</string>
-    <string name="toast_get_image_error_message">권한을 확인해주세요</string>
-    <string name="toast_wrong_number_findpw_a">인증번호를 확인해주세요</string>
+    <string name="toast_origin_changepassword">Check your old password</string>
+    <string name="toast_check_changepassword">Check your password</string>
+    <string name="toast_fail_changepw">Please try again</string>
+    <string name="toast_success_changepw">Your password has been changed</string>
+    <string name="toast_duplication_nickname">This is a duplicate nickname</string>
+    <string name="toast_no_scrap_message">No Scraped Images</string>
+    <string name="toast_get_image_error_message">Check the permission</string>
+    <string name="toast_wrong_number_findpw_a">Check the authentication number</string>
 
-    <string name="title_editmyinfo">내 정보 수정</string>
+    <string name="title_editmyinfo">Modify My Information</string>
 
-    <string name="no_recent_searching">최근 검색 결과가 없습니다</string>
-    <string name="dialog_withdrawl_message">회원 탈퇴시 계정을 복구 할  수 없습니다. 그래도 탈퇴하시겠습니까?</string>
-    <string name="dialog_withdrawl_title">회원 탈퇴</string>
+    <string name="no_recent_searching">No recent search results</string>
+    <string name="dialog_withdrawl_message">When you leave the membership, all photos and comments are erased and your account cannot be restored. Do you still want to leave?</string>
+    <string name="dialog_withdrawl_title">Delete account</string>
 
-    <string name="ok">확인</string>
+    <string name="ok">OK</string>
 
-    <string name="private_status">비공개 상태입니다</string>
-    <string name="private_account">비공개 계정입니다</string>
+    <string name="private_status">It\'s private</string>
+    <string name="private_account">This is a private account</string>
 
-    <string name="text_terms_of_service">이용 약관</string>
-    <string name="text_open_source_library">오픈 소스 라이브러리</string>
-    <string name="inquiry">문의하기</string>
-    <string name="keep_private">비공개로 전환</string>
-    <string name="keep_public">공개로 전환</string>
+    <string name="text_terms_of_service">Terms and Conditions</string>
+    <string name="text_open_source_library">Open Source Library</string>
+    <string name="inquiry">To inquire</string>
+    <string name="keep_private">Switch to private</string>
+    <string name="keep_public">Switch to public</string>
 
-    <string name="server_connection_error">서버 연결에 오류가 발생했습니다</string>
+    <string name="server_connection_error">Connection to server failed</string>
 
-    <string name="user_no_photo">업로드한 사진이 없습니다</string>
+    <string name="user_no_photo">No photos have been uploaded</string>
 
-    <string name="spam">스팸</string>
-    <string name="abuse_and_slander">욕설 및 비방</string>
-    <string name="pornography">음란물</string>
-    <string name="unauthorized_use">무단 도용</string>
-    <string name="etc">기타</string>
+    <string name="spam">Spam</string>
+    <string name="abuse_and_slander">abusive language and slander</string>
+    <string name="pornography">obscene material</string>
+    <string name="unauthorized_use">unauthorized theft</string>
+    <string name="etc">etc</string>
 
-    <string name="report_photo">사진 신고</string>
-    <string name="hint_report_etc">신고 사유를 작성해주세요</string>
+    <string name="report_photo">a photo report</string>
+    <string name="hint_report_etc">Please fill in the reason for the report</string>
 
-    <string name="report_done">신고가 접수되었습니댜</string>
+    <string name="report_done">A report has been filed</string>
 
-    <string name="no_scrap">스크랩한 사진이 없습니다</string>
+    <string name="no_scrap">don\'t have any scraps</string>
 
-    <string name="text_reported_photo">신고 처리 중인 사진입니다.</string>
+    <string name="text_reported_photo">This picture is being processed</string>
 
-    <string name="photo_i_uploaded">내가 업로드한 사진</string>
-    <string name="comment_i_wrote">내가 쓴 댓글</string>
-    <string name="text_footer_reason_f">스팟은 건강한 커뮤니티 운영을 위해 가이드라인에 위배되는 사진 혹은 댓글을 삭제하고 있습니다.\n잘못된 조치라고 생각되면 문의하기를 해주세요.</string>
-    <string name="reason">사유</string>
+    <string name="photo_i_uploaded">Pictures I uploaded</string>
+    <string name="comment_i_wrote">comment I wrote</string>
+    <string name="text_footer_reason_f">Phopo is deleting pictures or comments that violate guidelines for healthy community operations.\nIf you think it\'s a wrong move, please ask.</string>
+    <string name="reason">reason</string>
 
-    <string name="failed_to_upload_comment">댓글 등록에 실패했습니다</string>
-    <string name="failed_to_edit_comment">댓글 수정에 실패했습니다</string>
-    <string name="failed_to_delete_comment">댓글 삭제에 실패했습니다</string>
-    <string name="failed_to_delete_noti">알림 삭제에 실패했습니다</string>
+    <string name="failed_to_upload_comment">Failed to register comment</string>
+    <string name="failed_to_edit_comment">Failed to modify comment</string>
+    <string name="failed_to_delete_comment">Failed to delete comment</string>
+    <string name="failed_to_delete_noti">Deleting alert failed</string>
 
-    <string name="inquiry_subject">[문의] phopo에 문의합니다.</string>
+    <string name="inquiry_subject">[Inquiry] Ask the phopo</string>
 
-    <string name="toast_low_quality">사진의 화질이 낮아 윤곽선 없이 업로드됩니다</string>
+    <string name="toast_low_quality">The picture is uploaded without contours due to the low quality of the</string>
 
-    <string name="toast_photo_delete_error">사진이 삭제되지 않았습니다\n다시 시도하세요</string>
+    <string name="toast_photo_delete_error">The picture has not been deleted\nPlease try again.</string>
 
-    <string name="failed_to_edit_caption">설명 편집에 실패했습니다</string>
+    <string name="failed_to_edit_caption">Description edit failed</string>
 
-    <string name="no_location_info">사진의 위치를 표시해주세요</string>
+    <string name="no_location_info">Please indicate the location of the picture</string>
 
-    <string name="no_photo_caption">사진에 대한 설명을 입력해주세요</string>
+    <string name="no_photo_caption">Please enter a description of the picture</string>
 
-    <string name="already_finding_location">현재 위치를 가지고 오는 중입니다. 잠시 후 다시 시도해주세요</string>
+    <string name="already_finding_location">I\'m bringing my current location. Please try again in a few minutes.</string>
 
-    <string name="privacy_policy">개인정보처리방침</string>
+    <string name="privacy_policy">Privacy Policy</string>
 
-    <string name="location_policy">위치기반서비스 이용약관</string>
+    <string name="location_policy">Terms and Conditions of Use of Location-Based Services</string>
 
-    <string name="see_photo_uploading_guideline">사진 업로드 가이드라인 보기</string>
+    <string name="see_photo_uploading_guideline">View Photo Upload Guidelines</string>
 
-    <string name="error_400">400 에러</string>
-    <string name="error_404">404 에러</string>
-    <string name="error_500">500 에러</string>
-    <string name="error_fb_email_permission">페북 로그인시 이메일 권한을 허가해주세요</string>
-    <string name="error_camera_permission">권한이 필요합니다</string>
-    <string name="error_check_password">비밀번호를 확인해주세요</string>
-    <string name="error_none_back_image">윤곽선이 없는 사진입니다</string>
-    <string name="error_invalid_nickname">닉네임을 4~15 이상 작성해주세요</string>
-    <string name="error_retry">다시 시도해주세요</string>
+    <string name="error_400">400 erro</string>
+    <string name="error_404">404 error</string>
+    <string name="error_500">500 error</string>
+    <string name="error_fb_email_permission">Permit me to email you.</string>
+    <string name="error_camera_permission">Need permission</string>
+    <string name="error_check_password">Check your password</string>
+    <string name="error_none_back_image">It\'s a picture without an outline</string>
+    <string name="error_invalid_nickname">Please write 4 to 15 English letters or numbers</string>
+    <string name="error_retry">Please try again</string>
+    <string name="error_duplication_nickname">This is a duplicate nickname</string>
+    <string name="error_wrong_password">Please check your password again</string>
 
-    <string name="error_wrong_password">비밀번호를 다시 확인해주세요</string>
+    <string name="success_changed_password">Your password has been changed</string>
+    <string name="success_changed_nickname">Nickname changed</string>
 
-    <string name="success_changed_password">비밀번호가 변경되었습니다</string>
+    <string name="checked">It\'s been confirmed</string>
+    <string name="send_authentication_number">code number has been sent</string>
 
-    <string name="checked">확인되었습니다</string>
-    <string name="send_authentication_number">인증번호가 전송되었습니다</string>
-
-    <string name="year">년</string>
-    <string name="month">월</string>
-    <string name="week">주</string>
-    <string name="day">일</string>
-    <string name="hour">시</string>
-    <string name="minute">분</string>
-    <string name="just">방금</string>
+    <string name="just">just</string>
 
     <string name="yyyy_MM_dd">%1$s년 %2$s월 %3$s일</string>
 
-    <string name="year_ago">년 전</string>
-    <string name="month_ago">월 전</string>
+    <string name="month_ago">달 전</string>
     <string name="week_ago">주 전</string>
     <string name="day_ago">%1$d일 전</string>
     <string name="hour_ago">%1$d시간 전</string>
@@ -229,7 +220,7 @@
 
 
     <string-array name="edit_profile_item">
-        <item>"수정하기"</item>
-        <item>"삭제하기"</item>
+        <item>"To modify"</item>
+        <item>"To delete"</item>
     </string-array>
 </resources>

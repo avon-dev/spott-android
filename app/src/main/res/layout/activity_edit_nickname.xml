@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
         android:background="@drawable/corner_round_graybtn"
-        android:text="@string/signup_"
+        android:text="@string/signup"
         android:textColor="#FAFAFA"
         android:textSize="12sp"
         android:textStyle="bold"
