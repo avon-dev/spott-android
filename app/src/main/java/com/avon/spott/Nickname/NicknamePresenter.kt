@@ -8,6 +8,12 @@ import com.avon.spott.Data.User
 import com.avon.spott.Utils.*
 import com.google.gson.GsonBuilder
 import retrofit2.HttpException
+import java.security.cert.Certificate
+import javax.crypto.Cipher
+import javax.crypto.KeyGenerator
+import javax.crypto.SecretKey
+import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.SecretKeySpec
 
 class NicknamePresenter(val nicknameView: NicknameContract.View) : NicknameContract.Presenter {
 
@@ -76,5 +82,32 @@ class NicknamePresenter(val nicknameView: NicknameContract.View) : NicknameContr
                 )
             }
         })
+    }
+
+    fun encrypt(pw:String, certificate: Certificate) {
+        val charset = Charsets.UTF_8
+
+        val plaintext:ByteArray = pw.toByteArray(charset)
+        val keygen = KeyGenerator.getInstance("AES")
+        keygen.init(256)
+        val key: SecretKey = keygen.generateKey()
+
+        val cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING")
+        cipher.init(Cipher.ENCRYPT_MODE, key)
+        val ciphertext:ByteArray = cipher.doFinal(plaintext)
+        val iv:ByteArray = cipher.iv
+
+        val cipher3 = Cipher.getInstance("RSA")
+        cipher3.init(Cipher.ENCRYPT_MODE, certificate.publicKey)
+        val cipher3text = cipher3.doFinal(key.encoded)
+        val ivtext = cipher3.doFinal(iv)
+
+        val secretKey = SecretKeySpec(cipher3text, "AES")
+        val ivSpec = IvParameterSpec(ivtext)
+        var keyjson2 = GsonBuilder().create().toJson(secretKey)
+        var ivjson = GsonBuilder().create().toJson(ivSpec)
+
+        // GsonBuilder()는 Gson()보다 제한적인 느낌이다.
+
     }
 }

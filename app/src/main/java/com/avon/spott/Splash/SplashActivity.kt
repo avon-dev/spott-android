@@ -142,11 +142,6 @@ class SplashActivity : Activity() {
         val bytearraytobinarystring = byteArrayToBinaryString(ciphertext)
         val binarystringtonytearray = binaryStringToByteArray(bytearraytobinarystring)
 
-//        val cipher2 = Cipher.getInstance("RSA")
-//        cipher2.init(Cipher.ENCRYPT_MODE, certificate)
-//        val cipher2text = cipher2.doFinal(key.encoded)
-//        val strcipher2text = byteArrayToBinaryString(cipher2text)
-
         val cipher3 = Cipher.getInstance("RSA")
         cipher3.init(Cipher.ENCRYPT_MODE, certificate.publicKey)
         val cipher3text = cipher3.doFinal(key.encoded)
