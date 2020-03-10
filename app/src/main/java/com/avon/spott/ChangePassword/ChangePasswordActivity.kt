@@ -29,9 +29,7 @@ class ChangePasswordActivity : AppCompatActivity(), ChangePasswordContract.View,
 
     private fun init() {
         // 임시
-        edit_origin_changepassword_a.setText("seunghyun1!")
-
-
+//        edit_origin_changepassword_a.setText("seunghyun1!")
 
         text_title_toolbar.text = getString(R.string.changepw)
 
