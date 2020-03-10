@@ -50,7 +50,7 @@
         android:layout_marginTop="32dp"
         android:background="@drawable/corner_round_graybtn"
         android:clickable="false"
-        android:text="@string/join"
+        android:text="@string/signup"
         android:textColor="#ffffff"
         android:textSize="12dp"
         android:textStyle="bold"

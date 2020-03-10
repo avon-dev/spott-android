@@ -134,7 +134,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="@string/signup_"
+        android:text="@string/signup"
         android:textColor="@color/span_text"
         android:textSize="13dp"
         android:textStyle="bold"

@@ -16,6 +16,7 @@ interface EditMyInfoContract {
         // 비밀번호 변경
         fun withDrawl(result:Boolean)// 회원 탈퇴
         fun loginActivity() // 로그아웃
+        fun showMessage(code:Int)
     }
 
     interface Presenter {
