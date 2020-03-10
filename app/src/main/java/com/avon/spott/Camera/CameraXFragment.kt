@@ -663,7 +663,8 @@ class CameraXFragment : Fragment() {
 
                 onBackPressedCallback.isEnabled = false
 
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("content://media/internal/images/media"))
+//                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("content://media/internal/images/media"))
+                val intent = Intent(Intent.ACTION_VIEW, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                 startActivity(intent)
 
 //                Navigation.findNavController(requireActivity(), R.id.fragment_container_camerax).navigate(

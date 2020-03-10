@@ -73,21 +73,23 @@ class DateTimeFormatter {
                 /* start */
                 val formatString = DateFormat.getBestDateTimePattern(Locale.getDefault(), "ddMMMMyyyy")
                 simpleDateFormat = SimpleDateFormat(formatString)
-                val bestDateString = simpleDateFormat.format(createdDate)
-                logd(TAG, "bestDateString : $bestDateString")
-                logd(TAG, "bestDateString-fr: ${SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.FRANCE, "ddMMMMyyyy")).format(createdDate)}")
-                logd(TAG, "bestDateString-jp: ${SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.JAPANESE, "ddMMMMyyyy")).format(createdDate)}")
-                logd(TAG, "bestDateString-en: ${SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.UK, "ddMMMMyyyy")).format(createdDate)}")
+                simpleDateFormat.timeZone = timeZone
+//                val bestDateString = simpleDateFormat.format(createdDate)
+                result = simpleDateFormat.format(createdDate)
+//                logd(TAG, "bestDateString : $bestDateString")
+//                logd(TAG, "bestDateString-fr: ${SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.FRANCE, "ddMMMMyyyy")).format(createdDate)}")
+//                logd(TAG, "bestDateString-jp: ${SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.JAPANESE, "ddMMMMyyyy")).format(createdDate)}")
+//                logd(TAG, "bestDateString-en: ${SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.UK, "ddMMMMyyyy")).format(createdDate)}")
 
 
                 /* end */
 
-                simpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
-                simpleDateFormat.timeZone = timeZone
-                val createdDateToString = simpleDateFormat.format(createdDate)
+//                simpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
+//                simpleDateFormat.timeZone = timeZone
+//                val createdDateToString = simpleDateFormat.format(createdDate)
 
-                var list = createdDateToString.split("-")
-                result = String.format(App.mContext.getString(R.string.yyyy_MM_dd), list[0], list[1], list[2])
+//                var list = createdDateToString.split("-")
+//                result = String.format(App.mContext.getString(R.string.yyyy_MM_dd), list[0], list[1], list[2])
             }
 
             /* Start */
