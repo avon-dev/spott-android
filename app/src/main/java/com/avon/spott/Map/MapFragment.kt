@@ -134,9 +134,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
         bottomconst = root.findViewById<ConstraintLayout>(R.id.const_bottomsheet_map_f)
 
-
         configureBackdrop()  //바텀시트 처리
-
 
         if(!::mapView.isInitialized){ //처음 생성될 때 빼고는 다시 구글맵을 초기화하지 않는다.
             val mapFragment : SupportMapFragment = childFragmentManager.findFragmentById(R.id.frag_googlemap_map_f) as SupportMapFragment
@@ -321,16 +319,9 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
         val ITEM = 0
         val LOADING = 1
-//        val ADS = 2
         private var isLoadingAdded = false
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-            /** 에드몹 테스트 */
-//            if(viewType == ADS){
-//                val view = LayoutInflater.from(context).inflate(R.layout.item_ads, parent, false)
-//                return AdViewHolder(view)
-//            }else
-            /**-----------------------*/
             if(viewType == ITEM){ //아이템일 때 아이템뷰홀더 선택
                 val view =  LayoutInflater.from(context).inflate(R.layout.item_photo_square, parent, false)
                 return ItemViewHolder(view)
@@ -357,20 +348,12 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
             add(MapCluster(0.0,0.0, "",0,0))
         }
 
-//        fun addAdItem(){
-//            itemsList.add(MapCluster(0.0,0.0, "",0))
-//            notifyDataSetChanged()
-//        }
-
         fun removeLoadingItem(){
 
 
             isLoadingAdded = false
             val position = itemsList.size -1
 
-//            val item = getItem(position)
-//            logd(TAG, "deleting position : " + position)
-//            itemsList.remove(item)
 
             itemsList.removeAt(position)
 
@@ -380,11 +363,6 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         }
 
         override fun getItemViewType(position: Int): Int {
-            /** 에드몹 테스트 */
-//            if(position%20 ==19){
-//                return ADS
-//            }else
-            /**-----------------------*/
             if(position==itemsList.size-1 && isLoadingAdded){
                 return LOADING
             }else return ITEM
@@ -395,17 +373,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
             notifyItemInserted(itemsList.size-1)
         }
 
-        fun getItem(position: Int):MapCluster{
-            return itemsList.get(position)
-        }
-        //=========================================================
-
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-            /** 에드몹 테스트 */
-//            if(getItemViewType(position)==ADS){
-//
-//            }else
-            /**-----------------------*/
             if(getItemViewType(position)==ITEM) {
                 val mapholder :ItemViewHolder = holder as ItemViewHolder
                 itemsList[position].let {
@@ -428,8 +396,6 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
         inner class LoadingViewHolder(itemView:View):RecyclerView.ViewHolder(itemView){
         }
-//        inner class AdViewHolder(itemView:View):RecyclerView.ViewHolder(itemView){
-//        }
 
 
     }

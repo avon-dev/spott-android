@@ -102,19 +102,19 @@
         app:layout_constraintEnd_toEndOf="@+id/include_toolbar_addphoto_a"
         app:layout_constraintTop_toTopOf="@+id/include_toolbar_addphoto_a" />
 
-<!--    <ImageButton-->
-<!--        android:id="@+id/imgbtn_search_addphoto_a"-->
-<!--        android:layout_width="45dp"-->
-<!--        android:layout_height="45dp"-->
-<!--        android:layout_marginTop="12dp"-->
-<!--        android:layout_marginEnd="12dp"-->
-<!--        android:layout_marginRight="12dp"-->
-<!--        android:background="@drawable/btn_map_icon"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/frag_googlemap_addphoto_a"-->
-<!--        app:srcCompat="@drawable/ic_search_24px" />-->
+    <ImageButton
+        android:id="@+id/imgbtn_search_addphoto_a"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp"
+        android:background="@drawable/btn_map_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/frag_googlemap_addphoto_a"
+        app:srcCompat="@drawable/ic_search_24px" />
 
-<!--    <TextView-->
+    <!--    <TextView-->
 <!--        android:id="@+id/text_public_addphoto_a"-->
 <!--        android:layout_width="wrap_content"-->
 <!--        android:layout_height="wrap_content"-->
@@ -141,6 +141,28 @@
 <!--        app:layout_constraintEnd_toEndOf="@+id/switch_private_addphoto_a"-->
 <!--        app:layout_constraintTop_toTopOf="@+id/switch_private_addphoto_a"-->
 <!--        tools:visibility="visible" />-->
+
+    <EditText
+        android:id="@+id/edit_search_addphoto_a"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/edit_search_map"
+        android:drawableLeft="@drawable/ic_arrow_forward_black_24dp"
+        android:drawablePadding="5dip"
+        android:hint="@string/hint_edit_search_addphoto_a"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:visibility="gone"
+        android:paddingLeft="10dp"
+        android:paddingRight="12dp"
+        android:textSize="14dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/frag_googlemap_addphoto_a" />
 
     <LinearLayout
         android:id="@+id/linear_loading_addphoto_a"

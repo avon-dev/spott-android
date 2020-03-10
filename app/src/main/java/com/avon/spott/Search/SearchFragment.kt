@@ -23,6 +23,7 @@ import com.avon.spott.Main.controlToolbar
 import com.avon.spott.R
 import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.activity_add_photo.*
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
@@ -186,7 +187,6 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
     fun init(){
         searchPresenter = SearchPresenter(this)
 
-
         mToolbar.edit_search_toolbar.setOnTouchListener(object : View.OnTouchListener {
             override fun onTouch(v: View?, event: MotionEvent?): Boolean {
                 val DRAWABLE_RIGHT = 2
@@ -215,6 +215,12 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
         }
 
         text_deleteall_search_f.setOnClickListener(this)
+
+
+        mToolbar.edit_search_toolbar.isFocusableInTouchMode = true
+        mToolbar.edit_search_toolbar.requestFocus()
+        val imm = context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(mToolbar.edit_search_toolbar, 0)
 
     }
 

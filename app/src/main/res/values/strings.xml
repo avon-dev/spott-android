@@ -223,4 +223,11 @@
         <item>"To modify"</item>
         <item>"To delete"</item>
     </string-array>
+
+    <string name="search_edittext_hint">해시태그나 유저를 검색해보세요</string>
+
+    <string name="toast_blank_edit_search_addphoto_a">장소를 입력해주세요</string>
+    <string name="text_no_place">장소를 찾을 수 없습니다</string>
+    <string name="hint_edit_search_addphoto_a">장소, 지역, 나라를 검색해보세요</string>
+
 </resources>

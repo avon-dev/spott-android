@@ -22,25 +22,33 @@
         tools:replace="android:allowBackup">
 
         <activity android:name=".Splash.SplashActivity"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TOS.TOSActivity" />
-        <activity android:name=".OpensourceActivity" />
-        <activity android:name=".GuidelineActivity" />
-        <activity android:name=".FindPlace.FindPlaceActivity" />
-        <activity android:name=".EditCaption.EditCaptionActivity" />
-        <activity android:name=".ChangePassword.ChangePasswordActivity" />
-        <activity android:name=".NewPassword.NewPasswordActivity" />
+        <activity android:name=".TOS.TOSActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".OpensourceActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".GuidelineActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".FindPlace.FindPlaceActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".EditCaption.EditCaptionActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ChangePassword.ChangePasswordActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".NewPassword.NewPasswordActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Camera.CameraXActivity"
             android:clearTaskOnLaunch="true"
             android:rotationAnimation="seamless"
-            android:screenOrientation="fullUser">
+            android:screenOrientation="portrait">
 
             <!-- Register as a system camera app -->
             <intent-filter>
@@ -71,32 +79,43 @@
         </activity>
         <activity
             android:name=".PhotoEnlargementActivity"
-            android:theme="@style/Transparent" />
+            android:theme="@style/Transparent"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".AddPhoto.AddPhotoActivity"
-            android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".EditPWActivity" />
-        <activity android:name=".EditNicknameActivity" />
+        android:name=".AddPhoto.AddPhotoActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".EditPWActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".EditNicknameActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Camera.CameraActivity"
             android:theme="@style/NoStatusbar" />
-        <activity android:name=".EditMyinfo.EditMyInfoActivity" />
+        <activity android:name=".EditMyinfo.EditMyInfoActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Main.MainActivity"
-            android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".EmailLogin.EmailLoginActivity" />
-        <activity android:name=".FindPW.FindPWActivity" />
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".EmailLogin.EmailLoginActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".FindPW.FindPWActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Login.LoginActivity"
+            android:screenOrientation="portrait"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation">
         </activity>
-        <activity android:name=".Nickname.NicknameActivity" />
-        <activity android:name=".Password.PasswordActivity" />
-        <activity android:name=".Email.EmailActivity" />
+        <activity android:name=".Nickname.NicknameActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Password.PasswordActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Email.EmailActivity"
+            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

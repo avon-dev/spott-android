@@ -79,6 +79,8 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
     private lateinit var userNickname: String
     private lateinit var photoDateTime: String
 
+    private var commentUploading = false
+
     val commentInterListener = object :commentInter{
         override fun userClick(userId:Int){
             presenter.openUser(userId)
@@ -118,6 +120,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
             comeFrom = PHOTO
         }else{
             photoId = arguments?.getInt("notiPhotoId")!!
+            logd(TAG, "photoId : $photoId")
             comeFrom = NOTI
             fromNoti = true
         }
@@ -192,6 +195,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
     }
 
     fun init(){
+
         commentPresenter = CommentPresenter(this)
         text_nickname_comment_f.setOnClickListener(this)
 
@@ -213,6 +217,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         enableSending(false)
 
         imgbtn_write_comment_f.setOnClickListener(this)
+
     }
 
     override fun showUserUi(userId:Int) {
@@ -268,8 +273,13 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         when(v?.id){
             R.id.img_profile_comment_f -> {presenter.openUser(userId)}
             R.id.text_nickname_comment_f -> {presenter.openUser(userId)}
-            R.id.imgbtn_write_comment_f -> {presenter.postCommnet(baseurl,
-                photoId, edit_comment_comment_f.text.toString())}
+            R.id.imgbtn_write_comment_f -> {
+                if(!commentUploading){
+                    commentUploading = true
+                    presenter.postCommnet(baseurl, photoId, edit_comment_comment_f.text.toString())
+                }
+
+            }
         }
     }
 
@@ -440,7 +450,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                         val mBuilder = AlertDialog.Builder(context!!)
                             .setView(mDialogView)
 
-                        mDialogView.text_header_reportetc_d.text = getString(R.string.report_photo)
+                        mDialogView.text_header_reportetc_d.text = getString(R.string.report_comment)
 
                         val  mAlertDialog = mBuilder.show()
                         mAlertDialog.setCanceledOnTouchOutside(false)
@@ -454,7 +464,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
                         mDialogView.btn_reportetc_d.setOnClickListener {
                             presenter.report(getString(R.string.baseurl), 0, mDialogView.edit_reportetc_d.text.toString(),
-                                arguments?.getInt("photoId")!!, itemsList[position].contents, itemsList[position].id, mAlertDialog, position)
+                                photoId, itemsList[position].contents, itemsList[position].id, mAlertDialog, position)
 
                         }
 
@@ -467,7 +477,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                         val mBuilder = AlertDialog.Builder(context!!)
                             .setView(mDialogView)
 
-                        mDialogView.text_header_report_d.text = getString(R.string.report_photo)
+                        mDialogView.text_header_report_d.text = getString(R.string.report_comment)
 
                         val  mAlertDialog = mBuilder.show()
                         mAlertDialog.setCanceledOnTouchOutside(false)
@@ -496,7 +506,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
 
                             presenter.report(getString(R.string.baseurl), index+1, detail,
-                                arguments?.getInt("photoId")!!, itemsList[position].contents, itemsList[position].id, mAlertDialog, position )
+                                photoId, itemsList[position].contents, itemsList[position].id, mAlertDialog, position )
 
                         }
 
@@ -598,6 +608,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         imm.hideSoftInputFromWindow(view!!.windowToken, 0)
 
         Handler().postDelayed({
+            commentUploading = false
             start = 0
             refreshTimeStamp = ""
             presenter.getComments(baseurl, start, photoId, PHOTO)
@@ -660,6 +671,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
     override fun showFailsComment(state: Int) {
         when(state){
             1->{
+                commentUploading = false
                 showToast(getString(R.string.failed_to_upload_comment))
             }
             2->{

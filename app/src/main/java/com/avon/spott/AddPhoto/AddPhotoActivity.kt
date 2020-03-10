@@ -2,32 +2,38 @@ package com.avon.spott.AddPhoto
 
 
 import android.content.ComponentName
+import android.content.Context
+import android.content.Context.*
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.location.Address
+import android.location.Geocoder
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.provider.MediaStore
 import android.text.*
 import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
 import android.text.style.BackgroundColorSpan
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
+import com.avon.spott.AnimSlide.Companion.animSlideAlpha
 import com.avon.spott.FindPlace.FindPlaceActivity
 import com.avon.spott.R
 import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -38,6 +44,7 @@ import org.opencv.android.Utils
 import org.opencv.core.Mat
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
@@ -69,6 +76,12 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
 
     private var lowQuality = true
 
+    lateinit var watcher : TextWatcher
+
+    private lateinit var geocoder: Geocoder
+
+    private var moveToPlace = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_photo)
@@ -85,11 +98,34 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         init()
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        watcher =
+            edit_search_addphoto_a.addTextChangedListener {
+                if(it!!.trim().length>0){
+                    edit_search_addphoto_a.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        R.drawable.ic_arrow_forward_black_24dp, 0, R.drawable.ic_close_grey_20dp,0)
+
+                }else{
+                    edit_search_addphoto_a.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        R.drawable.ic_arrow_forward_black_24dp, 0, 0,0)
+                }
+            }
+
+    }
+
     override fun onResume() {
         super.onResume()
         if (OpenCVLoader.initDebug()) {
             mIsOpenCVReady = true
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        edit_search_addphoto_a.removeTextChangedListener(watcher)
     }
 
     external fun detectEdgeJNI(inputImage: Long, outputImage: Long, th1: Int, th2: Int, th3:Int)
@@ -114,11 +150,95 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
 //        imgbtn_search_addphoto_a.setOnClickListener(this)
 
         checkQuality(intent.getStringExtra("cropPhoto"))
+        
+        edit_search_addphoto_a.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                if(edit_search_addphoto_a.text.toString().trim().length>0){
+                    findPlace(edit_search_addphoto_a.text.toString())
+                    edit_search_addphoto_a.hideKeyboard()
+                }else{
+                    showToast(getString(R.string.toast_blank_edit_search_addphoto_a))
+                }
+
+               true
+            }else false
+        }
+
+
+        edit_search_addphoto_a.setOnTouchListener(object : View.OnTouchListener {
+            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+              when(event?.action){
+                    MotionEvent.ACTION_UP ->{
+                            logd(TAG, "event.rawX :"+ event.rawX)
+                            logd(TAG, "left : "+ edit_search_addphoto_a.left)
+                            logd(TAG, "width : "+edit_search_addphoto_a.compoundDrawables[0].bounds.width())
+                            if(event.rawX <= (edit_search_addphoto_a.left + edit_search_addphoto_a.compoundDrawables[0].bounds.width()+20)){
+                                // 검색 EditText 없애기
+                                edit_search_addphoto_a.text.clear()
+
+                                edit_search_addphoto_a.clearFocus()
+                                edit_caption_addphoto_a.clearFocus()
+                                edit_search_addphoto_a.hideKeyboard()
+                                edit_caption_addphoto_a.hideKeyboard()
+
+
+                                animSlideAlpha(this@AddPhotoActivity, edit_search_addphoto_a, false)
+                                Handler().postDelayed({
+                                    imgbtn_search_addphoto_a.visibility = View.VISIBLE
+                                }, 250)
+
+                                return v?.onTouchEvent(event) ?: true
+                            }else if(edit_search_addphoto_a.compoundDrawables[2]!=null){
+                               if(event.rawX >= (edit_search_addphoto_a.right - edit_search_addphoto_a.compoundDrawables[2].bounds.width()-30)){
+                                   // EditText 내용 지우기
+                                   edit_search_addphoto_a.text.clear()
+                                   return v?.onTouchEvent(event) ?: true
+                               }
+                            }
+
+
+                    }
+                }
+
+                return v?.onTouchEvent(event) ?: false
+            }
+        })
+
 
         edit_caption_addphoto_a.addTextChangedListener {
             hashArrayList.clear()
             presenter.checkEdit(it)
         }
+
+        imgbtn_search_addphoto_a.setOnClickListener {
+            edit_caption_addphoto_a.hideKeyboard()
+            edit_search_addphoto_a.clearFocus()
+            edit_caption_addphoto_a.clearFocus()
+            animSlideAlpha(this, imgbtn_search_addphoto_a, true)
+            Handler().postDelayed({
+                edit_search_addphoto_a.visibility = View.VISIBLE
+                edit_search_addphoto_a.requestFocus()
+            }, 250)
+
+
+        }
+
+
+
+        edit_search_addphoto_a.setOnFocusChangeListener { v, hasFocus ->
+            if(hasFocus){
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+            }
+        }
+
+        edit_caption_addphoto_a.setOnFocusChangeListener { v, hasFocus ->
+            if(hasFocus){
+                logd(TAG, "edit_caption_addphoto_a + hasfocus")
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+            }
+        }
+
+
 
     }
 
@@ -137,7 +257,10 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
     }
 
     override fun onMapReady(map: GoogleMap) {
-             mMap = map
+        mMap = map
+        geocoder = Geocoder(this)
+
+        mMap.uiSettings.isRotateGesturesEnabled = false //지도 방향 고정시키기(회전 불가)
 
         //인텐트로 받아온 사진 이미지 처리(이미지뷰에 넣기 + 위치 정보 있으면 가져오기)
         presenter.usePhoto(intent.getStringExtra("cropPhoto"))
@@ -149,6 +272,27 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
                 presenter.newMarker(latlng)
             }
         })
+
+        mMap.setOnCameraMoveStartedListener {
+            if(!moveToPlace){
+                if(edit_search_addphoto_a.visibility == View.VISIBLE){
+                    edit_search_addphoto_a.clearFocus()
+                    edit_caption_addphoto_a.clearFocus()
+                    edit_search_addphoto_a.hideKeyboard()
+                    edit_caption_addphoto_a.hideKeyboard()
+
+                    animSlideAlpha(this, edit_search_addphoto_a, false)
+                    Handler().postDelayed({
+                        imgbtn_search_addphoto_a.visibility = View.VISIBLE
+                    }, 250)
+                }
+
+            }
+            moveToPlace = false
+
+        }
+
+
 
     }
 
@@ -177,7 +321,6 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
     }
 
     override fun setPhoto(photo:String){
-        logd("photoTEST", "이미지 넣기 직전 : " + photo)
         Glide.with(this)
             .load(photo)
             .apply(RequestOptions().centerCrop())
@@ -289,6 +432,39 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
 
     override fun showNoCaptionToast() {
         showToast(getString(R.string.no_photo_caption))
+    }
+
+    fun View.hideKeyboard() {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
+    }
+
+
+    private fun findPlace(str:String){
+        var addressList : List<Address>? = null
+
+        try {
+            addressList = geocoder.getFromLocationName(
+                str, 10
+            )
+        }catch (e:IOException){
+            e.printStackTrace()
+        }
+
+        if(addressList!=null && addressList!!.size > 0){
+            logd(TAG, "address : " + addressList!![0].toString())
+            moveToPlace = true
+
+            val center: CameraUpdate = CameraUpdateFactory.newLatLng(LatLng(addressList!![0].latitude, addressList!![0].longitude))
+            mMap.animateCamera(center, 400, null)
+            addMarker(LatLng(addressList!![0].latitude, addressList!![0].longitude))
+
+        }else{
+            showToast(getString(R.string.text_no_place))
+        }
+
+
+
     }
 
 }
