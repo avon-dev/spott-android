@@ -44,6 +44,25 @@ class EditMyInfoPresenter(val editMyInfoView:EditMyInfoContract.View) : EditMyIn
     }
 
     @SuppressLint("CheckResult")
+    override fun changeNickname(baseUrl:String, token:String, nickname: String) {
+        val userInfo = UserInfo()
+        userInfo.nickname = nickname
+        val sending = Parser.toJson(userInfo)
+        Retrofit(baseUrl).patch(token, "/spott/users", sending).subscribe({ response ->
+            logd(TAG, "response : ${response.body()}")
+
+            val result = response.body()?.let { Parser.fromJson<BooleanResult>(it) }
+            if(result != null)
+                editMyInfoView.getNickname(result.result)
+        }, { throwable ->
+            loge(TAG, throwable.message)
+            if (throwable is HttpException) {
+                loge(TAG, "http exception code: ${throwable.code()}, http exception message: ${throwable.message()}")
+            }
+        })
+    }
+
+    @SuppressLint("CheckResult")
     override fun setProfileImage(baseUrl: String, token: String, photoUri: Uri) {
         val file = File(photoUri.path)
         val size = (file.length()/1024).toString() //사이즈 크기 kB
@@ -72,16 +91,17 @@ class EditMyInfoPresenter(val editMyInfoView:EditMyInfoContract.View) : EditMyIn
     }
 
     @SuppressLint("CheckResult")
-    override fun changeNickname(baseUrl:String, token:String, nickname: String) {
-        val userInfo = UserInfo()
-        userInfo.nickname = nickname
-        val sending = Parser.toJson(userInfo)
-        Retrofit(baseUrl).patch(token, "/spott/users", sending).subscribe({ response ->
+    override fun deleteProfileImage(baseUrl: String, token: String, url:String) {
+
+//        var requestBody: RequestBody = RequestBody.create(null, "null")
+        val deleteImage = MultipartBody.Part.createFormData("profile_image", "null")
+
+        Retrofit(baseUrl).patchPhoto(token, "/spott/users", deleteImage).subscribe({ response ->
             logd(TAG, "response : ${response.body()}")
 
             val result = response.body()?.let { Parser.fromJson<BooleanResult>(it) }
             if(result != null)
-                editMyInfoView.getNickname(result.result)
+                editMyInfoView.deleteProfileImage()
         }, { throwable ->
             loge(TAG, throwable.message)
             if (throwable is HttpException) {
