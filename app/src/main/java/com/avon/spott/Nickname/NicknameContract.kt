@@ -13,6 +13,8 @@ interface NicknameContract {
         fun enableSignUp(enable:Boolean)
         fun getToken(token:Token)
         fun getPublicKey(certificate: Certificate)
+        fun showLoading()
+        fun hideLoading()
     }
 
     interface Presenter {
