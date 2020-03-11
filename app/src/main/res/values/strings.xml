@@ -127,7 +127,7 @@
     <string name="title_editmyinfo">Modify My Information</string>
 
     <string name="no_recent_searching">No recent search results</string>
-    <string name="dialog_withdrawl_message">When you leave the membership, all photos and comments are erased and your account cannot be restored. Do you still want to leave?</string>
+    <string name="dialog_withdrawl_message">When you leave the membership, all photos and comments are erased and your account cannot be restored. \nDo you still want to leave?</string>
     <string name="dialog_withdrawl_title">Delete account</string>
 
     <string name="ok">OK</string>
@@ -218,9 +218,8 @@
     </string-array>
 
     <string name="search_edittext_hint">Search for hashtags or users</string>
-
     <string name="toast_blank_edit_search_addphoto_a">Please enter a location</string>
-    <string name="text_no_place">Can't find a place</string>
+    <string name="text_no_place">Can\'t find a place</string>
     <string name="hint_edit_search_addphoto_a">Search locations, regions, countries</string>
 
 </resources>
