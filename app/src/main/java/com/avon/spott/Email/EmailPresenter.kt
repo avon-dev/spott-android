@@ -35,34 +35,39 @@ class EmailPresenter(val emailView: EmailContract.View) : EmailContract.Presente
         if (number.code.equals(str)) {
             emailView.showPasswordUi()
         } else {
-            emailView.showError("인증번호를 확인해주세요")
+            emailView.showMessage(EmailActivity.CHECK_NUMBER)
         }
     }
 
     @SuppressLint("CheckResult")
     override fun sendEmail(baseUrl: String, email: String) {
+        emailView.showLoading()
+
         Retrofit(baseUrl).getNonHeader("/spott/email-auth", Parser.toJson(EmailAuth(ACTION_EMAIL, email)))
             .subscribe({ response ->
+                emailView.hideLoading()
                 logd(TAG, response.body())
                 val number = response.body()?.let { Parser.fromJson<Number>(it) }
 
                 if(number != null) {
                     if(number.duplication) { // 중복된 이메일
-                        emailView.showError("이미 가입된 이메일입니다")
+                        emailView.showMessage(EmailActivity.ERROR_DUPLICATION_EMAIL)
                     } else { // 사용 가능한 이메일
                         emailView.getNumber(number)
                     }
-//                    if (!number.duplication && !number.code.equals(""))
-//                        emailView.getNumber(number)
-//                    else
-//                        emailView.showError("이미 가입한 이메일입니다")
                 }
             }, { throwable ->
-                loge(TAG, throwable.message)
+                emailView.hideLoading()
+
+                val code:Int
                 if (throwable is HttpException) {
                     loge(TAG, "http exception : code ${throwable.code()}, message ${throwable.message()}" )
+                    code = throwable.code()
+                } else {
+                    loge(TAG, throwable.message)
+                    code = App.ERROR_ERTRY
                 }
-                emailView.showError("다시 시도해주세요")
+                emailView.showMessage(code)
             })
     }
 }

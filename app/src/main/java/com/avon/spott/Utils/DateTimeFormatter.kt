@@ -60,10 +60,10 @@ class DateTimeFormatter {
 
             val elapsedTime: Long = (now.time - createdDate.time) / 1000 // 경과한 시간
 
-            if (elapsedTime < HOUR_24) { // 방금
+            if (elapsedTime < HOUR_24) { // time ago
                 result = DateUtils.getRelativeTimeSpanString(createdDate.time, now.time, 0).toString()
 
-            } else { // 년 월 일
+            } else { // year month day
                 val formatString = DateFormat.getBestDateTimePattern(Locale.getDefault(), "ddMMMMyyyy")
                 simpleDateFormat = SimpleDateFormat(formatString)
                 simpleDateFormat.timeZone = timeZone

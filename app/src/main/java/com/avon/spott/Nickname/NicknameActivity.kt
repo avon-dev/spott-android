@@ -15,6 +15,7 @@ import com.avon.spott.Main.MainActivity
 import com.avon.spott.R
 import kotlinx.android.synthetic.main.activity_nickname.*
 import kotlinx.android.synthetic.main.toolbar.*
+import java.security.cert.Certificate
 
 class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClickListener {
 
@@ -117,7 +118,10 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
                 if (enable) {
                     if(login == EMAIL) {
                         emailUser.nickname = edit_nickname_a.text.toString()
-                        presenter.signUp(getString(R.string.baseurl), emailUser)
+//                        presenter.signUp(getString(R.string.baseurl), emailUser)
+
+                        presenter.getPublicKey(getString(R.string.baseurl), "/spott/login")
+
                     } else if (login == SOCIAL) {
                         socialUser.nickname = edit_nickname_a.text.toString()
 //                        presenter.signUp(getString(R.string.baseurl), "socialurl", socialUser)
@@ -128,5 +132,9 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
                 }
             }
         }
+    }
+
+    override fun getPublicKey(certificate: Certificate) {
+        presenter.test(getString(R.string.baseurl), "/spott/test", certificate, emailUser)
     }
 }

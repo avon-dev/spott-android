@@ -10,7 +10,9 @@ interface EmailContract {
         fun validEmail(valid: Boolean)
         fun validNumber(bool:Boolean)
         fun getNumber(number:Number)
-        fun showError(msg:String)
+        fun showMessage(msg:Int)
+        fun showLoading()
+        fun hideLoading()
     }
 
     interface Presenter {

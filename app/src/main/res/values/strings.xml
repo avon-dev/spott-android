@@ -187,12 +187,12 @@
     <string name="privacy_policy">Privacy Policy</string>
 
     <string name="location_policy">Terms and Conditions of Use of Location-Based Services</string>
-
     <string name="see_photo_uploading_guideline">View Photo Upload Guidelines</string>
 
-    <string name="error_400">400 erro</string>
-    <string name="error_404">404 error</string>
-    <string name="error_500">500 error</string>
+
+    <string name="error_400">Please try again(400)</string>
+    <string name="error_404">Please try again(404)</string>
+    <string name="error_500">Please try again(500)</string>
     <string name="error_fb_email_permission">Permit me to email you.</string>
     <string name="error_camera_permission">Need permission</string>
     <string name="error_check_password">Check your password</string>
@@ -200,7 +200,9 @@
     <string name="error_invalid_nickname">Please write 4 to 15 English letters or numbers</string>
     <string name="error_retry">Please try again</string>
     <string name="error_duplication_nickname">This is a duplicate nickname</string>
+    <string name="error_duplication_email">This is a duplicate email</string>
     <string name="error_wrong_password">Please check your password again</string>
+    <string name="error_check_number">Please check code number</string>
 
     <string name="success_changed_password">Your password has been changed</string>
     <string name="success_changed_nickname">Nickname changed</string>

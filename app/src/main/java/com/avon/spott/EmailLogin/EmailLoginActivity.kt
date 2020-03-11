@@ -53,10 +53,6 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
         btn_login_emaillogin_a.setOnClickListener(this)
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
-
     override fun showMainUi(token: Token) {
         val pref = getSharedPreferences("pref", Context.MODE_PRIVATE)
         val ed = pref.edit()

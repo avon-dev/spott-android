@@ -84,7 +84,7 @@ class NicknamePresenter(val nicknameView: NicknameContract.View) : NicknameContr
         })
     }
 
-    fun encrypt(pw:String, certificate: Certificate) {
+    fun encrypt(pw:String, certificate: Certificate): ArrayList<String> {
         val charset = Charsets.UTF_8
 
         val plaintext:ByteArray = pw.toByteArray(charset)
@@ -108,6 +108,47 @@ class NicknamePresenter(val nicknameView: NicknameContract.View) : NicknameContr
         var ivjson = GsonBuilder().create().toJson(ivSpec)
 
         // GsonBuilder()는 Gson()보다 제한적인 느낌이다.
+        var array = ArrayList<String>()
 
+        array.add(keyjson2)
+        array.add(ivjson)
+        array.add(GsonBuilder().create().toJson(ciphertext))
+
+        return array
+    }
+
+    @SuppressLint("CheckResult")
+    override fun getPublicKey(baseUrl: String, url: String) {
+        Retrofit(baseUrl).getNonHeader(url).subscribe({ response ->
+
+            logd(TAG, response.message())
+            val raw = response.raw()
+
+            val certificate = raw.handshake()?.peerCertificates().orEmpty()
+            if(certificate!= null) {
+                nicknameView.getPublicKey(certificate.get(0))
+                logd(TAG, "certificate 얻음")
+                logd(TAG, "공개키 스트링 : ${certificate.get(0).publicKey.toString()}")
+            }
+        }, { throwable ->
+
+            logd(TAG, throwable.message)
+
+        })
+    }
+
+    override fun test(baseUrl: String, url: String, certificate: Certificate, user: User) {
+
+        val array = encrypt(user.password!!, certificate)
+
+        val key = array.get(0)
+        val iv = array.get(1)
+        val password = array.get(2)
+
+        Retrofit(baseUrl).postNonHeader(url, key, iv, password).subscribe({
+
+        }, {
+
+        })
     }
 }

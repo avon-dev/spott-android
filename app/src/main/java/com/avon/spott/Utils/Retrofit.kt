@@ -5,7 +5,6 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import okhttp3.MultipartBody
-import okhttp3.OkHttpClient
 import retrofit2.HttpException
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -97,8 +96,22 @@ class Retrofit(baseUrl:String) {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    fun postNonHeader(url: String, key: String, iv:String, pw:String): Observable<Response<String>> {
+        return retrofitService.postNonHeader(url, key, iv)
+            .subscribeOn(Schedulers.io())
+            .map { t -> if (t.isSuccessful) t else throw HttpException(t) }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
     fun getNonHeader(url: String, sending: String): Observable<Response<String>> {
         return retrofitService.getNonToken(url, sending)
+            .subscribeOn(Schedulers.io())
+            .map { t -> if (t.isSuccessful) t else throw HttpException(t) }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun getNonHeader(url: String): Observable<Response<String>> {
+        return retrofitService.getNonToken(url)
             .subscribeOn(Schedulers.io())
             .map { t -> if (t.isSuccessful) t else throw HttpException(t) }
             .observeOn(AndroidSchedulers.mainThread())

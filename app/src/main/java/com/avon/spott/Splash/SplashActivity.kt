@@ -72,9 +72,9 @@ class SplashActivity : Activity() {
             if(certificate!= null)
                 encrypt("seunghyun1!", certificate.get(0))
 
-//            val publicKey = raw.handshake()?.peerCertificates()?.get(0)?.publicKey
-//            if(publicKey != null)
-//                encrypt("seunghyun1!", publicKey)
+            val publicKey = raw.handshake()?.peerCertificates()?.get(0)?.publicKey
+            if(publicKey != null)
+                encrypt("seunghyun1!", publicKey)
 
 
             val result = response.body()?.let { Parser.fromJson<IntResult>(it) }
