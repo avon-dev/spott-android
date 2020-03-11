@@ -22,7 +22,6 @@ class NewPasswordPresenter(val newPasswordView: NewPasswordContract.View) :
     override fun isPassword(password: String) {
         val isPassword = Validator.validPassword(password)
         newPasswordView.isPassword(isPassword)
-        newPasswordView.showWarning()
     }
 
     override fun isCheck(password: String, checkpw: String) {
@@ -48,6 +47,8 @@ class NewPasswordPresenter(val newPasswordView: NewPasswordContract.View) :
             if (throwable is HttpException) {
                 loge(TAG, "code: ${throwable.code()}, msg: ${throwable.message()}")
                 newPasswordView.showMessage(throwable.code())
+            } else {
+                newPasswordView.showMessage(App.ERROR_ERTRY)
             }
         })
     }
