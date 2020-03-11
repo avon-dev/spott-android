@@ -2,7 +2,6 @@ package com.avon.spott.EmailLogin
 
 import android.content.Context
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -11,13 +10,8 @@ import com.avon.spott.Data.Token
 import com.avon.spott.FindPW.FindPWActivity
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.R
-import com.avon.spott.Utils.logd
 import kotlinx.android.synthetic.main.activity_email_login.*
 import kotlinx.android.synthetic.main.toolbar.*
-import java.security.PublicKey
-import javax.net.ssl.HttpsURLConnection
-import javax.net.ssl.SSLSocket
-import javax.net.ssl.SSLSocketFactory
 
 
 class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.OnClickListener {
@@ -111,48 +105,4 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
             }
         }
     }
-
-
-    inner class getAsyncTask() : AsyncTask<Unit, Unit, Unit>() {
-        override fun doInBackground(vararg params: Unit?) {
-            val hostname = "https://wikipedia.org"
-            val factory:SSLSocketFactory = HttpsURLConnection.getDefaultSSLSocketFactory()
-            val socket:SSLSocket = factory.createSocket(hostname, 443) as SSLSocket
-            socket.startHandshake()
-
-            var certs = socket.session.peerCertificates
-            val cert = certs[0]
-            val key:PublicKey = cert.publicKey
-
-            logd(TAG, "다다다ㅏ다다다" + key.toString())
-        }
-    }
-    private fun ssltest() {
-
-        val th = Thread {
-//            val url = URL("https://wikipedia.org")
-//            val url = URL("http://api.phopo.best")
-//            val urlConnection:URLConnection = url.openConnection()
-//            var inputStream:InputStream
-//            inputStream = urlConnection.getInputStream()
-
-            val hostname = "https://wikipedia.org"
-            val factory:SSLSocketFactory = HttpsURLConnection.getDefaultSSLSocketFactory()
-            val socket:SSLSocket = factory.createSocket(hostname, 443) as SSLSocket
-            socket.startHandshake()
-
-            var certs = socket.session.peerCertificates
-            val cert = certs[0]
-            val key:PublicKey = cert.publicKey
-
-
-            val a = 10
-            val b = a
-
-        }
-
-        th.start()
-
-    }
-
 }
