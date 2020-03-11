@@ -212,26 +212,15 @@
     <string name="send_authentication_number">code number has been sent</string>
     <string name="wait_resending">Please try in %1$d seconds</string>
 
-    <string name="just">just</string>
-
-    <string name="yyyy_MM_dd">%1$s년 %2$s월 %3$s일</string>
-
-    <string name="month_ago">달 전</string>
-    <string name="week_ago">주 전</string>
-    <string name="day_ago">%1$d일 전</string>
-    <string name="hour_ago">%1$d시간 전</string>
-    <string name="minute_ago">%1$d분 전</string>
-
-
     <string-array name="edit_profile_item">
         <item>"To modify"</item>
         <item>"To delete"</item>
     </string-array>
 
-    <string name="search_edittext_hint">해시태그나 유저를 검색해보세요</string>
+    <string name="search_edittext_hint">Search for hashtags or users</string>
 
-    <string name="toast_blank_edit_search_addphoto_a">장소를 입력해주세요</string>
-    <string name="text_no_place">장소를 찾을 수 없습니다</string>
-    <string name="hint_edit_search_addphoto_a">장소, 지역, 나라를 검색해보세요</string>
+    <string name="toast_blank_edit_search_addphoto_a">Please enter a location</string>
+    <string name="text_no_place">Can't find a place</string>
+    <string name="hint_edit_search_addphoto_a">Search locations, regions, countries</string>
 
 </resources>
