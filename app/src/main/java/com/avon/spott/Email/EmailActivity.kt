@@ -29,8 +29,9 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
     private var transmitable = true // 이메일을 보낼 수 있는 상태인지
     private var startTime = 0L
     private val resending = EMAIL_FIND_RESENDING_MILLS
-    private var isShowing = false
+    private var isShowing = false;
     private var number: Number = Number(false)
+    private lateinit var email:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,9 +58,9 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
             presenter.isEmail(it.toString())
         }
 
-        edit_number_email_a.addTextChangedListener {
-            presenter.isNumber(it.toString())
-        }
+//        edit_number_email_a.addTextChangedListener {
+//            presenter.isNumber(it.toString())
+//        }
 
 //        text_block_email_a.setOnTouchListener { v, event -> true }
     }
@@ -101,7 +102,7 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
     // 인증번호 받기
     override fun getNumber(number: Number) {
 
-//        hideLoading()
+        email = edit_email_email_a.text.toString()
 
         if (!isShowing) {
             edit_number_email_a.visibility = View.VISIBLE
@@ -122,22 +123,28 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
             transmitable = true
         }, resending)
 
+        // 임시 코드
 //        Toast.makeText(this@EmailActivity, getString(R.string.send_authentication_number), Toast.LENGTH_SHORT).show()
 
-        // 임시 코드
         Toast.makeText(this@EmailActivity, "인증번호가 전송되었습니다 ${number.code}", Toast.LENGTH_SHORT).show()
     }
 
     // 메세지 보여주기
     override fun showMessage(msgCode: Int) {
 
-        lateinit var msg:String
-
-        when(msgCode) {
-            App.SERVER_ERROR_400 -> { msg = getString(R.string.error_400) }
-            ERROR_DUPLICATION_EMAIL -> { msg = getString(R.string.error_duplication_email) }
-            CHECK_NUMBER -> { msg = getString(R.string.error_check_number)}
-            else -> { msg = getString(R.string.error_retry) }
+        val msg:String = when(msgCode) {
+            App.SERVER_ERROR_400 -> {
+                getString(R.string.error_400)
+            }
+            ERROR_DUPLICATION_EMAIL -> {
+                getString(R.string.error_duplication_email)
+            }
+            CHECK_NUMBER -> {
+                getString(R.string.error_check_number)
+            }
+            else -> {
+                getString(R.string.error_retry)
+            }
         }
 
         Toast.makeText(this@EmailActivity, msg, Toast.LENGTH_SHORT).show()
@@ -171,15 +178,11 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
                 } else { // 이메일 인증요청이 불가능 할 때
                     val elapsedTime = System.currentTimeMillis()
                     val remainingTime = resending / 1000 - (elapsedTime - startTime) / 1000
-                    Toast.makeText(
-                        applicationContext,
-                        "${remainingTime}초 후 시도해주세요",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(applicationContext, String.format(getString(R.string.wait_resending), remainingTime), Toast.LENGTH_SHORT).show()
                 }
             }
             R.id.btn_confirm_email_a -> {
-                presenter.confirm(number, edit_number_email_a.text.toString())
+                presenter.confirm(number, email)
             }
         }
     }

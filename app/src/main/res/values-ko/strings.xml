@@ -203,12 +203,14 @@
     <string name="error_duplication_email">중복된 이메일입니다</string>
     <string name="error_wrong_password">비밀번호를 다시 확인해주세요</string>
     <string name="error_check_number">인증번호를 확인해주세요</string>
+    <string name="error_none_email">가입되지 않은 이메일입니다</string>
 
     <string name="success_changed_password">비밀번호가 변경되었습니다</string>
     <string name="success_changed_nickname">닉네임이 변경되었습니다</string>
 
     <string name="checked">확인되었습니다</string>
     <string name="send_authentication_number">인증번호가 전송되었습니다</string>
+    <string name="wait_resending">%1$d초 후 시도해주세요</string>
 
     <string name="just">방금</string>
 

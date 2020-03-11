@@ -3,6 +3,7 @@ package com.avon.spott.FindPW
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
@@ -10,6 +11,7 @@ import com.avon.spott.Camera.EMAIL_FIND_RESENDING_MILLS
 import com.avon.spott.Data.Number
 import com.avon.spott.NewPassword.NewPasswordActivity
 import com.avon.spott.R
+import com.avon.spott.Utils.App
 import kotlinx.android.synthetic.main.activity_find_pw.*
 import kotlinx.android.synthetic.main.toolbar.*
 
@@ -26,6 +28,8 @@ class FindPWActivity : AppCompatActivity(), FindPWContract.View, View.OnClickLis
 
     private var startTime: Long = 0L
 
+    private lateinit var email:String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_find_pw)
@@ -39,7 +43,7 @@ class FindPWActivity : AppCompatActivity(), FindPWContract.View, View.OnClickLis
 
     private fun init() {
         // 임시
-        edit_email_findpw_a.setText("baek5@seunghyun.com")
+        edit_email_findpw_a.setText("baek@seunghyun.com")
 
         findPWPresenter = FindPWPresenter(this)
 
@@ -53,7 +57,6 @@ class FindPWActivity : AppCompatActivity(), FindPWContract.View, View.OnClickLis
             presenter.isEmail(it.toString())
         }
 
-        text_block_findpw_a.setOnTouchListener { v, event -> true }
     }
 
     override fun navigateUp() {
@@ -63,15 +66,17 @@ class FindPWActivity : AppCompatActivity(), FindPWContract.View, View.OnClickLis
     override fun isEmail(valid: Boolean) {
         if (valid) {// 이메일이 맞을 때
             text_warnmsg_findpw_a.visibility = View.INVISIBLE
-            btn_send_findpw_a.setBackgroundResource(R.drawable.corner_round_primary)
+            if(transmitable)
+                btn_send_findpw_a.setBackgroundResource(R.drawable.corner_round_primary)
         } else { // 이메일이 아닐 때
             text_warnmsg_findpw_a.visibility = View.VISIBLE
-            btn_send_findpw_a.setBackgroundResource(R.drawable.corner_round_graybtn)
+            if(transmitable)
+                btn_send_findpw_a.setBackgroundResource(R.drawable.corner_round_graybtn)
         }
     }
 
     override fun getNumber(number: Number) {
-        hideLoading()
+        email = edit_email_findpw_a.text.toString()
 
         this.transmitable = false
         this.number = number
@@ -95,19 +100,36 @@ class FindPWActivity : AppCompatActivity(), FindPWContract.View, View.OnClickLis
         }, resending)
     }
 
-    override fun showError(msg: String) {
-        hideLoading()
-        Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
+    override fun showMessage(msgCode: Int) {
+
+        val msg:String = when(msgCode) {
+            App.SERVER_ERROR_400 -> {
+                getString(R.string.error_400)
+            }
+            ERROR_NON_EMAIL -> {
+                getString(R.string.error_none_email)
+            }
+            else -> {
+                getString(R.string.error_retry)
+            }
+        }
+
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+
     }
 
     override fun showLoading() {
-        text_block_findpw_a.visibility = View.VISIBLE
+//        text_block_findpw_a.visibility = View.VISIBLE
         progress_findpw_a.visibility = View.VISIBLE
+
+        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
 
     override fun hideLoading() {
-        text_block_findpw_a.visibility = View.GONE
+//        text_block_findpw_a.visibility = View.GONE
         progress_findpw_a.visibility = View.GONE
+
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
 
     override fun onClick(v: View?) {
@@ -124,17 +146,13 @@ class FindPWActivity : AppCompatActivity(), FindPWContract.View, View.OnClickLis
                 } else {
                     val elapsedTime = System.currentTimeMillis()
                     val remainingTime = resending / 1000 - (elapsedTime - startTime) / 1000
-                    Toast.makeText(
-                        applicationContext,
-                        "${remainingTime}초 후 시도해주세요",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(applicationContext, String.format(getString(R.string.wait_resending), remainingTime), Toast.LENGTH_SHORT).show()
                 }
             }
             R.id.btn_confirm_findpw_a -> {
                 if(edit_number_findpw_a.text.toString().equals(number.code)) {
                     Intent(this@FindPWActivity, NewPasswordActivity::class.java).let {
-                        it.putExtra(FIND_PW, edit_email_findpw_a.text.toString())
+                        it.putExtra(FIND_PW, email)
                         startActivity(it)
                     }
                 } else {
@@ -147,4 +165,9 @@ class FindPWActivity : AppCompatActivity(), FindPWContract.View, View.OnClickLis
             }
         }
     }
+
+    companion object {
+        val ERROR_NON_EMAIL = 1
+    }
+
 }

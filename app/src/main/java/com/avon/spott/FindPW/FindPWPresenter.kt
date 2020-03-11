@@ -27,15 +27,21 @@ class FindPWPresenter(val findPWView: FindPWContract.View) : FindPWContract.Pres
     override fun sendEmail(email: String, baseUrl: String) {
         findPWView.showLoading()
 
-        Retrofit(baseUrl).getNonHeader("/spott/email-authen", Parser.toJson(EmailAuth(ACTION_EMAIL, email)))
+        Retrofit(baseUrl).getNonHeader("/spott/email-auth", Parser.toJson(EmailAuth(ACTION_EMAIL, email)))
             .subscribe({ response ->
+                findPWView.hideLoading()
+
                 logd(TAG, response.body())
                 val number = response.body()?.let { Parser.fromJson<Number>(it) }
                 if (number != null) {
-                    if (!number.code.equals(""))
+                    if (number.registration)
                         findPWView.getNumber(number)
+                    else
+                        findPWView.showMessage(FindPWActivity.ERROR_NON_EMAIL)
                 }
             }, { throwable ->
+                findPWView.hideLoading()
+
                 loge(TAG, throwable.message)
                 if (throwable is HttpException) {
                     loge(
@@ -43,9 +49,7 @@ class FindPWPresenter(val findPWView: FindPWContract.View) : FindPWContract.Pres
                         "http exception : code ${throwable.code()}, message ${throwable.message()}"
                     )
                 }
-                findPWView.showError("다시 시도해주세요")
-            }, {
-                logd(TAG, "onComplete()")
+                findPWView.showMessage(App.ERROR_ERTRY)
             })
     }
 }
