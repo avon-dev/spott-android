@@ -10,6 +10,9 @@ interface ChangePasswordContract {
         fun isPassword(isPassword:Boolean)
         fun isCheck(isCheck:Boolean)
         fun changedPassword(result:Boolean)
+
+        fun showLoading()
+        fun hideLoading()
     }
 
     interface Presenter {

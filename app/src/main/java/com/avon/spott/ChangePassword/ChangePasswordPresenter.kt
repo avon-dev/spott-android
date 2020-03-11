@@ -6,32 +6,37 @@ import com.avon.spott.Data.Password
 import com.avon.spott.Utils.*
 import retrofit2.HttpException
 
-class ChangePasswordPresenter(val view:ChangePasswordContract.View) : ChangePasswordContract.Presenter {
+class ChangePasswordPresenter(val changePasswrodView:ChangePasswordContract.View) : ChangePasswordContract.Presenter {
 
     private val TAG = "ChangePasswordPresenter"
 
     init {
-        view.presenter = this
+        changePasswrodView.presenter = this
     }
 
     override fun navigateUp() { // 뒤로가기
-        view.navigateUp()
+        changePasswrodView.navigateUp()
     }
 
     @SuppressLint("CheckResult")
     override fun checkPassword(baseUrl:String, token:String, password: String) { // 비밀번호 확인
+        changePasswrodView.showLoading()
+
         val pw = Password(password)
         val sending = Parser.toJson(pw)
 
         Retrofit(baseUrl).get(token, "/spott/users/password", sending).subscribe({ response ->
+
+            changePasswrodView.hideLoading()
             logd(TAG, "response body: ${response.body()}")
 
             val result = response.body()?.let { Parser.fromJson<BooleanResult>(it) }
 
             if(result != null){
-                view.checkPassword(result.result)
+                changePasswrodView.checkPassword(result.result)
             }
         }, { throwable ->
+            changePasswrodView.hideLoading()
             loge(TAG, "throwable: ${throwable.message}")
             if(throwable is HttpException) {
                 loge(TAG, "http exception code: ${throwable.code()}, msg: ${throwable.message()}")
@@ -40,11 +45,11 @@ class ChangePasswordPresenter(val view:ChangePasswordContract.View) : ChangePass
     }
 
     override fun isPassword(password: String) {
-        view.isPassword(Validator.validPassword(password))
+        changePasswrodView.isPassword(Validator.validPassword(password))
     }
 
     override fun isCheck(password: String, checkpw: String) {
-        view.isCheck(password.equals(checkpw))
+        changePasswrodView.isCheck(password.equals(checkpw))
     }
 
     @SuppressLint("CheckResult")
@@ -57,7 +62,7 @@ class ChangePasswordPresenter(val view:ChangePasswordContract.View) : ChangePass
 
             val result = response.body()?.let { Parser.fromJson<BooleanResult>(it)}
             if(result != null)
-                view.changedPassword(result.result)
+                changePasswrodView.changedPassword(result.result)
         }, { throwable ->
             loge(TAG, "throwable: ${throwable.message}")
             if(throwable is HttpException) {

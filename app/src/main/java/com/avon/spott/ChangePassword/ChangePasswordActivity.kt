@@ -2,6 +2,7 @@ package com.avon.spott.ChangePassword
 
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
@@ -74,6 +75,10 @@ class ChangePasswordActivity : AppCompatActivity(), ChangePasswordContract.View,
         } else {
             text_warnmessage_changepassword_a.visibility = View.VISIBLE
         }
+        presenter.isCheck(
+            edit_changepassword_a.text.toString(),
+            edit_check_changepassword_a.text.toString()
+        )
     }
 
     override fun isCheck(isCheck: Boolean) { // 비밀번호를 같게 입력했는지?
@@ -93,7 +98,14 @@ class ChangePasswordActivity : AppCompatActivity(), ChangePasswordContract.View,
         } else {
             Toast.makeText(applicationContext, getString(R.string.toast_fail_changepw), Toast.LENGTH_SHORT).show()
         }
+    }
 
+    override fun showLoading() {
+        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+    }
+
+    override fun hideLoading() {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
 
     override fun onClick(v: View) {
