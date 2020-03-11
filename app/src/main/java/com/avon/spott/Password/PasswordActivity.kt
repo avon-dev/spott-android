@@ -30,11 +30,6 @@ class PasswordActivity : AppCompatActivity(), PasswordContract.View, View.OnClic
         init()
     }
 
-    override fun onDestroy() {
-        CompositeDisposable().dispose()
-        super.onDestroy()
-    }
-
     fun init() {
         user = intent.getParcelableExtra(INTENT_EXTRA_USER)
 
