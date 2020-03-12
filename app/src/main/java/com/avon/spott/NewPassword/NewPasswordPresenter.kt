@@ -5,6 +5,7 @@ import com.avon.spott.Data.BooleanResult
 import com.avon.spott.Data.User
 import com.avon.spott.Utils.*
 import retrofit2.HttpException
+import java.security.cert.Certificate
 
 class NewPasswordPresenter(val newPasswordView: NewPasswordContract.View) :
     NewPasswordContract.Presenter {
@@ -22,7 +23,6 @@ class NewPasswordPresenter(val newPasswordView: NewPasswordContract.View) :
     override fun isPassword(password: String) {
         val isPassword = Validator.validPassword(password)
         newPasswordView.isPassword(isPassword)
-        newPasswordView.showWarning()
     }
 
     override fun isCheck(password: String, checkpw: String) {
@@ -32,8 +32,11 @@ class NewPasswordPresenter(val newPasswordView: NewPasswordContract.View) :
     }
 
     @SuppressLint("CheckResult")
-    override fun fixPassword(baseUrl: String, email: String, password: String) {
+    override fun fixPassword(baseUrl: String, email: String, password: String, certificate: Certificate) {
         val user = User(email, password)
+
+        val cipherpw  = RSAEncrypt(certificate, user.password!!)
+        user.password = cipherpw.contentToString()
 
         val sending = Parser.toJson(user)
 
@@ -48,6 +51,33 @@ class NewPasswordPresenter(val newPasswordView: NewPasswordContract.View) :
             if (throwable is HttpException) {
                 loge(TAG, "code: ${throwable.code()}, msg: ${throwable.message()}")
                 newPasswordView.showMessage(throwable.code())
+            } else {
+                newPasswordView.showMessage(App.ERROR_ERTRY)
+            }
+        })
+    }
+
+    @SuppressLint("CheckResult")
+    override fun getPublicKey(baseUrl: String, url: String) {
+        Retrofit(baseUrl).getNonHeader(url).subscribe({ response ->
+
+            logd(TAG, response.message())
+            val raw = response.raw()
+
+            val certificate = raw.handshake()?.peerCertificates().orEmpty()
+            if (certificate.size > 0) {
+                logd(TAG, "공개키 스트링 : ${certificate.get(0).publicKey.toString()}")
+                newPasswordView.getPublicKey(certificate.get(0))
+            } else {
+                newPasswordView.showMessage(App.ERROR_PUBLICKEY)
+            }
+        }, { throwable ->
+            logd(TAG, throwable.message)
+            if (throwable is HttpException) {
+                loge(TAG, "http exception code: ${throwable.code()}, http exception message: ${throwable.message()}")
+                newPasswordView.showMessage(throwable.code())
+            } else {
+                newPasswordView.showMessage(App.ERROR_PUBLICKEY)
             }
         })
     }

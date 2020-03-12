@@ -34,7 +34,7 @@ class PermissionsFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if(requestCode == PERMISSIONS_REQUEST_CODE) {
-            if (PackageManager.PERMISSION_GRANTED == grantResults.firstOrNull()) {
+            if (PackageManager.PERMISSION_GRANTED == grantResults.get(0) && PackageManager.PERMISSION_GRANTED == grantResults.get(1)) {
                 Navigation.findNavController(requireActivity(), R.id.fragment_container_camerax).navigate(
                     PermissionsFragmentDirections.actionPermissionsToCamera()
                 )

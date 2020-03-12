@@ -10,7 +10,7 @@ interface FindPWContract {
         fun getNumber(number:Number)
         fun showLoading()
         fun hideLoading()
-        fun showError(msg:String)
+        fun showMessage(msgCode:Int)
     }
 
     interface Presenter {

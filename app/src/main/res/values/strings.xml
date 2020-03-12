@@ -127,7 +127,7 @@
     <string name="title_editmyinfo">Modify My Information</string>
 
     <string name="no_recent_searching">No recent search results</string>
-    <string name="dialog_withdrawl_message">When you leave the membership, all photos and comments are erased and your account cannot be restored. Do you still want to leave?</string>
+    <string name="dialog_withdrawl_message">When you leave the membership, all photos and comments are erased and your account cannot be restored. \nDo you still want to leave?</string>
     <string name="dialog_withdrawl_title">Delete account</string>
 
     <string name="ok">OK</string>
@@ -187,12 +187,12 @@
     <string name="privacy_policy">Privacy Policy</string>
 
     <string name="location_policy">Terms and Conditions of Use of Location-Based Services</string>
-
     <string name="see_photo_uploading_guideline">View Photo Upload Guidelines</string>
 
-    <string name="error_400">400 erro</string>
-    <string name="error_404">404 error</string>
-    <string name="error_500">500 error</string>
+
+    <string name="error_400">Please try again(400)</string>
+    <string name="error_404">Please try again(404)</string>
+    <string name="error_500">Please try again(500)</string>
     <string name="error_fb_email_permission">Permit me to email you.</string>
     <string name="error_camera_permission">Need permission</string>
     <string name="error_check_password">Check your password</string>
@@ -200,35 +200,27 @@
     <string name="error_invalid_nickname">Please write 4 to 15 English letters or numbers</string>
     <string name="error_retry">Please try again</string>
     <string name="error_duplication_nickname">This is a duplicate nickname</string>
+    <string name="error_duplication_email">This is a duplicate email</string>
     <string name="error_wrong_password">Please check your password again</string>
+    <string name="error_check_number">Please check code number</string>
+    <string name="error_none_email">This email is not registered</string>
 
     <string name="success_changed_password">Your password has been changed</string>
     <string name="success_changed_nickname">Nickname changed</string>
 
     <string name="checked">It\'s been confirmed</string>
     <string name="send_authentication_number">code number has been sent</string>
-
-    <string name="just">just</string>
-
-    <string name="yyyy_MM_dd">%1$s년 %2$s월 %3$s일</string>
-
-    <string name="month_ago">달 전</string>
-    <string name="week_ago">주 전</string>
-    <string name="day_ago">%1$d일 전</string>
-    <string name="hour_ago">%1$d시간 전</string>
-    <string name="minute_ago">%1$d분 전</string>
-
+    <string name="wait_resending">Please try in %1$d seconds</string>
 
     <string-array name="edit_profile_item">
         <item>"To modify"</item>
         <item>"To delete"</item>
     </string-array>
 
-    <string name="search_edittext_hint">해시태그나 유저를 검색해보세요</string>
-
-    <string name="toast_blank_edit_search_addphoto_a">장소를 입력해주세요</string>
-    <string name="text_no_place">장소를 찾을 수 없습니다</string>
-    <string name="hint_edit_search_addphoto_a">장소, 지역, 나라를 검색해보세요</string>
+    <string name="search_edittext_hint">Search for hashtags or users</string>
+    <string name="toast_blank_edit_search_addphoto_a">Please enter a location</string>
+    <string name="text_no_place">Can\'t find a place</string>
+    <string name="hint_edit_search_addphoto_a">Search locations, regions, countries</string>
 
     <string name="text_no_hashtag"> 태그가 추가된 사진이 여기 표시됩니다.</string>
 

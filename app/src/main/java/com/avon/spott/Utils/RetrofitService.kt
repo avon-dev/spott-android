@@ -45,14 +45,21 @@ interface RetrofitService {
                   @Url url: String,
                   @Part profile_image : MultipartBody.Part): Observable<Response<String>>
 
-
     /**  토큰 테스트용!!!!! 임시 토큰 2020-02-04   */
 
     @POST
     fun postNonHeader(@Url url: String, @Query("sending") sending: String): Observable<Response<String>>
 
+    @FormUrlEncoded
+    @POST
+    fun postNonHeader(@Url url: String, @Field("key") key:String, @Field("iv") iv:String ): Observable<Response<String>>
+
     @GET
     fun getNonToken(@Url url: String, @Query("sending") sending: String): Observable<Response<String>>
+
+    @GET
+    fun getNonToken(@Url url: String): Observable<Response<String>>
+
 
     @FormUrlEncoded
     @PATCH

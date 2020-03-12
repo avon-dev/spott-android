@@ -1,3 +1,3 @@
 package com.avon.spott.Data
 
-data class Password(val password:String)
+data class Password(var password:String)
