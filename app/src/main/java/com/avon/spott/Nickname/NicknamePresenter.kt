@@ -30,7 +30,10 @@ class NicknamePresenter(val nicknameView: NicknameContract.View) : NicknameContr
     override fun signUp(baseUrl: String, user: User, certificate: Certificate) {
 
         val cipherpw  = RSAEncrypt(certificate, user.password!!)
-        val cipherUser = user
+        val cipherUser = User(user.email)
+        cipherUser.password = user.password
+        cipherUser.nickname = user.nickname
+
         cipherUser.password = cipherpw.contentToString()
 
         logd(TAG, "PASER : " + Parser.toJson(cipherUser)) //테스트테스트
@@ -92,10 +95,10 @@ class NicknamePresenter(val nicknameView: NicknameContract.View) : NicknameContr
             logd(TAG, response.message())
             val raw = response.raw()
 
-            val certificate = raw.handshake()?.peerCertificates().orEmpty()
-            if (certificate.size > 0) {
-                logd(TAG, "공개키 스트링 : ${certificate.get(0).publicKey.toString()}")
-                nicknameView.getPublicKey(certificate.get(0))
+            val certificate = raw.handshake()?.peerCertificates()?.get(0)
+            if (certificate != null) {
+//                logd(TAG, "공개키 스트링 : ${certificate.get(0).publicKey.toString()}")
+                nicknameView.getPublicKey(certificate)
             } else {
                 nicknameView.showMessage(App.ERROR_PUBLICKEY)
             }
