@@ -41,7 +41,12 @@ class HashtagPresenter(val hashtagView : HashtagContract.View):HashtagContract.P
                 val result = Parser.fromJson<HomeResult>(string!!)
 
                 if (start ==0){
+                    hashtagView.showNohashtag(false)
                     hashtagView.clearAdapter()
+
+                    if(result.items.size == 0){
+                        hashtagView.showNohashtag(true)
+                    }
                 }else if(hashtagView.hasNext){
                     hashtagView.removePageLoading()
                 }

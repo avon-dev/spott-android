@@ -41,7 +41,12 @@ class NotificationPresenter (val notiView: NotificationContract.View) : Notifica
                 val result = Parser.fromJson<NotiResult>(string!!)
 
                 if (start ==0){
+                    notiView.showNoNoti(false)
                     notiView.clearAdapter()
+
+                    if(result.items.size == 0){
+                        notiView.showNoNoti(true)
+                    }
                 }else if(notiView.hasNext){
                     notiView.removePageLoading()
                 }

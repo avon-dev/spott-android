@@ -407,7 +407,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
         mMap.uiSettings.isRotateGesturesEnabled = false //지도 방향 고정시키기(회전 불가)
 
-//        mMap.setMinZoomPreference(8f) //지도 최대 축소 지정
+        mMap.setMinZoomPreference(3f) //지도 최대 축소 지정
 
         setClusterManager() //클러스터 세팅
         presenter.getLastPosition() //카메라 포지션 옮기기. (처음실행 : 서울, 그외 : 최근에 봤던 곳)
@@ -473,8 +473,10 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
         text_spotnumber_map_f.text = cluster!!.size.toString()
 
         val sortItmes = cluster.items.sortedByDescending { mapCluster: MapCluster? -> mapCluster!!.like_count }
+        logd(TAG, "sortItmes : "+ sortItmes.toString())
 
         val firstItem = sortItmes[0] //첫번째 아이템 선택
+        logd(TAG, "firstItem : "+ firstItem.toString())
 
         selectedCluster = cluster
         selectedMarker = mCustomClusterItemRenderer.getMarker(cluster)

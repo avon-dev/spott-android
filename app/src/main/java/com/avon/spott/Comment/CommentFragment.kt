@@ -81,6 +81,9 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
 
     private var commentUploading = false
 
+    private var dialog : AlertDialog? = null
+
+
     val commentInterListener = object :commentInter{
         override fun userClick(userId:Int){
             presenter.openUser(userId)
@@ -192,6 +195,16 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
     override fun onDestroyView() {
         super.onDestroyView()
         recycler_comment_f.layoutManager = null
+    }
+
+    override fun onDestroy() {
+        logd(TAG, "dialog : "+ dialog.toString())
+        if(dialog!=null && dialog!!.isShowing){
+            dialog!!.dismiss()
+        }
+
+
+        super.onDestroy()
     }
 
     fun init(){
@@ -416,6 +429,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                             .setView(mDialogView)
 
                         val  mAlertDialog = mBuilder.show()
+
                         mAlertDialog.setCanceledOnTouchOutside(false)
 
                         if(delete){
@@ -553,7 +567,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
                         }
                         val adapter = ArrayAdapter<String>(context!!, android.R.layout.simple_list_item_1, arrayList)
                         builder.setAdapter(adapter, listener)
-                        builder.show()
+                        dialog = builder.show()
                     }
 
 

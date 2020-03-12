@@ -222,4 +222,8 @@
     <string name="text_no_place">Can\'t find a place</string>
     <string name="hint_edit_search_addphoto_a">Search locations, regions, countries</string>
 
+    <string name="text_no_hashtag"> 태그가 추가된 사진이 여기 표시됩니다.</string>
+
+    <string name="text_no_noti">새로운 알림이 없습니다.</string>
+
 </resources>

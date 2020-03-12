@@ -74,11 +74,6 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
     private var dialog : AlertDialog? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_photo, container, false)

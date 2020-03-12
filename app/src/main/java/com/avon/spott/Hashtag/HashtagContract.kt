@@ -10,6 +10,7 @@ interface HashtagContract {
         fun addItems(homeItemItems: ArrayList<HomeItem>)
         fun removePageLoading()
         fun clearAdapter()
+        fun showNohashtag(boolean: Boolean)
 
 
         var hasNext: Boolean
