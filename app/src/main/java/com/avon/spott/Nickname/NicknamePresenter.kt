@@ -29,6 +29,8 @@ class NicknamePresenter(val nicknameView: NicknameContract.View) : NicknameContr
     @SuppressLint("CheckResult")
     override fun signUp(baseUrl: String, user: User, certificate: Certificate) {
 
+        logd(TAG, "user.password : "+user.password)
+
         val cipherpw  = RSAEncrypt(certificate, user.password!!)
         val cipherUser = User(user.email)
         cipherUser.password = user.password

@@ -168,6 +168,7 @@ class NotificationFragment : Fragment(), NotificationContract.View, View.OnClick
     }
 
     override fun showPhotoUi(photoId:Int) {
+        logd(TAG, "photoId : $photoId")
         val bundle = bundleOf("photoId" to photoId)
         findNavController().navigate(R.id.action_notiFragment_to_photo, bundle)
     }
