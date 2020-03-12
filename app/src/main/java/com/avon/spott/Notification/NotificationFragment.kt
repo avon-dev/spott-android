@@ -51,6 +51,10 @@ class NotificationFragment : Fragment(), NotificationContract.View, View.OnClick
 
     private var checkInit = false
 
+    private var dialog : AlertDialog? = null
+
+    private var noNoti = false
+
     val notiInterListener = object : notiInter{
         override fun photoClick(photoId:Int){
             presenter.openPhoto(photoId)
@@ -103,11 +107,21 @@ class NotificationFragment : Fragment(), NotificationContract.View, View.OnClick
         controlToolbar(View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE)
         MainActivity.mToolbar.text_title_toolbar.text = getString(R.string.notification)
         MainActivity.mToolbar.visibility = View.VISIBLE
+
+        showNoNoti(noNoti)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         recycler_noti_f.layoutManager = null
+    }
+
+    override fun onDestroy() {
+        if(dialog!=null && dialog!!.isShowing){
+            dialog!!.dismiss()
+        }
+
+        super.onDestroy()
     }
 
     fun init(){
@@ -463,7 +477,7 @@ class NotificationFragment : Fragment(), NotificationContract.View, View.OnClick
                                     arrayList
                                 )
                                 builder.setAdapter(adapter, listener)
-                                builder.show()
+                                dialog = builder.show()
 
                                 return true
                             }
@@ -507,6 +521,16 @@ class NotificationFragment : Fragment(), NotificationContract.View, View.OnClick
             1->{
                 showToast(getString(R.string.failed_to_delete_noti))
             }
+        }
+    }
+
+    override fun showNoNoti(boolean: Boolean){
+        if(boolean){
+            text_nonoti_noti_f.visibility = View.VISIBLE
+            noNoti = true
+        }else{
+            text_nonoti_noti_f.visibility = View.GONE
+            noNoti = false
         }
     }
 

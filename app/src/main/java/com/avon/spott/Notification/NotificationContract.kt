@@ -17,6 +17,7 @@ interface NotificationContract {
         fun deleteDone(position:Int)
         fun serverError()
         fun showFail(state:Int)
+        fun showNoNoti(boolean: Boolean)
 
 
         var hasNext : Boolean

@@ -53,6 +53,8 @@ class HashtagFragment: Fragment(), HashtagContract.View, View.OnClickListener{
     private var fromSearch = false
     private var hashtag = ""
 
+    private var nohashtag = false
+
     val hashtagInterListener = object :hashtagInter{
         override fun itemClick(id:Int){
             presenter.openPhoto(id)
@@ -138,7 +140,6 @@ class HashtagFragment: Fragment(), HashtagContract.View, View.OnClickListener{
         if(!checkInit){
             //처음 사진을 가져오는 코드 (처음 이후에는 리프레쉬 전까지 가져오지않는다.)
             presenter.getPhotos(getString(R.string.baseurl), start, hashtag, fromSearch)
-            checkInit = true
         }
 
         swiperefresh_user_f.setColorSchemeColors(ContextCompat.getColor(context!!, R.color.colorPrimary))
@@ -154,11 +155,7 @@ class HashtagFragment: Fragment(), HashtagContract.View, View.OnClickListener{
 
         mToolbar.text_title_toolbar.text = "#"+hashtag
 
-        //=================테스트 테스트 테스트 테스트 테스트 테스트 테스트 ==================================
-        mToolbar.text_title_toolbar.setOnClickListener {
-            presenter.openPhoto(1674)
-        }
-        //===========================================================================
+        showNohashtag(nohashtag) //해시태그 없을 땐 없다는 문구 보여주기
 
     }
 
@@ -178,6 +175,8 @@ class HashtagFragment: Fragment(), HashtagContract.View, View.OnClickListener{
         hashtagAdapter.notifyDataSetChanged()
 
         pageLoading = false
+
+        checkInit = true
     }
 
     override fun removePageLoading(){
@@ -303,9 +302,16 @@ class HashtagFragment: Fragment(), HashtagContract.View, View.OnClickListener{
         inner class LoadingViewHolder(itemView:View):RecyclerView.ViewHolder(itemView) {
 
         }
+    }
 
-
-
-
+    override fun showNohashtag(boolean: Boolean){
+        if(boolean){
+            text_nohashtag_user_f.text = "#"+hashtag+" "+getString(R.string.text_no_hashtag)
+            text_nohashtag_user_f.visibility = View.VISIBLE
+            nohashtag = true
+        }else{
+            text_nohashtag_user_f.visibility = View.GONE
+            nohashtag = false
+        }
     }
 }
