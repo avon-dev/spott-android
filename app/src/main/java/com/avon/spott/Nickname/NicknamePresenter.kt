@@ -8,6 +8,7 @@ import com.avon.spott.Data.User
 import com.avon.spott.Utils.*
 import com.google.gson.GsonBuilder
 import retrofit2.HttpException
+import java.security.cert.Certificate
 
 class NicknamePresenter(val nicknameView: NicknameContract.View) : NicknameContract.Presenter {
 
@@ -26,24 +27,29 @@ class NicknamePresenter(val nicknameView: NicknameContract.View) : NicknameContr
     }
 
     @SuppressLint("CheckResult")
-    override fun signUp(baseUrl: String, user: User) {
-        logd(TAG, "PASER : "+Parser.toJson(user)) //테스트테스트
-            Retrofit(baseUrl).postFieldNonHeader("/spott/account", Parser.toJson(user)).subscribe({ response ->
-            logd(TAG, "response code: ${response.code()}, response body : ${response.body()}")
-            val result = response.body()?.let { Parser.fromJson<NicknmaeResult>(it) }
-            if (result != null) {
-                nicknameView.signUp(result.sign_up)
-            }
-        }, { throwable ->
-            loge(TAG, throwable.message)
-            if (throwable is HttpException) {
-                val exception = throwable
-                loge(
-                    TAG,
-                    "http exception code: ${exception.code()}, http exception message: ${exception.message()}"
-                )
-            }
-        })
+    override fun signUp(baseUrl: String, user: User, certificate: Certificate) {
+
+        val cipherpw  = RSAEncrypt(certificate, user.password!!)
+        user.password = cipherpw.contentToString()
+
+        logd(TAG, "PASER : " + Parser.toJson(user)) //테스트테스트
+        Retrofit(baseUrl).postFieldNonHeader("/spott/account", Parser.toJson(user))
+            .subscribe({ response ->
+                logd(TAG, "response code: ${response.code()}, response body : ${response.body()}")
+                val result = response.body()?.let { Parser.fromJson<NicknmaeResult>(it) }
+                if (result != null) {
+                    nicknameView.signUp(result.sign_up)
+                }
+            }, { throwable ->
+                loge(TAG, throwable.message)
+                if (throwable is HttpException) {
+                    val exception = throwable
+                    loge(
+                        TAG,
+                        "http exception code: ${exception.code()}, http exception message: ${exception.message()}"
+                    )
+                }
+            })
     }
 
     @SuppressLint("CheckResult")
@@ -63,7 +69,7 @@ class NicknamePresenter(val nicknameView: NicknameContract.View) : NicknameContr
             logd(TAG, "response code: ${response.code()}, response body : ${response.body()}")
 
             val jsonObj = response.body()
-            if(jsonObj != null) {
+            if (jsonObj != null) {
                 val token = GsonBuilder().create().fromJson(jsonObj, Token::class.java)
                 nicknameView.getToken(token)
             }
@@ -74,6 +80,31 @@ class NicknamePresenter(val nicknameView: NicknameContract.View) : NicknameContr
                     TAG,
                     "http exception code: ${throwable.code()}, http exception message: ${throwable.message()}"
                 )
+            }
+        })
+    }
+
+    @SuppressLint("CheckResult")
+    override fun getPublicKey(baseUrl: String, url: String) {
+        Retrofit(baseUrl).getNonHeader(url).subscribe({ response ->
+
+            logd(TAG, response.message())
+            val raw = response.raw()
+
+            val certificate = raw.handshake()?.peerCertificates().orEmpty()
+            if (certificate.size > 0) {
+                logd(TAG, "공개키 스트링 : ${certificate.get(0).publicKey.toString()}")
+                nicknameView.getPublicKey(certificate.get(0))
+            } else {
+                nicknameView.showMessage(App.ERROR_PUBLICKEY)
+            }
+        }, { throwable ->
+            logd(TAG, throwable.message)
+            if (throwable is HttpException) {
+                loge(TAG, "http exception code: ${throwable.code()}, http exception message: ${throwable.message()}")
+                nicknameView.showMessage(throwable.code())
+            } else {
+                nicknameView.showMessage(App.ERROR_PUBLICKEY)
             }
         })
     }

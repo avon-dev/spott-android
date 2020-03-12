@@ -3,15 +3,16 @@ package com.avon.spott.Email
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.avon.spott.Camera.EMAIL_FIND_RESENDING_MILLS
-import com.avon.spott.Camera.EMAIL_RESENDING_MILLS
 import com.avon.spott.Data.Number
 import com.avon.spott.Data.User
 import com.avon.spott.Password.PasswordActivity
 import com.avon.spott.R
+import com.avon.spott.Utils.App
 import kotlinx.android.synthetic.main.activity_email.*
 import kotlinx.android.synthetic.main.toolbar.*
 
@@ -28,16 +29,9 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
     private var transmitable = true // 이메일을 보낼 수 있는 상태인지
     private var startTime = 0L
     private val resending = EMAIL_FIND_RESENDING_MILLS
-    private var isShowing = false
-
-
-    private var isFirst: Boolean = true
-    private var elapsedTime: Long = 0
+    private var isShowing = false;
     private var number: Number = Number(false)
-    private var isEmail: Boolean = false
-
-    private var isSending: Boolean = true
-    private val resendingTime = EMAIL_RESENDING_MILLS
+    private lateinit var email:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +43,6 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
     // 초기화
     private fun init() {
         // 임시
-//        edit_email_email_a.setText("baek@seunghyun.com")
 
         signUpPresenter = EmailPresenter(this)
 
@@ -63,12 +56,6 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
         edit_email_email_a.addTextChangedListener {
             presenter.isEmail(it.toString())
         }
-
-        edit_number_email_a.addTextChangedListener {
-            presenter.isNumber(it.toString())
-        }
-
-        text_block_email_a.setOnTouchListener { v, event -> true }
     }
 
 
@@ -88,11 +75,6 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
             if (transmitable)
                 btn_send_email_a.setBackgroundResource(R.drawable.corner_round_graybtn)
         }
-
-
-//        isEmail = valid
-//        if (isEmail) text_warnmsg1_email_a.visibility = View.INVISIBLE
-//        else text_warnmsg1_email_a.visibility = View.VISIBLE
     }
 
     // 인증번호 확인하기
@@ -103,7 +85,7 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
 
     // 비밀번호 작성 액티비티로 이동하기
     override fun showPasswordUi() {
-        val user = User(edit_email_email_a.text.toString())
+        val user = User(email)
         val intent = Intent(this, PasswordActivity::class.java).apply {
             putExtra(INTENT_EXTRA_USER, user)
         }
@@ -113,7 +95,7 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
     // 인증번호 받기
     override fun getNumber(number: Number) {
 
-        hideLoading()
+        email = edit_email_email_a.text.toString()
 
         if (!isShowing) {
             edit_number_email_a.visibility = View.VISIBLE
@@ -134,27 +116,45 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
             transmitable = true
         }, resending)
 
+        // 임시 코드
 //        Toast.makeText(this@EmailActivity, getString(R.string.send_authentication_number), Toast.LENGTH_SHORT).show()
 
-        // 임시 코드
-        Toast.makeText(this@EmailActivity, "인증번호가 전송되었습니다 ${number.code}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this@EmailActivity, "인증번호가 전송되었습니다 ${number.code}", Toast.LENGTH_LONG).show()
     }
 
-    // 에러 보여주기
-    override fun showError(msg: String) {
-        hideLoading()
+    // 메세지 보여주기
+    override fun showMessage(msgCode: Int) {
+
+        val msg:String = when(msgCode) {
+            App.SERVER_ERROR_400 -> {
+                getString(R.string.error_400)
+            }
+            ERROR_DUPLICATION_EMAIL -> {
+                getString(R.string.error_duplication_email)
+            }
+            CHECK_NUMBER -> {
+                getString(R.string.error_check_number)
+            }
+            else -> {
+                getString(R.string.error_retry)
+            }
+        }
 
         Toast.makeText(this@EmailActivity, msg, Toast.LENGTH_SHORT).show()
     }
 
-    private fun showLoading() {
-        text_block_email_a.visibility = View.VISIBLE
+    override fun showLoading() {
+//        text_block_email_a.visibility = View.VISIBLE
         progressbar_wait_email_a.visibility = View.VISIBLE
+
+        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
 
-    private fun hideLoading() {
-        text_block_email_a.visibility = View.GONE
+    override fun hideLoading() {
+//        text_block_email_a.visibility = View.GONE
         progressbar_wait_email_a.visibility = View.GONE
+
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
 
     override fun onClick(v: View?) {
@@ -164,9 +164,6 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
             }
             R.id.btn_send_email_a -> {
                 if (transmitable) { // 이메일 인증을 서버에 요청가능 할 때
-
-                    showLoading()
-
                     presenter.sendEmail(
                         getString(R.string.baseurl),
                         edit_email_email_a.text.toString()
@@ -174,16 +171,17 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
                 } else { // 이메일 인증요청이 불가능 할 때
                     val elapsedTime = System.currentTimeMillis()
                     val remainingTime = resending / 1000 - (elapsedTime - startTime) / 1000
-                    Toast.makeText(
-                        applicationContext,
-                        "${remainingTime}초 후 시도해주세요",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(applicationContext, String.format(getString(R.string.wait_resending), remainingTime), Toast.LENGTH_SHORT).show()
                 }
             }
             R.id.btn_confirm_email_a -> {
                 presenter.confirm(number, edit_number_email_a.text.toString())
             }
         }
+    }
+
+    companion object ERROR {
+        val ERROR_DUPLICATION_EMAIL = 1
+        val CHECK_NUMBER = 2
     }
 }

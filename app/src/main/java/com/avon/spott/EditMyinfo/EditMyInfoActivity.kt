@@ -47,9 +47,12 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
 
     private val CROPPED_PROFILE_IMAGE_NAME = "ProfileCropImage.jpg"
 
-    private val ERROR_DUPLICATION_NICKNAME = 1
-    private val SUCCESS_CHANGE_NICKNAME = 2
-    private val ERROR_INVALID_NICKNAME = 3
+    private val CHANGE_PROFILE_IMAGE = 0
+    private val DELETE_PROFILE_IMAGE = 1
+
+    private val ERROR_DUPLICATION_NICKNAME = 3
+    private val SUCCESS_CHANGE_NICKNAME = 4
+    private val ERROR_INVALID_NICKNAME = 5
     private val ERROR_RETRY = 999
 
     private val SELECT_IMAGE = 102
@@ -130,7 +133,9 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
         } else {
             buffNickname = edit_nickname_editmyinfo_a.text.toString()
             userDataChange = true
+            showMessage(SUCCESS_CHANGE_NICKNAME)
         }
+
     }
 
     override fun withDrawl(result: Boolean) {
@@ -138,7 +143,6 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
             presenter.signOut(MySharedPreferences(this))
         } else {
             showMessage(ERROR_RETRY)
-//            Toast.makeText(applicationContext, getString(R.string.error_retry), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -150,16 +154,20 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
         startActivity(intent)
     }
 
+    override fun deleteProfileImage() {
+        img_profile_editmyinfo_a.setImageResource(R.drawable.img_person)
+    }
+
     override fun showMessage(code: Int) {
         when(code) {
             App.SERVER_ERROR_400 -> {
-//                Toast.makeText(applicationContext, getString(R.string.error_400), Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, getString(R.string.error_400), Toast.LENGTH_SHORT).show()
             }
             App.SERVER_ERROR_404 -> {
-//                Toast.makeText(applicationContext, getString(R.string.error_404), Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, getString(R.string.error_404), Toast.LENGTH_SHORT).show()
             }
             App.SERVER_ERROR_500 -> {
-//                Toast.makeText(applicationContext, getString(R.string.error_500), Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, getString(R.string.error_500), Toast.LENGTH_SHORT).show()
             }
             ERROR_DUPLICATION_NICKNAME -> {
                 Toast.makeText(applicationContext, getString(R.string.error_duplication_nickname), Toast.LENGTH_SHORT).show()
@@ -182,31 +190,24 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
         if(requestCode == PERMISSIONS_REQUEST_CODE) {
             if (PackageManager.PERMISSION_GRANTED == grantResults.firstOrNull()) { // 권한이 있으면
 
-
                 val builder = AlertDialog.Builder(this)
 
                 builder.setTitle("프로필 이미지 수정")
                     .setItems(R.array.edit_profile_item, DialogInterface.OnClickListener { _, pos ->
                         when(pos) {
-                            0 -> {
+                            CHANGE_PROFILE_IMAGE -> {
                                 val pickPhoto = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                                 pickPhoto.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                                 startActivityForResult(pickPhoto, SELECT_IMAGE)
                             }
-                            1 -> {
-                                Toast.makeText(applicationContext, "개발 중인 기능입니다", Toast.LENGTH_SHORT).show()
+                            DELETE_PROFILE_IMAGE -> {
+                                presenter.deleteProfileImage(getString(R.string.baseurl), App.prefs.token, "/spott/users")
                             }
                         }
                     })
 
                 val dialog = builder.create()
                 dialog.show()
-
-//                val pickPhoto = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-//                pickPhoto.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-//                startActivityForResult(pickPhoto, 102)
-            } else { // 없으면
-
             }
         }
     }
@@ -243,7 +244,6 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
             } else if(requestCode == UCrop.REQUEST_CROP){
                 var mCropPath: Uri? = UCrop.getOutput(data)
                 logd(TAG, "croppath : " + mCropPath)
-//                presenter.openAddPhoto(mCropPath.toString())
 
                 val token = MySharedPreferences(applicationContext).prefs.getString("access", "")
                 if(token != null && mCropPath != null) {
@@ -273,13 +273,13 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
                     builder.setTitle("프로필 이미지 수정")
                         .setItems(R.array.edit_profile_item, DialogInterface.OnClickListener { _, pos ->
                             when(pos) {
-                                0 -> {
+                                CHANGE_PROFILE_IMAGE -> {
                                     val pickPhoto = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                                     pickPhoto.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                                     startActivityForResult(pickPhoto, 102)
                                 }
-                                1 -> {
-                                    Toast.makeText(applicationContext, "개발 중인 기능입니다", Toast.LENGTH_SHORT).show()
+                                DELETE_PROFILE_IMAGE -> {
+                                    presenter.deleteProfileImage(getString(R.string.baseurl), App.prefs.token, "/spott/users")
                                 }
                             }
                         })

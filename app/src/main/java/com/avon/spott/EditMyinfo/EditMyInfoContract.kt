@@ -17,6 +17,7 @@ interface EditMyInfoContract {
         fun withDrawl(result:Boolean)// 회원 탈퇴
         fun loginActivity() // 로그아웃
         fun showMessage(code:Int)
+        fun deleteProfileImage()
     }
 
     interface Presenter {
@@ -28,5 +29,6 @@ interface EditMyInfoContract {
         // 비밀번호 변경하기
         fun withDrawl(baseUrl:String, token:String)// 회원 탈퇴
         fun changeNickname(baseUrl:String, token:String, nickname:String)// 닉네임 수정
+        fun deleteProfileImage(baseUrl: String, token:String, url: String)
     }
 }

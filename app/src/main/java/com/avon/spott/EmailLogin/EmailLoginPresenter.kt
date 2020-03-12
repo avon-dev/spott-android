@@ -4,11 +4,10 @@ import android.annotation.SuppressLint
 import com.avon.spott.Camera.HTTP_BAD_REQUEST
 import com.avon.spott.Camera.HTTP_UNAUTHORIZED
 import com.avon.spott.Data.Token
-import com.avon.spott.Utils.Retrofit
-import com.avon.spott.Utils.logd
-import com.avon.spott.Utils.loge
+import com.avon.spott.Utils.*
 import com.google.gson.GsonBuilder
 import retrofit2.HttpException
+import java.security.cert.Certificate
 
 class EmailLoginPresenter(val emailLoginView: EmailLoginContract.View) :
     EmailLoginContract.Presenter {
@@ -28,9 +27,12 @@ class EmailLoginPresenter(val emailLoginView: EmailLoginContract.View) :
     }
 
     @SuppressLint("CheckResult")
-    override fun signIn(baseUrl: String, email: String, password: String) {
+    override fun signIn(baseurl: String, email: String, password: String, certificate: Certificate) {
 
-        Retrofit(baseUrl).signIn("/spott/token", email, password).subscribe({ response ->
+        val cipherpw  = RSAEncrypt(certificate, password)
+        val encryptpw = cipherpw.contentToString()
+
+        Retrofit(baseurl).signIn("/spott/token", email, encryptpw).subscribe({ response ->
             logd(TAG, "response code: ${response.code()}, response body : ${response.body()}")
             val jsonObj = response.body()
             if(jsonObj != null) {
@@ -51,8 +53,32 @@ class EmailLoginPresenter(val emailLoginView: EmailLoginContract.View) :
                 }
             }
         }, {
-            logd(TAG, "실패")
+//            logd(TAG, "실패")
         })
+    }
 
+    @SuppressLint("CheckResult")
+    override fun getPublicKey(baseUrl: String, url: String) {
+        Retrofit(baseUrl).getNonHeader(url).subscribe({ response ->
+
+            logd(TAG, response.message())
+            val raw = response.raw()
+
+            val certificate = raw.handshake()?.peerCertificates().orEmpty()
+            if (certificate.size > 0) {
+                logd(TAG, "공개키 스트링 : ${certificate.get(0).publicKey.toString()}")
+                emailLoginView.getPublicKey(certificate.get(0))
+            } else {
+                emailLoginView.showMessage(App.ERROR_PUBLICKEY)
+            }
+        }, { throwable ->
+            logd(TAG, throwable.message)
+            if (throwable is HttpException) {
+                loge(TAG, "http exception code: ${throwable.code()}, http exception message: ${throwable.message()}")
+                emailLoginView.showMessage(App.ERROR_PUBLICKEY)
+            } else {
+                emailLoginView.showMessage(App.ERROR_ERTRY)
+            }
+        })
     }
 }
