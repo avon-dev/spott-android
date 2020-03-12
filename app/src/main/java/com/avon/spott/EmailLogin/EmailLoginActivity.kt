@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.avon.spott.Data.Token
@@ -90,6 +91,8 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
                     return
                 }
 
+                window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
                 presenter.getPublicKey(getString(R.string.baseurl),"/spott/publickey")
             }
         }
@@ -105,6 +108,7 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
             else -> { msg = getString(R.string.error_retry) }
         }
         Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
     override fun getPublicKey(certificate: Certificate) {
         presenter.signIn(

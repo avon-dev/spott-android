@@ -30,10 +30,11 @@ class NicknamePresenter(val nicknameView: NicknameContract.View) : NicknameContr
     override fun signUp(baseUrl: String, user: User, certificate: Certificate) {
 
         val cipherpw  = RSAEncrypt(certificate, user.password!!)
-        user.password = cipherpw.contentToString()
+        val cipherUser = user
+        cipherUser.password = cipherpw.contentToString()
 
-        logd(TAG, "PASER : " + Parser.toJson(user)) //테스트테스트
-        Retrofit(baseUrl).postFieldNonHeader("/spott/account", Parser.toJson(user))
+        logd(TAG, "PASER : " + Parser.toJson(cipherUser)) //테스트테스트
+        Retrofit(baseUrl).postFieldNonHeader("/spott/account", Parser.toJson(cipherUser))
             .subscribe({ response ->
                 logd(TAG, "response code: ${response.code()}, response body : ${response.body()}")
                 val result = response.body()?.let { Parser.fromJson<NicknmaeResult>(it) }
