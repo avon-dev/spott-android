@@ -36,7 +36,11 @@ class NewPasswordPresenter(val newPasswordView: NewPasswordContract.View) :
         val user = User(email, password)
 
         val cipherpw  = RSAEncrypt(certificate, user.password!!)
-        user.password = cipherpw.contentToString()
+        val cipherUser = User(user.email)
+        cipherUser.password = user.password
+        cipherUser.nickname = user.nickname
+
+        cipherUser.password= cipherpw.contentToString()
 
         val sending = Parser.toJson(user)
 
