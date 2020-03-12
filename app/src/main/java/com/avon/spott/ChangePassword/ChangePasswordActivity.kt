@@ -7,9 +7,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.avon.spott.R
+import com.avon.spott.Utils.App
 import com.avon.spott.Utils.MySharedPreferences
 import kotlinx.android.synthetic.main.activity_change_password.*
 import kotlinx.android.synthetic.main.toolbar.*
+import java.security.cert.Certificate
 
 class ChangePasswordActivity : AppCompatActivity(), ChangePasswordContract.View,
     View.OnClickListener {
@@ -30,7 +32,6 @@ class ChangePasswordActivity : AppCompatActivity(), ChangePasswordContract.View,
 
     private fun init() {
         // 임시
-//        edit_origin_changepassword_a.setText("seunghyun1!")
 
         text_title_toolbar.text = getString(R.string.changepw)
 
@@ -56,6 +57,17 @@ class ChangePasswordActivity : AppCompatActivity(), ChangePasswordContract.View,
         }
     }
 
+    override fun showMessage(msgCode: Int) {
+        val msg:String
+        when (msgCode) {
+            App.ERROR_PUBLICKEY -> { msg = getString(R.string.error_retry) }
+            App.SERVER_ERROR_400 -> { msg = getString(R.string.error_400) }
+            App.SERVER_ERROR_404 -> { msg = getString(R.string.error_404) }
+            App.SERVER_ERROR_500 -> { msg = getString(R.string.error_500) }
+            else -> { msg = getString(R.string.error_retry) }
+        }
+        Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
+    }
     override fun navigateUp() {
         onBackPressed()
     }
@@ -128,7 +140,8 @@ class ChangePasswordActivity : AppCompatActivity(), ChangePasswordContract.View,
                         val token = MySharedPreferences(applicationContext).prefs.getString("access", "")
 
                         if(token!=null && !token.equals(""))
-                            presenter.changePassword(getString(R.string.baseurl), token, edit_changepassword_a.text.toString())
+                            presenter.getPublicKey(getString(R.string.baseurl),"/spott/publickey")
+
                     } else {
                         Toast.makeText(applicationContext, getString(R.string.toast_check_changepassword), Toast.LENGTH_SHORT).show()
                     }
@@ -137,5 +150,9 @@ class ChangePasswordActivity : AppCompatActivity(), ChangePasswordContract.View,
                 }
             }
         }
+    }
+
+    override fun getPublicKey(certificate: Certificate) {
+        presenter.changePassword(getString(R.string.baseurl), App.prefs.token, edit_changepassword_a.text.toString(), certificate)
     }
 }

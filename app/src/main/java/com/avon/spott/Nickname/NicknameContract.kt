@@ -15,15 +15,15 @@ interface NicknameContract {
         fun getPublicKey(certificate: Certificate)
         fun showLoading()
         fun hideLoading()
+        fun showMessage(msgCode:Int)
     }
 
     interface Presenter {
         fun navigateUp()
         fun isNickname(nickname:String)
-        fun signUp(baseUrl:String, user: User)
+        fun signUp(baseUrl:String, user: User, certificate: Certificate)
         fun signUp(baseUrl:String, url:String, socialUser: SocialUser)
         fun getToken(baseUrl:String, email:String, password:String)
         fun getPublicKey(baseUrl:String, url:String)
-        fun test(baseUrl: String, url:String, certificate: Certificate, user: User)
     }
 }

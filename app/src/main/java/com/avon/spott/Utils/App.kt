@@ -15,6 +15,7 @@ class App : Application(), CameraXConfig.Provider {
         val SERVER_ERROR_404 = 404 // Not Found
         val SERVER_ERROR_500 = 500 // Server Internal Error
         val ERROR_ERTRY = 499
+        val ERROR_PUBLICKEY = 498
     }
     /* prefs라는 이름의 MySharedPreferences 하나만 생성할 수 있도록 설정. */
 

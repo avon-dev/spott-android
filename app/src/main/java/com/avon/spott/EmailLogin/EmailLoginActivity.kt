@@ -10,8 +10,10 @@ import com.avon.spott.Data.Token
 import com.avon.spott.FindPW.FindPWActivity
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.R
+import com.avon.spott.Utils.App
 import kotlinx.android.synthetic.main.activity_email_login.*
 import kotlinx.android.synthetic.main.toolbar.*
+import java.security.cert.Certificate
 
 
 class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.OnClickListener {
@@ -29,14 +31,6 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
     }
 
     private fun init() {
-
-        // 임시
-//        edit_username_emaillogin_a.setText("pms939@test.com")
-//        edit_password_emaillogin_a.setText("qwer1234!")
-
-        edit_username_emaillogin_a.setText("baek@seunghyun.com")
-        edit_password_emaillogin_a.setText("seunghyun1!")
-
 
         emailLoginPresenter = EmailLoginPresenter(this)
 
@@ -78,7 +72,6 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
         when (v?.id) {
             R.id.img_back_toolbar -> {
                 presenter.navigateUp()
-//                getAsyncTask().execute()
             }
 
             R.id.text_findpw_emaillogin_a -> {
@@ -97,12 +90,28 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
                     return
                 }
 
-                presenter.signIn(
-                    getString(R.string.baseurl),
-                    edit_username_emaillogin_a.text.toString(),
-                    edit_password_emaillogin_a.text.toString()
-                )
+                presenter.getPublicKey(getString(R.string.baseurl),"/spott/publickey")
             }
         }
+    }
+
+    override fun showMessage(msgCode: Int) {
+        val msg:String
+        when (msgCode) {
+            App.ERROR_PUBLICKEY -> { msg = getString(R.string.error_retry) }
+            App.SERVER_ERROR_400 -> { msg = getString(R.string.error_400) }
+            App.SERVER_ERROR_404 -> { msg = getString(R.string.error_404) }
+            App.SERVER_ERROR_500 -> { msg = getString(R.string.error_500) }
+            else -> { msg = getString(R.string.error_retry) }
+        }
+        Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
+    }
+    override fun getPublicKey(certificate: Certificate) {
+        presenter.signIn(
+            getString(R.string.baseurl),
+            edit_username_emaillogin_a.text.toString(),
+            edit_password_emaillogin_a.text.toString(),
+            certificate
+        )
     }
 }

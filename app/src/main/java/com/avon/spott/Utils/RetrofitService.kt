@@ -52,7 +52,7 @@ interface RetrofitService {
 
     @FormUrlEncoded
     @POST
-    fun postNonHeader(@Url url: String, @Field("key") key:String, iv:String ): Observable<Response<String>>
+    fun postNonHeader(@Url url: String, @Field("key") key:String, @Field("iv") iv:String ): Observable<Response<String>>
 
     @GET
     fun getNonToken(@Url url: String, @Query("sending") sending: String): Observable<Response<String>>

@@ -43,7 +43,6 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
     // 초기화
     private fun init() {
         // 임시
-        edit_email_email_a.setText("baek@seunghyun.com")
 
         signUpPresenter = EmailPresenter(this)
 
@@ -57,12 +56,6 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
         edit_email_email_a.addTextChangedListener {
             presenter.isEmail(it.toString())
         }
-
-//        edit_number_email_a.addTextChangedListener {
-//            presenter.isNumber(it.toString())
-//        }
-
-//        text_block_email_a.setOnTouchListener { v, event -> true }
     }
 
 
@@ -92,7 +85,7 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
 
     // 비밀번호 작성 액티비티로 이동하기
     override fun showPasswordUi() {
-        val user = User(edit_email_email_a.text.toString())
+        val user = User(email)
         val intent = Intent(this, PasswordActivity::class.java).apply {
             putExtra(INTENT_EXTRA_USER, user)
         }
@@ -126,7 +119,7 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
         // 임시 코드
 //        Toast.makeText(this@EmailActivity, getString(R.string.send_authentication_number), Toast.LENGTH_SHORT).show()
 
-        Toast.makeText(this@EmailActivity, "인증번호가 전송되었습니다 ${number.code}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this@EmailActivity, "인증번호가 전송되었습니다 ${number.code}", Toast.LENGTH_LONG).show()
     }
 
     // 메세지 보여주기
@@ -182,7 +175,7 @@ class EmailActivity : AppCompatActivity(), EmailContract.View, View.OnClickListe
                 }
             }
             R.id.btn_confirm_email_a -> {
-                presenter.confirm(number, email)
+                presenter.confirm(number, edit_number_email_a.text.toString())
             }
         }
     }

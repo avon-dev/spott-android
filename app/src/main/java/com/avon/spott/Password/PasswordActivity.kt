@@ -9,7 +9,6 @@ import com.avon.spott.Data.User
 import com.avon.spott.Email.INTENT_EXTRA_USER
 import com.avon.spott.Nickname.NicknameActivity
 import com.avon.spott.R
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_password.*
 import kotlinx.android.synthetic.main.toolbar.*
 
@@ -31,10 +30,8 @@ class PasswordActivity : AppCompatActivity(), PasswordContract.View, View.OnClic
     }
 
     fun init() {
-        user = intent.getParcelableExtra(INTENT_EXTRA_USER)
 
-        edit_password_a.setText("seunghyun1!")
-        edit_check_password_a.setText("seunghyun1!")
+        user = intent.getParcelableExtra(INTENT_EXTRA_USER)
 
         passwordPresenter = PasswordPresenter(this)
 
@@ -103,7 +100,6 @@ class PasswordActivity : AppCompatActivity(), PasswordContract.View, View.OnClic
                 presenter.navigateUp()
             }
             R.id.btn_confirm_password_a -> {
-                passwordPresenter.encrypt(edit_check_password_a.text.toString())
                 presenter.openNickname()
             }
         }

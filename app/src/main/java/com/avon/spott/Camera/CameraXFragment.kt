@@ -218,7 +218,6 @@ class CameraXFragment : Fragment() {
         }
 
         onBackPressedCallback.isEnabled = true
-
     }
 
     override fun onDestroyView() {

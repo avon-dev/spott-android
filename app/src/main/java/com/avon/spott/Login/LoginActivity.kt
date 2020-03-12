@@ -244,48 +244,6 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
             R.id.text_signup_login_a -> { // 회원가입
                 presenter.openSignup()
             }
-
-//            R.id.btn_facebooklogin_a -> {
-//                LoginManager.getInstance().logInWithReadPermissions(this@LoginActivity, Arrays.asList("id, email"))
-//
-//                LoginManager.getInstance().registerCallback(callbackManager, object: FacebookCallback<LoginResult?> {
-//                    override fun onSuccess(loginResult: LoginResult?) {
-//                        if(loginResult != null) {
-//                            logd(TAG, "success: ${loginResult.accessToken}")
-//
-//                            val request = GraphRequest.newMeRequest(loginResult.accessToken, GraphRequest.GraphJSONObjectCallback { jsonObject, response ->
-//                                try {
-//                                    if(jsonObject.has("email")) { // 이메일을 허락해줬을 때
-//                                        logd(TAG, "fb email: " + jsonObject.getString("email"))
-//                                        Toast.makeText(this@LoginActivity, "페북 로그인 성공", Toast.LENGTH_SHORT).show()
-//                                    } else { // 이메일을 허락하지 않았을 때
-//                                        // 로그인 실패로 간주하고 권한을 허락해달라고 해야 함.
-//                                        LoginManager.getInstance().logOut()
-//                                        Toast.makeText(this@LoginActivity, "페북 로그인 실패 (권한이 필요합니다)", Toast.LENGTH_SHORT).show()
-//                                    }
-//                                } catch (e:Exception) {
-//                                    e.printStackTrace()
-//                                }
-//                            })
-//
-//                            val parameter = Bundle()
-//                            parameter.putString("fields", "id,name,email");
-//                            request.parameters = parameter
-//                            request.executeAsync()
-//                        }
-//                    }
-//
-//                    override fun onCancel() {
-//                    }
-//
-//                    override fun onError(exception: FacebookException) {
-//                        loge(TAG, "${exception.message}")
-//                        exception.printStackTrace()
-//                    }
-//                })
-//
-//            }
         }
     }
-
 }

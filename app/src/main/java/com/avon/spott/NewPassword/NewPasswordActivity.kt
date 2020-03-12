@@ -12,6 +12,7 @@ import com.avon.spott.R
 import com.avon.spott.Utils.App
 import kotlinx.android.synthetic.main.activity_new_password.*
 import kotlinx.android.synthetic.main.toolbar.*
+import java.security.cert.Certificate
 
 class NewPasswordActivity : AppCompatActivity(), NewPasswordContract.View, View.OnClickListener {
 
@@ -124,11 +125,16 @@ class NewPasswordActivity : AppCompatActivity(), NewPasswordContract.View, View.
                 // 서버에 바뀐 비밀번호 알려주기
                 // 이메일 로그인 화면으로 이동하는게 나을지, 아예 처음 로그인 화면이 나을지
                 if(isPassword and isCheck)
-                    presenter.fixPassword(getString(R.string.baseurl), email, edit_newpassword_a.text.toString())
+                    presenter.getPublicKey(getString(R.string.baseurl),"/spott/publickey")
                 else {
                     showMessage(ERROR_CHECK_PASSWORD)
                 }
             }
         }
+    }
+
+
+    override fun getPublicKey(certificate: Certificate) {
+        presenter.fixPassword(getString(R.string.baseurl), email, edit_newpassword_a.text.toString(), certificate)
     }
 }

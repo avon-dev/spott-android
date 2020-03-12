@@ -14,6 +14,7 @@ import com.avon.spott.Data.User
 import com.avon.spott.Email.INTENT_EXTRA_USER
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.R
+import com.avon.spott.Utils.App
 import kotlinx.android.synthetic.main.activity_nickname.*
 import kotlinx.android.synthetic.main.toolbar.*
 import java.security.cert.Certificate
@@ -118,6 +119,18 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
 
+    override fun showMessage(msgCode: Int) {
+        val msg:String
+        when (msgCode) {
+            App.ERROR_PUBLICKEY -> { msg = getString(R.string.error_retry) }
+            App.SERVER_ERROR_400 -> { msg = getString(R.string.error_400) }
+            App.SERVER_ERROR_404 -> { msg = getString(R.string.error_404) }
+            App.SERVER_ERROR_500 -> { msg = getString(R.string.error_500) }
+            else -> { msg = getString(R.string.error_retry) }
+        }
+        Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
+    }
+
     override fun onClick(v: View?) {
         when (v?.id) {
 
@@ -130,10 +143,9 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
             R.id.btn_confirm_nickname_a -> {
                 if (enable) {
                     if(login == EMAIL) {
-                        emailUser.nickname = edit_nickname_a.text.toString()
+//                        emailUser.nickname = edit_nickname_a.text.toString()
 //                        presenter.signUp(getString(R.string.baseurl), emailUser)
-
-                        presenter.getPublicKey(getString(R.string.baseurl), "/spott/login")
+                        presenter.getPublicKey(getString(R.string.baseurl), "/spott/publickey")
 
                     } else if (login == SOCIAL) {
                         socialUser.nickname = edit_nickname_a.text.toString()
@@ -148,6 +160,7 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
     }
 
     override fun getPublicKey(certificate: Certificate) {
-        presenter.test(getString(R.string.baseurl), "/spott/test", certificate, emailUser)
+        emailUser.nickname = edit_nickname_a.text.toString()
+        presenter.signUp(getString(R.string.baseurl), emailUser, certificate)
     }
 }
