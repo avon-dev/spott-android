@@ -14,6 +14,14 @@ interface RetrofitService {
 
     @FormUrlEncoded
     @POST
+    fun signIn(@Url url: String, @Field("email") email: String, @Field("password") password: String, @Field("user_type") usertype:Int): Observable<Response<JsonObject>>
+
+    @FormUrlEncoded
+    @POST
+    fun signIn(@Url url: String, @Field("email") email: String, @Field("user_type") usertype:Int): Observable<Response<JsonObject>>
+
+    @FormUrlEncoded
+    @POST
     fun post(@Header("Authorization") token :String, @Url url: String, @Field("sending") sending: String): Observable<Response<String>>
 
     @GET
@@ -53,6 +61,9 @@ interface RetrofitService {
     @FormUrlEncoded
     @POST
     fun postNonHeader(@Url url: String, @Field("key") key:String, @Field("iv") iv:String ): Observable<Response<String>>
+
+    @GET
+    fun getNonToken(@Url url: String, @Query("email") email: String, @Query("user_type") usertype: Int): Observable<Response<String>>
 
     @GET
     fun getNonToken(@Url url: String, @Query("sending") sending: String): Observable<Response<String>>

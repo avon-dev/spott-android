@@ -11,7 +11,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.avon.spott.Data.User
+import com.avon.spott.Data.SocialUser
 import com.avon.spott.Email.EmailActivity
 import com.avon.spott.Email.INTENT_EXTRA_USER
 import com.avon.spott.EmailLogin.EmailLoginActivity
@@ -46,6 +46,13 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
     private val RC_SIGN_IN = 1
     private val TAG = "LoginActivity"
 
+    private val GOOGLE_USER = 9001
+    private val FACEBOOK_USER = 9002
+
+    private val SOCIAL_LOGIN = 1
+    private var socialEmail:String? = null
+    private var socialType:Int = GOOGLE_USER
+
     private lateinit var callbackManager:CallbackManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +65,6 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
     // 초기화
     private fun init() {
         btn_facebooklogin_a.visibility = View.GONE
-        btn_googlelogin_login_a.visibility = View.GONE
 
         loginPresenter = LoginPresenter(this)
 
@@ -68,7 +74,6 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
 //        btn_facebooklogin_a.setOnClickListener(this)
 
         callbackManager = CallbackManager.Factory.create();
-
 
 //        btn_facebooklogin_a.setReadPermissions("email")
         btn_facebooklogin_a.setPermissions(Arrays.asList("email"))
@@ -126,8 +131,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         })
 
 
-
-
+        // 이용약관
         val span: Spannable = text_privacyinfo_login_a.text as Spannable
         text_privacyinfo_login_a.movementMethod = LinkMovementMethod.getInstance()
 
@@ -147,6 +151,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         }, 13, 17, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         text_privacyinfo_login_a.movementMethod = LinkMovementMethod.getInstance()
 
+        // 개인정보 처리 방침
         val span2: Spannable = text_privacyinfo_login_a.text as Spannable
         text_privacyinfo_login_a.movementMethod = LinkMovementMethod.getInstance()
 
@@ -173,9 +178,9 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
             }
         }, 20, 28, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         text_privacyinfo_login_a.movementMethod = LinkMovementMethod.getInstance()
-
     }
 
+    // 메인으로 이동하기 ( 소셜 로그인 성공시 )
     override fun showMainUi() {
         val intent = Intent(this@LoginActivity, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -183,16 +188,19 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         startActivity(intent)
     }
 
+    // 이메일 로그인으로 이동하기
     override fun showEmailLoginUi() {
         val intent = Intent(this@LoginActivity, EmailLoginActivity::class.java)
         startActivity(intent)
     }
 
+    // 이메일 인증으로 이동하기
     override fun showSignupUi() {
         val intent = Intent(this@LoginActivity, EmailActivity::class.java)
         startActivity(intent)
     }
 
+    // 구글 로그인 결과
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         callbackManager.onActivityResult(requestCode, resultCode, data)
         super.onActivityResult(requestCode, resultCode, data)
@@ -209,23 +217,36 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
             val account = completedTask.getResult(ApiException::class.java)
             logd(TAG, "google account: ${account.toString()}")
 
-            if(account != null) {
-                val email = account.email
-                if(email != null) {
-                    Intent(this@LoginActivity, NicknameActivity::class.java).let {
-                        it.putExtra(INTENT_EXTRA_USER, User(email))
-                        startActivity(it)
-                    }
-                }
-            }
-//            Intent(this@LoginActivity, MainActivity::class.java).let { startActivity(it) }
-//            Toast.makeText(this, "구글 로그인 성공", Toast.LENGTH_SHORT).show()
+            socialType = GOOGLE_USER
+            socialEmail = account?.email?.let { it }
+            socialEmail?.let { presenter.isPhopoUser(getString(R.string.baseurl), "/spott/social-account", SocialUser(it, socialType)) }
         } catch (e:ApiException) {
             loge(TAG, "signInResult:failed code=${e.statusCode}, ${e.message}")
             println(e.stackTrace.toString())
         }
     }
 
+    override fun isPhopoUser() {
+        // 가입한 유저일 때
+        // 토큰 발급 받기
+//        presenter.getToken()
+        logd(TAG, "View.isPohopoUser() : 가입된 유저")
+    }
+
+    override fun notPhopoUser() {
+        // 가입안한 유저일 때
+        // 닉네임 액티비티로 이동하기
+        socialEmail?.let { socialEmail ->
+            Intent(this@LoginActivity, NicknameActivity::class.java).let {
+                it.putExtra("login", SOCIAL_LOGIN) // 소셜 로그인에서 넘어옴
+                it.putExtra(INTENT_EXTRA_USER, SocialUser(socialEmail, socialType))
+                startActivity(it)
+            }
+        }
+
+    }
+
+    // 버튼 클릭
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btn_googlelogin_login_a -> { // 구글 로그인

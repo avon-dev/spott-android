@@ -29,9 +29,14 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
 
     private val EMAIL = 0
     private val SOCIAL = 1
+
     private var login:Int = -1
 
     private var enable = false
+
+    companion object {
+        val ERROR_DUPLICATION = 4000
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,8 +52,7 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
         if(login == EMAIL) { // 이메일 로그인일 때
             emailUser = intent?.getParcelableExtra(INTENT_EXTRA_USER)!!
         } else if (login == SOCIAL) { // 소셜 로그인일 때
-            val email = intent.extras.getString("email", "")
-            socialUser = SocialUser(email)
+            socialUser= intent.getParcelableExtra(INTENT_EXTRA_USER)
         }
 
         nicknamePresenter = NicknamePresenter(this)
@@ -82,22 +86,8 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
         onBackPressed()
     }
 
-    override fun signUp(result: Boolean) {
-        if (result) {
-            presenter.getToken(getString(R.string.baseurl), emailUser.email, emailUser.password!!)
-        } else {
-            Toast.makeText(this@NicknameActivity, getString(R.string.toast_duplication_nickname), Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    override fun getToken(token:Token) {
-        val pref = getSharedPreferences("pref", Context.MODE_PRIVATE)
-        val ed = pref.edit()
-        ed.putString("access", token.access)
-        ed.putString("refresh", token.refresh)
-        ed.apply()
-
-        showMainUi()
+    override fun socialSignup() {
+        presenter.getToken(getString(R.string.baseurl), "/spot/token", socialUser)
     }
 
     private fun showMainUi() {
@@ -126,10 +116,32 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
             App.SERVER_ERROR_400 -> { msg = getString(R.string.error_400) }
             App.SERVER_ERROR_404 -> { msg = getString(R.string.error_404) }
             App.SERVER_ERROR_500 -> { msg = getString(R.string.error_500) }
+            ERROR_DUPLICATION -> { msg = getString(R.string.error_duplication_nickname)}
             else -> { msg = getString(R.string.error_retry) }
         }
         Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
     }
+
+    override fun getPublicKey(certificate: Certificate) {
+        emailUser.nickname = edit_nickname_a.text.toString()
+        presenter.signUp(getString(R.string.baseurl), emailUser, certificate)
+    }
+
+    override fun signUp(certificate: Certificate) {
+        presenter.getToken(getString(R.string.baseurl), emailUser.email, emailUser.password!!, emailUser.user_type, certificate)
+    }
+
+    override fun getToken(token:Token) {
+        val pref = getSharedPreferences("pref", Context.MODE_PRIVATE)
+        val ed = pref.edit()
+        ed.putString("access", token.access)
+        ed.putString("refresh", token.refresh)
+        ed.apply()
+
+        showMainUi()
+    }
+
+    override fun addClickListener() { btn_confirm_nickname_a.setOnClickListener(this) }
 
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -142,25 +154,17 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
             // 가입하기
             R.id.btn_confirm_nickname_a -> {
                 if (enable) {
+                    btn_confirm_nickname_a.setOnClickListener(null)
                     if(login == EMAIL) {
-//                        emailUser.nickname = edit_nickname_a.text.toString()
-//                        presenter.signUp(getString(R.string.baseurl), emailUser)
                         presenter.getPublicKey(getString(R.string.baseurl), "/spott/publickey")
-
                     } else if (login == SOCIAL) {
                         socialUser.nickname = edit_nickname_a.text.toString()
-//                        presenter.signUp(getString(R.string.baseurl), "socialurl", socialUser)
-                        Toast.makeText(this@NicknameActivity, "소셜 회원 가입", Toast.LENGTH_SHORT).show()
+                            presenter.signUp(getString(R.string.baseurl), "/spott/social-account", socialUser)
                     }
                 } else {
                     Toast.makeText(this@NicknameActivity, getString(R.string.error_invalid_nickname), Toast.LENGTH_SHORT).show()
                 }
             }
         }
-    }
-
-    override fun getPublicKey(certificate: Certificate) {
-        emailUser.nickname = edit_nickname_a.text.toString()
-        presenter.signUp(getString(R.string.baseurl), emailUser, certificate)
     }
 }

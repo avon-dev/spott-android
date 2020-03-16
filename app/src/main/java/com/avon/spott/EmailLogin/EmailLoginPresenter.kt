@@ -32,7 +32,7 @@ class EmailLoginPresenter(val emailLoginView: EmailLoginContract.View) :
         val cipherpw  = RSAEncrypt(certificate, password)
         val encryptpw = cipherpw.contentToString()
 
-        Retrofit(baseurl).signIn("/spott/token", email, encryptpw).subscribe({ response ->
+        Retrofit(baseurl).signIn("/spott/token", email, encryptpw, 9000).subscribe({ response ->
             logd(TAG, "response code: ${response.code()}, response body : ${response.body()}")
             val jsonObj = response.body()
             if(jsonObj != null) {
