@@ -17,7 +17,7 @@ class PhotoContract {
                            backPhotoUrl:String?, photoLat:Double, photoLng:Double,
                            caption:String, comments:Int, dateTime:String, likeCount:Int,
                            likeChecked:Boolean, scrapChecked:Boolean, myself:Boolean, userId:Int
-                            ,hasHash:Boolean)
+                            ,hasHash:Boolean, postKind:Int)
         fun likeResultDone(count:Int)
         fun likeResultError()
         fun scrapResultDone()

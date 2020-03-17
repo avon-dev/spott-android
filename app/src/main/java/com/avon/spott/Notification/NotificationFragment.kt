@@ -104,7 +104,7 @@ class NotificationFragment : Fragment(), NotificationContract.View, View.OnClick
         super.onStart()
 
         // 툴바 뒤로가기, 타이틀 보이게
-        controlToolbar(View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE)
+        controlToolbar(View.VISIBLE, View.GONE, View.GONE, View.VISIBLE,View.GONE, View.GONE, View.GONE, View.GONE, View.GONE)
         MainActivity.mToolbar.text_title_toolbar.text = getString(R.string.notification)
         MainActivity.mToolbar.visibility = View.VISIBLE
 

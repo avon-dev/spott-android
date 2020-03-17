@@ -8,7 +8,7 @@
         android:width="66.5dip"
         android:height="85.5dip"
         android:gravity="center"
-        android:drawable="@drawable/ic_symbil_white" >
+        android:drawable="@drawable/ic_symbol_white" >
     </item>
 
 

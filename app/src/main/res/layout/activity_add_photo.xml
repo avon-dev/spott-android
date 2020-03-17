@@ -114,6 +114,18 @@
         app:layout_constraintTop_toTopOf="@+id/frag_googlemap_addphoto_a"
         app:srcCompat="@drawable/ic_search_24px" />
 
+    <ImageButton
+        android:id="@+id/imgbtn_mylocation_addphoto_a"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="69dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp"
+        android:background="@drawable/btn_map_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/frag_googlemap_addphoto_a"
+        app:srcCompat="@drawable/ic_my_location_black_24dp" />
+
     <!--    <TextView-->
 <!--        android:id="@+id/text_public_addphoto_a"-->
 <!--        android:layout_width="wrap_content"-->
@@ -184,6 +196,18 @@
             android:layout_gravity="center"
             android:layout_weight="1" />
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_addphoto_a"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/frag_googlemap_addphoto_a"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/frag_googlemap_addphoto_a"
+        app:layout_constraintTop_toTopOf="@+id/frag_googlemap_addphoto_a"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

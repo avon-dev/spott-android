@@ -533,7 +533,13 @@ class CameraXFragment : Fragment() {
                             .into(overlayImage)
 //                    }
                 }
+
+                //한번이라도 윤곽선 버튼을 누르면 윤곽선 가이드 말풍선 사라지게함
+                const_guide_camerax_f.visibility = View.GONE
+                App.prefs.camera_guide = true
             }
+
+
 
 //            if(currentPhoto == BACK_IMAGE) {
 //                currentPhoto = POST_IMAGE
@@ -852,6 +858,12 @@ class CameraXFragment : Fragment() {
             img_changeimage_camerax_f.visibility = View.VISIBLE
             img_changeimagefront_camerax_f.visibility = View.VISIBLE
             img_changeimageback_camerax_f.visibility = View.GONE
+
+            //처음 윤곽선 버튼이 나오면
+            if(!App.prefs.camera_guide){
+                //말풍선 가이드 보여줌
+                const_guide_camerax_f.visibility = View.VISIBLE
+            }
         } else
             img_changeimage_camerax_f.visibility = View.GONE
 
@@ -864,6 +876,11 @@ class CameraXFragment : Fragment() {
         opacitySeekbar.visibility = View.GONE
         closeImage.visibility = View.GONE
         img_changeimage_camerax_f.visibility = View.GONE
+
+        if(!App.prefs.camera_guide){
+            //말풍선 가이드 없앰
+            const_guide_camerax_f.visibility = View.GONE
+        }
 //        rightRotation.visibility = View.GONE
     }
 

@@ -1,6 +1,7 @@
 package com.avon.spott.AddPhoto
 
 
+import android.Manifest
 import android.content.ComponentName
 import android.content.Context
 import android.content.Context.*
@@ -15,6 +16,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import android.text.*
 import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -25,6 +27,7 @@ import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import com.avon.spott.AnimSlide.Companion.animSlideAlpha
@@ -33,6 +36,7 @@ import com.avon.spott.R
 import com.avon.spott.Utils.logd
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
@@ -82,6 +86,12 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
 
     private var moveToPlace = false
 
+    //mylocation
+    private lateinit var mFusedLocationClient : FusedLocationProviderClient
+    private lateinit var locationRequest : LocationRequest
+    override var  mylocation :LatLng? = null
+    private var mylocationClick = false //내 위치 버튼 클릭했는지 여부
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_photo)
@@ -100,6 +110,8 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
 
     override fun onStart() {
         super.onStart()
+
+        locationInit()
 
         watcher =
             edit_search_addphoto_a.addTextChangedListener {
@@ -126,6 +138,56 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         super.onStop()
 
         edit_search_addphoto_a.removeTextChangedListener(watcher)
+
+        //현재 내 위치 받아오기 제거
+        mFusedLocationClient.removeLocationUpdates(locationCallback)
+        mylocation = null
+    }
+
+    private fun locationInit(){
+        locationRequest = LocationRequest()
+            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+            .setInterval(10000) // 자기 위치를 최신화하는 단위시간
+            .setFastestInterval(1000)
+
+        val builder : LocationSettingsRequest.Builder = LocationSettingsRequest.Builder()
+        builder.addLocationRequest(locationRequest)
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+    }
+
+    val locationCallback = object: LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult?) {
+            super.onLocationResult(locationResult)
+
+            locationResult?.let{
+                for((i, location) in it.locations.withIndex()){
+                    logd(TAG, "mylocation #$i ${location.latitude} , ${location.longitude}")
+                    mylocation = LatLng(location.latitude, location.longitude)
+                    if(mylocationClick && mylocation!=null){
+                        mylocationClick = false
+                        showMylocation()
+                        animCamera(mylocation!!)
+                        showProgressbar(false)
+                    }
+
+                }
+            }
+
+        }
+    }
+
+    override fun showMylocation() {
+        mMap.isMyLocationEnabled = true
+        mMap.uiSettings.isMyLocationButtonEnabled = false
+    }
+
+    override fun showProgressbar(boolean: Boolean) {
+        progress_addphoto_a.visibility = if(boolean) View.VISIBLE else View.GONE
+    }
+
+    override fun startLocationUpdates(){
+        mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
     }
 
     external fun detectEdgeJNI(inputImage: Long, outputImage: Long, th1: Int, th2: Int, th3:Int)
@@ -148,6 +210,7 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         text_upload_addphoto_a.setOnClickListener(this)
         include_toolbar_addphoto_a.img_back_toolbar.setOnClickListener(this)
 //        imgbtn_search_addphoto_a.setOnClickListener(this)
+        imgbtn_mylocation_addphoto_a.setOnClickListener(this)
 
         checkQuality(intent.getStringExtra("cropPhoto"))
         
@@ -253,6 +316,10 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
             }
             R.id.img_back_toolbar ->{ presenter.navigateUp() }
 //            R.id.imgbtn_search_addphoto_a ->{presenter.openFindPlace()}
+            R.id.imgbtn_mylocation_addphoto_a ->{
+                mylocationClick = true
+                presenter.getMylocation()
+            }
         }
     }
 
@@ -414,7 +481,7 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         val size = (file.length()/1024).toString() //사이즈 크기 kB
 
         if(mOriginalImage!!.width<200 || mOriginalImage!!.height<200 || size.toInt()<500){
-            showToast(getString(R.string.toast_low_quality))
+            Toast.makeText(this, R.string.toast_low_quality, Toast.LENGTH_LONG).show()
         }else lowQuality = false
 
         logd(TAG, "size : $size")
@@ -462,9 +529,33 @@ class AddPhotoActivity : AppCompatActivity(), AddPhotoContract.View, View.OnClic
         }else{
             showToast(getString(R.string.text_no_place))
         }
+    }
 
+    override fun animCamera(latLng: LatLng){
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng), 400, null)
+        addMarker(latLng)
+    }
 
+    override fun checkPermission(): Boolean {
+        val resultFine = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        val resultCoarse = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+        if( resultFine == PackageManager.PERMISSION_DENIED ||
+            resultCoarse == PackageManager.PERMISSION_DENIED ) return false
+        return true
+    }
 
+    override fun showPermissionDialog() {
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 1000)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
+                                            grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(requestCode==1000){
+            if(grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                presenter.getMylocation()
+            }
+        }
     }
 
 }

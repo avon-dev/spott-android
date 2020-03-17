@@ -21,4 +21,9 @@ class PhotoEnlargementActivity  : AppCompatActivity() {
 
         imgbtn_close_photodetail_a.setOnClickListener { onBackPressed() }
     }
+
+    override fun onPause() {
+        super.onPause()
+        overridePendingTransition(0,0)
+    }
 }

@@ -58,6 +58,10 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         override fun itemClick(id: Int) {
             presenter.openPhoto(id)
         }
+
+        override fun recommendClick() {
+            presenter.openRecommend()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -155,6 +159,10 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         findNavController().navigate(R.id.action_homeFragment_to_search)
     }
 
+    override fun showRecommendUi() {
+        findNavController().navigate(R.id.action_homeFragment_to_recommnedFragment)
+    }
+
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.img_search_home_f ->{presenter.openSearch()}
@@ -165,6 +173,7 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
     //리사이클러뷰 아이템 클릭을 위한 인터페이스
     interface homeInter{
         fun itemClick(id: Int)
+        fun recommendClick()
     }
 
     override fun addItems(){
@@ -194,9 +203,16 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         val ITEM = 0
         val LOADING = 1
         val ADS = 2
+        val RECOMMEND = 3
         private var isLoadingAdded = false
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+            /**  */
+           if(viewType==RECOMMEND){
+                val view = LayoutInflater.from(context).inflate(R.layout.item_recommend, parent, false)
+                return RecommendViewHolder(view)
+            } else
+           /**  */
             if(viewType == ADS){
                 val view = LayoutInflater.from(context).inflate(R.layout.item_ads, parent, false)
                 return AdViewHolder(view)
@@ -239,6 +255,11 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
 
         override fun getItemViewType(position: Int): Int {
+            /**  */
+            if(position ==0){
+                return RECOMMEND
+            }else
+            /**  */
             if(mRecylerViewItems[position] is UnifiedNativeAd){
                 return ADS
             }else if(
@@ -255,14 +276,7 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
                 logd(TAG, "getItemViewType(position)==ADS!!!!!!!! : $position")
                 val adViewholder :AdViewHolder = holder as AdViewHolder
 
-
-
-
                 populateUnifiedNativeAdView(mRecylerViewItems[position] as UnifiedNativeAd, adViewholder.adView)
-
-
-
-
 
             }else if(getItemViewType(position)==ITEM) {
                val itemViewholder :ItemViewHolder = holder as ItemViewHolder
@@ -281,6 +295,15 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
             }else{
                 val layoutParams = holder.itemView.layoutParams as StaggeredGridLayoutManager.LayoutParams
                 layoutParams.isFullSpan = true
+
+                if(getItemViewType(position)==RECOMMEND){
+                    val recommendViewholder :RecommendViewHolder = holder as RecommendViewHolder
+
+                    recommendViewholder.itemView.setOnClickListener {
+                        homeInterListner.recommendClick()
+                    }
+                }
+
             }
         }
 
@@ -295,11 +318,19 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
             val adView = itemView.findViewById(R.id.adview_ads_i) as UnifiedNativeAdView
         }
 
+        inner class RecommendViewHolder(itemView:View):RecyclerView.ViewHolder(itemView){
+        }
+
     }
 
     override fun loadNativeAds(homeItemItems: ArrayList<HomeItem>, pagable:Boolean){
 
+
         if(start == 0 || !pagable){
+            if(start==0){
+                homeAdapter.mRecylerViewItems.add(0, HomeItem("",0))
+            }
+
             if(start!=0 && hasNext){
                 removePageLoading()
             }
@@ -311,14 +342,6 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
 
             return
         }
-
-//        val optionBuilder = NativeAdOptions.Builder()
-//        optionBuilder.setReturnUrlsForImageAssets(true)
-//
-//        val adOptions = optionBuilder.build()
-
-
-
 
         val builder = AdLoader.Builder(context!!, getString(R.string.banner_ad_unit_id_for_test))
 

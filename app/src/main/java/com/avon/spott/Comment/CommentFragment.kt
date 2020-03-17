@@ -187,7 +187,7 @@ class CommentFragment : Fragment(), CommentContract.View, View.OnClickListener {
         super.onStart()
 
         // 툴바 뒤로가기, 타이틀 보이게
-        controlToolbar(View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE)
+        controlToolbar(View.VISIBLE, View.GONE, View.GONE, View.VISIBLE,View.GONE, View.GONE, View.GONE, View.GONE, View.GONE)
         MainActivity.mToolbar.text_title_toolbar.text = getString(R.string.comment)
         MainActivity.mToolbar.visibility = View.VISIBLE
     }

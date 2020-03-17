@@ -28,6 +28,14 @@ interface AddPhotoContract {
         fun showErrorToast()
         fun showNoLoactionInfoToast()
         fun showNoCaptionToast()
+        fun startLocationUpdates()
+        fun showMylocation()
+        fun showProgressbar(boolean: Boolean)
+        fun animCamera(latLng: LatLng)
+        fun checkPermission(): Boolean
+        fun showPermissionDialog()
+
+        var   mylocation : LatLng?
     }
 
     interface Presenter{
@@ -37,6 +45,7 @@ interface AddPhotoContract {
         fun newMarker(latLng: LatLng)
         fun checkEdit(editable: Editable?)
         fun openFindPlace()
+        fun getMylocation()
     }
 
 }
