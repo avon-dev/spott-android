@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.avon.spott.Data.Token
@@ -91,8 +90,9 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
                     return
                 }
 
-                window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+//                window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
+                btn_login_emaillogin_a.setOnClickListener(null)
                 presenter.getPublicKey(getString(R.string.baseurl),"/spott/publickey")
             }
         }
@@ -108,14 +108,19 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
             else -> { msg = getString(R.string.error_retry) }
         }
         Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
-        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        btn_login_emaillogin_a.setOnClickListener(this)
+
     }
     override fun getPublicKey(certificate: Certificate) {
+//        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
         presenter.signIn(
             getString(R.string.baseurl),
             edit_username_emaillogin_a.text.toString(),
             edit_password_emaillogin_a.text.toString(),
             certificate
         )
+        btn_login_emaillogin_a.setOnClickListener(this)
+
     }
 }
