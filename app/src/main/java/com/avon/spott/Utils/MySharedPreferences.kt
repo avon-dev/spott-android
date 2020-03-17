@@ -47,8 +47,9 @@ class MySharedPreferences(context: Context) {
     var token: String
         get() = prefs.getString(PREF_ACCESS_TOKEN, "")
         set(value) =  prefs.edit().putString(PREF_ACCESS_TOKEN, value).apply()
-    val refresh: String
+    var refresh: String
         get() = prefs.getString(PREF_REFRESH_TOKEN, "")
+        set(value) = prefs.edit().putString(PREF_REFRESH_TOKEN, value).apply()
 
     fun deleteToken() {
         val edit = prefs.edit()

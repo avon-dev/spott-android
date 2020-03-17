@@ -93,11 +93,8 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
             presenter.isNickname(edit_nickname_editmyinfo_a.text.toString())
         }
     }
-
     override fun getUserInfo(userInfo: UserInfo) {
         buffNickname = userInfo.nickname.toString()
-
-        btn_email_editmyinfo_a.setText(userInfo.email)
 
         edit_nickname_editmyinfo_a.setText(userInfo.nickname)
         if(userInfo.profile_image != null) { // 프로필 이미지 있으면 이미지 세팅하기
@@ -107,7 +104,15 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
                 .error(android.R.drawable.stat_notify_error)
                 .into(img_profile_editmyinfo_a)
         }
+
+        if(userInfo.user_type == 9000) {
+            btn_email_editmyinfo_a.setText(userInfo.email)
+        } else {
+            btn_email_editmyinfo_a.visibility = View.GONE
+            btn_changepw_editmyinfo_a.visibility = View.GONE
+        }
     }
+
 
     override fun navigateUp() {
         onBackPressed()

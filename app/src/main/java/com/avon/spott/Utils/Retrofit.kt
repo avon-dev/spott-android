@@ -31,6 +31,20 @@ class Retrofit(baseUrl:String) {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    fun signIn(url:String, email:String, password:String, usertype:Int): Observable<Response<JsonObject>> {
+        return retrofitService.signIn(url, email, password, usertype)
+            .subscribeOn(Schedulers.io())
+            .map { t -> if (t.isSuccessful) t else throw HttpException(t) }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun signIn(url:String, email:String, usertype:Int): Observable<Response<JsonObject>> {
+        return retrofitService.signIn(url, email, usertype)
+            .subscribeOn(Schedulers.io())
+            .map { t -> if (t.isSuccessful) t else throw HttpException(t) }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
     fun get(token:String, url:String): Observable<Response<String>> {
         return retrofitService.get("jwt "+token, url)
             .subscribeOn(Schedulers.io())
@@ -98,6 +112,13 @@ class Retrofit(baseUrl:String) {
 
     fun postNonHeader(url: String, key: String, iv:String, pw:String): Observable<Response<String>> {
         return retrofitService.postNonHeader(url, key, iv)
+            .subscribeOn(Schedulers.io())
+            .map { t -> if (t.isSuccessful) t else throw HttpException(t) }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun getNonHeader(url: String, email: String, usertype:Int): Observable<Response<String>> {
+        return retrofitService.getNonToken(url, email, usertype)
             .subscribeOn(Schedulers.io())
             .map { t -> if (t.isSuccessful) t else throw HttpException(t) }
             .observeOn(AndroidSchedulers.mainThread())

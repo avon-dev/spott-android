@@ -3,11 +3,12 @@ package com.avon.spott.Data
 import android.os.Parcel
 import android.os.Parcelable
 
-data class User(val email: String, var password: String? = null, var nickname: String? = null) : Parcelable {
+data class User(val email: String, var password: String? = null, var nickname: String? = null, var user_type:Int = 9000) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readString(),
-        parcel.readString()
+        parcel.readString(),
+        parcel.readInt()
     ) {
     }
 
@@ -15,6 +16,7 @@ data class User(val email: String, var password: String? = null, var nickname: S
         parcel.writeString(email)
         parcel.writeString(password)
         parcel.writeString(nickname)
+        parcel.writeInt(user_type)
     }
 
     override fun describeContents(): Int {

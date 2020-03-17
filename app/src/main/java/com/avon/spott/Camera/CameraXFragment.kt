@@ -1,16 +1,19 @@
 package com.avon.spott.Camera
 
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.database.Cursor
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.hardware.display.DisplayManager
+import android.location.Location
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
@@ -35,6 +38,7 @@ import androidx.camera.core.ImageCapture.OnImageSavedCallback
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
@@ -49,6 +53,9 @@ import com.avon.spott.R
 import com.avon.spott.Utils.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.Task
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.fragment_camera_x.*
 import retrofit2.HttpException
@@ -99,7 +106,7 @@ class CameraXFragment : Fragment() {
         override fun onDisplayChanged(displayId: Int) = view?.let { view ->
             if (displayId == this@CameraXFragment.displayId) {
                 logd(TAG, "Rotation changed: ${view.display.rotation}")
-                imageCapture?.setTargetRotation(view.display.rotation)
+//                imageCapture?.setTargetRotation(view.display.rotation)
 //                imageAnalyzer?.setTargetRotation(view.display.rotation)
             }
         } ?: Unit
@@ -194,10 +201,63 @@ class CameraXFragment : Fragment() {
     private lateinit var onBackPressedCallback:OnBackPressedCallback
 
 
+    var lastLocationTask: Task<Location>? = null
+    var lastLocation:Location? = null
+
+    var tbool = true
+
+    private fun getLastLocation(fusedLocationProviderClient: FusedLocationProviderClient) {
+
+        logd(TAG, "getLastLocation()")
+
+        val lastLocatTask = fusedLocationProviderClient.lastLocation
+        lastLocatTask?.addOnSuccessListener{
+            logd(TAG, "getLastLocation(success) : $it")
+            this.lastLocation = it
+            if(tbool) {
+                tbool = false
+                getLastLocation(mFusedLocationProviderClient!!)
+            }
+        }
+        lastLocatTask?.addOnFailureListener {
+            logd(TAG, "getLastLocation(fail) : ${it.message}")
+            if(tbool) {
+                tbool = false
+                getLastLocation(mFusedLocationProviderClient!!)
+            }
+        }
+    }
+
+    var mFusedLocationProviderClient: FusedLocationProviderClient?= null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainExecutor =
             ContextCompat.getMainExecutor(requireContext()) // requireContext() : fragment 수명주기와 관련하여 사용해야 함.
+
+        if(checkLocationPermission()) {
+            logd(TAG, "checkLocationPermission()")
+            mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
+            mFusedLocationProviderClient?.let { getLastLocation(it) }
+
+//            var mFusedLocationProviderClient: FusedLocationProviderClient =
+//                LocationServices.getFusedLocationProviderClient(requireContext())
+//            lastLocationTask = mFusedLocationProviderClient.lastLocation
+//            lastLocationTask?.addOnSuccessListener {
+//                lastLocation = it
+//                logd(TAG, "addOnSuccessListener: $it")
+//                logd(TAG, "addOnSuccessListener(lastLocation): $lastLocation")
+//                if(lastLocation == null) {
+//
+//                }
+            }
+//            lastLocationTask?.addOnFailureListener {
+//                logd(TAG, "addOnFailureListener ")
+//                lastLocationTask = mFusedLocationProviderClient.lastLocation
+//            }
+//        }
+//
+//
 //        analysisExecutor = Executors.newSingleThreadExecutor()
 
 //        broadcastManager = LocalBroadcastManager.getInstance(view.context)
@@ -572,6 +632,32 @@ class CameraXFragment : Fragment() {
 
                     // 전면 카메라 사용시 이미지 미러
                     isReversedHorizontal = lensFacing == CameraSelector.LENS_FACING_FRONT
+
+                    if(lastLocation != null) {
+                        location = lastLocation
+                        logd(TAG, "metadata location : $location")
+                    }
+
+//                    if(checkLocationPermission()) {
+//                        var mFusedLocationProviderClient:FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
+//                        val lastLocation = mFusedLocationProviderClient.lastLocation.result
+//
+//                        if (lastLocation != null) {
+//                            location = lastLocation
+//                            logd(TAG, "location: $lastLocation")
+//                        }
+
+//                        val locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+//                        val locationProvider = LocationManager.GPS_PROVIDER
+//                        val currentLocation = locationManager.getLastKnownLocation(locationProvider)
+//                        if(currentLocation != null) {
+//                            val lng = currentLocation.longitude
+//                            val lat = currentLocation.latitude
+//                            location = currentLocation
+//                            logd(TAG, "location : $lng, $lat")
+//                        }
+//                    }
+
                 }
 
                 // 사진 찍은 후 동작하는 이미지 캡쳐 리스너 설정
@@ -820,6 +906,14 @@ class CameraXFragment : Fragment() {
 //            showScrapData()
 //        }
         )
+    }
+
+    fun checkLocationPermission(): Boolean {
+        val resultFine = ActivityCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION)
+        val resultCoarse = ActivityCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_COARSE_LOCATION)
+        if( resultFine == PackageManager.PERMISSION_DENIED ||
+            resultCoarse == PackageManager.PERMISSION_DENIED ) return false
+        return true
     }
 
     companion object {
