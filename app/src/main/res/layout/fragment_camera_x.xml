@@ -149,6 +149,43 @@
     <!--        app:srcCompat="@drawable/ic_close_black_24dp"-->
     <!--        tools:visibility="visible" />-->
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/const_guide_camerax_f"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintStart_toEndOf="@+id/img_changeimage_camerax_f"
+        app:layout_constraintTop_toTopOf="@+id/preview_viewfinder_camerax_f">
+
+        <ImageView
+            android:id="@+id/imageView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:src="@drawable/ic_signal_wifi_4_bar_primary_24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/corner_round_primary"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="5dp"
+            android:text="@string/text_guide_camerax_a"
+            android:textColor="@color/text_white"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <FrameLayout
         android:id="@+id/img_changeimage_camerax_f"
         android:layout_width="40dp"

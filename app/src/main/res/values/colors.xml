@@ -7,7 +7,7 @@
 
 <!--    <color name="colorPrimaryDark">#0B3E8B</color>-->
     <color name="colorPrimaryDark">#12499C</color>
-    <color name="colorAccent">#DE9800</color>
+    <color name="colorAccent">#FFB947</color>
 
     <!-- 화면 배경색 -->
     <color name="default_background">#FAFAFA</color>
@@ -25,7 +25,9 @@
     <color name="trans_grey">#80727272</color>
     <color name="trans_white">#B3FFFFFF</color>
 
-    <color name="markerSelected">#5690E8</color>
+    <color name="markerRecommend">#5690E8</color>
+
+    <color name="markerSelected">#FFB947</color>
 
     <color name="shadowBlack">#1F000000</color>
 

@@ -171,5 +171,19 @@ class AddPhotoPresenter(val addPhotoView:AddPhotoContract.View):AddPhotoContract
         addPhotoView.showFindPlaceUi()
     }
 
+    override fun getMylocation() {
+        if(!addPhotoView.checkPermission()){
+            addPhotoView.showPermissionDialog()
+            return
+        }
+        if(addPhotoView.mylocation !=null){
+            addPhotoView.showMylocation()
+            addPhotoView.animCamera(addPhotoView.mylocation!!)
+        }else{
+            addPhotoView.showProgressbar(true)
+            addPhotoView.startLocationUpdates()
+        }
+    }
+
 
 }

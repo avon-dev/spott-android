@@ -79,11 +79,13 @@
         </activity>
         <activity
             android:name=".PhotoEnlargementActivity"
+            android:launchMode = "singleTop"
             android:theme="@style/Transparent"
             android:screenOrientation="portrait"/>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
+            android:hardwareAccelerated="false"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
         android:name=".AddPhoto.AddPhotoActivity"

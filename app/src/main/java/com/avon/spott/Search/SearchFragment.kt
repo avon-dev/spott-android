@@ -126,7 +126,7 @@ class SearchFragment: Fragment(), SearchContract.View, View.OnClickListener {
         super.onStart()
 
         //툴바 처리 (뒤로가기 + 검색edit)
-        controlToolbar(View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE, View.VISIBLE)
+        controlToolbar(View.VISIBLE, View.GONE, View.GONE, View.GONE,View.GONE, View.GONE, View.GONE, View.GONE, View.VISIBLE)
         MainActivity.mToolbar.visibility = View.VISIBLE
 
         watcher =

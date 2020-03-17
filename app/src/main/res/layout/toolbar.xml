@@ -75,6 +75,15 @@
             tools:text="title"
             tools:visibility="visible" />
 
+        <ImageView
+            android:id="@+id/img_title_toolbar"
+            android:layout_width="100dp"
+            android:layout_height="23dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/seoul"
+            android:visibility="gone"
+            />
+
 
         <ImageView
             android:id="@+id/img_more_toolbar"
@@ -136,17 +145,6 @@
 
         </FrameLayout>
 
-<!--        <ImageView-->
-<!--            android:id="@+id/img_noti_toolbar"-->
-<!--            android:layout_width="26dp"-->
-<!--            android:layout_height="?attr/actionBarSize"-->
-<!--            android:layout_gravity="right"-->
-<!--            android:layout_marginRight="10dp"-->
-<!--            android:visibility="gone"-->
-<!--            app:srcCompat="@drawable/ic_notifications_black_24dp"-->
-<!--            tools:ignore="VectorDrawableCompat"-->
-<!--            tools:layout_editor_absoluteX="341dp"-->
-<!--            tools:visibility="visible" />-->
 
         <EditText
             android:id="@+id/edit_search_toolbar"

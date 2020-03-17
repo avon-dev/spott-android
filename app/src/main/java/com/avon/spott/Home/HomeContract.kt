@@ -12,6 +12,7 @@ interface HomeContract {
         fun removePageLoading()
         fun clearAdapter()
         fun showSearchUi()
+        fun showRecommendUi()
         fun loadNativeAds(homeItemItems: ArrayList<HomeItem>, pagable:Boolean)
 
         var hasNext : Boolean
@@ -21,6 +22,7 @@ interface HomeContract {
     interface Presenter{
         fun openPhoto(id:Int)
         fun openSearch()
+        fun openRecommend()
         fun getPhotos(baseUrl:String, start:Int, action:Int)
 //        fun getToken(baseUrl: String, start:Int, action:Int)
     }

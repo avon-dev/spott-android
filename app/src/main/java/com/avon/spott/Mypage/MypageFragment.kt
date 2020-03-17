@@ -225,11 +225,11 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
 
         if(!checkInit){
             // 뒤로가기만 보이게
-            controlToolbar(View.GONE, View.GONE, View.GONE, View.GONE, View.GONE, View.VISIBLE, View.VISIBLE, View.GONE)
+            controlToolbar(View.GONE, View.GONE, View.GONE, View.GONE,View.GONE, View.GONE, View.VISIBLE, View.VISIBLE, View.GONE)
             mToolbar.visibility = View.VISIBLE
         }else{
             // 툴바 유저이미지, 유저닉네임, 알람, 메뉴 보이게
-            controlToolbar(View.GONE, View.VISIBLE, View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.VISIBLE, View.GONE)
+            controlToolbar(View.GONE, View.VISIBLE, View.VISIBLE, View.GONE,View.GONE, View.GONE, View.VISIBLE, View.VISIBLE, View.GONE)
             mToolbar.visibility = View.VISIBLE
         }
 
@@ -306,7 +306,8 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
                                             bitmap,
                                             selectedCluster!!.size,
                                             false,
-                                            context!!
+                                            context!!,
+                                            firstItem.post_kind
                                         )
                                     )
                                 )
@@ -361,7 +362,8 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
                                     bitmap,
                                     cluster.size,
                                     true,
-                                    context!!
+                                    context!!,
+                                    firstItem.post_kind
                                 )
                             )
                         )
@@ -431,7 +433,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
 
         if(!checkInit){
             // 툴바 유저이미지, 유저닉네임, 알람, 메뉴 보이게
-            controlToolbar(View.GONE, View.VISIBLE, View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.VISIBLE, View.GONE)
+            controlToolbar(View.GONE, View.VISIBLE, View.VISIBLE, View.GONE,View.GONE, View.GONE, View.VISIBLE, View.VISIBLE, View.GONE)
             mToolbar.visibility = View.VISIBLE
         }
 

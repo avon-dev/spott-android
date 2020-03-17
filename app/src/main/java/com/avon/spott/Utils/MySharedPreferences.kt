@@ -9,6 +9,7 @@ class MySharedPreferences(context: Context) {
     val PREF_KEY_POSITION_LAT = "mylastlat"
     val PREF_KEY_POSITION_LNG = "mylastlng"
     val PREF_KEY_POSITION_ZOOM = "mylastzoom"
+    val  PREF_KEY_CAMERA_GUIDE = "camera_guide"
     private val PREF_ACCESS_TOKEN = "access"
     private val PREF_REFRESH_TOKEN = "refresh"
 
@@ -33,6 +34,10 @@ class MySharedPreferences(context: Context) {
     var mylastzoom: Float //마지막 확대값, 줌값
         get() = prefs.getFloat(PREF_KEY_POSITION_ZOOM, 0.0f)
         set(value) = prefs.edit().putFloat(PREF_KEY_POSITION_ZOOM, value).apply()
+
+    var camera_guide:Boolean // 카메라 윤곽선 버튼 가이드 보여준 적이 있는지
+        get() = prefs.getBoolean(PREF_KEY_CAMERA_GUIDE, false)
+        set(value) = prefs.edit().putBoolean(PREF_KEY_CAMERA_GUIDE, value).apply()
 
     /**  토큰 테스트용!!!!! 임시 토큰 2020-02-04   */
 //    var temporary_token:String //임시 토큰

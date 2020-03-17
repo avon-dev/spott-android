@@ -74,6 +74,8 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
     private var dialog : AlertDialog? = null
 
+    private var postKind = 200
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_photo, container, false)
@@ -84,6 +86,9 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         init()
+
+        controlToolbar(View.VISIBLE, View.GONE, View.GONE, View.GONE,View.GONE, View.GONE, View.GONE, View.GONE, View.GONE)
+        MainActivity.mToolbar.visibility = View.VISIBLE
 
 
         //넘어오는 photoId값
@@ -99,10 +104,6 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
     override fun onStart() {
         super.onStart()
-
-        //툴바 처리 (뒤로가기 + 더보기)
-        controlToolbar(View.VISIBLE, View.GONE, View.GONE, View.GONE, View.VISIBLE, View.GONE, View.GONE, View.GONE)
-        MainActivity.mToolbar.visibility = View.VISIBLE
 
         checkbox_scrap_photo_f.setOnCheckedChangeListener { _, _ ->
             if(!scrapProgressing){
@@ -194,6 +195,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
     override fun showPhotoEnlagementUi(photoUrl: String) {
         val nextIntent = Intent(context!!, PhotoEnlargementActivity::class.java)
         nextIntent.putExtra("photoUrl", photoUrl)
+        nextIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
         startActivity(nextIntent)
     }
 
@@ -374,7 +376,20 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
                                 backPhotoUrl:String?, photoLat:Double, photoLng:Double,
                                 caption:String, comments:Int, dateTime:String, likeCount:Int,
                                 likeChecked:Boolean, scrapChecked:Boolean, myself:Boolean,
-                                userId:Int,hasHash:Boolean){
+                                userId:Int,hasHash:Boolean, postKind:Int){
+
+        this.postKind = postKind
+
+
+        if(postKind==200){ //일반 게시물일 때 툴바 처리 (뒤로가기 + 더보기)
+            controlToolbar(View.VISIBLE, View.GONE, View.GONE,View.GONE, View.GONE, View.VISIBLE, View.GONE, View.GONE, View.GONE)
+            MainActivity.mToolbar.visibility = View.VISIBLE
+        }else if(postKind==201){ // 포포 추천 게시물일 때 툴바 처리(뒤로가기)
+            controlToolbar(View.VISIBLE, View.GONE, View.GONE,View.GONE, View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE)
+            MainActivity.mToolbar.visibility = View.VISIBLE
+        }
+
+
         showdetail = true
 
         this.myself = myself

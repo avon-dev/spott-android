@@ -345,7 +345,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
 
         fun addLoadingItem(){
             isLoadingAdded = true
-            add(MapCluster(0.0,0.0, "",0,0))
+            add(MapCluster(0.0,0.0, "",0,0,0))
         }
 
         fun removeLoadingItem(){
@@ -450,7 +450,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
                         try {
                             selectedMarker!!.setIcon(BitmapDescriptorFactory.fromBitmap(
                                 // 전에 선택했던 클러스터 아이템의 이미지를 넣은 클러스터 마커의 비트맵(테두리 하얀색 마커)을 만든다.
-                                getMarkerBitmapFromView(selectedMarkerView!!, bitmap, selectedCluster!!.size,false, context!!)))
+                                getMarkerBitmapFromView(selectedMarkerView!!, bitmap, selectedCluster!!.size,false, context!!, firstItem.post_kind)))
                             newCluster(cluster) // 새로 선택된 클러스터의 이미지를 넣은 클러스터 마커의 비트맵(테두리 파란색 마커)을 만든다.
                         }catch (e:Exception){
                              e.printStackTrace()
@@ -491,7 +491,7 @@ class MapFragment : Fragment() , MapContract.View, View.OnClickListener, OnMapRe
                     try {
                         selectedMarker!!.setIcon(
                             BitmapDescriptorFactory.fromBitmap(
-                                getMarkerBitmapFromView(selectedMarkerView!!, bitmap, cluster.size, true, context!!)))
+                                getMarkerBitmapFromView(selectedMarkerView!!, bitmap, cluster.size, true, context!!, firstItem.post_kind)))
                     }catch (e:Exception){
                         e.printStackTrace()
                     }

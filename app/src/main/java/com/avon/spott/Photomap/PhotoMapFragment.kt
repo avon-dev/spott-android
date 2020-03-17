@@ -76,7 +76,7 @@ class PhotoMapFragment: Fragment(), PhotoMapContract.View, View.OnClickListener,
         locationInit()
 
         //툴바 뒤로가기, 타이틀 보이게
-        controlToolbar(View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE)
+        controlToolbar(View.VISIBLE, View.GONE, View.GONE, View.VISIBLE,View.GONE, View.GONE, View.GONE, View.GONE, View.GONE)
         mToolbar.text_title_toolbar.text = getString(R.string.map)
         mToolbar.visibility = View.VISIBLE
     }
@@ -130,7 +130,7 @@ class PhotoMapFragment: Fragment(), PhotoMapContract.View, View.OnClickListener,
                     try{
                         val makerOptions = MarkerOptions()
                         makerOptions.position(photoLatLng).icon(BitmapDescriptorFactory.fromBitmap(
-                            getMarkerBitmapFromView(customMarkerView, bitmap, 1,false, context!!)))
+                            getMarkerBitmapFromView(customMarkerView, bitmap, 1,false, context!!, 200)))
 
                         mMap.addMarker(makerOptions)
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(photoLatLng, 16f))

@@ -126,7 +126,7 @@ class ReasonFragment :Fragment(), ReasonContract.View, View.OnClickListener{
     override fun onStart() {
         super.onStart()
         // 툴바 뒤로가기, 타이틀 보이게
-        controlToolbar(View.VISIBLE, View.GONE, View.GONE, View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE)
+        controlToolbar(View.VISIBLE, View.GONE, View.GONE, View.VISIBLE,View.GONE, View.GONE, View.GONE, View.GONE, View.GONE)
         MainActivity.mToolbar.text_title_toolbar.text = getString(R.string.reason)
         MainActivity.mToolbar.visibility = View.VISIBLE
     }

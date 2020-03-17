@@ -57,7 +57,7 @@ class PhotoRenderer(mcontext: Context, mMap:GoogleMap, clusterManager: ClusterMa
     override fun onClusterItemRendered(clusterItem: MapCluster?, marker: Marker?) {
         if(mapFrag){
             selectedMarker = null //선택된 클러스터 null로 만듦. -> 새로 클러스터링이 되면 선택했던 클러스터 없어지게함.
-            mBottomSheetBehavior?.state =  BottomSheetBehavior.STATE_COLLAPSED //리스트플래그먼트는 내려가게함.
+            mBottomSheetBehavior.state =  BottomSheetBehavior.STATE_COLLAPSED //리스트플래그먼트는 내려가게함.
         }else{
             if( selectedMarkerMypage != null) {
                 mapRecyclerView.isEnabled = false
@@ -75,7 +75,7 @@ class PhotoRenderer(mcontext: Context, mMap:GoogleMap, clusterManager: ClusterMa
                 override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?) {
                     try{
                         marker!!.setIcon(BitmapDescriptorFactory.fromBitmap(
-                        getMarkerBitmapFromView(customMarkerView, bitmap, 1,false, context)))
+                        getMarkerBitmapFromView(customMarkerView, bitmap, 1,false, context, clusterItem.post_kind)))
                     }catch (e:Exception){
                       e.printStackTrace()
                     }
@@ -98,7 +98,7 @@ class PhotoRenderer(mcontext: Context, mMap:GoogleMap, clusterManager: ClusterMa
     override fun onClusterRendered(cluster: Cluster<MapCluster>?, marker: Marker?) {
         if(mapFrag) {
             selectedMarker = null//선택된 클러스터 null로 만듦. -> 새로 클러스터링이 되면 선택했던 클러스터 없어지게함.
-            mBottomSheetBehavior?.state =
+            mBottomSheetBehavior.state =
                 BottomSheetBehavior.STATE_COLLAPSED //맵리스트플래그먼트(하단플래그먼트)는 내려가게함.
         }else{
             if( selectedMarkerMypage != null) {
@@ -117,8 +117,8 @@ class PhotoRenderer(mcontext: Context, mMap:GoogleMap, clusterManager: ClusterMa
 
         //클러스터 순서 테스트중....
         logd(TAG, "----------------------------------------------------")
-        logd(TAG, "size  : "+cluster!!.items.size.toString())
-        logd(TAG, "first : " +cluster!!.items.iterator().next())
+        logd(TAG, "size  : "+cluster.items.size.toString())
+        logd(TAG, "first : " +cluster.items.iterator().next())
         logd(TAG, "all   : " +cluster.items)
 
 
@@ -136,7 +136,8 @@ class PhotoRenderer(mcontext: Context, mMap:GoogleMap, clusterManager: ClusterMa
                                     bitmap,
                                     cluster.size,
                                     false,
-                                    context
+                                    context,
+                                    firstItem.post_kind
                                 )
                             )
                         )

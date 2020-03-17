@@ -17,6 +17,19 @@
         <action
             android:id="@+id/action_homeFragment_to_search"
             app:destination="@id/search" />
+        <action
+            android:id="@+id/action_homeFragment_to_recommnedFragment"
+            app:destination="@id/recommendFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/recommendFragment"
+        android:name="com.avon.spott.Recommend.RecommendFragment"
+        android:label="fragment_recommned"
+        tools:layout="@layout/fragment_user">
+        <action
+            android:id="@+id/action_recommendFragment_to_photo"
+            app:destination="@id/photo" />
     </fragment>
 
     <include app:graph="@navigation/photo" />

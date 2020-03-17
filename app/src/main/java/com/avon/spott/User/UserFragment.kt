@@ -128,12 +128,12 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
 
         if(!checkInit){
             // 뒤로가기만 보이게
-            controlToolbar(View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE)
+            controlToolbar(View.VISIBLE, View.GONE, View.GONE, View.GONE,View.GONE, View.GONE, View.GONE, View.GONE, View.GONE)
             MainActivity.mToolbar.visibility = View.VISIBLE
 
         }else{
             // 툴바 유저이미지, 유저닉네임 보이게
-            controlToolbar(View.VISIBLE, View.VISIBLE, View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE)
+            controlToolbar(View.VISIBLE, View.VISIBLE, View.VISIBLE, View.GONE,View.GONE, View.GONE, View.GONE, View.GONE, View.GONE)
             MainActivity.mToolbar.visibility = View.VISIBLE
         }
 
@@ -273,7 +273,7 @@ class UserFragment : Fragment(), UserContract.View, View.OnClickListener{
 
         if(!checkInit){
             // 툴바 유저이미지, 유저닉네임 보이게
-            controlToolbar(View.VISIBLE, View.VISIBLE, View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE)
+            controlToolbar(View.VISIBLE, View.VISIBLE, View.VISIBLE, View.GONE,View.GONE, View.GONE, View.GONE, View.GONE, View.GONE)
             MainActivity.mToolbar.visibility = View.VISIBLE
             checkInit = true
         }

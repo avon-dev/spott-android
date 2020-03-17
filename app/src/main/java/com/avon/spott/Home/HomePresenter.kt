@@ -17,6 +17,10 @@ class HomePresenter(val homeView:HomeContract.View) : HomeContract.Presenter {
 
     override fun openSearch(){homeView.showSearchUi()}
 
+    override fun openRecommend() {
+        homeView.showRecommendUi()
+    }
+
 
     override fun getPhotos(baseUrl:String, start:Int, action:Int){
 
