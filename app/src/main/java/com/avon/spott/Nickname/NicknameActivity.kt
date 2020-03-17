@@ -145,7 +145,6 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
 
     override fun onClick(v: View?) {
         when (v?.id) {
-
             // 뒤로가기
             R.id.img_back_toolbar -> {
                 presenter.navigateUp()

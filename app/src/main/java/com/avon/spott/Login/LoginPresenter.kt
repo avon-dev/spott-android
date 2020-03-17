@@ -3,10 +3,10 @@ package com.avon.spott.Login
 import android.annotation.SuppressLint
 import com.avon.spott.Data.CheckSignupResult
 import com.avon.spott.Data.SocialUser
-import com.avon.spott.Utils.Parser
-import com.avon.spott.Utils.Retrofit
-import com.avon.spott.Utils.logd
-import com.avon.spott.Utils.loge
+import com.avon.spott.Data.Token
+import com.avon.spott.Utils.*
+import com.google.gson.GsonBuilder
+import retrofit2.HttpException
 
 class LoginPresenter(val loginView:LoginContract.View) : LoginContract.Presenter {
 
@@ -48,9 +48,28 @@ class LoginPresenter(val loginView:LoginContract.View) : LoginContract.Presenter
     }
 
     // 토큰 발급 받기
-    override fun getToken() {
+    @SuppressLint("CheckResult")
+    override fun getToken(baseUrl: String, url: String, socialUser: SocialUser) {
+        logd(TAG, "${socialUser.email}, ${socialUser.user_type}")
 
-        // 토큰발급 받으면 메인으로 이동하기
-        loginView.showMainUi()
+        Retrofit(baseUrl).signIn("/spott/token", socialUser.email, socialUser.user_type!!).subscribe({ response ->
+            logd(TAG, "getToken() : response code: ${response.code()}, response body : ${response.body()}")
+
+            val jsonObj = response.body()
+            if (jsonObj != null) {
+                val token = GsonBuilder().create().fromJson(jsonObj, Token::class.java)
+                if(!token.access.equals("") && !token.refresh.equals("")) {
+                    loginView.showMainUi(token)
+                }
+            }
+        }, { throwable ->
+            loge(TAG, "getToken(): ${throwable.message}")
+            if (throwable is HttpException) {
+                loge(TAG, "http exception code: ${throwable.code()}, http exception message: ${throwable.message()}")
+                loginView.showMessage(throwable.code())
+            } else {
+                loginView.showMessage(App.ERROR_ERTRY)
+            }
+        })
     }
 }

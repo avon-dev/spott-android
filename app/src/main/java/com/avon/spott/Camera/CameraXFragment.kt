@@ -213,6 +213,7 @@ class CameraXFragment : Fragment() {
         val lastLocatTask = fusedLocationProviderClient.lastLocation
         lastLocatTask?.addOnSuccessListener{
             logd(TAG, "getLastLocation(success) : $it")
+            this.lastLocation = it
             if(tbool) {
                 tbool = false
                 getLastLocation(mFusedLocationProviderClient!!)

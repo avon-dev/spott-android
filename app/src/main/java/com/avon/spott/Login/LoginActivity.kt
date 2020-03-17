@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.avon.spott.Data.SocialUser
+import com.avon.spott.Data.Token
 import com.avon.spott.Email.EmailActivity
 import com.avon.spott.Email.INTENT_EXTRA_USER
 import com.avon.spott.EmailLogin.EmailLoginActivity
@@ -19,6 +20,7 @@ import com.avon.spott.Main.MainActivity
 import com.avon.spott.Nickname.NicknameActivity
 import com.avon.spott.R
 import com.avon.spott.TOS.TOSActivity
+import com.avon.spott.Utils.App
 import com.avon.spott.Utils.logd
 import com.avon.spott.Utils.loge
 import com.facebook.CallbackManager
@@ -52,6 +54,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
     private val SOCIAL_LOGIN = 1
     private var socialEmail:String? = null
     private var socialType:Int = GOOGLE_USER
+    private lateinit var socialUser:SocialUser
 
     private lateinit var callbackManager:CallbackManager
 
@@ -181,7 +184,10 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
     }
 
     // 메인으로 이동하기 ( 소셜 로그인 성공시 )
-    override fun showMainUi() {
+    override fun showMainUi(token: Token) {
+        App.prefs.token = token.access
+        App.prefs.refresh = token.refresh
+
         val intent = Intent(this@LoginActivity, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -219,7 +225,10 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
 
             socialType = GOOGLE_USER
             socialEmail = account?.email?.let { it }
-            socialEmail?.let { presenter.isPhopoUser(getString(R.string.baseurl), "/spott/social-account", SocialUser(it, socialType)) }
+            socialEmail?.let {
+                socialUser = SocialUser(it, socialType)
+                presenter.isPhopoUser(getString(R.string.baseurl), "/spott/social-account", socialUser)
+            }
         } catch (e:ApiException) {
             loge(TAG, "signInResult:failed code=${e.statusCode}, ${e.message}")
             println(e.stackTrace.toString())
@@ -231,6 +240,9 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         // 토큰 발급 받기
 //        presenter.getToken()
         logd(TAG, "View.isPohopoUser() : 가입된 유저")
+        socialEmail?.let {
+            presenter.getToken(getString(R.string.baseurl), "/spott/token", socialUser)
+        }
     }
 
     override fun notPhopoUser() {
@@ -243,7 +255,16 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
                 startActivity(it)
             }
         }
+    }
 
+    override fun showMessage(msgCode: Int) {
+        val msg:String
+        when(msgCode) {
+            App.SERVER_ERROR_400 -> { msg = getString(R.string.error_400)}
+            App.SERVER_ERROR_404 -> { msg = getString(R.string.error_404)}
+            else -> { msg = getString(R.string.error_retry) }
+        }
+        Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
     }
 
     // 버튼 클릭
