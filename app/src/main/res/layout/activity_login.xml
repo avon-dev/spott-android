@@ -32,24 +32,49 @@
 
 
 
-    <com.facebook.login.widget.LoginButton
-        android:id="@+id/btn_facebooklogin_a"
+    <FrameLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:paddingLeft="12dp"
-        android:gravity="center"
-        android:layout_gravity="center_horizontal"
+        app:layout_constraintBottom_toTopOf="@id/btn_googlelogin_login_a"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="16dp"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        android:elevation="3dp"
-        app:layout_constraintBottom_toTopOf="@id/btn_googlelogin_login_a"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/btn_facebooklogin_a"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingLeft="12dp"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:elevation="3dp"/>
+
+    </FrameLayout>
+
+<!--    <com.facebook.login.widget.LoginButton-->
+<!--        android:id="@+id/btn_facebooklogin_a"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:paddingTop="16dp"-->
+<!--        android:paddingBottom="16dp"-->
+<!--        android:paddingLeft="12dp"-->
+<!--        android:gravity="center"-->
+<!--        android:layout_gravity="center_horizontal"-->
+<!--        android:layout_marginStart="32dp"-->
+<!--        android:layout_marginEnd="32dp"-->
+<!--        android:layout_marginBottom="16dp"-->
+<!--        android:textSize="12sp"-->
+<!--        android:textStyle="bold"-->
+<!--        android:elevation="3dp"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/btn_googlelogin_login_a"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
 
 <!--    <Button-->
 <!--        android:id="@+id/btn_facebooklogin_a"-->
@@ -89,25 +114,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView4" />
-
-<!--    <Button-->
-<!--        android:id="@+id/btn_googlelogin_login_a"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="54dp"-->
-<!--        android:layout_marginStart="28.5dp"-->
-<!--        android:layout_marginEnd="28.5dp"-->
-<!--        android:background="@drawable/common_google_signin_btn_text_light_normal"-->
-<!--        android:paddingLeft="30dp"-->
-<!--        android:paddingRight="23dp"-->
-<!--        android:text="@string/signin_google"-->
-<!--        android:textAllCaps="false"-->
-<!--        android:textSize="12sp"-->
-<!--        android:textStyle="bold"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/text_privacyinfo_login_a"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.0"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/text_titlelogo_login_a" />-->
 
     <Button
 
@@ -160,48 +166,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <!--    <TextView-->
-<!--        android:id="@+id/text_termsandconditions_login_a"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="@string/text_termsandconditions_login_a"-->
-<!--        android:textColor="#0000f0"-->
-<!--        android:textSize="12dp"-->
-<!--        app:layout_constraintStart_toEndOf="@id/text_privacyinfo_login_a"-->
-<!--        app:layout_constraintTop_toTopOf="@id/text_privacyinfo_login_a"-->
-<!--        />-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/text_privacyinfo2_login_a"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="@string/text_privacyinfo2_login_a"-->
-<!--        android:textSize="12dp"-->
-<!--        app:layout_constraintStart_toEndOf="@id/text_termsandconditions_login_a"-->
-<!--        app:layout_constraintTop_toTopOf="@id/text_termsandconditions_login_a"-->
-<!--        />-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/text_personalinformation_login_a"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="@string/text_personalinformation_login_a"-->
-<!--        android:textColor="#0000f0"-->
-<!--        android:textSize="12dp"-->
-<!--        app:layout_constraintStart_toEndOf="@id/text_privacyinfo2_login_a"-->
-<!--        app:layout_constraintTop_toTopOf="@id/text_privacyinfo2_login_a"-->
-<!--        />-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/text_privacyinfo3_login_a"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="@string/text_privacyinfo3_login_a"-->
-<!--        android:textSize="12dp"-->
-<!--        app:layout_constraintStart_toEndOf="@id/text_personalinformation_login_a"-->
-<!--        app:layout_constraintTop_toTopOf="@id/text_personalinformation_login_a"-->
-<!--        />-->
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
