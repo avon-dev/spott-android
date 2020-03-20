@@ -34,6 +34,7 @@ import com.avon.spott.Data.MapCluster
 import com.avon.spott.EditMyinfo.EditMyInfoActivity
 import com.avon.spott.Main.MainActivity.Companion.mToolbar
 import com.avon.spott.Main.controlToolbar
+import com.avon.spott.Notice.NoticeActivity
 import com.avon.spott.R
 import com.avon.spott.TOS.TOSActivity
 import com.avon.spott.Utils.logd
@@ -467,6 +468,10 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         startActivity(Intent(context, EditMyInfoActivity::class.java))
     }
 
+    override fun showNoticeUi() {
+        startActivity(Intent(context, NoticeActivity::class.java))
+    }
+
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.frame_noti_toolbar -> {presenter.openAlarm()}
@@ -686,6 +691,7 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
         arrayList.add(getString(R.string.text_title_editmyinfo_a))
         arrayList.add(if(isPublic) getString(R.string.keep_private) else getString(R.string.keep_public))
         arrayList.add(getString(R.string.inquiry))
+        arrayList.add(getString(R.string.text_notice))
         arrayList.add(getString(R.string.text_terms_of_service))
         arrayList.add(getString(R.string.text_open_source_library))
         arrayList.add(getString(R.string.see_photo_uploading_guideline))
@@ -701,17 +707,18 @@ class MypageFragment : Fragment(), MypageContract.View, View.OnClickListener, On
                        presenter.changePublic(getString(R.string.baseurl), isPublic)
                     }
                     2 ->{ //문의하기 눌렀을 때
-                        /** 메일 앱으로 연동하거나
-                         *  어드민사이트로 보낼 예정*/
                         inquire(context!!)
                     }
-                    3->{ //이용약관 눌렀을 때
+                    3 ->{
+                       presenter.openNotice()
+                    }
+                    4->{ //이용약관 눌렀을 때
                         Intent(context!!, TOSActivity::class.java).let { startActivity(it) }
                     }
-                    4->{ //오픈소스 라이브러리 눌렀을 때
+                    5->{ //오픈소스 라이브러리 눌렀을 때
                         Intent(context!!, OpensourceActivity::class.java).let { startActivity(it) }
                     }
-                    5->{//사진 업로드 가이드라인 보기
+                    6->{//사진 업로드 가이드라인 보기
                         Intent(context!!, GuidelineActivity::class.java).let { startActivity(it) }
                     }
                 }

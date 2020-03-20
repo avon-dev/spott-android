@@ -31,6 +31,10 @@ class MypagePresenter(val mypageView:MypageContract.View):MypageContract.Present
         mypageView.showPhotoUi(id)
     }
 
+    override fun openNotice() {
+        mypageView.showNoticeUi()
+    }
+
     override fun clickAddPhoto(){
         if (!mypageView.checkPermission()) {
             mypageView.showPermissionDialog()
