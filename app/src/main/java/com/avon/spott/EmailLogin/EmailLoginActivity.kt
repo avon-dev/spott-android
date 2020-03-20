@@ -88,6 +88,9 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
                 if (edit_username_emaillogin_a.text.toString().equals("")) {
                     showError("이메일을 입력해주세요")
                     return
+                }else{
+                    email = edit_username_emaillogin_a.text.toString()
+
                 }
 
                 if (edit_password_emaillogin_a.text.toString().equals("")) {
@@ -96,7 +99,6 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
                 }
 
 //                window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-                email = edit_email_email_a.text.toString()
 
                 btn_login_emaillogin_a.setOnClickListener(null)
                 presenter.getPublicKey(getString(R.string.baseurl),"/spott/publickey")
