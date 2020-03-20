@@ -76,6 +76,8 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
 
     private var postKind = 200
 
+    private var isSuperuser = false
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_photo, container, false)
@@ -376,17 +378,25 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
                                 backPhotoUrl:String?, photoLat:Double, photoLng:Double,
                                 caption:String, comments:Int, dateTime:String, likeCount:Int,
                                 likeChecked:Boolean, scrapChecked:Boolean, myself:Boolean,
-                                userId:Int,hasHash:Boolean, postKind:Int){
+                                userId:Int,hasHash:Boolean, postKind:Int, isSuperuser:Boolean){
 
         this.postKind = postKind
+
+        this.isSuperuser = isSuperuser
 
 
         if(postKind==200){ //일반 게시물일 때 툴바 처리 (뒤로가기 + 더보기)
             controlToolbar(View.VISIBLE, View.GONE, View.GONE,View.GONE, View.GONE, View.VISIBLE, View.GONE, View.GONE, View.GONE)
             MainActivity.mToolbar.visibility = View.VISIBLE
-        }else if(postKind==201){ // 포포 추천 게시물일 때 툴바 처리(뒤로가기)
-            controlToolbar(View.VISIBLE, View.GONE, View.GONE,View.GONE, View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE)
-            MainActivity.mToolbar.visibility = View.VISIBLE
+        }else if(postKind==201){
+            if(this.isSuperuser){  // 포포 추천 게시물이고 관리자 계정일때 툴바 처리(뒤로가기+제목+더보기)
+                controlToolbar(View.VISIBLE, View.GONE, View.GONE,View.GONE, View.VISIBLE,View.VISIBLE, View.GONE, View.GONE, View.GONE)
+                MainActivity.mToolbar.visibility = View.VISIBLE
+            }else{  // 포포 추천 게시물일 때 툴바 처리(뒤로가기+제목)
+                controlToolbar(View.VISIBLE, View.GONE, View.GONE,View.GONE, View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE)
+                MainActivity.mToolbar.visibility = View.VISIBLE
+            }
+
         }
 
 

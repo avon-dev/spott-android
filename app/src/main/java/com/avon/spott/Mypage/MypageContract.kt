@@ -13,6 +13,7 @@ interface MypageContract {
         fun showAlarmUi()
         fun showEditMyInfoUi()
         fun showAddPhotoUi(mCropPath: String)
+        fun showNoticeUi()
         fun checkPermission():Boolean
         fun showPermissionDialog()
         fun openGallery()
@@ -33,6 +34,7 @@ interface MypageContract {
         fun openAlarm()
         fun openEditMyInfo()
         fun openAddPhoto(mCropPath: String)
+        fun openNotice()
         fun clickAddPhoto()
         fun changePublic(baseUrl:String, isPublic: Boolean)
     }

@@ -228,10 +228,11 @@
 
 <string name="text_no_noti">没有新通知</string>
 
-<string name="text_guide_camerax_a">버튼을누르면윤곽선을일반사진으로바꿀수있어요</string>
+    <string name="text_guide_camerax_a">只要按下按钮,就可以将等高线转换成正常画面。</string>
 
-<string name="phopo_recommended">Phopo추천</string>
+    <string name="phopo_recommended">推荐Phopo</string>
 
-<string name="text_about_seoul">대한민국의수도인서울은현대적인고층빌딩,첨단기술의지하철,대중문화와사찰,고궁,노점상이공존하는대도시입니다\nPhopo가추천하는서울의포토포인트를소개합니다</string>
+    <string name="text_about_seoul">韩国首都首尔是现代摩天大楼,艺术地铁状态,大众文化与寺庙,旧宫殿与摊贩并存的大城市。\n为您介绍Phopo推荐的首尔照片亮点</string>
 
+    <string name="text_notice">通知</string>
 </resources>

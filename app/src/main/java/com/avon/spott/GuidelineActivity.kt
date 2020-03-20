@@ -2,8 +2,10 @@ package com.avon.spott
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.avon.spott.Utils.logd
 import kotlinx.android.synthetic.main.activity_webview.*
 import kotlinx.android.synthetic.main.toolbar.view.*
+import java.util.*
 
 class GuidelineActivity : AppCompatActivity() {
 
@@ -18,7 +20,15 @@ class GuidelineActivity : AppCompatActivity() {
             onBackPressed()
         }
 
-           webview_webview_a.loadUrl(getString(R.string.baseurl)+"/spott/guide")
+        if(Locale.getDefault().language=="ko"){
+            webview_webview_a.loadUrl(getString(R.string.baseurl)+"/spott/guide")
+        }else if(Locale.getDefault().language=="zh"){
+            webview_webview_a.loadUrl(getString(R.string.baseurl)+"/spott/guide-cn")
+        }else{
+            webview_webview_a.loadUrl(getString(R.string.baseurl)+"/spott/guide-en")
+        }
+
+
 
 
     }

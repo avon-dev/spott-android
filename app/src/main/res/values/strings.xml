@@ -227,10 +227,13 @@
 
     <string name="text_no_noti">No notifications</string>
 
-    <string name="text_guide_camerax_a">버튼을 누르면 윤곽선을 일반사진으로 바꿀 수 있어요</string>
+    <string name="text_guide_camerax_a">By pressing the button, you can change the contour to a normal picture.</string>
 
-    <string name="phopo_recommended">Phopo 추천</string>
+    <string name="phopo_recommended">Phopo recommended</string>
 
-    <string name="text_about_seoul">대한민국의 수도인 서울은 현대적인 고층 빌딩, 첨단 기술의 지하철, 대중문화와 사찰, 고궁, 노점상이 공존하는 대도시입니다.\nPhopo가 추천하는 서울의 포토포인트를 소개합니다.</string>
+    <string name="text_about_seoul">Seoul, the capital of South Korea, is a large city where modern skyscrapers, state of the art subways, pop culture and temples, old palaces and street vendors coexist.\nHere are Phopo\'s top picks for the best photo points in Seoul</string>
+
+    <string name="text_notice">Notice</string>
+
 
 </resources>

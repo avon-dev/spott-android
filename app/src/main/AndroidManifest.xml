@@ -30,6 +30,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Notice.NoticeDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Notice.NoticeActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".TOS.TOSActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".OpensourceActivity"
