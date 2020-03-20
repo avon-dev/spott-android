@@ -235,5 +235,6 @@
 
     <string name="text_notice">Notice</string>
 
+    <string name="agree_to_use">Access to cameras, location information, and galleries may be required</string>
 
 </resources>

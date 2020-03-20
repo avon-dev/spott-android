@@ -235,4 +235,7 @@
     <string name="text_about_seoul">韩国首都首尔是现代摩天大楼,艺术地铁状态,大众文化与寺庙,旧宫殿与摊贩并存的大城市。\n为您介绍Phopo推荐的首尔照片亮点</string>
 
     <string name="text_notice">通知</string>
+
+    <string name="agree_to_use">可能需要访问摄像机,位置信息和画廊</string>
+
 </resources>
