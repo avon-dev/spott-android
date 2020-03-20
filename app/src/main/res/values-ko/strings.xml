@@ -11,6 +11,7 @@
 
     <string name="signin_email">이메일로 계속하기</string>
     <string name="signin_google">Google로 계속하기</string>
+    <string name="signin_facebook">Facebook으로 계속하기</string>
 
     <!--    <string name="signin_email">Sign in with email</string>-->
     <string name="check">확인</string>
@@ -127,7 +128,7 @@
     <string name="title_editmyinfo">내 정보 수정</string>
 
     <string name="no_recent_searching">최근 검색 결과가 없습니다</string>
-    <string name="dialog_withdrawl_message">회원 탈퇴시 사진과 댓글이 모두 지워지고 계정을 복구 할 수 없습니다. \n그래도 탈퇴하시겠습니까?</string>
+    <string name="dialog_withdrawl_message">회원탈퇴시 사진과 댓글이 모두 지워지고 계정을 복구 할 수 없습니다. \n그래도 탈퇴하시겠습니까?</string>
     <string name="dialog_withdrawl_title">회원 탈퇴</string>
 
     <string name="ok">확인</string>
@@ -153,11 +154,8 @@
 
     <string name="report_photo">사진 신고</string>
     <string name="hint_report_etc">신고 사유를 작성해주세요</string>
-
     <string name="report_done">신고가 접수되었습니댜</string>
-
     <string name="no_scrap">스크랩한 사진이 없습니다</string>
-
     <string name="text_reported_photo">신고 처리 중인 사진입니다.</string>
 
     <string name="photo_i_uploaded">내가 업로드한 사진</string>
@@ -225,4 +223,12 @@
     <string name="text_no_hashtag"> 태그가 추가된 사진이 여기 표시됩니다.</string>
 
     <string name="text_no_noti">새로운 알림이 없습니다.</string>
+
+
+    <string name="text_guide_camerax_a">버튼을 누르면 윤곽선을 일반사진으로 바꿀 수 있어요</string>
+
+    <string name="phopo_recommended">Phopo 추천</string>
+
+    <string name="text_about_seoul">대한민국의 수도인 서울은 현대적인 고층 빌딩, 첨단 기술의 지하철, 대중문화와 사찰, 고궁, 노점상이 공존하는 대도시입니다.\nPhopo가 추천하는 서울의 포토포인트를 소개합니다.</string>
+
 </resources>

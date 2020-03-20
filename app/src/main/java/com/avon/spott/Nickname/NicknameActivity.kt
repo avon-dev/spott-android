@@ -46,7 +46,6 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
     }
 
     private fun init() {
-
         login = intent.extras.getInt("login", EMAIL)
 
         if(login == EMAIL) { // 이메일 로그인일 때

@@ -29,6 +29,7 @@ import com.facebook.FacebookException
 import com.facebook.GraphRequest
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
+import com.facebook.login.widget.LoginButton
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -36,8 +37,6 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import kotlinx.android.synthetic.main.activity_login.*
 import java.util.*
-
-
 
 
 class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListener {
@@ -58,6 +57,8 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
 
     private lateinit var callbackManager:CallbackManager
 
+    private var logined = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.avon.spott.R.layout.activity_login)
@@ -65,26 +66,28 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         init()
     }
 
+    override fun onResume() {
+        super.onResume()
+    }
+
     // 초기화
     private fun init() {
-        btn_facebooklogin_a.visibility = View.GONE
+//        btn_facebooklogin_a.visibility = View.GONE
 
         loginPresenter = LoginPresenter(this)
 
         btn_googlelogin_login_a.setOnClickListener(this)
         btn_emaillogin_login_a.setOnClickListener(this)
         text_signup_login_a.setOnClickListener(this)
-//        btn_facebooklogin_a.setOnClickListener(this)
+//        btn_facebooklogin.setOnClickListener(this)
+        btn_facebook_login_a.setOnClickListener(this)
 
         callbackManager = CallbackManager.Factory.create();
-
-//        btn_facebooklogin_a.setReadPermissions("email")
-        btn_facebooklogin_a.setPermissions(Arrays.asList("email"))
-
-//        val loginButton = findViewById(R.id.btn_facebooklogin_a) as LoginButton
+        btn_facebooklogin.setPermissions(Arrays.asList("email"))
+        val loginButton = findViewById(R.id.btn_facebooklogin) as LoginButton
 
         // Callback registration
-        btn_facebooklogin_a.registerCallback(callbackManager, object :
+        btn_facebooklogin.registerCallback(callbackManager, object :
             FacebookCallback<LoginResult?> {
             override fun onSuccess(loginResult: LoginResult?) { // App code
 
@@ -95,16 +98,11 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
                         try {
                             if(jsonObject.has("email")) { // 이메일을 허락해줬을 때
                                 logd(TAG, "fb email: " + jsonObject.getString("email"))
-                                Toast.makeText(this@LoginActivity, "페북 로그인 성공", Toast.LENGTH_SHORT).show()
 
-                                Intent(applicationContext, NicknameActivity::class.java).let {
-                                    it.putExtra("login", 1)
-//                                    val socialUser = SocialUser(jsonObject.getString("email"))
-                                    it.putExtra("email", jsonObject.getString("email"))
-//                                    it.putExtra("email", jsonObject.getString("email"))
-                                    startActivity(it)
-                                }
-
+                                socialType = FACEBOOK_USER
+                                socialEmail = jsonObject.getString("email")
+                                socialUser = SocialUser(socialEmail!!, socialType)
+                                presenter.isPhopoUser(getString(R.string.baseurl), "/spott/social-account", socialUser)
                             } else { // 이메일을 허락하지 않았을 때
                                 // 로그인 실패로 간주하고 권한을 허락해달라고 해야 함.
                                 LoginManager.getInstance().logOut()
@@ -285,6 +283,9 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
             }
             R.id.text_signup_login_a -> { // 회원가입
                 presenter.openSignup()
+            }
+            R.id.btn_facebook_login_a -> {
+                btn_facebooklogin.performClick()
             }
         }
     }
