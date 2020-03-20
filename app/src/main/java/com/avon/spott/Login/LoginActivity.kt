@@ -133,39 +133,6 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
             }
         })
 
-
-        val strPrivacy1 = getString(R.string.text_privacyinfo1)
-        val strPrivacy2 = getString(R.string.text_privacyinfo2)
-        val strPrivacy3 = getString(R.string.text_privacyinfo3)
-        val strPrivacy4 = getString(R.string.text_privacyinfo4)
-        val strPrivacy5 = getString(R.string.text_privacyinfo5)
-
-        val spanPrivacy: Spannable = text_privacyinfo_login_a.text as Spannable
-        text_privacyinfo_login_a.text = strPrivacy1 + strPrivacy2 + strPrivacy3 + strPrivacy4 + strPrivacy5
-        text_privacyinfo_login_a.movementMethod = LinkMovementMethod.getInstance()
-
-        val startPrivacy = strPrivacy1.length
-        val endPrivacy = strPrivacy2.length
-
-        logd(TAG, "$strPrivacy1 : $startPrivacy, $strPrivacy2 : $endPrivacy")
-
-        spanPrivacy.setSpan(object : ClickableSpan() {
-            override fun updateDrawState(ds: TextPaint) {
-                super.updateDrawState(ds)
-                //span text 색상 변경 및 밑줄없애기, 진하게
-                ds.color = ContextCompat.getColor(this@LoginActivity, R.color.span_text)
-                ds.isUnderlineText = false
-//                ds.setTypeface(Typeface.DEFAULT_BOLD)
-
-            }
-            override fun onClick(widget: View) {
-//                Intent(this@LoginActivity, MainActivity::class.java).let { startActivity(it) }
-                Intent(this@LoginActivity, TOSActivity::class.java).let { startActivity(it) }
-            }
-        }, 13, 17, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        text_privacyinfo_login_a.movementMethod = LinkMovementMethod.getInstance()
-
-
         // 이용약관
         val span: Spannable = text_privacyinfo_login_a.text as Spannable
         text_privacyinfo_login_a.movementMethod = LinkMovementMethod.getInstance()
