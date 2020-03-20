@@ -64,6 +64,8 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
     private lateinit var buffNickname: String
     private var validNickname:Boolean = true
 
+    private lateinit var userInfo:UserInfo
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_my_info)
@@ -94,6 +96,7 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
         }
     }
     override fun getUserInfo(userInfo: UserInfo) {
+        this.userInfo = userInfo
         buffNickname = userInfo.nickname.toString()
 
         edit_nickname_editmyinfo_a.setText(userInfo.nickname)
@@ -145,7 +148,7 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
 
     override fun withDrawl(result: Boolean) {
         if(result) {
-            presenter.signOut(MySharedPreferences(this))
+            presenter.signOut(MySharedPreferences(this), userInfo.user_type!!)
         } else {
             showMessage(ERROR_RETRY)
         }
@@ -367,7 +370,7 @@ class EditMyInfoActivity : AppCompatActivity(), EditMyInfoContract.View, View.On
             }
 
             R.id.btn_signout_editmyinfo_a -> { // 로그아웃
-                presenter.signOut(MySharedPreferences(this))
+                 presenter.signOut(MySharedPreferences(this), userInfo.user_type!!)
             }
         }
     }
