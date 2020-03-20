@@ -19,7 +19,7 @@ class OpensourceActivity : AppCompatActivity() {
         }
 
         /**  오픈소스라이브러리 url 넣어야함 */
-//           webview_webview_a.loadUrl("")
+           webview_webview_a.loadUrl(getString(R.string.baseurl)+"/spott/open-source")
 
 
     }
