@@ -2,7 +2,7 @@
     <string name="app_name">Phopo</string>
 
     <!-- EditMyinfoActivity [Start]-->
-    <string name="text_title_editmyinfo_a">Modify Information</string>
+    <string name="text_title_editmyinfo_a">Edit my information</string>
     <string name="text_editing">Editing</string>
     <string name="btn_signout_editmyinfo_a">Sign out</string>
     <string name="btn_withdrawal_editmyinfo_a">Delete Account</string>
@@ -12,19 +12,20 @@
 <!--    <string name="signin_email">이메일로 계속하기</string>-->
     <string name="signin_email">Sign in with email</string>
     <string name="signin_google">Sign in with google</string>
+    <string name="signin_facebook">Sign in with facebook</string>
 
     <string name="check">check</string>
 
     <!-- Hint -->
     <string name="hint_nickname">Write 4 to 15 English letters or numbers</string>
     <string name="hint_originpassword">Old password</string>
-    <string name="hint_email">Enter an e-mail</string>
+    <string name="hint_email">Write your email address</string>
 
     <!-- EditMyinfoActivity [End]-->
 
     <!-- MapFragment [Start]-->
     <string name="text_all">All</string>
-    <string name="text_find_thisplace">Find in this area</string>
+    <string name="text_find_thisplace">Search this area</string>
     <!-- MapFragment [End]-->
 
 
@@ -32,8 +33,8 @@
 <!--    <string name="text_private">Private&#160;&#160;</string>-->
     <string name="btn_upload_photo">Upload</string>
     <string name="hint_search_place">Search place</string>
-    <string name="hint_caption">Please leave a description of the picture :)</string>
-    <string name="text_longtab">Press and hold the map to indicate the location</string>
+    <string name="hint_caption">Please leave your comment about photo. #Hashtag #Available</string>
+    <string name="text_longtab">Tap and hold a spot on the map to leave a tag</string>
     <!-- AddPhotoFragment [End]-->
 
 
@@ -43,8 +44,8 @@
     <string name="notification_sharing">The picture has been shared</string>
     <string name="guideline">Guideline</string>
     <string name="notification_reason">(Reason : %1$s)</string>
-    <string name="text_new_comment">%1$s left a comment on your photo</string>
-    <string name="was_removed_for_reason">%1$s was deleted because it violated the guidelines</string>
+    <string name="text_new_comment">%1$s, commented on your photo</string>
+    <string name="was_removed_for_reason">%1$s has been deleted against the guidelines</string>
     <string name="photo">Photo</string>
     <!-- item_alarm.xml [End] -->
 
@@ -53,13 +54,13 @@
 
     <string name="email">Email</string>
     <string name="pw">Enter your password</string>
-    <string name="password_information">8~20 characters include at least one special character, English, number</string>
+    <string name="password_information">Password between 8 and 20 characters; must contain at least one letter, one numeric digit, and one special character, but cannot contain whitespace</string>
     <string name="checkpw">Check password</string>
-    <string name="originpw">Old password</string>
+    <string name="originpw">Present password</string>
     <string name="newpw">New password</string>
     <string name="changepw">Change password</string>
 
-    <string name="text_warnmsg1_signup_a">Check the email format</string>
+    <string name="text_warnmsg1_signup_a">Fill in a correct email address format</string>
     <string name="text_warnmsg2_signup_a">Enter your password according to the format</string>
     <string name="text_warnmsg3_signup_a">The password does not match.</string>
 
@@ -68,32 +69,32 @@
     <string name="text_warnmsg_findpw_a">Check the email format</string>
     <string name="text_warnmessage_number_a">This nickname is already in use</string>
 
-    <string name="certification_number">code number</string>
+    <string name="certification_number">The authentication number</string>
     <string name="nickname">Nickname</string>
 
     <string name="text_all_scrap_f">All</string>
     <string name="text_photos_scrap_f">images</string>
-    <string name="select_delete">Delete selection</string>
+    <string name="select_delete">Delete a selected feature</string>
 
-    <string name="text_guide_scrap_f">You can follow the scraped pictures.Press and hold\n the scrap picture or select it directly from the camera</string>
+    <string name="text_guide_scrap_f">You can take a photo just like what you scrap. \nTap and hold it or select one in the album.</string>
 
     <string name="map">Map</string>
     <string name="comment">Comment</string>
 
 
-    <string name="text_privacyinfo_login_a">I agree with Phopo\'s Terms of Use and Privacy Policy when I sign up</string>
+    <string name="text_privacyinfo_login_a">By creating an account, you are agreeing to Phopo\'s Terms of service and Private policy.</string>
 
     <string name="text_title_emaillogin">Sign in with email</string>
 
     <string name="send">Send</string>
     <string name="resend">Resend</string>
-    <string name="certification_message">Enter the authentication number sent to the email address</string>
+    <string name="certification_message">Please add the authentication number sent to your email</string>
 
     <string name="adding_photo">Add photo</string>
 
-    <string name="toast_nophoto_map_f">There are no registered pictures. Move the screen or zoom in on//down the map</string>
-    <string name="map_no_photo">There are no photos registered at the location</string>
-    <string name="upload_first_photo">Upload the first picture</string>
+    <string name="toast_nophoto_map_f">No photo in this area. Please move to another area or zoom in or the map</string>
+    <string name="map_no_photo">No photos uploaded in this area</string>
+    <string name="upload_first_photo">Add your First photo</string>
 
     <string name="cancel">Cancel</string>
     <string name="done">Done</string>
@@ -102,38 +103,38 @@
     <string name="report">Report</string>
     <string name="modify">Modify</string>
 
-    <string name="editing_caption">Edit description</string>
+    <string name="editing_caption">Edit an explanation</string>
 
     <string name="edit_comment">Modifying comment</string>
     <string name="delete_comment">Delete comment</string>
-    <string name="report_comment">Report comment</string>
-    <string name="text_warning_comment_d">Deleted comments cannot be recovered.\nAre you sure you want to delete the comments?</string>
-    <string name="text_warning_deleting_photo">Deleted pictures cannot be recovered.\n\nAre you sure you want to delete the picture?\n</string>
+    <string name="report_comment">Report a comment</string>
+    <string name="text_warning_comment_d">Comments cannot be recovered once deleted. \nWould you like to continue?</string>
+    <string name="text_warning_deleting_photo">Photos cannot be recovered once deleted. \nWould you like to continue?</string>
 
-    <string name="text_no_photo">The picture could not be found</string>
+    <string name="text_no_photo">Cannot search an image(a photo) you want to find</string>
 
     <string name="recent_searching">Recent Search</string>
     <string name="delete_all">Delete All</string>
 
-    <string name="toast_origin_changepassword">Check your old password</string>
+    <string name="toast_origin_changepassword">Please check the present password</string>
     <string name="toast_check_changepassword">Check your password</string>
     <string name="toast_fail_changepw">Please try again</string>
     <string name="toast_success_changepw">Your password has been changed</string>
     <string name="toast_duplication_nickname">This is a duplicate nickname</string>
-    <string name="toast_no_scrap_message">No Scraped Images</string>
+    <string name="toast_no_scrap_message">No images scraped</string>
     <string name="toast_get_image_error_message">Check the permission</string>
-    <string name="toast_wrong_number_findpw_a">Check the authentication number</string>
+    <string name="toast_wrong_number_findpw_a">Please confirm the authentication number</string>
 
     <string name="title_editmyinfo">Modify My Information</string>
 
-    <string name="no_recent_searching">No recent search results</string>
-    <string name="dialog_withdrawl_message">When you leave the membership, all photos and comments are erased and your account cannot be restored. \nDo you still want to leave?</string>
+    <string name="no_recent_searching">No recent search records</string>
+    <string name="dialog_withdrawl_message">All photos and comments cannot be recovered once deleted your account. Would you like to continue?</string>
     <string name="dialog_withdrawl_title">Delete account</string>
 
     <string name="ok">OK</string>
 
     <string name="private_status">It\'s private</string>
-    <string name="private_account">This is a private account</string>
+    <string name="private_account">This account is private</string>
 
     <string name="text_terms_of_service">Terms and Conditions</string>
     <string name="text_open_source_library">Open Source Library</string>
@@ -141,90 +142,90 @@
     <string name="keep_private">Switch to private</string>
     <string name="keep_public">Switch to public</string>
 
-    <string name="server_connection_error">Connection to server failed</string>
+    <string name="server_connection_error">There is an error connecting to the server</string>
 
-    <string name="user_no_photo">No photos have been uploaded</string>
+    <string name="user_no_photo">No photos uploaded</string>
 
     <string name="spam">Spam</string>
-    <string name="abuse_and_slander">abusive language and slander</string>
-    <string name="pornography">obscene material</string>
-    <string name="unauthorized_use">unauthorized theft</string>
-    <string name="etc">etc</string>
+    <string name="abuse_and_slander">Harassment or hate speech content</string>
+    <string name="pornography">Sexual content</string>
+    <string name="unauthorized_use">Theft by unauthorized taking</string>
+    <string name="etc">and more sugestions…</string>
 
     <string name="report_photo">a photo report</string>
-    <string name="hint_report_etc">Please fill in the reason for the report</string>
+    <string name="hint_report_etc">Post the report reason.</string>
 
-    <string name="report_done">A report has been filed</string>
+    <string name="report_done">We\'ve received your report.</string>
 
     <string name="no_scrap">don\'t have any scraps</string>
 
-    <string name="text_reported_photo">This picture is being processed</string>
+    <string name="text_reported_photo">This is being reported</string>
 
-    <string name="photo_i_uploaded">Pictures I uploaded</string>
-    <string name="comment_i_wrote">comment I wrote</string>
-    <string name="text_footer_reason_f">Phopo is deleting pictures or comments that violate guidelines for healthy community operations.\nIf you think it\'s a wrong move, please ask.</string>
+    <string name="photo_i_uploaded">My photo</string>
+    <string name="comment_i_wrote">My comment</string>
+    <string name="text_footer_reason_f">If the comment or photo goes against the Phopo Community Guidelines, we can remove it. If you think it is unfair, please contact the help center.</string>
     <string name="reason">reason</string>
 
-    <string name="failed_to_upload_comment">Failed to register comment</string>
-    <string name="failed_to_edit_comment">Failed to modify comment</string>
-    <string name="failed_to_delete_comment">Failed to delete comment</string>
-    <string name="failed_to_delete_noti">Deleting alert failed</string>
+    <string name="failed_to_upload_comment">Failed to add a comment</string>
+    <string name="failed_to_edit_comment">Failed to amend a comment</string>
+    <string name="failed_to_delete_comment">Failed to delete a comment</string>
+    <string name="failed_to_delete_noti">Failed to delete a notification</string>
 
-    <string name="inquiry_subject">[Inquiry] Ask the phopo</string>
+    <string name="inquiry_subject">[HELP] Ask Phopo</string>
 
-    <string name="toast_low_quality">The picture is uploaded without contours due to the low quality of the</string>
+    <string name="toast_low_quality">It is going to uploading without an outline because of a low clarity.</string>
 
-    <string name="toast_photo_delete_error">The picture has not been deleted\nPlease try again.</string>
+    <string name="toast_photo_delete_error">Photo is not deleted. \nPlease try again.</string>
 
-    <string name="failed_to_edit_caption">Description edit failed</string>
+    <string name="failed_to_edit_caption">Failed to edit an explanation</string>
 
-    <string name="no_location_info">Please indicate the location of the picture</string>
+    <string name="no_location_info">Mark the location where you took a photo</string>
 
-    <string name="no_photo_caption">Please enter a description of the picture</string>
+    <string name="no_photo_caption">Add an explaination your photo</string>
 
-    <string name="already_finding_location">I\'m bringing my current location. Please try again in a few minutes.</string>
+    <string name="already_finding_location">Now we are getting your current location. Please try again after a few minutes.</string>
 
-    <string name="privacy_policy">Privacy Policy</string>
+    <string name="privacy_policy">Privacy policy</string>
 
-    <string name="location_policy">Terms and Conditions of Use of Location-Based Services</string>
-    <string name="see_photo_uploading_guideline">View Photo Upload Guidelines</string>
+    <string name="location_policy">Location Based Service\'s Terms and Conditions of Use</string>
+    <string name="see_photo_uploading_guideline">A guideline for uploading a photo</string>
 
 
     <string name="error_400">Please try again(400)</string>
     <string name="error_404">Please try again(404)</string>
     <string name="error_500">Please try again(500)</string>
-    <string name="error_fb_email_permission">Permit me to email you.</string>
-    <string name="error_camera_permission">Need permission</string>
+    <string name="error_fb_email_permission">Please approval permission to access your email</string>
+    <string name="error_camera_permission">You are not allowed an authority to use this category</string>
     <string name="error_check_password">Check your password</string>
-    <string name="error_none_back_image">It\'s a picture without an outline</string>
-    <string name="error_invalid_nickname">Please write 4 to 15 English letters or numbers</string>
+    <string name="error_none_back_image">This is without an outline</string>
+    <string name="error_invalid_nickname">Use 4~15 characters or numeric</string>
     <string name="error_retry">Please try again</string>
     <string name="error_duplication_nickname">This is a duplicate nickname</string>
     <string name="error_duplication_email">This is a duplicate email</string>
     <string name="error_wrong_password">Please check your password again</string>
     <string name="error_check_number">Please check code number</string>
-    <string name="error_none_email">This email is not registered</string>
+    <string name="error_none_email">Not registered email</string>
 
     <string name="success_changed_password">Your password has been changed</string>
-    <string name="success_changed_nickname">Nickname changed</string>
+    <string name="success_changed_nickname">Your nickname has been changed</string>
 
     <string name="checked">It\'s been confirmed</string>
-    <string name="send_authentication_number">code number has been sent</string>
-    <string name="wait_resending">Please try in %1$d seconds</string>
+    <string name="send_authentication_number">The authentication number has been sent</string>
+    <string name="wait_resending">Please try again after %1$d seconds</string>
 
     <string-array name="edit_profile_item">
         <item>"To modify"</item>
         <item>"To delete"</item>
     </string-array>
 
-    <string name="search_edittext_hint">Search for hashtags or users</string>
-    <string name="toast_blank_edit_search_addphoto_a">Please enter a location</string>
-    <string name="text_no_place">Can\'t find a place</string>
-    <string name="hint_edit_search_addphoto_a">Search locations, regions, countries</string>
+    <string name="search_edittext_hint">Search a hashtag or an user</string>
+    <string name="toast_blank_edit_search_addphoto_a">Add a place</string>
+    <string name="text_no_place">Cannot search the place</string>
+    <string name="hint_edit_search_addphoto_a">Let\'s search places, area, or Countires</string>
 
-    <string name="text_no_hashtag"> 태그가 추가된 사진이 여기 표시됩니다.</string>
+    <string name="text_no_hashtag">Photos with a tag are shown here</string>
 
-    <string name="text_no_noti">새로운 알림이 없습니다.</string>
+    <string name="text_no_noti">No notifications</string>
 
     <string name="text_guide_camerax_a">버튼을 누르면 윤곽선을 일반사진으로 바꿀 수 있어요</string>
 

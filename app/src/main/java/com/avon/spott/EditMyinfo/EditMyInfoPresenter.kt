@@ -127,8 +127,12 @@ class EditMyInfoPresenter(val editMyInfoView:EditMyInfoContract.View) : EditMyIn
         })
     }
 
-    override fun signOut(pref:MySharedPreferences) { // 로그아웃하기
-        EditMyInfoModel.deleteToken(pref)
+    override fun signOut(pref:MySharedPreferences, type:Int) { // 로그아웃하기
+//        if (type == 9002) {
+//            EditMyInfoModel.signOutwithFacebook()
+//        } else {
+            EditMyInfoModel.deleteToken(pref)
+//        }
         editMyInfoView.loginActivity()
     }
 }

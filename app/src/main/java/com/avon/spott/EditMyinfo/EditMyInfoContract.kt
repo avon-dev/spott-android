@@ -25,7 +25,7 @@ interface EditMyInfoContract {
         fun getUser(baseUrl:String, access:String) // 유저 정보 가져오기
         fun isNickname(nickname:String)// 닉네임을 맞게 썼는지 확인하기
         fun setProfileImage(baseUrl:String, token:String, photoUri: Uri)// 프로필 이미지 편집
-        fun signOut(pref:MySharedPreferences) // 로그아웃
+        fun signOut(pref:MySharedPreferences, type:Int) // 로그아웃
         // 비밀번호 변경하기
         fun withDrawl(baseUrl:String, token:String)// 회원 탈퇴
         fun changeNickname(baseUrl:String, token:String, nickname:String)// 닉네임 수정
