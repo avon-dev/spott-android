@@ -372,7 +372,6 @@ class CameraXFragment : Fragment() {
             return@setOnTouchListener true
         }
 
-
         try {
             val cursor = getImage()
 
