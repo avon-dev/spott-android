@@ -528,7 +528,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         startActivity(nextIntent)
     }
 
-    private fun showDeleteDialog(){  /// 다이얼로그 아래 마진 없애야함.
+    private fun showDeleteDialog(){
         val builder = AlertDialog.Builder(context!!)
         builder.setMessage(getString(R.string.text_warning_deleting_photo))
 
@@ -560,7 +560,7 @@ class PhotoFragment : Fragment(), PhotoContract.View, View.OnClickListener {
         mToolbar.img_back_toolbar.performClick()
     }
 
-    override fun showNoPhotoDialog(){  /// 다이얼로그 아래 마진 없애야함.
+    override fun showNoPhotoDialog(){
 
         val builder = AlertDialog.Builder(context!!)
         builder.setMessage(getString(R.string.text_no_photo))
