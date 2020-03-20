@@ -93,6 +93,13 @@ class NicknameActivity : AppCompatActivity(), NicknameContract.View, View.OnClic
         val intent = Intent(this@NicknameActivity, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+        if(login == EMAIL) {
+            intent.putExtra("email", emailUser.email)
+        } else {
+            intent.putExtra("email", socialUser.email)
+        }
+
         startActivity(intent)
     }
 
