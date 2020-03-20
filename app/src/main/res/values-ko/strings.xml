@@ -188,9 +188,9 @@
 
     <string name="see_photo_uploading_guideline">사진 업로드 가이드라인 보기</string>
 
-    <string name="error_400">다시 시도해주세요\n(400)</string>
-    <string name="error_404">다시 시도해주세요\n(404)</string>
-    <string name="error_500">다시 시도해주세요\n(500)</string>
+    <string name="error_400">다시 시도해주세요</string>
+    <string name="error_404">다시 시도해주세요</string>
+    <string name="error_500">다시 시도해주세요</string>
     <string name="error_fb_email_permission">이메일 권한을 허가해주세요</string>
     <string name="error_camera_permission">권한이 필요합니다</string>
     <string name="error_check_password">비밀번호를 확인해주세요</string>
@@ -224,11 +224,12 @@
 
     <string name="text_no_noti">새로운 알림이 없습니다.</string>
 
-
     <string name="text_guide_camerax_a">버튼을 누르면 윤곽선을 일반사진으로 바꿀 수 있어요</string>
 
     <string name="phopo_recommended">Phopo 추천</string>
 
     <string name="text_about_seoul">대한민국의 수도인 서울은 현대적인 고층 빌딩, 첨단 기술의 지하철, 대중문화와 사찰, 고궁, 노점상이 공존하는 대도시입니다.\nPhopo가 추천하는 서울의 포토포인트를 소개합니다.</string>
+
+    <string name="text_notice">공지사항</string>
 
 </resources>
