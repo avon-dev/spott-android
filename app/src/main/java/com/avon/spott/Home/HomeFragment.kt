@@ -343,7 +343,7 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
             return
         }
 
-        val builder = AdLoader.Builder(context!!, getString(R.string.banner_ad_unit_id_for_test))
+        val builder = AdLoader.Builder(context!!, getString(R.string.banner_ad_unit_id))
 
         val adLoader = builder.forUnifiedNativeAd(object : UnifiedNativeAd.OnUnifiedNativeAdLoadedListener{
             override fun onUnifiedNativeAdLoaded(unifiedNativeAd: UnifiedNativeAd) {

@@ -1,14 +1,18 @@
 package com.avon.spott.Main
 
+import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.fragment.NavHostFragment
 import com.avon.spott.Camera.CameraXActivity
 import com.avon.spott.Map.MapFragment.Companion.mBottomSheetBehavior
 import com.avon.spott.R
+import com.avon.spott.Utils.App
 import com.avon.spott.Utils.logd
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -48,6 +52,20 @@ class MainActivity : AppCompatActivity(), MainContract.View, View.OnClickListene
         // 버튼 클릭 리스너
         mToolbar.img_back_toolbar.setOnClickListener(this)
         const_camera_main_a.setOnClickListener(this)
+
+        if(App.per.email!!.isEmpty() && App.per.email != intent.extras.getString("email","")){
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage(getString(R.string.agree_to_use))
+            builder.setCancelable(false) //뒤로가기로 다이얼로그 종료 방지
+
+            builder.setPositiveButton(android.R.string.yes){_, _ ->
+                App.per.email = intent.extras.getString("email","")
+            }
+
+            val  mAlertDialog =  builder.show()
+            mAlertDialog.setCanceledOnTouchOutside(false)
+
+        }
 
     }
 

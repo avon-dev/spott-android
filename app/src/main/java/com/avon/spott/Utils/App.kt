@@ -10,6 +10,7 @@ class App : Application(), CameraXConfig.Provider {
     companion object {
         lateinit var prefs : MySharedPreferences
         lateinit var mContext: Context
+        lateinit var per : PermissionPreferences
 
         val SERVER_ERROR_400 = 400 // Bad Request
         val SERVER_ERROR_404 = 404 // Not Found
@@ -21,6 +22,7 @@ class App : Application(), CameraXConfig.Provider {
 
     override fun onCreate() {
         prefs = MySharedPreferences(applicationContext)
+        per = PermissionPreferences(applicationContext)
         super.onCreate()
         mContext = this
     }
