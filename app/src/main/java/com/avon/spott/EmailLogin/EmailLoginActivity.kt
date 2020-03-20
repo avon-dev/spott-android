@@ -22,6 +22,8 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
     override lateinit var presenter: EmailLoginContract.Presenter
     private lateinit var emailLoginPresenter: EmailLoginPresenter
 
+    private lateinit var email:String
+
     private val TAG = "EmailLoginActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +54,7 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
         Intent(applicationContext, MainActivity::class.java).let {
             it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            it.putExtra("email", edit_email_email_a.text.toString())
+            it.putExtra("email", email)
 
             startActivity(it)
         }
@@ -94,6 +96,7 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
                 }
 
 //                window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                email = edit_email_email_a.text.toString()
 
                 btn_login_emaillogin_a.setOnClickListener(null)
                 presenter.getPublicKey(getString(R.string.baseurl),"/spott/publickey")
