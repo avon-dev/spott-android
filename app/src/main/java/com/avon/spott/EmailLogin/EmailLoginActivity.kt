@@ -11,6 +11,7 @@ import com.avon.spott.FindPW.FindPWActivity
 import com.avon.spott.Main.MainActivity
 import com.avon.spott.R
 import com.avon.spott.Utils.App
+import kotlinx.android.synthetic.main.activity_email.*
 import kotlinx.android.synthetic.main.activity_email_login.*
 import kotlinx.android.synthetic.main.toolbar.*
 import java.security.cert.Certificate
@@ -51,6 +52,8 @@ class EmailLoginActivity : AppCompatActivity(), EmailLoginContract.View, View.On
         Intent(applicationContext, MainActivity::class.java).let {
             it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            it.putExtra("email", edit_email_email_a.text.toString())
+
             startActivity(it)
         }
     }

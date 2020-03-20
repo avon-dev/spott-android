@@ -79,8 +79,8 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         btn_googlelogin_login_a.setOnClickListener(this)
         btn_emaillogin_login_a.setOnClickListener(this)
         text_signup_login_a.setOnClickListener(this)
-//        btn_facebooklogin.setOnClickListener(this)
-        btn_facebook_login_a.setOnClickListener(this)
+        btn_facebooklogin.setOnClickListener(this)
+//        btn_facebook_login_a.setOnClickListener(this)
 
         callbackManager = CallbackManager.Factory.create();
         btn_facebooklogin.setPermissions(Arrays.asList("email"))
@@ -284,9 +284,9 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
             R.id.text_signup_login_a -> { // 회원가입
                 presenter.openSignup()
             }
-            R.id.btn_facebook_login_a -> {
-                btn_facebooklogin.performClick()
-            }
+//            R.id.btn_facebook_login_a -> {
+//                btn_facebooklogin.performClick()
+//            }
         }
     }
 }
