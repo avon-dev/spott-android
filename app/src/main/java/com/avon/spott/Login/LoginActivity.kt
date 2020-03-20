@@ -56,6 +56,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
     private lateinit var socialUser:SocialUser
 
     private lateinit var callbackManager:CallbackManager
+    private lateinit var email:String
 
     private var logined = false
 
@@ -100,6 +101,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
                                 logd(TAG, "fb email: " + jsonObject.getString("email"))
 
                                 socialType = FACEBOOK_USER
+                                email = jsonObject.getString("email")
                                 socialEmail = jsonObject.getString("email")
                                 socialUser = SocialUser(socialEmail!!, socialType)
                                 presenter.isPhopoUser(getString(R.string.baseurl), "/spott/social-account", socialUser)
@@ -189,6 +191,8 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         val intent = Intent(this@LoginActivity, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.putExtra("email", email)
+
         startActivity(intent)
     }
 
@@ -224,6 +228,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
             socialType = GOOGLE_USER
             socialEmail = account?.email?.let { it }
             socialEmail?.let {
+                email = it
                 socialUser = SocialUser(it, socialType)
                 presenter.isPhopoUser(getString(R.string.baseurl), "/spott/social-account", socialUser)
             }
