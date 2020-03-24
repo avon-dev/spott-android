@@ -33,14 +33,14 @@
 -------
 ### 1. 지도
 <p>
-  <img width="200" src="https://user-images.githubusercontent.com/51042849/77423869-7aafd880-6e13-11ea-9484-9b1645cef511.gif">  
+  <img width="240" src="https://user-images.githubusercontent.com/51042849/77423869-7aafd880-6e13-11ea-9484-9b1645cef511.gif">  
 </p>
 
 - 지도에서 인생샷 장소를 찾아볼 수 있습니다.
 
 ### 2. 카메라
 <p>
-  <img width="180" src="https://user-images.githubusercontent.com/51042849/77391894-2ee23c80-6ddd-11ea-85b3-fff279794460.jpg">  
+  <img width="240" src="https://user-images.githubusercontent.com/51042849/77391894-2ee23c80-6ddd-11ea-85b3-fff279794460.jpg">  
 </p>
 
 - 윤곽선과 가이드 사진을 이용하여 원하는 사진을 따라찍을 수 있습니다.
@@ -48,8 +48,8 @@
 
 ### 3. 검색
 <p>
-  <img width="200" src="https://user-images.githubusercontent.com/51042849/77425020-6b318f00-6e15-11ea-9e47-22f09a59ebd7.jpg">  
-  <img width="200" src="https://user-images.githubusercontent.com/51042849/77425043-7684ba80-6e15-11ea-894a-d5d1a43d9071.jpg">
+  <img width="240" src="https://user-images.githubusercontent.com/51042849/77425020-6b318f00-6e15-11ea-9e47-22f09a59ebd7.jpg">  
+  <img width="240" src="https://user-images.githubusercontent.com/51042849/77425043-7684ba80-6e15-11ea-894a-d5d1a43d9071.jpg">
 </p>
 
 - 해시태그나 유저를 검색 할 수 있습니다.
@@ -57,14 +57,14 @@
 
 ### 4. 사진 업로드
 <p>
-  <img width="200" src="https://user-images.githubusercontent.com/51042849/77424930-4210fe80-6e15-11ea-87f2-4102ae53c860.jpg">
+  <img width="240" src="https://user-images.githubusercontent.com/51042849/77424930-4210fe80-6e15-11ea-87f2-4102ae53c860.jpg">
 </p>
 
 - 업로드할 사진의 위치 메타 데이터를 가져옵니다. 위치 메타 데이터가 없다면 위치 검색, 내 위치를 활용하여 위치 정보를 등록해야 합니다.
 
 ### 5. 로그인
 <p>
-  <img width="200" src="https://user-images.githubusercontent.com/51042849/77424976-56ed9200-6e15-11ea-9d3e-e5ffe9625be5.jpg">
+  <img width="240" src="https://user-images.githubusercontent.com/51042849/77424976-56ed9200-6e15-11ea-9d3e-e5ffe9625be5.jpg">
 </p>
 
 - 이메일 로그인과 구글 로그인, 페북 로그인을 사용할 수 있습니다.
@@ -73,9 +73,9 @@
 
 ### 6. 기타
 <p>
-  <img width="200" src="https://user-images.githubusercontent.com/51042849/77425167-a3d16880-6e15-11ea-8f26-3dbfa9ffdff9.jpg">  
-  <img width="200" src="https://user-images.githubusercontent.com/51042849/77425193-af249400-6e15-11ea-884f-6bcbbe5c5bc7.jpg">
-  <img width="200" src="https://user-images.githubusercontent.com/51042849/77425207-b5b30b80-6e15-11ea-90b4-12511a6186dc.jpg">
+  <img width="240" src="https://user-images.githubusercontent.com/51042849/77425167-a3d16880-6e15-11ea-8f26-3dbfa9ffdff9.jpg">  
+  <img width="240" src="https://user-images.githubusercontent.com/51042849/77425193-af249400-6e15-11ea-884f-6bcbbe5c5bc7.jpg">
+  <img width="240" src="https://user-images.githubusercontent.com/51042849/77425207-b5b30b80-6e15-11ea-90b4-12511a6186dc.jpg">
 </p>
 
 - 다른 사람의 사진을 좋아요, 스크랩할 수 있고 사진에 댓글을 남길 수 있습니다. 
