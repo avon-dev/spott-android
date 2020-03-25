@@ -40,7 +40,7 @@
 
 ### 2. 카메라
 <p>
-  <img width="240" src="https://user-images.githubusercontent.com/51042849/77391894-2ee23c80-6ddd-11ea-85b3-fff279794460.jpg">  
+  <img width="240" src="https://user-images.githubusercontent.com/51042849/77516642-19910f00-6ebe-11ea-96d4-ba8968683629.gif">  
 </p>
 
 - 윤곽선과 가이드 사진을 이용하여 원하는 사진을 따라찍을 수 있습니다.
