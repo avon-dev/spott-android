@@ -22,13 +22,13 @@ Java_com_avon_spott_AddPhoto_AddPhotoActivity_detectEdgeJNI(JNIEnv *env, jobject
 
     cvtColor(outputMat, outputMat, COLOR_GRAY2RGBA);
 
-    for(int i = 0; i<outputMat.rows;i++){ // 검정색(면) 부분 투명으로 //왜 선부분을 제외한 면부부만 투명이 되는지 모르겠음...
+    for(int i = 0; i<outputMat.rows;i++){ // 검정색(면) 부분 투명으로
         for(int j=0;j<outputMat.cols;j++){
             outputMat.at<cv::Vec4b>(i,j)[3]=0;
         }
     }
 
-    for(int i = 0; i<outputMat.rows;i++){ // 하얀색(윤곽선) 부분 하늘색으로
+    for(int i = 0; i<outputMat.rows;i++){ // 하얀색(윤곽선) 부분 노란 색으로
         for(int j=0;j<outputMat.cols;j++){
             if(outputMat.at<cv::Vec4b>(i,j)[0] == 255 && outputMat.at<cv::Vec4b>(i,j)[1] == 255 && outputMat.at<cv::Vec4b>(i,j)[2] ==255 )
             {
